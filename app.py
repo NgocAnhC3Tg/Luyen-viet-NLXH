@@ -5,7 +5,7 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TABS MÀU SẮC TRỰC QUAN (NO DUPLICATION)
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TABS BÔI MÀU NỔI BẬT KHI BẤM CHỌN
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -47,7 +47,7 @@ st.markdown("""
         margin: 0;
     }
 
-    /* Thiết kế Tabs Menu Màu Sắc Nổi Bật Ngay Từ Đầu */
+    /* Khung danh sách Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
         background-color: #ffffff;
@@ -57,45 +57,56 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
+    /* Kiểu dáng Tab trạng thái bình thường */
     .stTabs [data-baseweb="tab"] {
-        height: 48px;
+        height: 50px;
         border-radius: 10px;
         font-weight: 700;
         font-size: 0.95rem;
         color: #475569;
-        padding: 0 16px;
-        border: 1px solid #f1f5f9;
-        transition: all 0.2s ease;
+        padding: 0 18px;
+        border: 1px solid #e2e8f0;
+        background-color: #f8fafc;
+        transition: all 0.2s ease-in-out;
     }
 
-    /* Màu riêng cho từng Tab khi được Active */
+    /* Bôi màu nổi bật khi HỌC SINH BẤM CHỌN từng Bước */
     .stTabs [data-baseweb="tab"]:nth-child(1)[aria-selected="true"] {
         background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-    }
-    .stTabs [data-baseweb="tab"]:nth-child(2)[aria-selected="true"] {
-        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-    }
-    .stTabs [data-baseweb="tab"]:nth-child(3)[aria-selected="true"] {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
-    }
-    .stTabs [data-baseweb="tab"]:nth-child(4)[aria-selected="true"] {
-        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
-    }
-    .stTabs [data-baseweb="tab"]:nth-child(5)[aria-selected="true"] {
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
-        color: white !important;
-        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
+        color: #ffffff !important;
+        border-color: #059669 !important;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
     }
 
-    /* Tiêu đề mục rõ ràng, đậm nét */
+    .stTabs [data-baseweb="tab"]:nth-child(2)[aria-selected="true"] {
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        color: #ffffff !important;
+        border-color: #1d4ed8 !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
+    }
+
+    .stTabs [data-baseweb="tab"]:nth-child(3)[aria-selected="true"] {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: #ffffff !important;
+        border-color: #d97706 !important;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4) !important;
+    }
+
+    .stTabs [data-baseweb="tab"]:nth-child(4)[aria-selected="true"] {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
+        color: #ffffff !important;
+        border-color: #6d28d9 !important;
+        box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4) !important;
+    }
+
+    .stTabs [data-baseweb="tab"]:nth-child(5)[aria-selected="true"] {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+        color: #ffffff !important;
+        border-color: #0369a1 !important;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
+    }
+
+    /* Tiêu đề mục */
     .section-title {
         font-size: 1.3rem;
         font-weight: 800;
@@ -109,7 +120,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU CHUẨN (DUNG LƯỢNG KHOẢNG 600 CHỮ)
+# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -314,7 +325,7 @@ BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
         }
 
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT TỰ ĐỘNG MÀU SẮC)
+# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT TỰ ĐỘNG BÔI MÀU)
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
