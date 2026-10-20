@@ -5,7 +5,7 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TABS BÔI MÀU NỔI BẬT KHI BẤM CHỌN
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & BÔI XANH ĐÚNG TAB BƯỚC ĐANG CHỌN
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -57,58 +57,30 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* Kiểu dáng Tab trạng thái bình thường */
+    /* Kiểu dáng Tab trạng thái bình thường (Chưa chọn - Màu xám chìm) */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         border-radius: 10px;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #475569;
+        color: #64748b;
         padding: 0 18px;
         border: 1px solid #e2e8f0;
         background-color: #f8fafc;
         transition: all 0.2s ease-in-out;
     }
 
-    /* Bôi màu nổi bật khi HỌC SINH BẤM CHỌN từng Bước */
-    .stTabs [data-baseweb="tab"]:nth-child(1)[aria-selected="true"] {
-        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+    /* BÔI XANH ĐẬM BẮT MẮT KHI BẤM CHỌN BẤT KỲ TAB NÀO */
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
         color: #ffffff !important;
-        border-color: #059669 !important;
-        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+        border-color: #2563eb !important;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
     }
 
-    .stTabs [data-baseweb="tab"]:nth-child(2)[aria-selected="true"] {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-        color: #ffffff !important;
-        border-color: #1d4ed8 !important;
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4) !important;
-    }
-
-    .stTabs [data-baseweb="tab"]:nth-child(3)[aria-selected="true"] {
-        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-        color: #ffffff !important;
-        border-color: #d97706 !important;
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4) !important;
-    }
-
-    .stTabs [data-baseweb="tab"]:nth-child(4)[aria-selected="true"] {
-        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
-        color: #ffffff !important;
-        border-color: #6d28d9 !important;
-        box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4) !important;
-    }
-
-    .stTabs [data-baseweb="tab"]:nth-child(5)[aria-selected="true"] {
-        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
-        color: #ffffff !important;
-        border-color: #0369a1 !important;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4) !important;
-    }
-
-    /* Tiêu đề mục */
+    /* Tiêu đề mục gọn gàng, không bị lặp chữ "Bước 1, 2, 3..." */
     .section-title {
-        font-size: 1.3rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: #0f172a;
         margin-bottom: 16px;
@@ -120,7 +92,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU
+# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU CHUẨN (KHOẢNG 600 CHỮ)
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -325,7 +297,7 @@ BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
         }
 
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT TỰ ĐỘNG BÔI MÀU)
+# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS TỰ ĐỘNG BÔI XANH KHI BẤM CHỌN)
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
