@@ -41,7 +41,7 @@ st.markdown("""
         border: none;
     }
 </style>
-""", unsafe_allow_syntax_hide=True)
+""", unsafe_allow_html=True)
 
 # ==============================================================================
 # 2. KHỞI TẠO TÀI NGUYÊN ĐỀ BÀI VÀ SESSION STATE
@@ -141,7 +141,6 @@ if st.button("📊 Khởi Tạo Báo Cáo Học Tập"):
     else:
         bai_viet_hien_thi = user_essay if user_essay.strip() else "(Chưa nhập bài viết)"
         
-        # ĐOẠN F-STRING ĐÃ ĐƯỢC CHỈNH SỬA CHUẨN XÁC 3 DẤU NGOẶC KÉP
         report_text = f"""BẢN BÁO CÁO HỌC TẬP – QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NLXH
 Học sinh: {student_name}
 Mức độ rèn luyện: {st.session_state.get('muc_tieu_hoc_tap', '')}
