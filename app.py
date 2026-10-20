@@ -5,7 +5,7 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH THIẾT KẾ GIAO DIỆN CAO CẤP (ADVANCED CSS & COLORFUL STATIONS)
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TABS MÀU SẮC TRỰC QUAN (NO DUPLICATION)
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -26,124 +26,90 @@ st.markdown("""
     /* Hero Banner Đỉnh Trang */
     .hero-banner {
         background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
-        padding: 30px 35px;
-        border-radius: 18px;
+        padding: 24px 30px;
+        border-radius: 16px;
         color: white;
-        box-shadow: 0 12px 24px -5px rgba(15, 23, 42, 0.2);
-        margin-bottom: 25px;
+        box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15);
+        margin-bottom: 22px;
     }
     
     .hero-title {
-        font-size: 2.1rem !important;
+        font-size: 2.0rem !important;
         font-weight: 800 !important;
         letter-spacing: -0.5px;
-        margin-bottom: 6px !important;
+        margin-bottom: 4px !important;
         color: #ffffff !important;
     }
     
     .hero-subtitle {
-        font-size: 1.05rem;
+        font-size: 1.0rem;
         color: #93c5fd;
         margin: 0;
     }
 
-    /* 4 Thanh Màu Nổi Bật Cho 4 Bước Học Tập */
-    .step-header-1 {
-        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-        color: white;
-        padding: 12px 22px;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
-        display: flex;
-        align-items: center;
-    }
-
-    .step-header-2 {
-        background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
-        color: white;
-        padding: 12px 22px;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
-    }
-
-    .step-header-3 {
-        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
-        color: white;
-        padding: 12px 22px;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
-    }
-
-    .step-header-4 {
-        background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);
-        color: white;
-        padding: 12px 22px;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
-    }
-
-    .step-header-5 {
-        background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%);
-        color: white;
-        padding: 12px 22px;
-        border-radius: 12px;
-        font-size: 1.2rem;
-        font-weight: 800;
-        margin-bottom: 18px;
-        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
-    }
-
-    /* Tối ưu hóa Tabs chính nổi bật */
+    /* Thiết kế Tabs Menu Màu Sắc Nổi Bật Ngay Từ Đầu */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 10px;
         background-color: #ffffff;
         padding: 8px;
         border-radius: 14px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        border: 1px solid #cbd5e1;
+        border: 1px solid #e2e8f0;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 50px;
+        height: 48px;
         border-radius: 10px;
         font-weight: 700;
         font-size: 0.95rem;
         color: #475569;
-        padding: 0 18px;
+        padding: 0 16px;
+        border: 1px solid #f1f5f9;
+        transition: all 0.2s ease;
     }
 
-    .stTabs [aria-selected="true"] {
-        background: #1e3a8a !important;
-        color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3) !important;
+    /* Màu riêng cho từng Tab khi được Active */
+    .stTabs [data-baseweb="tab"]:nth-child(1)[aria-selected="true"] {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
+    }
+    .stTabs [data-baseweb="tab"]:nth-child(2)[aria-selected="true"] {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+    }
+    .stTabs [data-baseweb="tab"]:nth-child(3)[aria-selected="true"] {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3) !important;
+    }
+    .stTabs [data-baseweb="tab"]:nth-child(4)[aria-selected="true"] {
+        background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3) !important;
+    }
+    .stTabs [data-baseweb="tab"]:nth-child(5)[aria-selected="true"] {
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%) !important;
+        color: white !important;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
     }
 
-    /* Card thông tin */
-    .custom-card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 18px 22px;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        margin-bottom: 15px;
+    /* Tiêu đề mục rõ ràng, đậm nét */
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU
+# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU CHUẨN (DUNG LƯỢNG KHOẢNG 600 CHỮ)
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -152,7 +118,7 @@ DE_BAI_DATA = {
 > *"Khi ta ở, chỉ là nơi đất ở  
 > Khi ta đi, đất đã hóa tâm hồn!"*
 
-Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (từ 600 đến 1000 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nay.""",
+Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nay.""",
         "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ.",
         "topic_tag": "Trách nhiệm – Cống hiến – Tình người",
         "explain_core": [
@@ -170,7 +136,7 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
     "Đề 02 (Cơ bản): Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
         "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa. Đó chính là ý nghĩa của cơn bão."* Nhưng để cùng nhau đi qua những 'cơn bão lòng', con người rất cần sự thấu hiểu.
 
-Hãy viết một bài văn nghị luận (từ 600 đến 1000 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
+Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
         "vdnl_chuan": "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa con người với con người trong xã hội hiện đại.",
         "topic_tag": "Thấu cảm – Lắng nghe – Hàn gắn",
         "explain_core": [
@@ -188,7 +154,7 @@ Hãy viết một bài văn nghị luận (từ 600 đến 1000 chữ) bàn về
     "Đề 03 (Cơ bản): Trách nhiệm giữ gìn bản sắc văn hóa dân tộc trong dòng chảy toàn cầu hóa": {
         "text": """Có ý kiến cho rằng: *"Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."*
 
-Viết bài văn nghị luận (từ 600 đến 1000 chữ) bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ hôm nay.""",
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ hôm nay.""",
         "vdnl_chuan": "Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ trong bối cảnh toàn cầu hóa.",
         "topic_tag": "Bản sắc văn hóa – Nguồn cội – Hội nhập",
         "explain_core": [
@@ -205,7 +171,7 @@ Viết bài văn nghị luận (từ 600 đến 1000 chữ) bàn về trách nhi
     "Đề 16 (Nâng cao): Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
         "text": """Có ý kiến cho rằng: *"Con sông nào cũng phải chảy qua ghềnh thác để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó sẽ hòa tan vào những con lạch nhỏ mà biến mất."*
 
-Viết bài văn nghị luận (từ 600 đến 1000 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực của số đông đối với người trẻ trong kỷ nguyên số.""",
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực của số đông đối với người trẻ trong kỷ nguyên số.""",
         "vdnl_chuan": "Bản lĩnh giữ gìn bản sắc riêng, chính kiến cá nhân trước áp lực của đám đông trong thời đại số.",
         "topic_tag": "Bản lĩnh – Tư duy độc lập – Bản sắc",
         "explain_core": [
@@ -225,23 +191,13 @@ for i in range(4, 31):
     if not any(k_name in k for k in DE_BAI_DATA.keys()):
         is_nc = "Nâng cao" if i >= 16 else "Cơ bản"
         DE_BAI_DATA[f"{k_name} ({is_nc}): Rèn luyện năng lực tư duy thực tiễn"] = {
-            "text": f"Hãy viết một bài văn nghị luận (từ 600 đến 1000 chữ) bàn về một phẩm chất sống hoặc vấn đề xã hội thiết thực của thanh niên hôm nay ({k_name}).",
+            "text": f"Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về một phẩm chất sống hoặc vấn đề xã hội thiết thực của thanh niên hôm nay ({k_name}).",
             "vdnl_chuan": f"Tư duy độc lập và trách nhiệm công dân của người trẻ ({k_name}).",
             "topic_tag": "Kỹ năng sống – Bản lĩnh",
             "explain_core": ["Làm rõ bản chất khái niệm then chốt trong đề bài và ý nghĩa định hướng đời sống."],
             "questions": [{"cau_hoi": "Vì sao vấn đề này có ý nghĩa với em?", "y_tra_loi": ["Giúp hoàn thiện tư duy và nhân cách sống."]}],
             "counter": ["Phê phán nhận thức lệch lạc và hành vi tiêu cực."]
         }
-
-KHO_DAN_CHUNG = {
-    "1. Lòng nhân ái – Trách nhiệm cộng đồng": [
-        {"nv": "Trưởng thôn Ma Seo Chứ (Lào Cai)", "nd": "Trong cơn bão số 3 (Yagi) năm 2024, bằng linh cảm nhạy bén và tinh thần trách nhiệm, anh đã di dời 115 người dân thôn Kho Vàng lên núi dựng lán trú ẩn an toàn trước khi sạt lở san phẳng làng xóm.", "nguon": "Báo Dân Trí, VTV (09/2024)"},
-        {"nv": "Bé Nguyễn Hải An (7 tuổi)", "nd": "Trước khi qua đời vì bệnh hiểm nghèo, bé và mẹ đã tình nguyện hiến tặng giác mạc mang lại ánh sáng cho 2 người khác, lan tỏa làn sóng đăng ký hiến tạng rộng khắp.", "nguon": "Báo VnExpress (2018)"}
-    ],
-    "2. Ý chí – Nghị lực – Vượt nghịch cảnh": [
-        {"nv": "Vận động viên Derek Redmond", "nd": "Bị rách gân khoeo gục ngã trên đường chạy bán kết 400m Olympic 1992, anh kiên quyết đứng dậy bước từng bước khập khiễng về đích trong sự nể phục của cả khán đài.", "nguon": "Olympic Channel"}
-    ]
-}
 
 # ==============================================================================
 # 3. KẾT NỐI GEMINI AI & SESSION STATE
@@ -251,6 +207,10 @@ if "gemini_api_key" not in st.session_state:
 
 if "last_selected_de" not in st.session_state:
     st.session_state["last_selected_de"] = ""
+if "custom_de_analyzed" not in st.session_state:
+    st.session_state["custom_de_analyzed"] = False
+if "custom_de_data" not in st.session_state:
+    st.session_state["custom_de_data"] = None
 
 def kiem_tra_va_reset_khi_doi_de(ten_de_moi):
     if st.session_state["last_selected_de"] != ten_de_moi:
@@ -276,11 +236,11 @@ with st.sidebar:
     if st.session_state["gemini_api_key"]:
         st.success("✅ Trợ lí Ngữ văn đã sẵn sàng")
     else:
-        st.info("💡 Hệ thống đang dùng Key ẩn (Secrets) hoặc chờ bạn dán Key.")
+        st.info("💡 Hệ thống đang dùng Key ẩn (Secrets) hoặc chờ dán Key.")
 
     st.markdown("---")
     st.markdown("### 📌 LỘ TRÌNH 4 BƯỚC")
-    st.write("1. **🌱 Bước 1:** Phân tích đề")
+    st.write("1. **🌱 Bước 1:** Phân tích đề & VĐNL")
     st.write("2. **🧵 Bước 2:** Lập dàn ý & AI tư vấn")
     st.write("3. **✍️ Bước 3:** Xưởng viết độc lập")
     st.write("4. **🔍 Bước 4:** AI Chấm điểm Rubric")
@@ -318,8 +278,43 @@ Trả về JSON:
     except Exception:
         return {"status": "LECH", "feedback": "Em hãy kiểm tra lại từ khóa chính trong đề.", "suggested_fix": vdnl_chuan}
 
+def ai_analyze_custom_exam(exam_text, student_guess=""):
+    prompt = f"""
+Bạn là chuyên gia Ngữ văn THPT GDPT 2018. Phân tích đề tự nhập: \"\"\"{exam_text}\"\"\".
+Học sinh phán đoán VĐNL là: \"{student_guess}\".
+
+BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
+{{
+  "status": "DUNG" | "LECH" | "SAI",
+  "teacher_evaluation": "Lời nhận xét thẩm định (xưng cô - em)",
+  "vdnl_chuan": "Vấn đề nghị luận chuẩn xác nhất",
+  "topic_tag": "Chủ điểm bài học",
+  "explain_core": ["Cắt nghĩa từ khóa 1", "Cắt nghĩa từ khóa 2"],
+  "questions": [
+     {{"cau_hoi": "Câu hỏi gợi mở 1", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}},
+     {{"cau_hoi": "Câu hỏi gợi mở 2", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}},
+     {{"cau_hoi": "Câu hỏi gợi mở 3", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}}
+  ],
+  "counter": ["Gợi ý phản biện / Lật lại vấn đề"]
+}}
+"""
+    raw_res = call_gemini_engine(prompt)
+    try:
+        match = re.search(r"\{.*\}", raw_res, re.DOTALL)
+        return json.loads(match.group(0)) if match else json.loads(raw_res)
+    except Exception:
+        return {
+            "status": "LECH",
+            "teacher_evaluation": "Cô nhận thấy em đã bước đầu nắm được đề nhưng cần đào sâu hơn.",
+            "vdnl_chuan": "Vấn đề nghị luận rút ra từ đề bài tự nhập",
+            "topic_tag": "Đề tự chọn",
+            "explain_core": ["Làm rõ các từ ngữ quan trọng trong đề."],
+            "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng?", "y_tra_loi": ["Ý nghĩa hoàn thiện nhân cách"]}],
+            "counter": ["Phê phán biểu hiện tiêu cực"]
+        }
+
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT)
+# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT TỰ ĐỘNG MÀU SẮC)
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
@@ -340,47 +335,115 @@ tabs = st.tabs([
 # BƯỚC 1: TÌM HIỂU ĐỀ
 # ------------------------------------------------------------------------------
 with tabs[0]:
-    st.markdown('<div class="step-header-1">🌱 BƯỚC 1: ĐỌC KỸ ĐỀ BÀI & XÁC ĐỊNH VẤN ĐỀ NGHỊ LUẬN CỐT LÕI</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🔍 Đọc Kỹ Đề Bài & Xác Định Vấn Đề Nghị Luận Cốt Lõi</div>', unsafe_allow_html=True)
     
-    col_de1, col_de2 = st.columns([1, 2], gap="medium")
-    with col_de1:
-        muc_do_de = st.radio("Dạng đề thi:", ["Đề cơ bản", "Đề nâng cao"], index=0)
-        filtered_de_keys = [k for k in DE_BAI_DATA.keys() if ("(Nâng cao)" if muc_do_de == "Đề nâng cao" else "(Cơ bản)") in k]
-        selected_de_key = st.selectbox("Chọn đề bài:", filtered_de_keys)
-        kiem_tra_va_reset_khi_doi_de(selected_de_key)
-        de_info = DE_BAI_DATA[selected_de_key]
+    muc_do_de = st.radio(
+        "Lựa chọn nguồn đề bài:",
+        ["Đề cơ bản", "Đề nâng cao", "Tự nhập đề bài riêng cần hỗ trợ"],
+        index=0,
+        horizontal=True
+    )
+    
+    if muc_do_de == "Tự nhập đề bài riêng cần hỗ trợ":
+        st.session_state["is_custom_de"] = True
+        custom_de_input = st.text_area(
+            "Dán toàn bộ đề bài em cần hỗ trợ vào đây:",
+            value=st.session_state.get("saved_custom_de_text", ""),
+            placeholder="Ví dụ: Đọc đoạn trích sau... Viết bài văn nghị luận bàn về...",
+            height=120
+        )
+        st.session_state["saved_custom_de_text"] = custom_de_input
         
-    with col_de2:
-        with st.container(border=True):
-            st.markdown("##### 📖 Đề bài đã chọn:")
-            st.info(de_info['text'].replace("**", ""))
-            
-    st.markdown("---")
-    student_vdnl = st.text_input("⚡ Thao tác học sinh: Xác định Vấn đề nghị luận cốt lõi của đề trên:", placeholder="Gõ câu trả lời của em ở đây...")
-    
-    if st.button("🔍 Kiểm tra Vấn đề Nghị luận với AI", type="primary"):
-        if student_vdnl.strip():
-            with st.spinner("AI đang thẩm định..."):
-                res = ai_evaluate_student_vdnl(de_info['text'], de_info['vdnl_chuan'], student_vdnl)
-                st.session_state["eval_vdnl_result"] = res
+        ten_de_hien_tai = "Đề tự nhập: " + (custom_de_input[:35] + "..." if len(custom_de_input) > 35 else custom_de_input)
+        if not custom_de_input.strip():
+            ten_de_hien_tai = "Đề tự nhập (Chưa có nội dung)"
+        kiem_tra_va_reset_khi_doi_de(ten_de_hien_tai)
+        
+        st.markdown("---")
+        student_vdnl = st.text_input("⚡ Thao tác học sinh: Xác định Vấn đề nghị luận cốt lõi theo ý hiểu của em:", placeholder="Gõ vấn đề nghị luận ở đây...")
+        
+        if st.button("🔍 Thẩm định Vấn đề nghị luận & Tạo giàn giáo Bước 2 cho đề này", type="primary"):
+            if not custom_de_input.strip():
+                st.warning("Em chưa dán đề bài vào ô phía trên!")
+            elif not student_vdnl.strip():
+                st.warning("Em hãy tự gõ phán đoán Vấn đề nghị luận trước nhé!")
+            else:
+                with st.spinner("AI đang đọc đề bài và tạo khung giàn giáo..."):
+                    analyzed = ai_analyze_custom_exam(custom_de_input, student_vdnl)
+                    st.session_state["custom_de_data"] = analyzed
+                    st.session_state["custom_de_analyzed"] = True
+                    st.session_state["eval_vdnl_result"] = {
+                        "status": analyzed.get("status", "LECH"),
+                        "feedback": analyzed.get("teacher_evaluation", ""),
+                        "suggested_fix": analyzed.get("vdnl_chuan", "")
+                    }
+                    
+        if st.session_state.get("custom_de_analyzed") and st.session_state.get("custom_de_data"):
+            data = st.session_state["custom_de_data"]
+            res = st.session_state.get("eval_vdnl_result", {})
+            if res.get("status") == "DUNG":
+                st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi:* {data['vdnl_chuan']}")
+            else:
+                st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {data['vdnl_chuan']}")
+                
+            de_info = {
+                "text": custom_de_input,
+                "vdnl_chuan": data["vdnl_chuan"],
+                "explain_core": data["explain_core"],
+                "questions": data["questions"],
+                "counter": data["counter"]
+            }
         else:
-            st.warning("Em chưa nhập câu trả lời!")
+            de_info = {
+                "text": custom_de_input if custom_de_input.strip() else "Chưa có nội dung đề bài.",
+                "vdnl_chuan": "Đề tự nhập",
+                "explain_core": ["Dán đề bài và bấm nút phân tích phía trên."],
+                "questions": [{"cau_hoi": "Câu hỏi gợi mở", "y_tra_loi": ["Đang chờ phân tích đề"]}],
+                "counter": ["Đang chờ phân tích đề"]
+            }
             
-    if st.session_state.get("eval_vdnl_result"):
-        res = st.session_state["eval_vdnl_result"]
-        if res.get("status") == "DUNG":
-            st.success(f"🎯 **ĐÚNG RỒI!** {res.get('feedback')}")
-        else:
-            st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:* {de_info['vdnl_chuan']}")
+    else:
+        st.session_state["is_custom_de"] = False
+        st.session_state["custom_de_analyzed"] = False
+        
+        col_de1, col_de2 = st.columns([1, 2], gap="medium")
+        with col_de1:
+            filtered_de_keys = [k for k in DE_BAI_DATA.keys() if ("(Nâng cao)" if muc_do_de == "Đề nâng cao" else "(Cơ bản)") in k]
+            selected_de_key = st.selectbox("Chọn đề bài có sẵn trong thư viện:", filtered_de_keys)
+            kiem_tra_va_reset_khi_doi_de(selected_de_key)
+            de_info = DE_BAI_DATA[selected_de_key]
+            
+        with col_de2:
+            with st.container(border=True):
+                st.markdown("##### 📖 Nội dung đề bài:")
+                st.info(de_info['text'].replace("**", ""))
+                
+        st.markdown("---")
+        student_vdnl = st.text_input("⚡ Thao tác học sinh: Xác định Vấn đề nghị luận cốt lõi của đề trên:", placeholder="Gõ câu trả lời của em ở đây...")
+        
+        if st.button("🔍 Đối chiếu Vấn đề Nghị luận với AI", type="primary"):
+            if student_vdnl.strip():
+                with st.spinner("AI đang thẩm định..."):
+                    res = ai_evaluate_student_vdnl(de_info['text'], de_info['vdnl_chuan'], student_vdnl)
+                    st.session_state["eval_vdnl_result"] = res
+            else:
+                st.warning("Em chưa nhập câu trả lời!")
+                
+        if st.session_state.get("eval_vdnl_result"):
+            res = st.session_state["eval_vdnl_result"]
+            if res.get("status") == "DUNG":
+                st.success(f"🎯 **ĐÚNG RỒI!** {res.get('feedback')}")
+            else:
+                st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:* {de_info['vdnl_chuan']}")
 
     st.session_state["current_de_info"] = de_info
-    st.session_state["current_de_key"] = selected_de_key
+    st.session_state["current_de_key"] = selected_de_key if muc_do_de != "Tự nhập đề bài riêng cần hỗ trợ" else ten_de_hien_tai
 
 # ------------------------------------------------------------------------------
 # BƯỚC 2: TÌM Ý & LẬP DÀN Ý
 # ------------------------------------------------------------------------------
 with tabs[1]:
-    st.markdown('<div class="step-header-2">🧵 BƯỚC 2: XÂY DỰNG HỆ THỐNG LUẬN ĐIỂM & TỰ HOÀN THIỆN DÀN Ý</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🧵 Xây Dựng Hệ Thống Luận Điểm & Tự Hoàn Thiện Dàn Ý</div>', unsafe_allow_html=True)
     cur_de_info = st.session_state.get("current_de_info", DE_BAI_DATA[list(DE_BAI_DATA.keys())[0]])
     
     c_left, c_right = st.columns([1.2, 0.8], gap="large")
@@ -420,13 +483,13 @@ with tabs[1]:
 # BƯỚC 3: VIẾT BÀI
 # ------------------------------------------------------------------------------
 with tabs[2]:
-    st.markdown('<div class="step-header-3">✍️ BƯỚC 3: XƯỞNG VIẾT ĐỘC LẬP (DUNG LƯỢNG 600 - 1000 CHỮ)</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">✍️ Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
     c_v1, c_v2 = st.columns([1.3, 0.7], gap="medium")
     with c_v1:
-        essay_in = st.text_area("✍️ Nhập bài văn hoàn chỉnh của em:", value=st.session_state.get("user_essay", ""), height=400)
+        essay_in = st.text_area("✍️ Nhập bài văn hoàn chỉnh của em:", value=st.session_state.get("user_essay", ""), height=400, placeholder="Viết bài văn hoàn chỉnh dựa trên dàn ý đã lập...")
         st.session_state["user_essay"] = essay_in
         w_cnt = len(essay_in.strip().split()) if essay_in.strip() else 0
-        st.metric("Số từ đã viết", f"{w_cnt} chữ", delta="Đạt chuẩn" if 600 <= w_cnt <= 1000 else "Cần 600-1000 chữ")
+        st.metric("Số từ đã viết", f"{w_cnt} chữ")
 
     with c_v2:
         st.markdown("##### 💡 Dàn ý đối chiếu:")
@@ -436,7 +499,7 @@ with tabs[2]:
 # BƯỚC 4: CHỈNH SỬA & ĐÁNH GIÁ
 # ------------------------------------------------------------------------------
 with tabs[3]:
-    st.markdown('<div class="step-header-4">🔍 BƯỚC 4: GIÁM KHẢO AI CHẤM ĐIỂM THEO BẢNG RUBRIC 10 ĐIỂM</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🔍 Giám Khảo AI Chấm Điểm Theo Bảng Rubric 10 Điểm</div>', unsafe_allow_html=True)
     if st.button("🚀 AI Bắt Đầu Chấm Điểm & Phản Hồi Bài Viết", type="primary"):
         essay_text = st.session_state.get("user_essay", "").strip()
         if not essay_text:
@@ -460,10 +523,10 @@ Xuất kết quả gồm:
         st.markdown(st.session_state["grading_result"])
 
 # ------------------------------------------------------------------------------
-# HỒ SƠ BÀI LÀM (SỬA HOÀN TOÀN LỖI HIỂN THỊ JSON)
+# HỒ SƠ BÀI LÀM
 # ------------------------------------------------------------------------------
 with tabs[4]:
-    st.markdown('<div class="step-header-5">📁 HỒ SƠ BÀI LÀM & TỔNG KẾT TIẾN TRÌNH HỌC TẬP</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📁 Hồ Sơ Bài Làm & Tổng Kết Tiến Trình Học Tập</div>', unsafe_allow_html=True)
     
     student_name = st.text_input("Họ và tên học sinh:", placeholder="Ví dụ: Nguyễn Văn An - Lớp 12A1")
     
@@ -472,7 +535,6 @@ with tabs[4]:
     user_essay = st.session_state.get("user_essay", "Chưa viết bài")
     grading_result = st.session_state.get("grading_result", "Chưa thực hiện chấm điểm ở Bước 4")
     
-    # Tạo văn bản báo cáo chuẩn sư phạm
     report_text = f"""BẢN BÁO CÁO HỌC TẬP - QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NGHỊ LUẬN XÃ HỘI
 Học sinh: {student_name if student_name else 'Học sinh chưa điền tên'}
 Đề bài thực hiện: {current_de}
