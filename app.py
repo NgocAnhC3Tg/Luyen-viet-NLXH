@@ -5,7 +5,7 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH TRANG WEB VÀ GIAO DIỆN SỰ PHẠM (CSS NGUYÊN BẢN)
+# 1. CẤU HÌNH TRANG WEB VÀ GIAO DIỆN SỰ PHẠM (CSS MÔ HÌNH 4 TRẠM)
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -208,7 +208,7 @@ Hãy nhận xét chi tiết ưu điểm, hạn chế, chấm điểm trên thang
                 response_cham = client.models.generate_content(model="gemini-2.5-flash", contents=prompt_cham)
                 ai_feedback = response_cham.text
 
-            # ĐOẠN REPORT TEXT ĐÃ ĐƯỢC CHỈNH SỬA CHUẨN XÁC CÚ PHÁP
+            # ĐOẠN F-STRING ĐÃ ĐƯỢC CHỈNH SỬA CHUẨN XÁC VỚI 3 DẤU NGOẶC KÉP
             report_text = f"""BẢN BÁO CÁO HỌC TẬP & ĐÁNH GIÁ TỰ ĐỘNG BẰNG AI
 Học sinh: {student_name}
 Mức độ rèn luyện: {muc_tieu}
