@@ -5,10 +5,10 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH THIẾT KẾ GIAO DIỆN CAO CẤP (CUSTOM CSS & STREAMLIT THEME)
+# 1. CẤU HÌNH THIẾT KẾ GIAO DIỆN CAO CẤP (ADVANCED CSS & COLORFUL STATIONS)
 # ==============================================================================
 st.set_page_config(
-    page_title="Hệ Thống Rèn Luyện Văn NLXH 4.0",
+    page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -16,7 +16,7 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -26,77 +26,118 @@ st.markdown("""
     /* Hero Banner Đỉnh Trang */
     .hero-banner {
         background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
-        padding: 36px 40px;
-        border-radius: 20px;
+        padding: 30px 35px;
+        border-radius: 18px;
         color: white;
-        box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15);
-        margin-bottom: 30px;
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 12px 24px -5px rgba(15, 23, 42, 0.2);
+        margin-bottom: 25px;
     }
     
     .hero-title {
         font-size: 2.1rem !important;
         font-weight: 800 !important;
         letter-spacing: -0.5px;
-        margin-bottom: 8px !important;
+        margin-bottom: 6px !important;
         color: #ffffff !important;
     }
     
     .hero-subtitle {
         font-size: 1.05rem;
         color: #93c5fd;
-        font-weight: 400;
         margin: 0;
     }
 
-    /* Tối ưu hóa Tabs */
+    /* 4 Thanh Màu Nổi Bật Cho 4 Bước Học Tập */
+    .step-header-1 {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        color: white;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        display: flex;
+        align-items: center;
+    }
+
+    .step-header-2 {
+        background: linear-gradient(90deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+    }
+
+    .step-header-3 {
+        background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+    }
+
+    .step-header-4 {
+        background: linear-gradient(90deg, #8b5cf6 0%, #6d28d9 100%);
+        color: white;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.25);
+    }
+
+    .step-header-5 {
+        background: linear-gradient(90deg, #0284c7 0%, #0369a1 100%);
+        color: white;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-size: 1.2rem;
+        font-weight: 800;
+        margin-bottom: 18px;
+        box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+    }
+
+    /* Tối ưu hóa Tabs chính nổi bật */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
+        gap: 8px;
         background-color: #ffffff;
-        padding: 10px;
-        border-radius: 16px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e2e8f0;
+        padding: 8px;
+        border-radius: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        border: 1px solid #cbd5e1;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 52px;
-        border-radius: 12px;
+        height: 50px;
+        border-radius: 10px;
         font-weight: 700;
         font-size: 0.95rem;
-        color: #64748b;
-        padding: 0 20px;
-        border: none !important;
+        color: #475569;
+        padding: 0 18px;
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+        background: #1e3a8a !important;
         color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3) !important;
     }
 
-    /* Card thông tin phong cách Glassmorphism */
+    /* Card thông tin */
     .custom-card {
         background: #ffffff;
-        border-radius: 16px;
-        padding: 24px;
+        border-radius: 12px;
+        padding: 18px 22px;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
-        margin-bottom: 20px;
-    }
-
-    /* Badge Trạng Thái */
-    .badge-step {
-        background-color: #eff6ff;
-        color: #1d4ed8;
-        font-size: 0.85rem;
-        font-weight: 700;
-        padding: 6px 14px;
-        border-radius: 9999px;
-        border: 1px solid #bfdbfe;
-        display: inline-block;
-        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        margin-bottom: 15px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -235,19 +276,19 @@ with st.sidebar:
     if st.session_state["gemini_api_key"]:
         st.success("✅ Trợ lí Ngữ văn đã sẵn sàng")
     else:
-        st.info("💡 Hệ thống đang chạy bằng API Key ẩn hoặc chờ bạn nhập Key.")
+        st.info("💡 Hệ thống đang dùng Key ẩn (Secrets) hoặc chờ bạn dán Key.")
 
     st.markdown("---")
     st.markdown("### 📌 LỘ TRÌNH 4 BƯỚC")
-    st.write("1. **🌱 Tìm hiểu đề:** Nhận diện cốt lõi")
-    st.write("2. **🧵 Tìm ý:** Dàn ý & Trợ lý AI")
-    st.write("3. **✍️ Viết bài:** Xưởng viết độc lập")
-    st.write("4. **🔍 Đánh giá:** Chấm điểm Rubric")
+    st.write("1. **🌱 Bước 1:** Phân tích đề")
+    st.write("2. **🧵 Bước 2:** Lập dàn ý & AI tư vấn")
+    st.write("3. **✍️ Bước 3:** Xưởng viết độc lập")
+    st.write("4. **🔍 Bước 4:** AI Chấm điểm Rubric")
 
 def call_gemini_engine(prompt_or_contents):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
-        return "[Thông báo]: Chưa nhận được API Key. Vui lòng kiểm tra lại cấu hình Key."
+        return "[Thông báo]: Chưa nhận được API Key. Vui lòng kiểm tra lại mã Key."
 
     client = genai.Client(api_key=api_key)
     models_to_try = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest"]
@@ -278,12 +319,12 @@ Trả về JSON:
         return {"status": "LECH", "feedback": "Em hãy kiểm tra lại từ khóa chính trong đề.", "suggested_fix": vdnl_chuan}
 
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS)
+# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS NỔI BẬT)
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-title">🖊️ QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NLXH</div>
-    <div class="hero-subtitle">Phát triển năng lực viết văn theo định hướng GDPT 2018 | Tích hợp Trợ lý AI Đánh giá cởi mở</div>
+    <div class="hero-subtitle">Phát triển năng lực viết văn theo định hướng GDPT 2018 | Trợ lý AI định hướng phương pháp</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -291,13 +332,15 @@ tabs = st.tabs([
     "🌱 BƯỚC 1: TÌM HIỂU ĐỀ",
     "🧵 BƯỚC 2: TÌM Ý & DÀN Ý",
     "✍️ BƯỚC 3: VIẾT BÀI",
-    "🔍 BƯỚC 4: CHỈNH SỬA & ĐÁNH GIÁ",
+    "🔍 BƯỚC 4: ĐÁNH GIÁ RUBRIC",
     "📁 HỒ SƠ BÀI LÀM"
 ])
 
+# ------------------------------------------------------------------------------
 # BƯỚC 1: TÌM HIỂU ĐỀ
+# ------------------------------------------------------------------------------
 with tabs[0]:
-    st.markdown('<span class="badge-step">BƯỚC 1: TÌM HIỂU ĐỀ</span>', unsafe_allow_html=True)
+    st.markdown('<div class="step-header-1">🌱 BƯỚC 1: ĐỌC KỸ ĐỀ BÀI & XÁC ĐỊNH VẤN ĐỀ NGHỊ LUẬN CỐT LÕI</div>', unsafe_allow_html=True)
     
     col_de1, col_de2 = st.columns([1, 2], gap="medium")
     with col_de1:
@@ -333,9 +376,11 @@ with tabs[0]:
     st.session_state["current_de_info"] = de_info
     st.session_state["current_de_key"] = selected_de_key
 
-# BƯỚC 2: TÌM Ý & DÀN Ý
+# ------------------------------------------------------------------------------
+# BƯỚC 2: TÌM Ý & LẬP DÀN Ý
+# ------------------------------------------------------------------------------
 with tabs[1]:
-    st.markdown('<span class="badge-step">BƯỚC 2: TÌM Ý & LẬP DÀN Ý</span>', unsafe_allow_html=True)
+    st.markdown('<div class="step-header-2">🧵 BƯỚC 2: XÂY DỰNG HỆ THỐNG LUẬN ĐIỂM & TỰ HOÀN THIỆN DÀN Ý</div>', unsafe_allow_html=True)
     cur_de_info = st.session_state.get("current_de_info", DE_BAI_DATA[list(DE_BAI_DATA.keys())[0]])
     
     c_left, c_right = st.columns([1.2, 0.8], gap="large")
@@ -353,7 +398,7 @@ with tabs[1]:
                     
         st.markdown("#### 📝 Dàn Ý Của Em")
         default_outline = f"I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề: {cur_de_info['vdnl_chuan']}\n\nII. THÂN BÀI:\n1. Giải thích:\n2. Bàn luận:\n3. Dẫn chứng:\n4. Phản biện:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"
-        user_outline = st.text_area("Hoàn thiện dàn ý:", value=st.session_state.get("user_outline") or default_outline, height=250)
+        user_outline = st.text_area("Hoàn thiện dàn ý 3 phần:", value=st.session_state.get("user_outline") or default_outline, height=250)
         st.session_state["user_outline"] = user_outline
 
     with c_right:
@@ -371,12 +416,14 @@ with tabs[1]:
             st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
             st.rerun()
 
+# ------------------------------------------------------------------------------
 # BƯỚC 3: VIẾT BÀI
+# ------------------------------------------------------------------------------
 with tabs[2]:
-    st.markdown('<span class="badge-step">BƯỚC 3: VIẾT BÀI</span>', unsafe_allow_html=True)
+    st.markdown('<div class="step-header-3">✍️ BƯỚC 3: XƯỞNG VIẾT ĐỘC LẬP (DUNG LƯỢNG 600 - 1000 CHỮ)</div>', unsafe_allow_html=True)
     c_v1, c_v2 = st.columns([1.3, 0.7], gap="medium")
     with c_v1:
-        essay_in = st.text_area("✍️ Nhập bài văn hoàn chỉnh của em (600 - 1000 chữ):", value=st.session_state.get("user_essay", ""), height=400)
+        essay_in = st.text_area("✍️ Nhập bài văn hoàn chỉnh của em:", value=st.session_state.get("user_essay", ""), height=400)
         st.session_state["user_essay"] = essay_in
         w_cnt = len(essay_in.strip().split()) if essay_in.strip() else 0
         st.metric("Số từ đã viết", f"{w_cnt} chữ", delta="Đạt chuẩn" if 600 <= w_cnt <= 1000 else "Cần 600-1000 chữ")
@@ -385,10 +432,12 @@ with tabs[2]:
         st.markdown("##### 💡 Dàn ý đối chiếu:")
         st.info(st.session_state.get("user_outline", "Chưa có dàn ý."))
 
+# ------------------------------------------------------------------------------
 # BƯỚC 4: CHỈNH SỬA & ĐÁNH GIÁ
+# ------------------------------------------------------------------------------
 with tabs[3]:
-    st.markdown('<span class="badge-step">BƯỚC 4: ĐÁNH GIÁ RUBRIC</span>', unsafe_allow_html=True)
-    if st.button("🚀 AI Chấm Điểm & Phản Hồi Bài Viết", type="primary"):
+    st.markdown('<div class="step-header-4">🔍 BƯỚC 4: GIÁM KHẢO AI CHẤM ĐIỂM THEO BẢNG RUBRIC 10 ĐIỂM</div>', unsafe_allow_html=True)
+    if st.button("🚀 AI Bắt Đầu Chấm Điểm & Phản Hồi Bài Viết", type="primary"):
         essay_text = st.session_state.get("user_essay", "").strip()
         if not essay_text:
             st.warning("Em chưa nhập bài viết ở Bước 3!")
@@ -400,7 +449,7 @@ Bạn là Giám khảo chấm thi Ngữ văn THPT GDPT 2018. Chấm bài văn sa
 Bài làm học sinh: {essay_text}
 
 Xuất kết quả gồm:
-1. Bảng điểm Rubric chi tiết Markdown.
+1. BẢNG ĐÁNH GIÁ CHI TIẾT THEO RUBRIC (Bắt buộc dùng Bảng Markdown).
 2. Ưu điểm nổi bật.
 3. Hạn chế & Câu hỏi gợi mở để học sinh TỰ VIẾT LẠI (không viết mẫu hộ).
 """
@@ -410,13 +459,44 @@ Xuất kết quả gồm:
     if st.session_state.get("grading_result"):
         st.markdown(st.session_state["grading_result"])
 
-# BƯỚC 5: HỒ SƠ BÀI LÀM
+# ------------------------------------------------------------------------------
+# HỒ SƠ BÀI LÀM (SỬA HOÀN TOÀN LỖI HIỂN THỊ JSON)
+# ------------------------------------------------------------------------------
 with tabs[4]:
-    st.markdown('<span class="badge-step">📁 HỒ SƠ BÀI LÀM</span>', unsafe_allow_html=True)
-    st.subheader("Báo Cáo Tiến Trình Học Tập")
-    st.json({
-        "Đề bài": st.session_state.get("current_de_key"),
-        "Dàn ý": st.session_state.get("user_outline"),
-        "Nội dung bài viết": st.session_state.get("user_essay"),
-        "Đánh giá AI": st.session_state.get("grading_result", "Chưa chấm điểm")
-    })
+    st.markdown('<div class="step-header-5">📁 HỒ SƠ BÀI LÀM & TỔNG KẾT TIẾN TRÌNH HỌC TẬP</div>', unsafe_allow_html=True)
+    
+    student_name = st.text_input("Họ và tên học sinh:", placeholder="Ví dụ: Nguyễn Văn An - Lớp 12A1")
+    
+    current_de = st.session_state.get("current_de_key", "Chưa chọn đề bài")
+    user_outline = st.session_state.get("user_outline", "Chưa lập dàn ý")
+    user_essay = st.session_state.get("user_essay", "Chưa viết bài")
+    grading_result = st.session_state.get("grading_result", "Chưa thực hiện chấm điểm ở Bước 4")
+    
+    # Tạo văn bản báo cáo chuẩn sư phạm
+    report_text = f"""BẢN BÁO CÁO HỌC TẬP - QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NGHỊ LUẬN XÃ HỘI
+Học sinh: {student_name if student_name else 'Học sinh chưa điền tên'}
+Đề bài thực hiện: {current_de}
+================================================================================
+1. DÀN Ý 3 PHẦN ĐÃ LẬP (BƯỚC 2):
+{user_outline}
+
+================================================================================
+2. BÀI VĂN NGHỊ LUẬN HOÀN CHỈNH (BƯỚC 3):
+{user_essay}
+
+================================================================================
+3. KẾT QUẢ ĐÁNH GIÁ & CHẤM ĐIỂM TỰ ĐỘNG THEO RUBRIC (BƯỚC 4):
+{grading_result}
+"""
+
+    st.markdown("##### 📄 Xem trước bản báo cáo học tập:")
+    st.text_area("Nội dung báo cáo chi tiết:", value=report_text, height=350)
+    
+    file_student_name = student_name.replace(" ", "_") if student_name.strip() else "Hoc_sinh"
+    st.download_button(
+        label="📥 Tải xuống Báo cáo học tập (.txt)",
+        data=report_text,
+        file_name=f"Bao_cao_hoc_tap_{file_student_name}.txt",
+        mime="text/plain",
+        type="primary"
+    )
