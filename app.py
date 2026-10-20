@@ -5,7 +5,7 @@ from google import genai
 from PIL import Image
 
 # ==============================================================================
-# CẤU HÌNH TRANG WEB VÀ GIAO DIỆN SƯ PHẠM
+# CẤU HÌNH TRANG WEB VÀ TỐI ƯU GIAO DIỆN SƯ PHẠM ĐẸP MẮT (ADVANCED CSS)
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -16,41 +16,93 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-    .main-header {
-        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-        color: white;
-        padding: 24px 30px;
-        border-radius: 12px;
-        margin-bottom: 25px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    /* 1. Nhập phông chữ Inter chuyên nghiệp */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif;
     }
+
+    /* 2. Banner chính (Header) nổi bật */
+    .main-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1a73e8 100%);
+        color: white;
+        padding: 32px 35px;
+        border-radius: 16px;
+        margin-bottom: 28px;
+        box-shadow: 0 10px 25px rgba(30, 60, 114, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* 3. Thẻ bước (Step Badge) bo tròn mềm mại */
     .step-badge {
-        background-color: #e8f0fe;
+        background: #e8f0fe;
         color: #1a73e8;
         font-weight: 700;
-        padding: 6px 14px;
-        border-radius: 20px;
+        padding: 6px 16px;
+        border-radius: 30px;
         display: inline-block;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         font-size: 0.88rem;
         border: 1px solid #c2e7ff;
+        letter-spacing: 0.3px;
     }
+    
+    /* 4. Thẻ khối nội dung (Cards) đổ bóng hiện đại */
     .step-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        padding: 18px 20px;
-        margin-bottom: 18px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        border-radius: 12px;
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+    .step-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    /* 5. Card hướng dẫn chuyển bước tiếp theo */
     .next-step-card {
-        background: linear-gradient(135deg, #f0f7ff 0%, #e6f0fa 100%);
+        background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
         border: 2px dashed #1a73e8;
-        border-radius: 14px;
-        padding: 22px 25px;
-        margin-top: 25px;
+        border-radius: 16px;
+        padding: 26px 30px;
+        margin-top: 28px;
         text-align: center;
-        box-shadow: 0 4px 12px rgba(26, 115, 232, 0.08);
+        box-shadow: 0 6px 18px rgba(26, 115, 232, 0.06);
+    }
+
+    /* 6. Tối ưu Tabs điều hướng chính */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 8px;
+        background-color: #f8fafc;
+        padding: 8px 10px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 48px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #475569;
+        padding: 0 18px;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background-color: #ffffff !important;
+        color: #1a73e8 !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    }
+
+    /* 7. Nút bấm tương tác */
+    .stButton > button {
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.2s ease-in-out;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -133,7 +185,6 @@ Viết bài văn nghị luận (từ 600 đến 1000 chữ) bàn về bản lĩn
     }
 }
 
-# Tự động nạp bổ sung các đề khác từ 04 đến 30
 for i in range(4, 31):
     k_name = f"Đề {i:02d}"
     if not any(k_name in k for k in DE_BAI_DATA.keys()):
@@ -312,8 +363,10 @@ KHO_DAN_CHUNG = {
 # ==============================================================================
 # QUẢN LÝ SESSION STATE & DỌN DẸP KHI ĐỔI ĐỀ
 # ==============================================================================
+# Tự động lấy Key từ Streamlit Secrets nếu có sẵn
 if "gemini_api_key" not in st.session_state:
-    st.session_state["gemini_api_key"] = ""
+    st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
+
 if "last_selected_de" not in st.session_state:
     st.session_state["last_selected_de"] = ""
 if "custom_de_analyzed" not in st.session_state:
@@ -338,7 +391,7 @@ def kiem_tra_va_reset_khi_doi_de(ten_de_moi):
 with st.sidebar:
     st.header("🔑 Kích Hoạt Trợ Lý AI")
     st.text_input(
-        "Dán Gemini API Key vào đây:",
+        "Dán Gemini API Key vào đây (nếu có):",
         type="password",
         key="api_key_field",
         value=st.session_state["gemini_api_key"],
@@ -384,7 +437,6 @@ def call_gemini_engine(prompt_or_contents):
     return f"[Lỗi kết nối]: {last_error}\n\nHãy kiểm tra lại mã API Key ở cột bên trái nhé!"
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
-    """Giáo viên AI thẩm định công tâm phán đoán VĐNL của học sinh (phân 3 mức DUNG, LECH, SAI)"""
     prompt = f"""
 Bạn là Giám khảo chấm thi môn Ngữ văn THPT theo định hướng GDPT 2018.
 - Đề bài: {exam_text}
@@ -421,7 +473,6 @@ BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
         }
 
 def ai_analyze_custom_exam(exam_text, student_guess=""):
-    """Phân tích tự động đề tự nhập của học sinh, thẩm định VĐNL và tự sinh giàn giáo Bước 2"""
     prompt = f"""
 Bạn là chuyên gia giáo dục Ngữ văn THPT định hướng GDPT 2018.
 Học sinh tự mang đến một đề bài Nghị luận xã hội mới:
@@ -512,8 +563,8 @@ NGUYÊN TẮC TƯ VẤN SƯ PHẠM:
 # ==============================================================================
 st.markdown("""
 <div class="main-header">
-    <h2 style="margin:0; font-size:1.85rem; font-weight:800;">QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NGHỊ LUẬN XÃ HỘI</h2>
-    <p style="margin:8px 0 0 0; opacity:0.92; font-size:1.02rem;">
+    <h2 style="margin:0; font-size:1.95rem; font-weight:800; letter-spacing:-0.5px;">QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NGHỊ LUẬN XÃ HỘI</h2>
+    <p style="margin:10px 0 0 0; opacity:0.95; font-size:1.05rem; font-weight:400;">
         Phát triển năng lực tạo lập văn bản theo định hướng GDPT 2018 | Rèn luyện tư duy độc lập – Trợ lí AI định hướng phương pháp
     </p>
 </div>
@@ -703,14 +754,12 @@ with tabs[1]:
     with col_left:
         st.markdown("#### 🛠️ Các Bước Tư Duy & Tìm Ý")
         
-        # THAO TÁC 1: GIẢI THÍCH (TỰ ĐỘNG THEO ĐỀ)
         with st.expander("📌 Thao tác 1: Làm rõ bản chất vấn đề nghị luận", expanded=True):
             st.markdown("*Định hướng sư phạm: Cắt nghĩa từ khóa then chốt để trả lời câu hỏi 'Vấn đề này thực chất là gì?'*")
             for item in cur_de_info.get("explain_core", []):
                 st.markdown(f"- {item}")
             st.markdown(f"👉 **Chốt lại Vấn đề nghị luận (VĐNL):** *{cur_de_info['vdnl_chuan']}*")
                 
-        # THAO TÁC 2: BÀN LUẬN & LÀM SÁNG TỎ (TỰ ĐỘNG THEO ĐỀ)
         with st.expander("💡 Thao tác 2: Bàn luận & Làm sáng tỏ vấn đề", expanded=True):
             st.markdown("*Gợi ý 3 trục câu hỏi bản chất sát với đề bài (Em hãy tham khảo để phát triển ý):*")
             for q in cur_de_info.get("questions", []):
@@ -719,13 +768,11 @@ with tabs[1]:
                     st.markdown(f"- {item}")
                 st.write("")
                 
-        # THAO TÁC 3: PHẢN BIỆN & LẬT NGƯỢC VẤN ĐỀ
         with st.expander("🔄 Thao tác 3: Mở rộng vấn đề (Phản biện đa chiều)", expanded=False):
             st.markdown("*Gợi ý hướng lật lại vấn đề để bài viết có chiều sâu:*")
             for c in cur_de_info.get("counter", []):
                 st.markdown(f"- {c}")
                 
-        # THAO TÁC 4: KHO DẪN CHỨNG
         with st.expander("📚 Thao tác 4: Kho dẫn chứng chọn lọc (8 nhóm chủ điểm)", expanded=False):
             selected_topic = st.selectbox("Chọn chủ điểm dẫn chứng cần tra cứu:", list(KHO_DAN_CHUNG.keys()))
             for dc in KHO_DAN_CHUNG[selected_topic]:
@@ -737,7 +784,6 @@ with tabs[1]:
                 </div>
                 """, unsafe_allow_html=True)
                 
-        # KHUNG LẬP DÀN Ý 3 PHẦN CHỈNH THỂ
         st.markdown("#### 📝 Khung Lập Dàn Ý Hoàn Chỉnh (Học sinh tự điền nội dung)")
         default_outline = f"""I. MỞ BÀI:
 - Ý định dẫn dắt của em:
