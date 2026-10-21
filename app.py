@@ -35,14 +35,8 @@ st.markdown("""
         font-size: 2.0rem !important;
         font-weight: 800 !important;
         letter-spacing: -0.5px;
-        margin-bottom: 4px !important;
+        margin-bottom: 0px !important;
         color: #ffffff !important;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.0rem;
-        color: #93c5fd;
-        margin: 0;
     }
 
     .stTabs [data-baseweb="tab-list"] {
@@ -73,10 +67,10 @@ st.markdown("""
     }
 
     .section-title {
-        font-size: 1.2rem;
+        font-size: 1.25rem;
         font-weight: 800;
         color: #0f172a;
-        margin-bottom: 14px;
+        margin-bottom: 16px;
     }
     
     .evidence-box {
@@ -91,7 +85,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. KHO 30 ĐỀ THI CHUẨN ĐẦY ĐỦ 100% (KHÔNG CẮT GỌT)
+# 2. KHO 30 ĐỀ THI CHUẨN ĐẦY ĐỦ 100%
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -482,7 +476,7 @@ KHO_DAN_CHUNG_8_CHU_DIEM = {
 }
 
 # ==============================================================================
-# 4. KẾT NỐI GEMINI AI (NGUYÊN TẮC: KHÔNG LÀM HỘ, CHỈ ĐỊNH HƯỚNG)
+# 4. KẾT NỐI GEMINI AI
 # ==============================================================================
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
@@ -505,6 +499,7 @@ def reset_de_data(ten_de_moi):
         if "grading_result" in st.session_state:
             del st.session_state["grading_result"]
 
+# Cấu hình thanh Sidebar
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     st.text_input(
@@ -520,9 +515,11 @@ with st.sidebar:
         st.info("💡 Hệ thống chờ nhập Key hoặc dùng Secrets.")
 
     st.markdown("---")
-    st.markdown("### 📌 NGUYÊN TẮC SƯ PHẠM")
-    st.write("- 🚫 **Không làm hộ / Không viết hộ văn mẫu.**")
-    st.write("- 🧭 **Chỉ đặt câu hỏi gợi mở, hướng dẫn phương pháp.**")
+    st.markdown("### 📌 4 BƯỚC TẠO LẬP VĂN BẢN")
+    st.write("1. **🌱 Bước 1:** Tìm hiểu đề bài & Xác định VĐNL")
+    st.write("2. **🧵 Bước 2:** Tìm ý, Lập dàn ý & Tra cứu dẫn chứng")
+    st.write("3. **✍️ Bước 3:** Thực hành viết bài độc lập")
+    st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
 
 def call_gemini_engine(prompt_or_contents):
     api_key = st.session_state.get("gemini_api_key", "").strip()
@@ -601,13 +598,12 @@ Trả về JSON duy nhất:
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-title">🖊️ QUY TRÌNH 4 BƯỚC TẠO LẬP BÀI VĂN NLXH</div>
-    <div class="hero-subtitle">Ngân hàng 30 Đề phân hóa | Kho dẫn chứng 8 chủ điểm chi tiết | Trợ lý AI định hướng phương pháp</div>
 </div>
 """, unsafe_allow_html=True)
 
 tabs = st.tabs([
     "🌱 BƯỚC 1: TÌM HIỂU ĐỀ",
-    "🧵 BƯỚC 2: TÌM Ý & KHO DẪN CHỨNG",
+    "🧵 BƯỚC 2: TÌM Ý, LẬP DÀN Ý & CẢM NHẬN DẪN CHỨNG",
     "✍️ BƯỚC 3: XƯỞNG VIẾT BÀI",
     "🔍 BƯỚC 4: CHẤM ĐIỂM RUBRIC",
     "📁 HỒ SƠ BÀI LÀM"
@@ -700,10 +696,10 @@ with tabs[0]:
             st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:* {res.get('suggested_fix')}")
 
 # ------------------------------------------------------------------------------
-# BƯỚC 2: TÌM Ý & TÍCH HỢP KHO DẪN CHỨNG VÀO THAO TÁC 3
+# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG
 # ------------------------------------------------------------------------------
 with tabs[1]:
-    st.markdown('<div class="section-title">🧵 Hệ Thống Giàn Giáo 4 Thao Tác Sư Phạm & Kho Dẫn Chứng Chọn Lọc</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🧵 BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG</div>', unsafe_allow_html=True)
     cur_de_info = st.session_state.get("current_de_info", DE_BAI_CO_BAN[list(DE_BAI_CO_BAN.keys())[0]])
     
     c_left, c_right = st.columns([1.1, 0.9], gap="large")
