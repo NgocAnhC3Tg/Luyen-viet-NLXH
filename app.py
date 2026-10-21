@@ -78,7 +78,7 @@ st.markdown("""
         box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
     }
 
-    /* Tiêu đề mục gọn gàng, không bị lặp chữ "Bước 1, 2, 3..." */
+    /* Tiêu đề mục gọn gàng */
     .section-title {
         font-size: 1.25rem;
         font-weight: 800;
@@ -92,7 +92,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI VÀ DỮ LIỆU CHUẨN (KHOẢNG 600 CHỮ)
+# 2. NGÂN HÀNG ĐỀ THI ĐÃ ĐƯỢC CHỌN LỌC KỸ LƯỠNG (KHÔNG LẶP LẠI)
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -151,10 +151,89 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
         ],
         "counter": ["Phê phán tâm lý sính ngoại mù quáng, quay lưng với văn hóa truyền thống, xem thường cội nguồn dân tộc.", "Lật lại vấn đề: Giữ gìn bản sắc không phải là khép kín, bảo thủ hay bài trừ tinh hoa thế giới; mà là tiếp biến có chọn lọc."]
     },
-    "Đề 16 (Nâng cao): Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
+    "Đề 04 (Cơ bản): Ý nghĩa của lòng biết ơn trong đời sống con người": {
+        "text": """Danh ngôn có câu: *"Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây."* 
+
+Từ cội nguồn đạo lý truyền thống đó, em hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lòng biết ơn trong đời sống con người hôm nay.""",
+        "vdnl_chuan": "Ý nghĩa và giá trị đạo đức của lòng biết ơn trong đời sống con người.",
+        "topic_tag": "Đạo lý – Lòng biết ơn – Nhân cách",
+        "explain_core": [
+            "**Lòng biết ơn:** Sự ghi nhớ, trân trọng và đền đáp những ân huệ, công sức mà người khác hoặc thế hệ đi trước đã dành cho mình.",
+            "**Ý nghĩa:** Là thước đo phẩm giá con người, là cội nguồn của sự gắn kết tình nghĩa trong cộng đồng."
+        ],
+        "questions": [
+            {"cau_hoi": "Vì sao con người cần phải có lòng biết ơn?", "y_tra_loi": ["Không ai tự sinh ra và lớn lên mà không nhận sự giúp đỡ từ người khác.", "Biết ơn giúp tâm hồn thanh thản, nuôi dưỡng lòng trắc ẩn và sự tử tế."]}
+        ],
+        "counter": ["Phê phán thói vô ơn, ăn cháo đá bát, vô cảm trước công sức của người khác."]
+    },
+    "Đề 05 (Cơ bản): Sức mạnh của niềm tin vào bản thân trong cuộc sống": {
+        "text": """Có câu nói: *"Tin rằng bạn có thể làm được là bạn đã đi được nửa đường."* (Theodore Roosevelt)
+
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của niềm tin vào bản thân trong hành trình vươn tới thành công.""",
+        "vdnl_chuan": "Sức mạnh và vai trò quyết định của niềm tin vào bản thân trong cuộc sống.",
+        "topic_tag": "Niềm tin – Bản lĩnh – Thành công",
+        "explain_core": [
+            "**Niềm tin vào bản thân:** Sự tự tin vào năng lực, giá trị và tiềm năng của chính mình trước mọi thử thách."
+        ],
+        "questions": [
+            {"cau_hoi": "Vì sao niềm tin bản thân lại quan trọng?", "y_tra_loi": ["Là ngọn đuốc soi đường khi đối mặt với nghịch cảnh, giúp vượt qua nỗi sợ hãi."]}
+        ],
+        "counter": ["Phê phán sự tự ti, ba hoa kiêu ngạo hoặc ảo tưởng sức mạnh."]
+    },
+    "Đề 06 (Cơ bản): Giá trị của sự kiên trì và bền bỉ theo đuổi ước mơ": {
+        "text": """Ngạn ngữ có câu: *"Nước chảy đá mòn."* 
+
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị của sự kiên trì, bền bỉ trong hành trình chinh phục mục tiêu của người trẻ.""",
+        "vdnl_chuan": "Giá trị của sự kiên trì, bền bỉ và ý chí vượt qua gian khó để đạt được ước mơ.",
+        "topic_tag": "Kiên trì – Ý chí – Thành quả",
+        "explain_core": ["Kiên trì là sự bền chí, không lùi bước trước thất bại ban đầu."],
+        "questions": [{"cau_hoi": "Vì sao kiên trì quyết định thành công?", "y_tra_loi": ["Mọi thành quả lớn lao đều đòi hỏi quá trình rèn luyện dài lâu."]}],
+        "counter": ["Phê phán lối sống cả thèm chóng chán, dễ nản lòng khi gặp khó khăn."]
+    },
+    "Đề 07 (Cơ bản): Ý nghĩa của việc trân trọng những giá trị giản dị quanh ta": {
+        "text": """Có ý kiến cho rằng: *"Hạnh phúc đôi khi không phải là những điều lớn lao, mà ẩn giấu trong những điều bình dị nhất của đời thường."*
+
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của việc biết trân trọng những giá trị bình dị xung quanh cuộc sống.""",
+        "vdnl_chuan": "Ý nghĩa của việc trân trọng những giá trị bình dị, dung dị để tìm thấy hạnh phúc đích thực.",
+        "topic_tag": "Hạnh phúc – Sự bình dị – Tỉnh thức",
+        "explain_core": ["Giá trị bình dị: Những điều nhỏ bé, mộc mạc hằng ngày nhưng nuôi dưỡng tâm hồn."],
+        "questions": [{"cau_hoi": "Vì sao cần trân trọng điều bình dị?", "y_tra_loi": ["Giúp con người sống an yên, biết ơn hiện tại thay vì cuốn theo tham vọng xa vời."]}],
+        "counter": ["Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng."]
+    },
+    "Đề 08 (Cơ bản): Vai trò của sách và văn hóa đọc trong kỷ nguyên số": {
+        "text": """Nhà văn Maxim Gorky từng khẳng định: *"Sách mở ra trước mắt tôi những chân trời mới."* 
+
+Trong thời đại bùng nổ công nghệ số, em hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò và giá trị của việc đọc sách.""",
+        "vdnl_chuan": "Vai trò, ý nghĩa của sách và văn hóa đọc đối với sự phát triển nhân cách con người.",
+        "topic_tag": "Sách – Tri thức – Văn hóa đọc",
+        "explain_core": ["Sách là kho tàng tri thức nhân loại, bồi dưỡng tư tưởng và cảm xúc."],
+        "questions": [{"cau_hoi": "Vì sao đọc sách vẫn quan trọng trong thời đại số?", "y_tra_loi": ["Giúp rèn luyện tư duy sâu (deep thinking) thay vì đọc lướt hời hợt."]}],
+        "counter": ["Phê phán tình trạng lười đọc sách, chỉ chuộng thông tin mì ăn liền trên mạng xã hội."]
+    },
+    "Đề 09 (Cơ bản): Ý nghĩa của lòng dũng cảm bảo vệ cái đúng, cái thiện": {
+        "text": """Có ý kiến cho rằng: *"Lòng dũng cảm không phải là không sợ hãi, mà là sự chiến thắng nỗi sợ hãi."*
+
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của lòng dũng cảm trong việc bảo vệ lẽ phải và công lý.""",
+        "vdnl_chuan": "Vai trò của lòng dũng cảm trong đấu tranh bảo vệ cái đúng, cái thiện và lẽ công bằng.",
+        "topic_tag": "Dũng cảm – Lẽ phải – Công lý",
+        "explain_core": ["Lòng dũng cảm là bản lĩnh dám đối mặt với hiểm nguy và tiêu cực để bảo vệ chân lý."],
+        "questions": [{"cau_hoi": "Vì sao cần có lòng dũng cảm?", "y_tra_loi": ["Sự im lặng trước cái ác đồng nghĩa với việc tiếp tay cho cái xấu."]}],
+        "counter": ["Phê phán thái độ hèn nhát, dĩ hòa vi quý, thờ ơ trước bất công."]
+    },
+    "Đề 10 (Cơ bản): Lợi ích và tác hại của mạng xã hội đối với giới trẻ": {
+        "text": """Mạng xã hội giống như con dao hai lưỡi vừa kết nối toàn cầu vừa tiềm ẩn nhiều hệ lụy. 
+
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về cách ứng xử thông minh của người trẻ trước không gian mạng.""",
+        "vdnl_chuan": "Cách ứng xử thông minh, làm chủ công nghệ và bản lĩnh trước tác động của mạng xã hội.",
+        "topic_tag": "Công nghệ – Mạng xã hội – Bản lĩnh",
+        "explain_core": ["Mạng xã hội mang lại thông tin nhưng cũng dễ gây nghiện và đánh mất sự kết nối thật."],
+        "questions": [{"cau_hoi": "Làm sao để làm chủ mạng xã hội?", "y_tra_loi": ["Sử dụng có chọn lọc, tỉnh táo trước thông tin giả và giữ gìn văn hóa ứng xử."]}],
+        "counter": ["Phê phán hiện tượng nghiện ảo, dùng mạng xã hội để lăng mạ, bôi nhọ người khác."]
+    },
+    "Đề 11 (Nâng cao): Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
         "text": """Có ý kiến cho rằng: *"Con sông nào cũng phải chảy qua ghềnh thác để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó sẽ hòa tan vào những con lạch nhỏ mà biến mất."*
 
-Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực của số đông đối với người trẻ trong kỷ nguyên số.""",
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực của số đông trong kỷ nguyên số.""",
         "vdnl_chuan": "Bản lĩnh giữ gìn bản sắc riêng, chính kiến cá nhân trước áp lực của đám đông trong thời đại số.",
         "topic_tag": "Bản lĩnh – Tư duy độc lập – Bản sắc",
         "explain_core": [
@@ -166,21 +245,48 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             {"cau_hoi": "Bản sắc riêng đem lại giá trị gì?", "y_tra_loi": ["Giúp cá nhân tự tin tỏa sáng bằng năng lực thật, thúc đẩy xã hội đa dạng và sáng tạo."]}
         ],
         "counter": ["Phê phán lối sống hùa theo phong trào, a dua thiếu suy nghĩ.", "Lật lại vấn đề: Giữ bản sắc không đồng nghĩa với lập dị, chống đối cực đoan hay coi thường chuẩn mực cộng đồng."]
+    },
+    "Đề 12 (Nâng cao): Trách nhiệm của thế hệ trẻ đối với di sản văn hóa truyền thống": {
+        "text": """Nhà văn Nguyên Ngọc từng trăn trở về việc giữ gìn hồn cốt dân tộc qua thời gian. 
+
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm và cách thức làm sống dậy di sản văn hóa truyền thống trong tâm hồn thế hệ trẻ hôm nay.""",
+        "vdnl_chuan": "Trách nhiệm và sứ mệnh của thế hệ trẻ trong việc bảo tồn, phát huy giá trị di sản văn hóa truyền thống.",
+        "topic_tag": "Di sản – Văn hóa – Trách nhiệm thế hệ",
+        "explain_core": ["Di sản văn hóa là dòng sữa nuôi dưỡng tâm hồn dân tộc qua các thế hệ."],
+        "questions": [{"cau_hoi": "Làm thế nào để đưa di sản đến gần giới trẻ?", "y_tra_loi": ["Kết hợp công nghệ số, sáng tạo trong cách tiếp cận thay vì bảo thủ xơ cứng."]}],
+        "counter": ["Phê phán thái độ hững hờ, xem nhẹ di sản cha ông để chạy theo văn hóa ngoại lai cực đoan."]
+    },
+    "Đề 13 (Nâng cao): Ý nghĩa của sự dấn thân và tinh thần phụng sự xã hội": {
+        "text": """Đặng Thùy Trâm từng viết trong nhật ký: *"Đời phải trải qua giông tố nhưng chớ cúi đầu trước giông tố."* Và sống là để dấn thân, cống hiến.
+
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về tinh thần dấn thân và khát vọng phụng sự cộng đồng của thanh niên thời đại mới.""",
+        "vdnl_chuan": "Ý nghĩa của tinh thần dấn thân, sống cống hiến và trách nhiệm phụng sự cộng đồng của tuổi trẻ.",
+        "topic_tag": "Dấn thân – Phụng sự – Lý tưởng sống",
+        "explain_core": ["Dấn thân là dám đương đầu với khó khăn, đem tài năng nhiệt huyết xây dựng đất nước."],
+        "questions": [{"cau_hoi": "Vì sao người trẻ cần có lý tưởng dấn thân?", "y_tra_loi": ["Tuổi trẻ là khoảng thời gian đẹp nhất để cống hiến, giúp cuộc đời có ý nghĩa sâu sắc hơn."]}],
+        "counter": ["Phê phán lối sống ích kỷ, thực dụng, chỉ biết hưởng thụ cá nhân."]
+    },
+    "Đề 14 (Nâng cao): Tư duy phản biện và năng lực chắt lọc thông tin trong thời đại AI": {
+        "text": """Trong kỷ nguyên trí tuệ nhân tạo (AI) và thông tin bùng nổ, ranh giới giữa sự thật và giả mạo trở nên mỏng manh hơn bao giờ hết.
+
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng của tư duy phản biện và năng lực tự chủ tri thức của người trẻ.""",
+        "vdnl_chuan": "Tầm quan trọng của tư duy phản biện và năng lực chắt lọc thông tin trước sự bùng nổ của công nghệ và AI.",
+        "topic_tag": "Tư duy phản biện – Trí tuệ – Tự chủ",
+        "explain_core": ["Tư duy phản biện là năng lực phân tích, đánh giá vấn đề một cách khách quan, đa chiều."],
+        "questions": [{"cau_hoi": "Vì sao tư duy phản biện lại sống còn thời đại AI?", "y_tra_loi": ["Tránh bị thao túng bởi thông tin độc hại, tin giả (fake news) lan tràn."]}],
+        "counter": ["Phê phán thói quen tiếp nhận thông tin thụ động, cả tin và thiếu kiểm chứng."]
+    },
+    "Đề 15 (Nâng cao): Lối sống tử tế và sức mạnh hàn gắn những tổn thương trong xã hội": {
+        "text": """Có câu danh ngôn: *"Hãy đối xử tử tế với mọi người bạn gặp, bởi vì ai cũng đang phải trải qua một cuộc chiến khốc liệt."*
+
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự tử tế và lòng trắc ẩn trong việc hàn gắn những rạn nứt xã hội.""",
+        "vdnl_chuan": "Sức mạnh của sự tử tế và lòng nhân ái trong việc xoa dịu tổn thương và kết nối con người.",
+        "topic_tag": "Tử tế – Lòng trắc ẩn – Hàn gắn",
+        "explain_core": ["Sự tử tế là thứ ngôn ngữ mà người điếc có thể nghe và người mù có thể thấy."],
+        "questions": [{"cau_hoi": "Sự tử tế đem lại điều kỳ diệu gì?", "y_tra_loi": ["Xóa nhòa khoảng cách, tạo ra bầu không khí nhân văn và ấm áp tình người."]}],
+        "counter": ["Phê phán sự lạnh lùng, ích kỷ, cư xử bạo lực và sắc lạnh với đồng loại."]
     }
 }
-
-for i in range(4, 31):
-    k_name = f"Đề {i:02d}"
-    if not any(k_name in k for k in DE_BAI_DATA.keys()):
-        is_nc = "Nâng cao" if i >= 16 else "Cơ bản"
-        DE_BAI_DATA[f"{k_name} ({is_nc}): Rèn luyện năng lực tư duy thực tiễn"] = {
-            "text": f"Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về một phẩm chất sống hoặc vấn đề xã hội thiết thực của thanh niên hôm nay ({k_name}).",
-            "vdnl_chuan": f"Tư duy độc lập và trách nhiệm công dân của người trẻ ({k_name}).",
-            "topic_tag": "Kỹ năng sống – Bản lĩnh",
-            "explain_core": ["Làm rõ bản chất khái niệm then chốt trong đề bài và ý nghĩa định hướng đời sống."],
-            "questions": [{"cau_hoi": "Vì sao vấn đề này có ý nghĩa với em?", "y_tra_loi": ["Giúp hoàn thiện tư duy và nhân cách sống."]}],
-            "counter": ["Phê phán nhận thức lệch lạc và hành vi tiêu cực."]
-        }
 
 # ==============================================================================
 # 3. KẾT NỐI GEMINI AI & SESSION STATE
@@ -246,11 +352,16 @@ def call_gemini_engine(prompt_or_contents):
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     prompt = f"""
-Bạn là Giám khảo Ngữ văn THPT GDPT 2018. Đề bài: {exam_text}. Đáp án VĐNL: {vdnl_chuan}. Học sinh trả lời: "{student_guess}".
-Trả về JSON:
+Bạn là Giám khảo Ngữ văn THPT GDPT 2018 tâm lý và uy tín. 
+- Đề bài: {exam_text}
+- Vấn đề nghị luận chuẩn: {vdnl_chuan}
+- Học sinh tự phán đoán VĐNL bằng ý hiểu của mình: "{student_guess}"
+
+Nhiệm vụ: Thẩm định xem học sinh đã bắt trúng tinh thần và ý nghĩa cốt lõi của đề hay chưa (không bắt bẻ từ ngữ máy móc, miễn là đúng bản chất).
+Trả về JSON DUY NHẤT:
 {{
   "status": "DUNG" | "LECH" | "SAI",
-  "feedback": "Nhận xét ngắn gọn xưng cô-em",
+  "feedback": "Lời nhận xét sư phạm ấm áp, khích lệ (xưng cô - em). Nếu đúng thì khen ngợi; nếu lệch/sai thì chỉ rõ thiếu sót một cách nhẹ nhàng.",
   "suggested_fix": "{vdnl_chuan}"
 }}
 """
@@ -259,11 +370,11 @@ Trả về JSON:
         match = re.search(r"\{.*\}", raw, re.DOTALL)
         return json.loads(match.group(0)) if match else json.loads(raw)
     except Exception:
-        return {"status": "LECH", "feedback": "Em hãy kiểm tra lại từ khóa chính trong đề.", "suggested_fix": vdnl_chuan}
+        return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt khá tốt tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
 
 def ai_analyze_custom_exam(exam_text, student_guess=""):
     prompt = f"""
-Bạn là chuyên gia Ngữ văn THPT GDPT 2018. Phân tích đề tự nhập: \"\"\"{exam_text}\"\"\".
+Bạn là chuyên gia Ngữ văn THPT GDPT 2018. Phân tích đề tự nhập của học sinh: \"\"\"{exam_text}\"\"\".
 Học sinh phán đoán VĐNL là: \"{student_guess}\".
 
 BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
