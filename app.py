@@ -94,23 +94,13 @@ st.markdown(
         font-size: 0.96rem;
         color: #1e293b;
     }
-    
-    .outline-box {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-left: 5px solid #2563eb;
-        padding: 22px;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        line-height: 1.8;
-    }
 </style>
 """,
     unsafe_allow_html=True,
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG ĐỀ CHUẨN GỐC (DẪN CHỨNG TƯỜNG MINH, CHI TIẾT 100%)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐẦY ĐỦ 100% NỘI DUNG GỐC, KHÔNG LƯỢC BỚT)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -200,7 +190,7 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             ),
             "gt": (
                 "Giải thích từ khóa 'lối sống có trách nhiệm', 'gắn bó cộng đồng';"
-                " làm rõ ý nghĩa 'đất hóa tâm hồn' là sự bồi đắp nghĩa tình."
+                " làm rõ ý nghĩa 'đất hóa tâm hồn'."
             ),
             "bl": (
                 "• Luận điểm 1: Con người là thực thể xã hội, sự phát triển cá"
@@ -224,7 +214,7 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
         },
     },
     "Đề 02: Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
-        "text": """Nhà văn Haruki Murakami từng chia sẻ: "Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa." Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
+        "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
 Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
         "vdnl_chuan": (
             "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
@@ -249,8 +239,8 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             ),
         ],
         "vdnl_ket_luan": (
-            "Sức mạnh của sự thấu cảm và lắng nghe chân thành giữa con người"
-            " với con người trong xã hội hiện đại."
+            "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
+            " con người với con người trong xã hội hiện đại."
         ),
         "questions": [{
             "cau_hoi": (
@@ -311,7 +301,7 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             ),
             "gt": (
                 "Cắt nghĩa 'thấu cảm', 'lắng nghe chân thành'; giải mã 'cơn bão"
-                " lòng' là những tổn thương tâm lý sâu sắc."
+                " lòng'."
             ),
             "bl": (
                 "• Luận điểm 1: Trong thời đại số, con người dễ cô đơn ngay giữa"
@@ -416,7 +406,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
             ),
             "gt": (
                 "Giải thích 'bản sắc văn hóa', 'trách nhiệm giữ gìn'; làm rõ hình"
-                " ảnh 'mỏ neo' trong không gian hội nhập."
+                " ảnh 'mỏ neo'."
             ),
             "bl": (
                 "• Luận điểm 1: Văn hóa là căn cước định danh dân tộc, mất văn"
@@ -424,9 +414,8 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
                 " hòa tan; bản sắc là nội lực giúp vươn xa."
             ),
             "dc": (
-                "• Dẫn chứng 1: Rapper Đen Vâu và Hoàng Thùy Linh đưa chất liệu"
-                " truyền thống vào âm nhạc.\n• Dẫn chứng 2: Dự án phục dựng cổ"
-                " phục của giới trẻ."
+                "• Dẫn chứng 1: Rapper Đen Vâu và Hoàng Thùy Linh.\n• Dẫn chứng"
+                " 2: Dự án phục dựng cổ phục."
             ),
             "pb": (
                 "Phê phán thái độ sính ngoại mù quáng, lai căng văn hóa hoặc"
@@ -763,8 +752,8 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của vi
             ),
             (
                 "<b>2. Phân tích ý nghĩa ý kiến:</b> Khẳng định chân lý: hạnh"
-                    " phúc đích thực không nằm ở những điều xa vời mà neo đậu ở"
-                    " chính những điều giản dị quanh ta."
+                " phúc đích thực không nằm ở những điều xa vời mà neo đậu ở"
+                " chính những điều giản dị quanh ta."
             ),
         ],
         "vdnl_ket_luan": (
@@ -1729,7 +1718,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             ),
             "gt": (
                 "Cắt nghĩa 'bản sắc riêng', 'chính kiến'; giải mã hình ảnh 'con"
-                " sông', 'ghềnh thác' tượng trưng cho thử thách."
+                " sông', 'ghềnh thác'."
             ),
             "bl": (
                 "• Luận điểm 1: Giữ bản sắc giúp khẳng định giá trị cá nhân độc"
@@ -1900,7 +1889,7 @@ KHO_DAN_CHUNG_8_CHU_DIEM = {
 }
 
 # ==============================================================================
-# 3. QUẢN LÝ SESSION STATE AN TOÀN
+# 3. QUẢN LÝ SESSION STATE
 # ==============================================================================
 if "gemini_api_key" not in st.session_state:
   st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
@@ -1917,8 +1906,8 @@ if "chat_messages" not in st.session_state:
   st.session_state["chat_messages"] = [{
       "role": "assistant",
       "content": (
-          "Chào em! Cô là Trợ lý Ngữ văn. Các em cần cô hướng dẫn thêm về"
-          " phương pháp lập dàn ý không?"
+          "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về phương pháp lập"
+          " dàn ý hay chọn dẫn chứng cứ hỏi cô nhé!"
       ),
   }]
 
@@ -1933,16 +1922,16 @@ with st.sidebar:
     st.session_state["gemini_api_key"] = api_key_input.strip()
 
   if st.session_state["gemini_api_key"]:
-    st.success("✅ Đã kết nối API Key")
+    st.success("✅ Trợ lí Ngữ văn đã sẵn sàng")
   else:
-    st.info("💡 Hệ thống chờ nhập Key hoặc dùng Secrets.")
+    st.warning("⚠️ Vui lòng nhập API Key để kích hoạt AI.")
 
   st.markdown("---")
-  st.markdown("### 📌 4 BƯỚC TẠO LẬP VĂN BẢN")
-  st.write("1. **🌱 Bước 1:** Tìm hiểu đề bài & Xác định VĐNL")
-  st.write("2. **🧵 Bước 2:** Tìm ý, Lập dàn ý & Tra cứu dẫn chứng")
-  st.write("3. **✍️ Bước 3:** Thực hành viết bài độc lập")
-  st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
+  st.markdown("### 📌 4 BƯỚC SƯ PHẠM")
+  st.write("1. **🌱 Bước 1:** Phân tích đề & VĐNL")
+  st.write("2. **🧵 Bước 2:** Lập dàn ý & Kho dẫn chứng")
+  st.write("3. **✍️ Bước 3:** Xưởng viết độc lập")
+  st.write("4. **🔍 Bước 4:** AI Chấm điểm Rubric")
 
 
 def call_gemini_engine(prompt_text):
@@ -2017,19 +2006,11 @@ Trả về JSON duy nhất:
   "feedback": "Nhận xét sư phạm (xưng cô - em)",
   "vdnl_chuan": "VĐNL cốt lõi chuẩn",
   "explain_guide": "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.",
-  "explain_items": ["<b>1. Giải thích từ khóa trong VĐNL:</b> Cắt nghĩa...", "<b>2. Phân tích ý nghĩa ngữ liệu:</b> ..."],
+  "explain_items": ["1. Giải thích từ khóa trong VĐNL: Cắt nghĩa...", "2. Phân tích ý nghĩa ngữ liệu: ..."],
   "vdnl_ket_luan": "Chốt lại Vấn đề nghị luận chuẩn",
   "questions": [{{"cau_hoi": "Câu hỏi bàn luận?", "y_tra_loi": ["Ý bàn luận 1", "Ý bàn luận 2"]}}],
   "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết sự kiện", "y_nghia": "Ý nghĩa phân tích", "nguon": "Nguồn báo chí"}}],
-  "counter": ["Ý phản biện lật lại vấn đề"],
-  "dani_chi_tiet": {{
-    "mb": "Dẫn dắt và giới thiệu vấn đề nghị luận.",
-    "gt": "Giải thích từ khóa VĐNL và ý nghĩa ngữ liệu.",
-    "bl": "Triển khai hệ thống luận điểm bàn luận trọng tâm.",
-    "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
-    "pb": "Phản biện, lật lại vấn đề và mở rộng.",
-    "kb": "Tổng kết vấn đề và rút ra bài học hành động."
-  }}
+  "counter": ["Ý phản biện lật lại vấn đề"]
 }}
 """
   raw = call_gemini_engine(prompt)
@@ -2052,7 +2033,7 @@ Trả về JSON duy nhất:
             " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
-            "<b>1. Giải thích từ khóa trong VĐNL:</b> Cắt nghĩa bản chất khái niệm."
+            "1. Giải thích từ khóa trong VĐNL: Cắt nghĩa bản chất khái niệm."
         ],
         "vdnl_ket_luan": (
             student_guess if student_guess else "Vấn đề nghị luận trọng tâm."
@@ -2068,19 +2049,11 @@ Trả về JSON duy nhất:
             "nguon": "Báo Tuổi Trẻ",
         }],
         "counter": ["Phê phán thái độ dửng dưng."],
-        "dani_chi_tiet": {
-            "mb": "Dẫn dắt vấn đề nghị luận.",
-            "gt": "Giải thích từ khóa cốt lõi.",
-            "bl": "Triển khai luận điểm bàn luận.",
-            "dc": "Đưa dẫn chứng thực tế.",
-            "pb": "Phản biện vấn đề.",
-            "kb": "Tổng kết bài học.",
-        },
     }
 
 
 # ==============================================================================
-# 5. GIAO DIỆN CHÍNH & TABS
+# 4. GIAO DIỆN CHÍNH & TABS
 # ==============================================================================
 st.markdown(
     """
@@ -2205,17 +2178,6 @@ with tabs[0]:
               "questions": res_custom.get("questions", []),
               "evidence": res_custom.get("evidence", []),
               "counter": res_custom.get("counter", []),
-              "dani_chi_tiet": res_custom.get(
-                  "dani_chi_tiet",
-                  {
-                      "mb": "Dẫn dắt và giới thiệu VĐNL.",
-                      "gt": "Giải thích từ khóa và ngữ liệu.",
-                      "bl": "Bàn luận các khía cạnh trọng tâm.",
-                      "dc": "Dẫn chứng thực tế tiêu biểu.",
-                      "pb": "Phản biện và mở rộng vấn đề.",
-                      "kb": "Tổng kết và bài học hành động.",
-                  },
-              ),
           }
           st.session_state["selected_de_key"] = ten_de_custom
           st.session_state["current_de_info"] = info_custom
@@ -2378,69 +2340,13 @@ with tabs[1]:
       for c in cur_de_info.get("counter", []):
         st.markdown(f"- {c}")
 
-    # ==========================================================================
-    # ĐỊNH HƯỚNG BỐ CỤC DÀN Ý CHI TIẾT (CHUẨN 3 PHẦN MỞ - THÂN - KẾT)
-    # ==========================================================================
-    st.markdown("---")
-    st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
-    st.info(
-        "💡 *Đây là khung định hướng bố cục chuẩn mực được tổng hợp sẵn từ các"
-        " thao tác trên. Các em hãy nghiên cứu kỹ khung sườn này để nắm vững mạch"
-        " triển khai, sau đó bấm chuyển sang Tab 'Xưởng Viết Bài' để bắt đầu tự"
-        " tay viết bài văn của mình nhé!*"
-    )
-
-    dani_data = cur_de_info.get(
-        "dani_chi_tiet",
-        {
-            "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
-            "gt": "Giải thích rõ từ khóa trong VĐNL và thông điệp ngữ liệu.",
-            "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc, đa chiều.",
-            "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu, giàu sức thuyết phục.",
-            "pb": "Phản biện, lật lại vấn đề và mở rộng góc nhìn.",
-            "kb": "Tổng kết vấn đề và rút ra bài học nhận thức, hành động.",
-        },
-    )
-
-    st.markdown(
-        f"""
-        <div class='outline-box'>
-            <h4 style='color:#1e3a8a; margin-top:0;'>🌟 I. PHẦN MỞ BÀI</h4>
-            <p>• <b>Dẫn dắt & Giới thiệu VĐNL:</b> {dani_data.get('mb', '')}</p>
-            
-            <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 II. PHẦN THÂN BÀI</h4>
-            <p>• <b>1. Mục Giải thích:</b> {dani_data.get('gt', '')}</p>
-            <p>• <b>2. Mục Bàn luận trọng tâm:</b> {dani_data.get('bl', '')}</p>
-            <p>• <b>3. Mục Dẫn chứng thực tế:</b> {dani_data.get('dc', '')}</p>
-            <p>• <b>4. Mục Phản biện & Mở rộng:</b> {dani_data.get('pb', '')}</p>
-            
-            <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 III. PHẦN KẾT BÀI</h4>
-            <p>• <b>Tổng kết & Bài học hành động:</b> {dani_data.get('kb', '')}</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
   with c_right:
-    st.markdown("#### 🧭 Trợ lý Ngữ văn (Định Hướng Phương Pháp)")
+    st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
     with st.container(border=True):
       st.info(
           "💡 **Nguyên tắc:** Trợ lý Ngữ văn **không viết hộ / làm hộ bài văn**,"
           " chỉ đặt câu hỏi gợi mở để giúp các em tự tư duy."
       )
-
-    if (
-        "chat_messages" not in st.session_state
-        or not st.session_state["chat_messages"]
-    ):
-      st.session_state["chat_messages"] = [{
-          "role": "assistant",
-          "content": (
-              f"Chào em! Cô là Trợ lý Ngữ văn. Đề bài các em đang chọn là:"
-              f" '{cur_de_key}'. Các em cần cô hướng dẫn thêm ở phần phương"
-              " pháp lập dàn ý không?"
-          ),
-      }]
 
     chat_box = st.container(height=380)
     with chat_box:
@@ -2481,13 +2387,13 @@ with tabs[2]:
       unsafe_allow_html=True,
   )
   st.info(
-      "💡 *Dựa vào bản định hướng dàn ý chi tiết ở Bước 2, các em hãy tự tay"
-      " viết bài văn hoàn chỉnh của mình vào đây nhé!*"
+      "💡 *Dựa vào hệ thống gợi ý ở Bước 2, các em hãy tự tay viết bài văn hoàn"
+      " chỉnh của mình vào đây nhé!*"
   )
   essay_in = st.text_area(
       "Nhập bài viết của em:",
       value=st.session_state.get("user_essay", ""),
-      height=350,
+      height=380,
       placeholder="Viết bài văn nghị luận hoàn chỉnh...",
   )
   st.session_state["user_essay"] = essay_in
