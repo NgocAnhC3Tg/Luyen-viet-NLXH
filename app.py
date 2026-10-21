@@ -100,7 +100,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐƯỢC BIÊN SOẠN TƯỜNG MINH, SÂU SẮC)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (BIÊN SOẠN TƯỜNG MINH, SÂU SẮC)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -144,9 +144,8 @@ DE_BAI_CO_BAN = {
                 ),
                 "y_tra_loi": [
                     (
-                        "Con người là thực thể xã hội, không ai có thể tồn tại"
-                        " biệt lập; sự phát triển của mỗi cá nhân luôn bắt"
-                        " nguồn từ nền tảng vững chắc của tập thể."
+                        "Con người là thực thể xã hội, sự phát triển cá nhân"
+                        " luôn bắt nguồn từ nền tảng vững chắc của tập thể."
                     ),
                     (
                         "Lối sống có trách nhiệm giúp đẩy lùi căn bệnh vô cảm,"
@@ -1231,7 +1230,6 @@ DE_BAI_CO_BAN = {
     },
 }
 
-# Tạm thời để trống Nhóm Nâng cao hoặc demo 1 đề để xây dựng dần từng phần theo ý thầy/cô
 DE_BAI_NANG_CAO = {
     "Đề 16: Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
         "text": (
@@ -1958,7 +1956,7 @@ with tabs[2]:
 # ------------------------------------------------------------------------------
 with tabs[3]:
   st.markdown(
-      '<div class="section-title">🔍 Giám Khảo AI Chấm Điểm Theo Bảng Rubric 10'
+      '<div class="section-title">🔍 Giám Khảo AI Chấm Điểm Điểm Theo Bảng Rubric 10'
       " Điểm</div>",
       unsafe_allow_html=True,
   )
