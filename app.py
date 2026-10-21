@@ -1,6 +1,6 @@
 import json
 import re
-import google.generativeai as genai_legacy
+import google.generativeai as genai
 import streamlit as st
 
 # ==============================================================================
@@ -124,7 +124,7 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             ),
             (
                 "<b>2. Phân tích ý nghĩa ngữ liệu:</b> Ý thơ Chế Lan Viên qua hình"
-                " ảnh 'nơi đất ở' và 'đất hóa tâm hồn' làm nổi bật mối quan hệ"
+                " ảnh 'nơi đất ở' và 'dat hóa tâm hồn' làm nổi bật mối quan hệ"
                 " gắn kết sâu sắc: khi con người biết sống cống hiến và trách"
                 " nhiệm, không gian sống vô tri sẽ hóa thành nghĩa tình gắn"
                 " bó."
@@ -408,7 +408,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
     }
 }
 
-# Kho dẫn chứng mở rộng phong phú hơn
 KHO_DAN_CHUNG_8_CHU_DIEM = {
     "1. Trách nhiệm, Cống hiến & Phụng sự cộng đồng": [
         {
@@ -602,7 +601,7 @@ with st.sidebar:
   st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
 
 
-# Hàm gọi AI sử dụng google.generativeai chuẩn mực, chống lỗi mã hóa ASCII
+# Hàm gọi AI sử dụng google.generativeai chuẩn mực
 def call_gemini_engine(prompt_text):
   api_key = st.session_state.get("gemini_api_key", "").strip()
   if not api_key:
@@ -612,8 +611,8 @@ def call_gemini_engine(prompt_text):
     )
 
   try:
-    genai_legacy.configure(api_key=api_key)
-    model = genai_legacy.GenerativeModel("gemini-1.5-flash")
+    genai.configure(api_key=api_key)
+    model = genai.GenerativeModel("gemini-1.5-flash")
     response = model.generate_content(prompt_text)
     if response and response.text:
       return response.text
@@ -950,7 +949,7 @@ with tabs[1]:
         unsafe_allow_html=True,
     )
 
-    # Thao tác 1: Trình bày sạch sẽ, không dấu ** rối mắt, chuẩn thứ tự sư phạm
+    # Thao tác 1: Trình bày sạch sẽ bằng HTML, hoàn toàn không có dấu ** rối mắt
     with st.expander(
         "📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True
     ):
@@ -1042,7 +1041,7 @@ with tabs[1]:
         st.markdown(f"- {c}")
 
     # ==========================================================================
-    # CẢI TIẾN: GIÀN GIÁO DÀN Ý CHI TIẾT CHUẨN 3 PHẦN (MỞ BÀI - THÂN BÀI - KẾT BÀI)
+    # CẢI TIẾN KHOA HỌC: GIÀN GIÁO DÀN Ý CHUẨN 3 PHẦN (MỞ - THÂN - KẾT)
     # ==========================================================================
     st.markdown("---")
     st.markdown("#### 📝 Xây Dựng Giàn Giáo Dàn Ý Chi Tiết")
@@ -1062,7 +1061,11 @@ with tabs[1]:
       }
 
     with st.container(border=True):
-      st.markdown("##### I. PHẦN MỞ BÀI")
+      st.markdown(
+          "##### 🌟 <span"
+          " style='color:#1e3a8a; font-weight:800;'>I. PHẦN MỞ BÀI</span>",
+          unsafe_allow_html=True,
+      )
       st.session_state["outline_parts"]["mb"] = st.text_area(
           "1. Dẫn dắt & Giới thiệu Vấn đề nghị luận (VĐNL):",
           value=st.session_state["outline_parts"]["mb"],
@@ -1073,7 +1076,11 @@ with tabs[1]:
           key="ta_mb",
       )
 
-      st.markdown("##### II. PHẦN THÂN BÀI")
+      st.markdown(
+          "##### 🌟 <span"
+          " style='color:#1e3a8a; font-weight:800;'>II. PHẦN THÂN BÀI</span>",
+          unsafe_allow_html=True,
+      )
       st.session_state["outline_parts"]["gt"] = st.text_area(
           "1. Mục Giải thích (Cắt nghĩa từ khóa VĐNL & ý nghĩa ngữ liệu):",
           value=st.session_state["outline_parts"]["gt"],
@@ -1108,7 +1115,11 @@ with tabs[1]:
           key="ta_pb",
       )
 
-      st.markdown("##### III. PHẦN KẾT BÀI")
+      st.markdown(
+          "##### 🌟 <span"
+          " style='color:#1e3a8a; font-weight:800;'>III. PHẦN KẾT BÀI</span>",
+          unsafe_allow_html=True,
+      )
       st.session_state["outline_parts"]["kb"] = st.text_area(
           "1. Tổng kết VĐNL & Rút ra bài học nhận thức, hành động:",
           value=st.session_state["outline_parts"]["kb"],
