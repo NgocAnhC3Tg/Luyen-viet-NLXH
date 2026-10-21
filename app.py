@@ -95,7 +95,6 @@ st.markdown("""
 # 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ ĐA DẠNG & PHONG PHÚ
 # ==============================================================================
 DE_BAI_DATA = {
-    # --- DẠNG ĐỀ CƠ BẢN (ĐỀ 01 - ĐỀ 15) ---
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
         "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:
 > *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*
@@ -281,7 +280,7 @@ Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh 
 Viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của việc bước ra khỏi vùng an toàn để khám phá tiềm năng bản thân.""",
         "vdnl_chuan": "Ý nghĩa của việc bứt phá khỏi vùng an toàn để rèn luyện bản lĩnh và khai phá tiềm năng.",
         "topic_tag": "Vùng an toàn – Bứt phá – Trưởng thành",
-        "explain_core": ["Vùng an toàn: Trạng thái tâm lý thoải mái, quen thuộc nhưng dễ triệt triệt tiêu sự sáng tạo."],
+        "explain_core": ["Vùng an toàn: Trạng thái tâm lý thoải mái, quen thuộc nhưng dễ triệt tiêu sáng tạo."],
         "questions": [{"cau_hoi": "Vì sao cần dũng cảm bước ra khỏi vùng an toàn?", "y_tra_loi": ["Chỉ qua thử thách mới khám phá hết giới hạn và sức mạnh tiềm ẩn của chính mình."]}],
         "counter": ["Phê phán tâm lý an phận thủ thường, sợ thất bại mà không dám dấn thân."]
     },
@@ -292,22 +291,22 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
         "topic_tag": "Vô cảm – Trách nhiệm – Lên tiếng",
         "explain_core": ["Thái độ vô cảm: Sự dửng dưng, quay lưng trước nỗi đau và sự bất công trong đời sống."],
         "questions": [{"cau_hoi": "Sự vô cảm gây nên hậu quả gì?", "y_tra_loi": ["Dung dưỡng cho cái xấu hoành hành, làm xói mòn các giá trị đạo đức căn bản."]}],
-        "counter": ["Lật lại vấn đề: Lên tiếng bảo vệ lẽ phải cần đi liền với sự tỉnh táo và phương pháp phù hợp."]
+        "counter": ["Lật lại vấn đề: Lên tiếng bảo vệ lẽ phải cần đi liền với sự tỉnh táo."]
     },
     "Đề 23 (Nâng cao): Ý thức trách nhiệm bảo vệ môi trường sống": {
-        "text": """Lao Động là cổ cổ hằng ngày, nhưng Trái Đất cũng đang gánh chịu tổn thương cực lớn. Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về lối sống xanh và trách nhiệm bảo vệ hành tinh xanh của thế hệ trẻ.""",
+        "text": """Trái Đất đang gánh chịu tổn thương cực lớn. Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về lối sống xanh và trách nhiệm bảo vệ hành tinh xanh của thế hệ trẻ.""",
         "vdnl_chuan": "Ý thức trách nhiệm và hành động thiết thực của tuổi trẻ trong việc bảo vệ môi trường.",
         "topic_tag": "Lối sống xanh – Môi trường – Tương lai",
         "explain_core": ["Lối sống xanh: Lối sống giảm thiểu tác hại đến thiên nhiên, phát triển bền vững."],
-        "questions": [{"cau_hoi": "Vì sao bảo vệ môi trường là việc cấp bách?", "y_tra_loi": ["Biến đổi khí hậu, ô nhiễm trực tiếp đe dọa đến sự sống còn của nhân loại."]}],
+        "questions": [{"cau_hoi": "Vì sao bảo vệ môi trường là việc cấp bách?", "y_tra_loi": ["Biến đổi khí hậu trực tiếp đe dọa sự sống còn của nhân loại."]}],
         "counter": ["Phê phán thói quen xả rác bừa bãi, tàn phá thiên nhiên vì lợi ích ngắn hạn."]
     },
     "Đề 24 (Nâng cao): Nhìn nhận đúng đắn về thất bại": {
         "text": """Thất bại không phải là đối lập của thành công, nó là một phần của thành công. Viết bài văn nghị luận (khoảng 600 chữ) bàn về thái độ tích cực cần có khi đối diện với thất bại ở người trẻ.""",
         "vdnl_chuan": "Thái độ tích cực, coi thất bại là bài học vô giá trên đường tới thành công.",
-        "topic_tag": "Thất bại – Bài học – Vươn lên",
-        "explain_core": ["Đối diện thất bại: Nhìn nhận lỗi sai bằng sự bình tĩnh để rút ra bài học kinh nghiệm."],
-        "questions": [{"cau_hoi": "Thất bại dạy cho ta điều gì?", "y_tra_loi": ["Rèn luyện sự kiên cường, giúp ta nhìn lại những lỗ hổng trong tư duy và hành động."]}],
+        "topic_tag": "Th thất bại – Bài học – Vươn lên",
+        "explain_core": ["Đối diện thất bại: Nhìn nhận lỗi sai bằng sự bình tĩnh để rút ra bài học."],
+        "questions": [{"cau_hoi": "Thất bại dạy cho ta điều gì?", "y_tra_loi": ["Rèn luyện sự kiên cường, giúp ta nhìn lại những lỗ hổng trong tư duy."]}],
         "counter": ["Phê phán tâm lý suy sụp, đổ lỗi cho hoàn cảnh khi gặp thất bại."]
     },
     "Đề 25 (Nâng cao): Ý nghĩa của sự khoan dung và lòng vị tha": {
@@ -315,14 +314,14 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
         "vdnl_chuan": "Ý nghĩa và giá trị của lòng khoan dung, vị tha trong việc cởi bỏ hận thù.",
         "topic_tag": "Khoan dung – Vị tha – Giải thoát",
         "explain_core": ["Khoan dung: Sự rộng lượng, sẵn sàng tha thứ cho lỗi lầm của người khác."],
-        "questions": [{"cau_hoi": "Khoan dung mang lại lợi ích gì?", "y_tra_loi": ["Giải thoát bản thân khỏi gánh nặng oán hận, mang lại sự bình yên trong tâm hồn."]}],
+        "questions": [{"cau_hoi": "Khoan dung mang lại lợi ích gì?", "y_tra_loi": ["Giải thoát bản thân khỏi gánh nặng oán hận, mang lại bình yên tâm hồn."]}],
         "counter": ["Phê phán thói chấp nhặt, thù lâu nhớ dai, luôn muốn trả đũa."]
     },
     "Đề 26 (Nâng cao): Bản lĩnh tự học và thích ứng trong tương lai": {
         "text": """Toàn cầu hóa đòi hỏi con người không ngừng học lại từ đầu. Viết bài văn nghị luận (khoảng 600 chữ) bàn về khả năng học hỏi suốt đời và năng lực thích ứng với sự thay đổi.""",
         "vdnl_chuan": "Tầm quan trọng của năng lực học hỏi suốt đời và khả năng thích ứng trước thế giới biến động.",
         "topic_tag": "Học suốt đời – Thích ứng – Tương lai",
-        "explain_core": ["Thích ứng: Năng lực linh hoạt điều chỉnh bản thân để phù hợp với môi trường mới."],
+        "explain_core": ["Thích ứng: Năng lực linh hoạt điều chỉnh bản thân để phù hợp môi trường mới."],
         "questions": [{"cau_hoi": "Vì sao học hỏi suốt đời lại bắt buộc?", "y_tra_loi": ["Kiến thức cũ nhanh chóng lỗi thời, sự chủ động học mới giúp không bị đào thải."]}],
         "counter": ["Phê phán thái độ tự mãn với kiến thức hiện có, lười đổi mới."]
     },
@@ -339,8 +338,8 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
         "vdnl_chuan": "Trách nhiệm và thái độ văn minh khi biết tôn trọng sự khác biệt của người khác.",
         "topic_tag": "Tôn trọng – Đa dạng – Văn minh",
         "explain_core": ["Tôn trọng sự khác biệt: Chấp nhận những quan điểm, tính cách, hoàn cảnh khác mình."],
-        "questions": [{"cau_hoi": "Vì sao cần tôn trọng sự khác biệt?", "y_tra_loi": ["Tạo nên bức tranh xã hội phong phú, hạn chế định kiến và phân biệt đối xử."]}],
-        "counter": ["Phê phán thói quen Áp đặt góc nhìn cá nhân, kỳ thị những người khác biệt."]
+        "questions": [{"cau_hoi": "Vì sao cần tôn trọng sự khác biệt?", "y_tra_loi": ["Tạo nên bức tranh xã hội phong phú, hạn chế định kiến."]}],
+        "counter": ["Phê phán thói áp đặt góc nhìn cá nhân, kỳ thị những người khác biệt."]
     },
     "Đề 29 (Nâng cao): Tầm quan trọng của việc quản lý thời gian": {
         "text": """Thời gian là tài sản công bằng nhất của nhân loại. Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về kỹ năng quản lý thời gian hiệu quả đối với sự thành công của giới trẻ.""",
@@ -348,7 +347,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
         "topic_tag": "Thời gian – Kỹ năng – Giá trị",
         "explain_core": ["Quản lý thời gian: Biết sắp xếp công việc hợp lý theo thứ tự ưu tiên."],
         "questions": [{"cau_hoi": "Vì sao cần trân trọng thời gian?", "y_tra_loi": ["Thời gian một đi không trở lại, làm chủ thời gian là làm chủ cuộc đời."]}],
-        "counter": ["Phê phán thói quen trì hoãn, lãng phí thời gian vào những việc vô bổ."]
+        "counter": ["Phê phán thói quen trì hoãn, lãng phí thời gian vào việc vô bổ."]
     },
     "Đề 30 (Nâng cao): Khát vọng cống hiến và giá trị của tuổi trẻ": {
         "text": """Tuổi trẻ không tính bằng số tuổi mà tính bằng khát vọng trong tim. Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về khát vọng cống hiến và ý nghĩa sống của tuổi trẻ hôm nay.""",
@@ -356,7 +355,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
         "topic_tag": "Tuổi trẻ – Khát vọng – Cống hiến",
         "explain_core": ["Khát vọng cống hiến: Ước mơ được đóng góp sức mình cho sự phát triển chung."],
         "questions": [{"cau_hoi": "Khát vọng mang lại điều gì?", "y_tra_loi": ["Thắp sáng ngọn lửa nhiệt huyết, biến những năm tháng thanh xuân trở nên rực rỡ."]}],
-        "counter": ["Phê phán lối sống nhạt nhòa, không mục đích, sống hoài sống phí."]
+        "counter": ["Phê phán lối sống nhạt nhòa, sống hoài sống phí."]
     }
 }
 
@@ -445,23 +444,49 @@ Trả về JSON DUY NHẤT:
         return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt khá tốt tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
 
 def ai_analyze_custom_exam(exam_text, student_guess=""):
+    """
+    HÀM NÀY ĐÃ ĐƯỢC VIẾT LẠI CHUYÊN SÂU: 
+    AI phân tích sâu sắc nội dung đề do người dùng tự nhập để tạo giàn giáo Bước 2 chi tiết, thực chất.
+    """
     prompt = f"""
-Bạn là chuyên gia Ngữ văn THPT GDPT 2018. Phân tích đề tự nhập của học sinh: \"\"\"{exam_text}\"\"\".
-Học sinh phán đoán VĐNL là: \"{student_guess}\".
+Bạn là chuyên gia khảo thí và giáo dục môn Ngữ văn THPT GDPT 2018. 
+Học sinh tự dán một đề bài nghị luận xã hội riêng vào hệ thống. Nội dung đề bài như sau:
+\"\"\"{exam_text}\"\"\"
 
-BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
+Học sinh đã phán đoán vấn đề nghị luận (VĐNL) là: \"{student_guess}\"
+
+Nhiệm vụ của bạn:
+1. Đọc kỹ đề bài, bóc tách chính xác Vấn đề nghị luận cốt lõi của đề này.
+2. Thẩm định phán đoán của học sinh xem đã chính xác chưa (DUNG, LECH, hoặc SAI) và viết lời nhận xét sư phạm ân cần (xưng cô - em).
+3. Xây dựng một khung giàn giáo tư duy CỰC KỲ CHI TIẾT VÀ THỰC CHẤT cho đề bài này để hỗ trợ học sinh ở Bước 2, bao gồm:
+   - Cắt nghĩa các từ khóa/mệnh đề cốt lõi.
+   - Các câu hỏi bàn luận trọng tâm bám sát đề.
+   - Gợi ý phản biện / lật ngược vấn đề sắc sảo.
+
+BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON (không kèm thêm markdown rườm rà ngoài chuỗi JSON):
 {{
   "status": "DUNG" | "LECH" | "SAI",
-  "teacher_evaluation": "Lời nhận xét thẩm định (xưng cô - em)",
-  "vdnl_chuan": "Vấn đề nghị luận chuẩn xác nhất",
-  "topic_tag": "Chủ điểm bài học",
-  "explain_core": ["Cắt nghĩa từ khóa 1", "Cắt nghĩa từ khóa 2"],
-  "questions": [
-     {{"cau_hoi": "Câu hỏi gợi mở 1", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}},
-     {{"cau_hoi": "Câu hỏi gợi mở 2", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}},
-     {{"cau_hoi": "Câu hỏi gợi mở 3", "y_tra_loi": ["Luận điểm a", "Luận điểm b"]}}
+  "teacher_evaluation": "Lời nhận xét sư phạm phân tích rõ học sinh đúng/chưa đúng chỗ nào (xưng cô - em)",
+  "vdnl_chuan": "Vấn đề nghị luận chuẩn xác và sâu sắc nhất của đề này",
+  "topic_tag": "Chủ điểm bài học cụ thể",
+  "explain_core": [
+     "Cắt nghĩa vế 1 hoặc từ khóa quan trọng trong đề",
+     "Cắt nghĩa vế 2 hoặc mối quan hệ giữa các yếu tố trong đề"
   ],
-  "counter": ["Gợi ý phản biện / Lật lại vấn đề"]
+  "questions": [
+     {{
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm 1 (Ví dụ: Vì sao vấn đề này đặt ra cấp thiết trong đời sống?)",
+       "y_tra_loi": ["Ý phân tích a", "Ý phân tích b"]
+     }},
+     {{
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm 2 (Ví dụ: Ý nghĩa/tác động của vấn đề đối với tuổi trẻ?)",
+       "y_tra_loi": ["Ý phân tích a", "Ý phân tích b"]
+     }}
+  ],
+  "counter": [
+     "Gợi ý phản biện 1: Phê phán biểu hiện trái ngược hoặc cực đoan",
+     "Gợi ý phản biện 2: Lật lại vấn đề để thấy tính đa chiều"
+  ]
 }}
 """
     raw_res = call_gemini_engine(prompt)
@@ -471,12 +496,12 @@ BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON:
     except Exception:
         return {
             "status": "LECH",
-            "teacher_evaluation": "Cô nhận thấy em đã bước đầu nắm được đề nhưng cần đào sâu hơn.",
+            "teacher_evaluation": "Cô nhận thấy em đã bước đầu tiếp cận được hướng đi của đề, nhưng cần phân tích sâu hơn các từ khóa trọng tâm.",
             "vdnl_chuan": "Vấn đề nghị luận rút ra từ đề bài tự nhập",
             "topic_tag": "Đề tự chọn",
-            "explain_core": ["Làm rõ các từ ngữ quan trọng trong đề."],
-            "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng?", "y_tra_loi": ["Ý nghĩa hoàn thiện nhân cách"]}],
-            "counter": ["Phê phán biểu hiện tiêu cực"]
+            "explain_core": ["Làm rõ các từ ngữ, hình ảnh hoặc thông điệp cốt lõi trong đề bài."],
+            "questions": [{"cau_hoi": "Vì sao vấn đề này có ý nghĩa đối với nhận thức của thế hệ trẻ?", "y_tra_loi": ["Giúp bồi dưỡng nhân cách sống", "Thúc đẩy hành động thiết thực"]}],
+            "counter": ["Phê phán nhận thức lệch lạc hoặc thái độ thờ ơ trước vấn đề."]
         }
 
 # ==============================================================================
@@ -534,7 +559,7 @@ with tabs[0]:
             elif not student_vdnl.strip():
                 st.warning("Em hãy tự gõ phán đoán Vấn đề nghị luận trước nhé!")
             else:
-                with st.spinner("AI đang đọc đề bài và tạo khung giàn giáo..."):
+                with st.spinner("AI đang phân tích sâu đề bài và thiết kế giàn giáo..."):
                     analyzed = ai_analyze_custom_exam(custom_de_input, student_vdnl)
                     st.session_state["custom_de_data"] = analyzed
                     st.session_state["custom_de_analyzed"] = True
