@@ -1,5 +1,6 @@
 import json
 import re
+import google.generativeai as genai
 import streamlit as st
 
 # ==============================================================================
@@ -77,9 +78,9 @@ st.markdown(
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-left: 4px solid #16a34a;
-        padding: 14px 16px;
+        padding: 16px 20px;
         border-radius: 10px;
-        margin-bottom: 12px;
+        margin-bottom: 14px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     
@@ -98,7 +99,7 @@ st.markdown(
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
         border-left: 5px solid #2563eb;
-        padding: 20px;
+        padding: 22px;
         border-radius: 10px;
         margin-bottom: 15px;
         line-height: 1.8;
@@ -109,7 +110,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (CHUẨN SƯ PHẠM)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (DẪN CHỨNG TƯỜNG MINH, SÂU SẮC)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -159,52 +160,66 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
                 ),
             ],
         }],
-        "evidence": [{
-            "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
-            "chi_tiet": (
-                "Sáng lập mô hình kết nối nhận nuôi cơm trưa cho hơn 60.000 học"
-                " sinh vùng cao khó khăn tại Điện Biên, Hà Giang."
-            ),
-            "y_nghia": (
-                "Chứng minh trách nhiệm được chuyển hóa thành hành động thực"
-                " tế thiết thực để thay đổi cuộc sống cộng đồng."
-            ),
-            "nguon": "Báo Tuổi Trẻ, Trung ương Đoàn TNCS Hồ Chí Minh",
-        }],
+        "evidence": [
+            {
+                "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
+                "chi_tiet": (
+                    "Sáng lập mô hình kết nối nhận nuôi cơm trưa cho hơn 60.000 học"
+                    " sinh vùng cao khó khăn tại Điện Biên, Hà Giang."
+                ),
+                "y_nghia": (
+                    "Chứng minh trách nhiệm được chuyển hóa thành hành động thực"
+                    " tế thiết thực để thay đổi cuộc sống cộng đồng, làm cho 'đất"
+                    " hóa tâm hồn'."
+                ),
+                "nguon": "Báo Tuổi Trẻ, Trung ương Đoàn TNCS Hồ Chí Minh",
+            },
+            {
+                "ten": "Đội cứu trợ thiện nguyện 'SOS Vũng Tàu'",
+                "chi_tiet": (
+                    "Hàng chục thành viên tự nguyện vá đường, hỗ trợ sửa xe và cấp"
+                    " cứu người tai nạn đêm hôm hoàn toàn miễn phí suốt nhiều"
+                    " năm."
+                ),
+                "y_nghia": (
+                    "Biểu sinh động cho lối sống đẹp, trách nhiệm cao cả vì sự"
+                    " bình yên của cộng đồng."
+                ),
+                "nguon": "Báo Thanh Niên",
+            },
+        ],
         "counter": [(
             "Phê phán lối sống ích kỷ, thực dụng, 'chỉ biết mình', thờ ơ"
             " trước những vấn đề chung của xã hội."
         )],
         "dani_chi_tiet": {
             "mb": (
-                "Dẫn dắt từ ý thơ 'Tiếng hát con tàu' của Chế Lan Viên về mối"
-                " quan hệ giữa con người và xứ sở; từ đó giới thiệu vấn đề nghị"
-                " luận: Ý nghĩa của lối sống có trách nhiệm và biết gắn bó với"
-                " cộng đồng của thế hệ trẻ."
+                "Dẫn dắt từ ý thơ 'Tiếng hát con tàu' của Chế Lan Viên; giới thiệu"
+                " vấn đề nghị luận: Ý nghĩa của lối sống có trách nhiệm và biết"
+                " gắn bó với cộng đồng."
             ),
             "gt": (
-                "Cắt nghĩa 'lối sống có trách nhiệm', 'gắn bó cộng đồng'; làm rõ"
-                " ý nghĩa câu thơ 'đất hóa tâm hồn': sự cống hiến làm bồi đắp"
-                " giá trị tinh thần cao đẹp cho mỗi người."
+                "Giải thích từ khóa 'lối sống có trách nhiệm', 'gắn bó cộng đồng';"
+                " làm rõ ý nghĩa 'đất hóa tâm hồn' là sự bồi đắp nghĩa tình."
             ),
             "bl": (
-                "- Vì sao phải sống có trách nhiệm? Con người là thực thể xã"
-                " hội, không thể tồn tại biệt lập.\n- Sống có trách nhiệm giúp"
-                " đẩy lùi căn bệnh vô cảm, nhân lên lòng nhân ái.\n- Cống hiến"
-                " là con đường khẳng định giá trị thanh xuân rực rỡ."
+                "• Luận điểm 1: Con người là thực thể xã hội, sự phát triển cá"
+                " nhân luôn cần bệ phóng từ tập thể.\n• Luận điểm 2: Sống trách"
+                " nhiệm giúp đẩy lùi căn bệnh vô cảm, lan tỏa sự tử tế.\n• Luận"
+                " điểm 3: Cống hiến là con đường khẳng định giá trị thanh xuân rực"
+                " rỡ."
             ),
             "dc": (
-                "Dẫn chứng về Hoàng Hoa Trung với dự án 'Nuôi Em' kết nối nhận"
-                " nuôi cơm trưa cho hơn 60.000 học sinh vùng cao."
+                "• Dẫn chứng 1: Hoàng Hoa Trung và dự án 'Nuôi Em'.\n• Dẫn chứng"
+                " 2: Đội cứu trợ thiện nguyện 'SOS Vũng Tàu'."
             ),
             "pb": (
-                "Phê phán lối sống ích kỷ, thực dụng, 'chỉ biết mình'; phân định"
-                " rạch ròi giữa trách nhiệm chân chính với việc cống hiến mù"
-                " quáng, hình thức."
+                "Phê phán lối sống ích kỷ, vô cảm; đồng thời phân định rạch ròi"
+                " giữa trách nhiệm chân chính với sự bao đồng, hình thức."
             ),
             "kb": (
-                "Khẳng định lại vai trò của lối sống có trách nhiệm; rút ra bài"
-                " học nhận thức và hành động thiết thực cho bản thân."
+                "Khẳng định lại giá trị của lối sống trách nhiệm; rút ra bài học"
+                " nhận thức và hành động thiết thực cho bản thân."
             ),
         },
     },
@@ -212,8 +227,8 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
         "text": """Nhà văn Haruki Murakami từng chia sẻ: "Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa." Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
 Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
         "vdnl_chuan": (
-            "Sức mạnh của sự thấu cảm và lắng nghe chân thành giữa con người"
-            " với con người trong xã hội hiện đại."
+            "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
+            " con người với con người trong xã hội hiện đại."
         ),
         "explain_guide": (
             "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
@@ -253,50 +268,69 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
                 ),
             ],
         }],
-        "evidence": [{
-            "ten": "TS. Đặng Hoàng Giang & Dự án 'Tổng đài Ngày Mai'",
-            "chi_tiet": (
-                "Sáng lập tổng đài tham vấn tâm lý phi lợi nhuận chuyên lắng"
-                " nghe, xoa dịu và hỗ trợ tinh thần cho hàng ngàn người trẻ."
-            ),
-            "y_nghia": (
-                "Không gian an toàn để được lắng nghe có thể cứu rỗi một cuộc"
-                " đời trước bờ vực tuyệt vọng."
-            ),
-            "nguon": "Báo Thanh Niên, VTV Digital",
-        }],
+        "evidence": [
+            {
+                "ten": "TS. Đặng Hoàng Giang & Dự án 'Tổng đài Ngày Mai'",
+                "chi_tiet": (
+                    "Sáng lập tổng đài tham vấn tâm lý phi lợi nhuận chuyên lắng"
+                    " nghe, xoa dịu và hỗ trợ tinh thần cho hàng ngàn người trẻ"
+                    " gặp khủng hoảng trầm cảm."
+                ),
+                "y_nghia": (
+                    "Không gian an toàn để được lắng nghe không phán xét có thể"
+                    " cứu rỗi một cuộc đời trước bờ vực tuyệt vọng."
+                ),
+                "nguon": "Báo Thanh Niên, VTV Digital",
+            },
+            {
+                "ten": (
+                    "Đoàn xe ô tô chắn gió trên cầu Bãi Cháy trong bão Yagi"
+                    " (2024)"
+                ),
+                "chi_tiet": (
+                    "Trong trận bão lịch sử, các tài xế xe tải chủ động đi chậm"
+                    " thành hàng dài song song để che chắn gió giật kinh hoàng"
+                    " cho người đi xe máy."
+                ),
+                "y_nghia": (
+                    "Sự thấu cảm trước hoạn nạn chuyển hóa thành hành động bảo"
+                    " vệ cao đẹp."
+                ),
+                "nguon": "Đài Truyền hình Việt Nam (VTV1)",
+            },
+        ],
         "counter": [(
             "Phê phán thói vô cảm, tâm lý phán xét vội vàng, bạo lực ngôn từ"
             " trên không gian mạng."
         )],
         "dani_chi_tiet": {
             "mb": (
-                "Dẫn dắt từ quan điểm của Haruki Murakami về những 'cơn bão'"
-                " trong cuộc đời; từ đó giới thiệu vấn đề nghị luận: Sức mạnh"
-                " của sự thấu cảm và lắng nghe chân thành."
+                "Dẫn dắt từ quan điểm của Haruki Murakami; giới thiệu vấn đề"
+                " nghị luận: Sức mạnh của sự thấu cảm và lắng nghe chân thành"
+                " trong xã hội hiện đại."
             ),
             "gt": (
-                "Cắt nghĩa 'thấu cảm', 'lắng nghe chân thành'; giải mã hình ảnh"
-                " 'cơn bão lòng' là những tổn thương, khủng hoảng tinh thần sâu"
-                " sắc cần được xoa dịu."
+                "Cắt nghĩa 'thấu cảm', 'lắng nghe chân thành'; giải mã 'cơn bão"
+                " lòng' là những tổn thương tâm lý sâu sắc."
             ),
             "bl": (
-                "- Trong thời đại số, con người kết nối ảo nhưng cô đơn thật.\n-"
-                " Sự thấu cảm giúp phá vỡ bức tường định kiến, kết nối trái tim"
-                " với trái tim.\n- Lắng nghe chân thành là món quà vô giá giúp"
-                " cứu rỗi tinh thần con người."
+                "• Luận điểm 1: Trong thời đại số, con người dễ cô đơn ngay giữa"
+                " đám đông, khao khát sự sẻ chia.\n• Luận điểm 2: Thấu cảm giúp"
+                " xóa bỏ định kiến, xoa dịu nỗi đau tinh thần.\n• Luận điểm 3:"
+                " Lắng nghe chân thành là cầu nối gắn kết tình người."
             ),
             "dc": (
-                "Dẫn chứng về TS. Đặng Hoàng Giang và Dự án 'Tổng đài Ngày Mai'"
-                " hỗ trợ tâm lý cho người trẻ."
+                "• Dẫn chứng 1: TS. Đặng Hoàng Giang với Dự án 'Tổng đài Ngày"
+                " Mai'.\n• Dẫn chứng 2: Các tài xế ô tô chắn gió trên cầu Bãi"
+                " Cháy."
             ),
             "pb": (
-                "Phê phán thói vô cảm, tâm lý phán xét vội vàng và bạo lực ngôn"
-                " từ trên không gian mạng."
+                "Phê phán thói vô cảm, tâm lý phán xét hùa theo đám đông và bạo"
+                " lực ngôn từ trực tuyến."
             ),
             "kb": (
-                "Khẳng định giá trị của sự thấu cảm; rút ra bài học tu dưỡng"
-                " bản thân trong lối sống hằng ngày."
+                "Khẳng định vai trò của sự thấu hiểu; rút ra bài học tu dưỡng"
+                " bản thân trong giao tiếp."
             ),
         },
     },
@@ -343,48 +377,64 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
                 ),
             ],
         }],
-        "evidence": [{
-            "ten": "Rapper Đen Vâu & Ca sĩ Hoàng Thùy Linh",
-            "chi_tiet": (
-                "Lồng ghép chất liệu ca dao, dân ca, nhạc cụ dân tộc vào âm nhạc"
-                " hiện đại đạt hàng triệu lượt xem."
-            ),
-            "y_nghia": (
-                "Cách làm mới di sản sáng tạo giúp văn hóa truyền thống tỏa"
-                " sáng rực rỡ trong thời đại số."
-            ),
-            "nguon": "Báo Tuổi Trẻ, Báo Lao Động",
-        }],
+        "evidence": [
+            {
+                "ten": "Rapper Đen Vâu & Ca sĩ Hoàng Thùy Linh",
+                "chi_tiet": (
+                    "Lồng ghép chất liệu ca dao, dân ca, nhạc cụ dân tộc vào âm"
+                    " nhạc hiện đại như 'Nấu ăn cho em', 'LINK' đạt hàng chục"
+                    " triệu lượt xem."
+                ),
+                "y_nghia": (
+                    "Cách làm mới di sản sáng tạo giúp văn hóa truyền thống tỏa"
+                    " sáng rực rỡ trong thời đại số."
+                ),
+                "nguon": "Báo Tuổi Trẻ, Báo Lao Động",
+            },
+            {
+                "ten": "Dự án phục dựng cổ phục Việt 'Đại Việt Cổ Phong'",
+                "chi_tiet": (
+                    "Tập thể Gen Z tự nguyện nghiên cứu, phục dựng chuẩn xác"
+                    " các bộ cổ phục thời Nguyễn, Lê ứng dụng vào đời sống."
+                ),
+                "y_nghia": (
+                    "Khẳng định tình yêu cội nguồn và ý thức tự giác giữ gìn di"
+                    " sản của thế hệ trẻ."
+                ),
+                "nguon": "Báo VnExpress",
+            },
+        ],
         "counter": [(
             "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt và"
             " các giá trị truyền thống."
         )],
         "dani_chi_tiet": {
             "mb": (
-                "Dẫn dắt từ nhịp sống toàn cầu hóa; từ đó giới thiệu vấn đề nghị"
-                " luận: Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc"
-                " của thế hệ trẻ."
+                "Dẫn dắt từ xu thế toàn cầu hóa; giới thiệu vấn đề nghị luận:"
+                " Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của"
+                " thế hệ trẻ."
             ),
             "gt": (
-                "Cắt nghĩa 'bản sắc văn hóa dân tộc', 'trách nhiệm giữ gìn'; làm"
-                " rõ ý nghĩa hình ảnh 'mỏ neo' trong dòng chảy hội nhập."
+                "Giải thích 'bản sắc văn hóa', 'trách nhiệm giữ gìn'; làm rõ hình"
+                " ảnh 'mỏ neo' trong không gian hội nhập."
             ),
             "bl": (
-                "- Văn hóa là cội nguồn, là căn cước định danh dân tộc.\n- Hội"
-                " nhập không có nghĩa là hòa tan; giữ gìn bản sắc giúp đất nước"
-                " đứng vững trên trường quốc tế."
+                "• Luận điểm 1: Văn hóa là căn cước định danh dân tộc, mất văn"
+                " hóa là mất tất cả.\n• Luận điểm 2: Hội nhập không có nghĩa là"
+                " hòa tan; bản sắc là nội lực giúp vươn xa."
             ),
             "dc": (
-                "Dẫn chứng về Rapper Đen Vâu và Hoàng Thùy Linh đưa chất liệu"
-                " truyền thống vào âm nhạc hiện đại."
+                "• Dẫn chứng 1: Rapper Đen Vâu và Hoàng Thùy Linh đưa chất liệu"
+                " truyền thống vào âm nhạc.\n• Dẫn chứng 2: Dự án phục dựng cổ"
+                " phục của giới trẻ."
             ),
             "pb": (
-                "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt và"
-                " các giá trị truyền thống."
+                "Phê phán thái độ sính ngoại mù quáng, lai căng văn hóa hoặc"
+                " bảo thủ đóng khung."
             ),
             "kb": (
-                "Khẳng định sứ mệnh của thế hệ trẻ đối với di sản ông cha; rút"
-                " ra bài học hành động thiết thực."
+                "Khẳng định sứ mệnh của tuổi trẻ với di sản dân tộc; rút ra bài"
+                " học hành động thiết thực."
             ),
         },
     },
@@ -451,18 +501,10 @@ for i in range(4, 16):
                 f"Dẫn dắt vào vấn đề nghị luận số {i} trong đời sống giới trẻ"
                 " hiện nay."
             ),
-            "gt": "Giải thích các từ khóa cốt lõi và thông điệp đặt ra trong đề.",
-            "bl": (
-                "Trình bày các luận điểm chứng minh tầm quan trọng và sự cần"
-                " thiết của vấn đề."
-            ),
-            "dc": (
-                "Đưa ra các dẫn chứng thực tế tiêu biểu, có nguồn kiểm chứng rõ"
-                " ràng."
-            ),
-            "pb": (
-                "Lật lại vấn đề, phê phán những quan niệm lệch lạc, hời hợt."
-            ),
+            "gt": "Giải thích rõ các từ khóa cốt lõi và thông điệp đặt ra.",
+            "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc, đa chiều.",
+            "dc": "Đưa ra các dẫn chứng thực tế tiêu biểu, giàu sức thuyết phục.",
+            "pb": "Phản biện, lật lại vấn đề và mở rộng góc nhìn.",
             "kb": "Tổng kết vấn đề và rút ra bài học hành động cho bản thân.",
         },
     }
@@ -525,18 +567,17 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
         )],
         "dani_chi_tiet": {
             "mb": (
-                "Dẫn dắt từ hình ảnh dòng sông chảy ra biển lớn; từ đó giới"
-                " thiệu vấn đề nghị luận: Bản lĩnh giữ gìn bản sắc riêng và"
-                " chính kiến trước áp lực số đông."
+                "Dẫn dắt từ hình ảnh dòng sông chảy ra biển lớn; giới thiệu vấn"
+                " đề nghị luận: Bản lĩnh giữ gìn bản sắc riêng và chính kiến"
+                " trước áp lực số đông."
             ),
             "gt": (
                 "Cắt nghĩa 'bản sắc riêng', 'chính kiến'; giải mã hình ảnh 'con"
-                " sông', 'ghềnh thác' tượng trưng cho những thử thách và áp lực"
-                " hòa tan."
+                " sông', 'ghềnh thác' tượng trưng cho thử thách."
             ),
             "bl": (
-                "- Vì sao cần giữ bản sắc? Giúp cá nhân khẳng định giá trị độc"
-                " lập, không bị lẫn lộn giữa đám đông.\n- Áp lực số đông dễ bóp"
+                "• Luận điểm 1: Giữ bản sắc giúp khẳng định giá trị cá nhân độc"
+                " lập.\n• Luận điểm 2: Áp lực đám đông và tâm lý bầy đàn dễ bóp"
                 " nghẹt tư duy phản biện."
             ),
             "dc": (
@@ -716,6 +757,15 @@ if "current_de_info" not in st.session_state:
       st.session_state["selected_de_key"]
   ]
 
+if "chat_messages" not in st.session_state:
+  st.session_state["chat_messages"] = [{
+      "role": "assistant",
+      "content": (
+          "Chào em! Cô là Trợ lý Ngữ văn. Các em cần cô hướng dẫn thêm ở phần"
+          " phương pháp lập dàn ý không?"
+      ),
+  }]
+
 with st.sidebar:
   st.title("⚙️ CẤU HÌNH HỆ THỐNG")
   api_key_input = st.text_input(
@@ -749,7 +799,7 @@ def call_gemini_engine(prompt_text):
     response = model.generate_content(prompt_text)
     if response and response.text:
       return response.text
-    return "Hệ thống đang bận, vui lòng thử lại."
+    return "Cô đang suy nghĩ, các em hãy bấm gửi lại nhé!"
   except Exception as e:
     return f"Lỗi kết nối AI: {str(e)}"
 
@@ -1068,150 +1118,206 @@ with tabs[1]:
   cur_de_key = st.session_state["selected_de_key"]
   cur_de_info = st.session_state["current_de_info"]
 
-  st.markdown(
-      f"#### 🛠️ Gợi ý khung tư duy cho: <span"
-      f" style='color:#2563eb;'>{cur_de_key}</span>",
-      unsafe_allow_html=True,
-  )
+  c_left, c_right = st.columns([1.1, 0.9], gap="large")
 
-  # Thao tác 1: Giải thích
-  with st.expander(
-      "📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True
-  ):
-    guide_txt = cur_de_info.get(
-        "explain_guide",
-        "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
-        " liệu/ý kiến -> Chốt vấn đề.",
-    )
-    items = cur_de_info.get("explain_items", [])
-    vdnl_kl = cur_de_info.get(
-        "vdnl_ket_luan", cur_de_info.get("vdnl_chuan", "")
+  with c_left:
+    st.markdown(
+        f"#### 🛠️ Gợi ý khung tư duy cho: <span"
+        f" style='color:#2563eb;'>{cur_de_key}</span>",
+        unsafe_allow_html=True,
     )
 
-    items_html = ""
-    for itm in items:
-      items_html += f"<p style='margin-bottom: 10px;'>• {itm}</p>"
+    # Thao tác 1: Giải thích
+    with st.expander(
+        "📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True
+    ):
+      guide_txt = cur_de_info.get(
+          "explain_guide",
+          "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+          " liệu/ý kiến -> Chốt vấn đề.",
+      )
+      items = cur_de_info.get("explain_items", [])
+      vdnl_kl = cur_de_info.get(
+          "vdnl_ket_luan", cur_de_info.get("vdnl_chuan", "")
+      )
+
+      items_html = ""
+      for itm in items:
+        items_html += f"<p style='margin-bottom: 10px;'>• {itm}</p>"
+
+      st.markdown(
+          f"""
+            <div class='explain-box-clean'>
+                <p style='margin:0 0 10px 0; font-style:italic; color:#475569;'><i>{guide_txt}</i></p>
+                <div style='margin:0 0 12px 0;'>
+                    {items_html}
+                </div>
+                <p style='margin:0; font-weight:700; color:#166534;'>
+                    👉 Chốt lại Vấn đề nghị luận (VĐNL): <span style='font-weight:normal; font-style:italic;'>{vdnl_kl}</span>
+                </p>
+            </div>
+            """,
+          unsafe_allow_html=True,
+      )
+
+    # Thao tác 2: Bàn luận
+    with st.expander(
+        "💡 Thao tác 2: Bàn luận trọng tâm (Hệ thống ý sâu sắc, đa chiều)",
+        expanded=True,
+    ):
+      for q in cur_de_info.get("questions", []):
+        st.markdown(f"**❓ {q['cau_hoi']}**")
+        for ans in q.get("y_tra_loi", []):
+          st.markdown(f"  * {ans}")
+
+    # Thao tác 3: Dẫn chứng
+    with st.expander(
+        "📚 Thao tác 3: Kho dẫn chứng trọng tâm & Dẫn chứng mở rộng",
+        expanded=True,
+    ):
+      st.markdown(
+          "##### 📌 Dẫn chứng thực tế tường minh cho đề bài đang chọn:"
+      )
+      list_ev = cur_de_info.get("evidence", [])
+      for ev in list_ev:
+        if isinstance(ev, dict):
+          st.markdown(
+              f"""
+                    <div class='evidence-card'>
+                        <h5 style='margin:0 0 6px 0; color:#15803d;'>👤 {ev.get('ten', '')}</h5>
+                        <p style='margin:0 0 6px 0;'><b>• Chi tiết sự kiện/hành động:</b> {ev.get('chi_tiet', '')}</p>
+                        <p style='margin:0 0 6px 0;'><b>• Ý nghĩa phân tích bài viết:</b> {ev.get('y_nghia', '')}</p>
+                        <p style='margin:0; font-size:0.85rem; color:#64748b;'>📰 <i>Nguồn kiểm chứng: {ev.get('nguon', '')}</i></p>
+                    </div>
+                    """,
+              unsafe_allow_html=True,
+          )
+        else:
+          st.markdown(f"<div class='evidence-card'>{ev}</div>", unsafe_allow_html=True)
+
+      st.markdown("---")
+      st.markdown(
+          "##### 📚 🔍 Tra cứu thêm Kho dẫn chứng mở rộng (8 nhóm chủ điểm):"
+      )
+      st.info(
+          "👉 *Mẹo nhỏ:* Các em có thể bấm vào hộp chọn bên dưới để mở rộng thêm"
+          " nhiều nhóm dẫn chứng thực tế phong phú khác cho bài văn của mình!"
+      )
+      selected_topic = st.selectbox(
+          "Chọn chủ điểm dẫn chứng cần tra cứu:",
+          options=list(KHO_DAN_CHUNG_8_CHU_DIEM.keys()),
+          key="sb_kho_dc",
+      )
+      for dc in KHO_DAN_CHUNG_8_CHU_DIEM[selected_topic]:
+        with st.container(border=True):
+          st.markdown(
+              f"#### 👤 <span style='color:#1d4ed8;'>{dc['ten']}</span>",
+              unsafe_allow_html=True,
+          )
+          st.write(dc["noi_dung"])
+          st.caption(f"📰 *Nguồn kiểm chứng: {dc['nguon']}*")
+
+    # Thao tác 4: Phản biện
+    with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng", expanded=False):
+      for c in cur_de_info.get("counter", []):
+        st.markdown(f"- {c}")
+
+    # ==========================================================================
+    # ĐỊNH HƯỚNG BỐ CỤC DÀN Ý CHI TIẾT (CHUẨN 3 PHẦN MỞ - THÂN - KẾT)
+    # ==========================================================================
+    st.markdown("---")
+    st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
+    st.info(
+        "💡 *Đây là khung định hướng bố cục chuẩn mực được tổng hợp sẵn từ các"
+        " thao tác trên. Các em hãy nghiên cứu kỹ khung sườn này để nắm vững mạch"
+        " triển khai, sau đó bấm chuyển sang Tab 'Xưởng Viết Bài' để bắt đầu tự"
+        " tay viết bài văn của mình nhé!*"
+    )
+
+    dani_data = cur_de_info.get(
+        "dani_chi_tiet",
+        {
+            "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
+            "gt": "Giải thích rõ từ khóa trong VĐNL và thông điệp ngữ liệu.",
+            "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc, đa chiều.",
+            "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu, giàu sức thuyết phục.",
+            "pb": "Phản biện, lật lại vấn đề và mở rộng góc nhìn.",
+            "kb": "Tổng kết vấn đề và rút ra bài học nhận thức, hành động.",
+        },
+    )
 
     st.markdown(
         f"""
-        <div class='explain-box-clean'>
-            <p style='margin:0 0 10px 0; font-style:italic; color:#475569;'><i>{guide_txt}</i></p>
-            <div style='margin:0 0 12px 0;'>
-                {items_html}
-            </div>
-            <p style='margin:0; font-weight:700; color:#166534;'>
-                👉 Chốt lại Vấn đề nghị luận (VĐNL): <span style='font-weight:normal; font-style:italic;'>{vdnl_kl}</span>
-            </p>
+        <div class='outline-box'>
+            <h4 style='color:#1e3a8a; margin-top:0;'>🌟 I. PHẦN MỞ BÀI</h4>
+            <p>• <b>Dẫn dắt & Giới thiệu VĐNL:</b> {dani_data.get('mb', '')}</p>
+            
+            <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 II. PHẦN THÂN BÀI</h4>
+            <p>• <b>1. Mục Giải thích:</b> {dani_data.get('gt', '')}</p>
+            <p>• <b>2. Mục Bàn luận trọng tâm:</b> {dani_data.get('bl', '')}</p>
+            <p>• <b>3. Mục Dẫn chứng thực tế:</b> {dani_data.get('dc', '')}</p>
+            <p>• <b>4. Mục Phản biện & Mở rộng:</b> {dani_data.get('pb', '')}</p>
+            
+            <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 III. PHẦN KẾT BÀI</h4>
+            <p>• <b>Tổng kết & Bài học hành động:</b> {dani_data.get('kb', '')}</p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-  # Thao tác 2: Bàn luận
-  with st.expander(
-      "💡 Thao tác 2: Bàn luận trọng tâm (Hệ thống ý sâu sắc, đa chiều)",
-      expanded=True,
-  ):
-    for q in cur_de_info.get("questions", []):
-      st.markdown(f"**❓ {q['cau_hoi']}**")
-      for ans in q.get("y_tra_loi", []):
-        st.markdown(f"  * {ans}")
+  with c_right:
+    st.markdown("#### 🧭 Trợ lý Ngữ văn (Định Hướng Phương Pháp)")
+    with st.container(border=True):
+      st.info(
+          "💡 **Nguyên tắc:** Trợ lý Ngữ văn **không viết hộ / làm hộ bài văn**,"
+          " chỉ đặt câu hỏi gợi mở để giúp các em tự tư duy."
+      )
 
-  # Thao tác 3: Dẫn chứng
-  with st.expander(
-      "📚 Thao tác 3: Kho dẫn chứng trọng tâm & Dẫn chứng mở rộng",
-      expanded=True,
-  ):
-    st.markdown("##### 📌 Dẫn chứng thực tế sâu sắc cho đề bài đang chọn:")
-    list_ev = cur_de_info.get("evidence", [])
-    for ev in list_ev:
-      if isinstance(ev, dict):
-        st.markdown(
-            f"""
-                <div class='evidence-card'>
-                    <h5 style='margin:0 0 6px 0; color:#15803d;'>👤 {ev.get('ten', '')}</h5>
-                    <p style='margin:0 0 6px 0;'><b>• Chi tiết sự kiện/hành động:</b> {ev.get('chi_tiet', '')}</p>
-                    <p style='margin:0 0 6px 0;'><b>• Ý nghĩa phân tích bài viết:</b> {ev.get('y_nghia', '')}</p>
-                    <p style='margin:0; font-size:0.85rem; color:#64748b;'>📰 <i>Nguồn kiểm chứng: {ev.get('nguon', '')}</i></p>
-                </div>
-                """,
-            unsafe_allow_html=True,
+    if (
+        "chat_messages" not in st.session_state
+        or not st.session_state["chat_messages"]
+    ):
+      st.session_state["chat_messages"] = [{
+          "role": "assistant",
+          "content": (
+              f"Chào em! Cô là Trợ lý Ngữ văn. Đề bài các em đang chọn là:"
+              f" '{cur_de_key}'. Các em cần cô hướng dẫn thêm ở phần phương"
+              " pháp lập dàn ý không?"
+          ),
+      }]
+
+    chat_box = st.container(height=380)
+    with chat_box:
+      for m in st.session_state["chat_messages"]:
+        st.chat_message(m["role"]).write(m["content"])
+
+    u_msg = st.chat_input(
+        "Hỏi cô về cách giải thích, chọn dẫn chứng...", key="chat_input_b2"
+    )
+    if u_msg:
+      st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
+
+      prompt_chat = f"""
+Bạn là Giáo viên Ngữ văn THPT tâm lý, tuân thủ nghiêm ngặt nguyên tắc SƯ PHẠM:
+- TUYỆT ĐỐI KHÔNG VIẾT HỘ, KHÔNG LÀM HỘ BÀI VĂN HOẶC ĐOẠN VĂN MẪU.
+- Chỉ đặt câu hỏi gợi mở, hướng dẫn phương pháp để học sinh tự làm.
+- Xưng hô: Cô - em.
+
+Đề bài học sinh đang chọn làm: "{cur_de_key}"
+Nội dung đề bài: "{cur_de_info.get('text', '')}"
+Học sinh hỏi: "{u_msg}"
+
+Hãy trả lời định hướng ngắn gọn (3–5 câu), bám sát đúng đề bài này và đặt câu hỏi gợi mở tư duy cho học sinh:
+"""
+      with st.spinner("Trợ lý Ngữ văn đang định hướng..."):
+        reply = call_gemini_engine(prompt_chat)
+        st.session_state["chat_messages"].append(
+            {"role": "assistant", "content": reply}
         )
-      else:
-        st.markdown(f"<div class='evidence-card'>{ev}</div>", unsafe_allow_html=True)
-
-    st.markdown("---")
-    st.markdown(
-        "##### 📚 🔍 Tra cứu thêm Kho dẫn chứng mở rộng (8 nhóm chủ điểm):"
-    )
-    st.info(
-        "👉 *Mẹo nhỏ:* Các em có thể bấm vào hộp chọn bên dưới để mở rộng thêm"
-        " nhiều nhóm dẫn chứng thực tế phong phú khác cho bài văn của mình!"
-    )
-    selected_topic = st.selectbox(
-        "Chọn chủ điểm dẫn chứng cần tra cứu:",
-        options=list(KHO_DAN_CHUNG_8_CHU_DIEM.keys()),
-        key="sb_kho_dc",
-    )
-    for dc in KHO_DAN_CHUNG_8_CHU_DIEM[selected_topic]:
-      with st.container(border=True):
-        st.markdown(
-            f"#### 👤 <span style='color:#1d4ed8;'>{dc['ten']}</span>",
-            unsafe_allow_html=True,
-        )
-        st.write(dc["noi_dung"])
-        st.caption(f"📰 *Nguồn kiểm chứng: {dc['nguon']}*")
-
-  # Thao tác 4: Phản biện
-  with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng", expanded=False):
-    for c in cur_de_info.get("counter", []):
-      st.markdown(f"- {c}")
-
-  # ==========================================================================
-  # TỔNG KẾT BẰNG BẢN DÀN Ý CHI TIẾT CHUẨN 3 PHẦN (MỞ - THÂN - KẾT)
-  # ==========================================================================
-  st.markdown("---")
-  st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
-  st.info(
-      "💡 *Đây là khung định hướng bố cục chuẩn mực được tổng hợp sẵn từ các"
-      " thao tác trên. Các em hãy nghiên cứu kỹ khung sườn này để nắm vững mạch"
-      " triển khai, sau đó bấm chuyển sang Tab 'Xưởng Viết Bài' để bắt đầu tự"
-      " tay viết bài văn của mình nhé!*"
-  )
-
-  dani_data = cur_de_info.get(
-      "dani_chi_tiet",
-      {
-          "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
-          "gt": "Giải thích rõ từ khóa trong VĐNL và thông điệp ngữ liệu.",
-          "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc, đa chiều.",
-          "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu, giàu sức thuyết phục.",
-          "pb": "Phản biện, lật lại vấn đề và mở rộng góc nhìn.",
-          "kb": "Tổng kết vấn đề và rút ra bài học nhận thức, hành động.",
-      },
-  )
-
-  st.markdown(
-      f"""
-    <div class='outline-box'>
-        <h4 style='color:#1e3a8a; margin-top:0;'>🌟 I. PHẦN MỞ BÀI</h4>
-        <p>• <b>Dẫn dắt & Giới thiệu VĐNL:</b> {dani_data.get('mb', '')}</p>
-        
-        <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 II. PHẦN THÂN BÀI</h4>
-        <p>• <b>1. Mục Giải thích:</b> {dani_data.get('gt', '')}</p>
-        <p>• <b>2. Mục Bàn luận trọng tâm:</b> {dani_data.get('bl', '')}</p>
-        <p>• <b>3. Mục Dẫn chứng thực tế:</b> {dani_data.get('dc', '')}</p>
-        <p>• <b>4. Mục Phản biện & Mở rộng:</b> {dani_data.get('pb', '')}</p>
-        
-        <h4 style='color:#1e3a8a; margin-top:20px;'>🌟 III. PHẦN KẾT BÀI</h4>
-        <p>• <b>Tổng kết & Bài học hành động:</b> {dani_data.get('kb', '')}</p>
-    </div>
-    """,
-      unsafe_allow_html=True,
-  )
+      st.rerun()
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (Placeholder ổn định)
+# BƯỚC 3: XƯỞNG VIẾT BÀI
 # ------------------------------------------------------------------------------
 with tabs[2]:
   st.markdown(
@@ -1231,7 +1337,7 @@ with tabs[2]:
   st.session_state["user_essay"] = essay_in
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: CHỈNH SỬA & ĐÁNH GIÁ RUBRIC (Placeholder ổn định)
+# BƯỚC 4: CHỈNH SỬA & ĐÁNH GIÁ RUBRIC
 # ------------------------------------------------------------------------------
 with tabs[3]:
   st.markdown(
@@ -1244,7 +1350,7 @@ with tabs[3]:
   )
 
 # ------------------------------------------------------------------------------
-# HỒ SƠ BÀI LÀM (Placeholder ổn định)
+# HỒ SƠ BÀI LÀM
 # ------------------------------------------------------------------------------
 with tabs[4]:
   st.markdown(
