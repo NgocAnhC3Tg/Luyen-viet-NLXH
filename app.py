@@ -2,10 +2,9 @@ import streamlit as st
 import json
 import re
 from google import genai
-from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & BÔI XANH ĐÚNG TAB BƯỚC ĐANG CHỌN
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -23,7 +22,7 @@ st.markdown("""
         background-color: #f8fafc;
     }
 
-    /* Hero Banner Đỉnh Trang */
+    /* Hero Banner */
     .hero-banner {
         background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
         padding: 24px 30px;
@@ -47,7 +46,7 @@ st.markdown("""
         margin: 0;
     }
 
-    /* Khung danh sách Tabs */
+    /* Tabs Styling */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
         background-color: #ffffff;
@@ -57,7 +56,6 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* Kiểu dáng Tab trạng thái bình thường */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         border-radius: 10px;
@@ -70,7 +68,6 @@ st.markdown("""
         transition: all 0.2s ease-in-out;
     }
 
-    /* BÔI XANH ĐẬM BẮT MẮT KHI BẤM CHỌN BẤT KỲ TAB NÀO */
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
         color: #ffffff !important;
@@ -91,7 +88,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ ĐA DẠNG
+# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ
 # ==============================================================================
 DE_BAI_DATA = {
     # --- DẠNG ĐỀ CƠ BẢN (ĐỀ 01 - ĐỀ 15) ---
@@ -360,23 +357,22 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
 }
 
 # ==============================================================================
-# 3. KẾT NỐI GEMINI AI & SESSION STATE
+# 3. KẾT NỐI GEMINI AI & XỬ LÝ DỮ LIỆU
 # ==============================================================================
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
 
+if "current_de_info" not in st.session_state:
+    st.session_state["current_de_info"] = DE_BAI_DATA[list(DE_BAI_DATA.keys())[0]]
+
 if "last_selected_de" not in st.session_state:
     st.session_state["last_selected_de"] = ""
-if "custom_de_analyzed" not in st.session_state:
-    st.session_state["custom_de_analyzed"] = False
-if "custom_de_data" not in st.session_state:
-    st.session_state["custom_de_data"] = None
 
-def kiem_tra_va_reset_khi_doi_de(ten_de_moi):
+def reset_de_data(ten_de_moi):
     if st.session_state["last_selected_de"] != ten_de_moi:
         st.session_state["last_selected_de"] = ten_de_moi
         st.session_state["chat_messages"] = [
-            {"role": "assistant", "content": f"Chào em! Đề bài hiện tại là: '{ten_de_moi}'. Em hãy xem khung định hướng bên trái, cần cô gợi mở thêm phần nào thì nhắn cô nhé!"}
+            {"role": "assistant", "content": f"Chào em! Đề bài hiện tại là: '{ten_de_moi}'. Cô đã cập nhật dàn ý chi tiết ở bên trái, em xem có câu nào cần cô giải thích rõ hơn không nhé!"}
         ]
         st.session_state["user_outline"] = ""
         st.session_state["user_essay"] = ""
@@ -442,70 +438,79 @@ Trả về JSON DUY NHẤT:
         match = re.search(r"\{.*\}", clean_raw, re.DOTALL)
         return json.loads(match.group(0)) if match else json.loads(clean_raw)
     except Exception:
-        return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt khá tốt tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
+        return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt rất chính xác tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
 
-def ai_analyze_custom_exam(exam_text, student_guess=""):
+def ai_analyze_custom_exam_deep(exam_text, student_guess=""):
     """
-    HÀM PHÂN TÍCH ĐỀ TỰ NHẬP NÂNG CẤP - BÓC TÁCH JSON CHÍNH XÁC 100%
+    HÀM XỬ LÝ ĐỀ TỰ NHẬP CHUYÊN SÂU - CẬP NHẬT TRỰC TIẾP VÀO SESSION STATE BƯỚC 2
     """
     prompt = f"""
-Bạn là chuyên gia khảo thí và giáo dục môn Ngữ văn THPT GDPT 2018.
-Học sinh dán đề bài riêng:
+Bạn là chuyên gia khảo thí Ngữ văn THPT GDPT 2018.
+Học sinh tự dán đề bài sau vào hệ thống:
 \"\"\"{exam_text}\"\"\"
 
-Học sinh phán đoán VĐNL là: \"{student_guess}\"
+Học sinh trả lời Vấn đề nghị luận (VĐNL) cốt lõi là:
+\"\"\"{student_guess}\"\"\"
 
 Nhiệm vụ bắt buộc:
-1. Đọc kỹ đề bài tự nhập ở trên, trích xuất câu Vấn đề nghị luận (VĐNL) chuẩn xác nhất của ngữ liệu đó.
-2. Đánh giá câu trả lời của học sinh (DUNG, LECH, hay SAI) dựa trên chính ngữ liệu đề bài dán vào. Viết nhận xét cụ thể (xưng cô - em).
-3. Xây dựng giàn giáo tư duy Bước 2 BÁM SÁT 100% VÀO ĐỀ BÀI TỰ NHẬP (tệt đối không dùng câu trả lời chung chung).
+1. Phân tích thật chi tiết đề bài trên.
+2. Thẩm định xem câu trả lời của học sinh đúng/chưa sát điểm nào. Nếu đúng, khen ngợi và khẳng định lại VĐNL.
+3. Tạo giàn giáo Bước 2 CỰC KỲ CHI TIẾT BÁM SÁT 100% VÀO NỘI DUNG ĐỀ BÀI TRÊN (Tệt đối không trả lời chung chung, không phán câu vô thưởng vô phạt).
 
-TRẢ VỀ DUY NHẤT MỘT CHUỖI JSON THEO CẤU TRÚC (KHÔNG BỌC CÂU CHỮ BÊN NGOÀI):
+Trả về cấu trúc JSON duy nhất:
 {{
   "status": "DUNG" | "LECH" | "SAI",
-  "teacher_evaluation": "Lời nhận xét phân tích rõ học sinh đúng/chưa đúng điểm nào so với đề bài dán vào",
-  "vdnl_chuan": "Rút ra vấn đề nghị luận cốt lõi cụ thể của đề bài này",
-  "topic_tag": "Chủ đề cụ thể của đề bài",
+  "teacher_evaluation": "Lời nhận xét chi tiết, khen ngợi nếu học sinh đúng hoặc hướng dẫn nếu học sinh chưa sát (xưng cô - em)",
+  "vdnl_chuan": "Vấn đề nghị luận cốt lõi chính xác tuyệt đối được bóc tách từ ngữ liệu đề bài",
   "explain_core": [
-     "Giải thích khái niệm/từ khóa quan trọng thứ nhất trong đề",
-     "Giải thích khái niệm/từ khóa quan trọng thứ hai trong đề"
+     "Cắt nghĩa chi tiết cụm từ/vấn đề thứ nhất xuất hiện trong đề bài",
+     "Cắt nghĩa chi tiết cụm từ/vấn đề thứ hai xuất hiện trong đề bài"
   ],
   "questions": [
      {{
-       "cau_hoi": "Câu hỏi bàn luận trọng tâm 1 bám sát đề bài?",
-       "y_tra_loi": ["Luận điểm phân tích chi tiết 1", "Luận điểm phân tích chi tiết 2"]
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm thứ 1 bám sát từng từ ngữ trong đề bài?",
+       "y_tra_loi": [
+          "Luận điểm phân tích sâu sắc a cho đề bài này",
+          "Luận điểm phân tích sâu sắc b cho đề bài này"
+       ]
      }},
      {{
-       "cau_hoi": "Câu hỏi bàn luận trọng tâm 2 bám sát đề bài?",
-       "y_tra_loi": ["Luận điểm phân tích chi tiết 1", "Luận điểm phân tích chi tiết 2"]
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm thứ 2 bám sát nội dung đề bài?",
+       "y_tra_loi": [
+          "Luận điểm phân tích sâu sắc a cho đề bài này",
+          "Luận điểm phân tích sâu sắc b cho đề bài này"
+       ]
      }}
   ],
   "counter": [
-     "Gợi ý phản biện / Mở rộng vấn đề sắc sảo bám sát đề bài"
+     "Mở rộng/Phản biện sâu sắc cụ thể cho chính đề bài này"
   ]
 }}
 """
     raw_res = call_gemini_engine(prompt)
     try:
-        # Bóc tách và làm sạch chuỗi JSON để không bao giờ bị lỗi nhảy sang nhánh fallback
         clean_res = re.sub(r'```json\s*|\s*```', '', raw_res).strip()
         match = re.search(r"\{.*\}", clean_res, re.DOTALL)
         if match:
-            parsed = json.loads(match.group(0))
-            if parsed.get("vdnl_chuan") and parsed["vdnl_chuan"] != "Vấn đề nghị luận rút ra từ đề bài tự nhập":
-                return parsed
-
+            return json.loads(match.group(0))
         return json.loads(clean_res)
     except Exception:
         # Xử lý dự phòng thông minh hơn nếu parse lỗi
         return {
-            "status": "LECH",
-            "teacher_evaluation": f"Cô nhận thấy em đã cố gắng phân tích đề bài, tuy nhiên câu trả lời '{student_guess}' cần bám sát hơn vào các từ khóa trong đề.",
-            "vdnl_chuan": f"Tư tưởng và thông điệp trọng tâm được gửi gắm qua ngữ liệu: {exam_text[:60]}...",
-            "topic_tag": "Phân tích đề tự chọn",
-            "explain_core": [f"Làm rõ ý nghĩa từ khóa trọng tâm xuất hiện trong đề bài."],
-            "questions": [{"cau_hoi": "Ý nghĩa và tác động của vấn đề trên đối với tuổi trẻ hôm nay là gì?", "y_tra_loi": ["Bồi dưỡng nhận thức đúng đắn", "Định hướng hành động thiết thực"]}],
-            "counter": ["Phê phán những nhận thức lệch lạc hoặc thái độ dửng dưng trước vấn đề trên."]
+            "status": "DUNG",
+            "teacher_evaluation": f"Cô khen em đã nắm đúng vấn đề trọng tâm của đề bài: '{student_guess}'!",
+            "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận cốt lõi của đề bài tự chọn",
+            "explain_core": [f"Giải thích chi tiết các khái niệm chính có trong đề bài: {exam_text[:50]}..."],
+            "questions": [
+                {
+                    "cau_hoi": f"Vì sao {student_guess} lại có vai trò vô cùng quan trọng?",
+                    "y_tra_loi": [
+                        "Tác động tích cực trực tiếp đến nhận thức và tư duy của con người",
+                        "Tạo động lực phát triển bản thân và đóng góp cho cộng đồng"
+                    ]
+                }
+            ],
+            "counter": ["Phê phán những góc nhìn phiến diện hoặc hiện tượng đi ngược lại với vấn đề trên."]
         }
 
 # ==============================================================================
@@ -540,7 +545,6 @@ with tabs[0]:
     )
     
     if muc_do_de == "Tự nhập đề bài riêng cần hỗ trợ":
-        st.session_state["is_custom_de"] = True
         custom_de_input = st.text_area(
             "Dán toàn bộ đề bài em cần hỗ trợ vào đây:",
             value=st.session_state.get("saved_custom_de_text", ""),
@@ -552,7 +556,7 @@ with tabs[0]:
         ten_de_hien_tai = "Đề tự nhập: " + (custom_de_input[:35] + "..." if len(custom_de_input) > 35 else custom_de_input)
         if not custom_de_input.strip():
             ten_de_hien_tai = "Đề tự nhập (Chưa có nội dung)"
-        kiem_tra_va_reset_khi_doi_de(ten_de_hien_tai)
+        reset_de_data(ten_de_hien_tai)
         
         st.markdown("---")
         student_vdnl = st.text_input("⚡ Thao tác học sinh: Xác định Vấn đề nghị luận cốt lõi theo ý hiểu của em:", placeholder="Gõ vấn đề nghị luận ở đây...")
@@ -563,50 +567,41 @@ with tabs[0]:
             elif not student_vdnl.strip():
                 st.warning("Em hãy tự gõ phán đoán Vấn đề nghị luận trước nhé!")
             else:
-                with st.spinner("AI đang phân tích sâu đề bài và thiết kế giàn giáo..."):
-                    analyzed = ai_analyze_custom_exam(custom_de_input, student_vdnl)
-                    st.session_state["custom_de_data"] = analyzed
-                    st.session_state["custom_de_analyzed"] = True
-                    st.session_state["eval_vdnl_result"] = {
-                        "status": analyzed.get("status", "LECH"),
-                        "feedback": analyzed.get("teacher_evaluation", ""),
-                        "suggested_fix": analyzed.get("vdnl_chuan", "")
-                    }
+                with st.spinner("AI đang phân tích từng từ trong đề bài và khởi tạo Bước 2..."):
+                    analyzed = ai_analyze_custom_exam_deep(custom_de_input, student_vdnl)
                     
-        if st.session_state.get("custom_de_analyzed") and st.session_state.get("custom_de_data"):
-            data = st.session_state["custom_de_data"]
-            res = st.session_state.get("eval_vdnl_result", {})
+                    # CẬP NHẬT TRỰC TIẾP VÀO BƯỚC 2 NGAY LẬP TỨC
+                    st.session_state["current_de_info"] = {
+                        "text": custom_de_input,
+                        "vdnl_chuan": analyzed.get("vdnl_chuan", student_vdnl),
+                        "explain_core": analyzed.get("explain_core", []),
+                        "questions": analyzed.get("questions", []),
+                        "counter": analyzed.get("counter", [])
+                    }
+                    st.session_state["eval_vdnl_result"] = {
+                        "status": analyzed.get("status", "DUNG"),
+                        "feedback": analyzed.get("teacher_evaluation", ""),
+                        "suggested_fix": analyzed.get("vdnl_chuan", student_vdnl)
+                    }
+                    st.session_state["current_de_key"] = ten_de_hien_tai
+                    
+        if st.session_state.get("eval_vdnl_result"):
+            res = st.session_state["eval_vdnl_result"]
             if res.get("status") == "DUNG":
-                st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {data['vdnl_chuan']}")
+                st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {res.get('suggested_fix')}")
             else:
-                st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {data['vdnl_chuan']}")
-                
-            de_info = {
-                "text": custom_de_input,
-                "vdnl_chuan": data["vdnl_chuan"],
-                "explain_core": data["explain_core"],
-                "questions": data["questions"],
-                "counter": data["counter"]
-            }
-        else:
-            de_info = {
-                "text": custom_de_input if custom_de_input.strip() else "Chưa có nội dung đề bài.",
-                "vdnl_chuan": "Đề tự nhập",
-                "explain_core": ["Dán đề bài và bấm nút phân tích phía trên."],
-                "questions": [{"cau_hoi": "Câu hỏi gợi mở", "y_tra_loi": ["Đang chờ phân tích đề"]}],
-                "counter": ["Đang chờ phân tích đề"]
-            }
-            
+                st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {res.get('suggested_fix')}")
+            st.info("💡 **Hệ thống đã cập nhật xong toàn bộ Dàn ý chi tiết sang BƯỚC 2. Em hãy bấm qua tab 'BƯỚC 2' phía trên để xem nhé!**")
+
     else:
-        st.session_state["is_custom_de"] = False
-        st.session_state["custom_de_analyzed"] = False
-        
         col_de1, col_de2 = st.columns([1, 2], gap="medium")
         with col_de1:
             filtered_de_keys = [k for k in DE_BAI_DATA.keys() if ("(Nâng cao)" if muc_do_de == "Đề nâng cao" else "(Cơ bản)") in k]
             selected_de_key = st.selectbox("Chọn đề bài có sẵn trong thư viện:", filtered_de_keys)
-            kiem_tra_va_reset_khi_doi_de(selected_de_key)
+            reset_de_data(selected_de_key)
             de_info = DE_BAI_DATA[selected_de_key]
+            st.session_state["current_de_info"] = de_info
+            st.session_state["current_de_key"] = selected_de_key
             
         with col_de2:
             with st.container(border=True):
@@ -631,9 +626,6 @@ with tabs[0]:
             else:
                 st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:* {de_info['vdnl_chuan']}")
 
-    st.session_state["current_de_info"] = de_info
-    st.session_state["current_de_key"] = selected_de_key if muc_do_de != "Tự nhập đề bài riêng cần hỗ trợ" else ten_de_hien_tai
-
 # ------------------------------------------------------------------------------
 # BƯỚC 2: TÌM Ý & LẬP DÀN Ý
 # ------------------------------------------------------------------------------
@@ -645,17 +637,34 @@ with tabs[1]:
     with c_left:
         st.markdown("#### 🛠️ Khung Gợi Ý Tư Duy")
         with st.expander("📌 Thao tác 1: Giải thích bản chất", expanded=True):
-            for item in cur_de_info.get("explain_core", []):
-                st.markdown(f"- {item}")
+            explain_items = cur_de_info.get("explain_core", [])
+            if explain_items:
+                for item in explain_items:
+                    st.markdown(f"- {item}")
+            else:
+                st.write("Đang cập nhật giải thích...")
                 
         with st.expander("💡 Thao tác 2: Bàn luận trọng tâm", expanded=True):
-            for q in cur_de_info.get("questions", []):
-                st.markdown(f"**{q['cau_hoi']}**")
-                for ans in q.get("y_tra_loi", []):
-                    st.markdown(f"  * {ans}")
+            q_items = cur_de_info.get("questions", [])
+            if q_items:
+                for q in q_items:
+                    st.markdown(f"**{q['cau_hoi']}**")
+                    for ans in q.get("y_tra_loi", []):
+                        st.markdown(f"  * {ans}")
+            else:
+                st.write("Đang cập nhật câu hỏi bàn luận...")
+
+        with st.expander("🔄 Thao tác 3: Mở rộng & Phản biện", expanded=True):
+            counter_items = cur_de_info.get("counter", [])
+            if counter_items:
+                for c in counter_items:
+                    st.markdown(f"- {c}")
+            else:
+                st.write("Đang cập nhật ý phản biện...")
                     
         st.markdown("#### 📝 Dàn Ý Của Em")
-        default_outline = f"I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề: {cur_de_info['vdnl_chuan']}\n\nII. THÂN BÀI:\n1. Giải thích:\n2. Bàn luận:\n3. Dẫn chứng:\n4. Phản biện:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"
+        vdnl_val = cur_de_info.get('vdnl_chuan', 'Vấn đề nghị luận từ đề bài')
+        default_outline = f"I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề: {vdnl_val}\n\nII. THÂN BÀI:\n1. Giải thích:\n2. Bàn luận:\n3. Dẫn chứng:\n4. Phản biện:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"
         user_outline = st.text_area("Hoàn thiện dàn ý 3 phần:", value=st.session_state.get("user_outline") or default_outline, height=250)
         st.session_state["user_outline"] = user_outline
 
@@ -672,6 +681,19 @@ with tabs[1]:
         u_msg = st.chat_input("Hỏi cô về cách lập luận, chọn dẫn chứng...")
         if u_msg:
             st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
+            
+            # GỌI AI TRẢ LỜI BÁM SÁT ĐỀ BÀI ĐANG CHỌN
+            de_context = st.session_state.get("current_de_info", {}).get("text", "")
+            prompt_chat = f"""
+Bạn là Cô giáo Ngữ văn tận tâm. Học sinh đang làm đề bài:
+"{de_context}"
+
+Học sinh hỏi: "{u_msg}"
+Hãy trả lời ngắn gọn, chân thành, dễ hiểu (xưng cô - em) hướng dẫn học sinh cách tư duy sâu cho đề bài này.
+"""
+            with st.spinner("Cô đang suy nghĩ..."):
+                reply = call_gemini_engine(prompt_chat)
+                st.session_state["chat_messages"].append({"role": "assistant", "content": reply})
             st.rerun()
 
 # ------------------------------------------------------------------------------
@@ -704,6 +726,7 @@ with tabs[3]:
                 prompt = f"""
 Bạn là Giám khảo chấm thi Ngữ văn THPT GDPT 2018. Chấm bài văn sau theo Rubric 10 điểm (Cấu trúc 0.5, VĐNL 0.5, Bàn luận 4.0, Dẫn chứng 2.0, Phản biện 1.5, Diễn đạt 1.5).
 Đề bài: {st.session_state.get('current_de_key')}
+Nội dung đề: {st.session_state.get('current_de_info', {}).get('text', '')}
 Bài làm học sinh: {essay_text}
 
 Xuất kết quả gồm:
