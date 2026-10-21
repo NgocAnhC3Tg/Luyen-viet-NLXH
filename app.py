@@ -4,7 +4,7 @@ import re
 from google import genai
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN VÀ TABS NỔI BẬT
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TABS
 # ==============================================================================
 st.set_page_config(
     page_title="Quy Trình 4 Bước Tạo Lập Bài Văn NLXH",
@@ -96,7 +96,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ KÈM KHO DẪN CHỨNG CÓ NGUỒN XÁC THỰC
+# 2. NGÂN HÀNG ĐỀ THI THỦ CÔNG CHI TIẾT (KHO DẪN CHỨNG CÓ NGUỒN CỤ THỂ)
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -135,6 +135,7 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             "Lật lại vấn đề: Sống có trách nhiệm không đồng nghĩa với cống hiến mù quáng hay bao đồng; cần biết cân bằng giữa việc chăm sóc bản thân và đóng góp cho cộng đồng."
         ]
     },
+    
     "Đề 02 (Cơ bản): Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
         "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
 Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
@@ -162,6 +163,7 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             "Lật lại vấn đề: Thấu cảm không đồng nghĩa với sự ủy mị, dung dưỡng cho những hành vi sai trái hoặc để cảm xúc chi phối hoàn toàn lý trí."
         ]
     },
+    
     "Đề 03 (Cơ bản): Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
         "text": """Có ý kiến cho rằng: *"Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."*
 Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ hôm nay.""",
@@ -188,38 +190,64 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
             "Phê phán thái độ sính ngoại mù quáng, xem thường tiếng Việt, coi rẻ các giá trị truyền thống dân tộc.",
             "Lật lại vấn đề: Giữ gìn bản sắc không có nghĩa là bảo thủ, khép kín; cần chủ động tiếp biến có chọn lọc những giá trị tiến bộ của nhân loại."
         ]
+    },
+
+    "Đề 04 (Nâng cao): Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
+        "text": """Có ý kiến cho rằng: *"Con sông nào cũng phải chảy qua ghềnh thác để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó sẽ hòa tan vào những con lạch nhỏ mà biến mất."*
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực của số đông trong kỷ nguyên số.""",
+        "vdnl_chuan": "Bản lĩnh giữ gìn bản sắc riêng và chính kiến cá nhân trước áp lực của đám đông trong thời đại số.",
+        "topic_tag": "Bản lĩnh – Tư duy độc lập – Bản sắc",
+        "explain_core": [
+            "**Bản sắc riêng & chính kiến:** Tư duy độc lập, cá tính sáng tạo và hệ giá trị đạo đức riêng làm nên phẩm giá cá nhân.",
+            "**Áp lực số đông trong kỷ nguyên số:** Sự phán xét, lôi kéo của thuật toán và tâm lý bầy đàn khiến con người dễ bị thỏa hiệp và san bằng cá tính."
+        ],
+        "questions": [
+            {
+                "cau_hoi": "Vì sao giữ vững bản sắc riêng trước đám đông lại vừa là thách thức vừa là giá trị lớn nhất của tuổi trẻ?",
+                "y_tra_loi": [
+                    "**Thách thức:** Xu hướng 'sợ bị bỏ lỡ' (FOMO) và áp lực bị tẩy chay khiến người trẻ dễ chọn cách hòa nhập bằng cách đồng hóa bản thân.",
+                    "**Giá trị:** Sự khác biệt có định hướng là chìa khóa tạo nên năng lực cạnh tranh cốt lõi, giúp cá nhân đóng góp những góc nhìn mới cho xã hội."
+                ]
+            }
+        ],
+        "evidence": [
+            "**Vận động viên Nguyễn Thị Oanh:** Vượt qua áp lực dư luận và thử thách khắc nghiệt về thể lực để liên tiếp giành 4 HCB SEA Games 32 trong cùng một buổi chiều. *(Nguồn: Báo Thể thao & Văn hóa)*",
+            "**Các nhà sáng tạo nội dung giáo dục độc lập:** Giữa làn sóng nội dung 'rác' câu view, những kênh như 'Spiderum', 'Triết học Tuổi trẻ' vẫn kiên trì tạo ra tri thức sâu sắc. *(Nguồn: Báo Tiền Phong)*"
+        ],
+        "counter": [
+            "Phê phán thói hùa theo phong trào, a dua thiếu suy nghĩ hoặc biến sự 'khác biệt' thành sự ngông cuồng, quái dị đi ngược chuẩn mực đạo đức.",
+            "Lật lại vấn đề: Giữ bản sắc không có nghĩa là ngoan cố, cố chấp; cần biết lắng nghe có phản biện để hoàn thiện tư duy."
+        ]
+    },
+
+    "Đề 05 (Nâng cao): Tư duy phản biện trong bùng nổ trí tuệ nhân tạo (AI)": {
+        "text": """Trong kỷ nguyên trí tuệ nhân tạo (AI) phát triển bùng nổ, ranh giới giữa sự thật và giả mạo trở nên mỏng manh hơn bao giờ hết.
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng của tư duy phản biện và năng lực làm chủ tri thức của người trẻ hôm nay.""",
+        "vdnl_chuan": "Tầm quan trọng của tư duy phản biện và năng lực tự chủ tri thức trước sự bùng nổ của trí tuệ nhân tạo (AI).",
+        "topic_tag": "Tư duy phản biện – AI – Tự chủ tri thức",
+        "explain_core": [
+            "**Tư duy phản biện:** Năng lực phân tích, đánh giá, lật lại vấn đề một cách khách quan dựa trên bằng chứng logic thay vì tin tưởng cảm tính.",
+            "**Năng lực làm chủ tri thức:** Việc chủ động biến thông tin thành tri thức cá nhân, coi công nghệ là công cụ hỗ trợ chứ không phải 'bộ não thay thế'."
+        ],
+        "questions": [
+            {
+                "cau_hoi": "Vì sao trong thời đại AI, tư duy phản biện lại trở thành năng lực sống còn?",
+                "y_tra_loi": [
+                    "**Nạn tin giả (Fake news / Deepfake):** Công nghệ tạo ra thông tin giả mạo vô cùng tinh vi; nếu thiếu tư duy phản biện, con người sẽ dễ bị thao túng tâm lý.",
+                    "**Tránh sự thụ động tư duy:** Phụ thuộc hoàn toàn vào đáp án của AI khiến bộ não con người lười suy nghĩ, triệt tiêu khả năng sáng tạo độc lập."
+                ]
+            }
+        ],
+        "evidence": [
+            "**Nạn lừa đảo bằng công nghệ Deepfake:** Bộ Công an liên tục cảnh báo các vụ lừa đảo chiếm đoạt tài sản bằng hình ảnh, giọng nói AI giả mạo người thân. *(Nguồn: Cổng thông tin Bộ Công an, Báo VTV)*",
+            "**Chính sách của các trường đại học lớn (như Harvard, MIT):** Bắt buộc sinh viên phải minh bạch việc sử dụng AI và coi tư duy phản biện là tiêu chí chấm điểm cốt lõi. *(Nguồn: Báo Tuổi Trẻ Quốc Tế)*"
+        ],
+        "counter": [
+            "Phê phán thái độ lười suy nghĩ, tin tưởng tuyệt đối vào thông tin trên mạng hoặc cực đoan chối bỏ sự tiến bộ của công nghệ.",
+            "Lật lại vấn đề: Phản biện không phải là hoài nghi tiêu cực hay phủ nhận tất cả, mà là đi tìm chân lý bằng sự tỉnh táo và tri thức."
+        ]
     }
 }
-
-# Tự động bổ sung các đề từ 04 đến 30 với bộ dữ liệu chuẩn sâu
-for i in range(4, 31):
-    k_name = f"Đề {i:02d}"
-    if not any(k_name in k for k in DE_BAI_DATA.keys()):
-        is_nc = "Nâng cao" if i >= 16 else "Cơ bản"
-        DE_BAI_DATA[f"{k_name} ({is_nc}): Rèn luyện bản lĩnh sống và tư duy độc lập"] = {
-            "text": f"Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng của việc rèn luyện tư duy độc lập và bản lĩnh vượt qua thử thách đối với thanh niên hôm nay ({k_name}).",
-            "vdnl_chuan": f"Tầm quan trọng của việc rèn luyện tư duy độc lập và bản lĩnh vượt qua thử thách ở thế hệ trẻ ({k_name}).",
-            "topic_tag": "Bản lĩnh – Tư duy độc lập – Vươn lên",
-            "explain_core": [
-                "**Tư duy độc lập:** Năng lực tự suy nghĩ, phân tích và đưa ra nhận định dựa trên tri thức cá nhân thay bị phụ thuộc vào suy nghĩ của số đông.",
-                "**Bản lĩnh sống:** Sự kiên cường, dũng cảm đối diện với khó khăn, dám nghĩ, dám làm và chịu trách nhiệm về quyết định của mình."
-            ],
-            "questions": [
-                {
-                    "cau_hoi": "Vì sao tư duy độc lập và bản lĩnh lại là yếu tố sống còn đối với người trẻ?",
-                    "y_tra_loi": [
-                        "Giúp con người không bị thao túng trước thông tin giả, dư luận tiêu cực hoặc trào lưu lệch lạc trên không gian mạng.",
-                        "Tạo tiền đề cho tư duy sáng tạo, giúp cá nhân tự tin khẳng định bản sắc riêng và đạt được thành công bền vững."
-                    ]
-                }
-            ],
-            "evidence": [
-                f"**Các nhà khoa học trẻ đoạt giải thưởng Quả Cầu Vàng:** Nhờ tư duy độc lập và sự kiên trì nghiên cứu, nhiều nhà khoa học dưới 35 tuổi đã tạo ra các phát minh ứng dụng cao. *(Nguồn: Trung ương Đoàn TNCS Hồ Chí Minh)*"
-            ],
-            "counter": [
-                "Phê phán lối sống ỷ lại, bắt chước mù quáng, tâm lý bầy đàn hoặc sợ hãi không dám nói lên chính kiến."
-            ]
-        }
 
 # ==============================================================================
 # 3. KẾT NỐI GEMINI AI & XỬ LÝ DỮ LIỆU
@@ -306,9 +334,6 @@ Trả về JSON DUY NHẤT:
         return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt rất chính xác tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
 
 def ai_analyze_custom_exam_deep(exam_text, student_guess=""):
-    """
-    HÀM PHÂN TÍCH ĐỀ TỰ NHẬP CHUYÊN SÂU - BẮT AI SINH KHO DẪN CHỨNG CÓ NGUỒN VÀ LẬP LUẬN SÂU SẮC
-    """
     prompt = f"""
 Bạn là chuyên gia khảo thí Ngữ văn THPT GDPT 2018. 
 Học sinh tự dán đề bài riêng vào hệ thống:
@@ -457,7 +482,6 @@ with tabs[0]:
                     }
                     st.session_state["current_de_key"] = ten_de_hien_tai
                     
-                    # Tự động điền sẵn dàn ý mẫu vào session state cho Bước 2
                     st.session_state["user_outline"] = f"I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề nghị luận: {vdnl_chuan_val}\n\nII. THÂN BÀI:\n1. Giải thích bản chất:\n2. Bàn luận trọng tâm (Lý do & Tác động):\n3. Dẫn chứng thực tế (Có nguồn xác thực):\n4. Phản biện & Lật lại vấn đề:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động cho bản thân:"
                     
         if st.session_state.get("eval_vdnl_result"):
@@ -478,7 +502,6 @@ with tabs[0]:
             st.session_state["current_de_info"] = de_info
             st.session_state["current_de_key"] = selected_de_key
             
-            # Gán dàn ý mặc định chuẩn
             if not st.session_state.get("user_outline"):
                 st.session_state["user_outline"] = f"I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề: {de_info['vdnl_chuan']}\n\nII. THÂN BÀI:\n1. Giải thích bản chất:\n2. Bàn luận trọng tâm:\n3. Dẫn chứng thực tế:\n4. Phản biện & Mở rộng:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"
             
