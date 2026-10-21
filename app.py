@@ -1,6 +1,6 @@
 import json
 import re
-from google import genai
+import google.generativeai as genai_legacy
 import streamlit as st
 
 # ==============================================================================
@@ -84,14 +84,14 @@ st.markdown(
         box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     
-    .explain-box-chuan {
+    .explain-box-clean {
         background-color: #f0fdf4;
         border: 1px solid #bbf7d0;
         border-left: 5px solid #16a34a;
-        padding: 16px 20px;
+        padding: 18px 22px;
         border-radius: 10px;
-        line-height: 1.7;
-        font-size: 0.95rem;
+        line-height: 1.75;
+        font-size: 0.96rem;
         color: #1e293b;
     }
 </style>
@@ -100,7 +100,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (CHUẨN TRÌNH TỰ SƯ PHẠM)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (CHUẨN SƯ PHẠM)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -112,21 +112,22 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             " cộng đồng của thế hệ trẻ."
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
             (
-                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **lối sống có"
-                " trách nhiệm** là nhận thức đúng đắn về bổn phận đối với tập"
-                " thể; **gắn bó với cộng đồng** là sự sẻ chia và tinh thần cống"
-                " hiến."
+                "<b>1. Giải thích từ khóa trong VĐNL:</b> <i>Lối sống có trách"
+                " nhiệm</i> là sự nhận thức đúng đắn về bổn phận đối với tập"
+                " thể; <i>gắn bó với cộng đồng</i> là sự sẻ chia, tình nghĩa và"
+                " tinh thần dấn thân cống hiến."
             ),
             (
-                "**2. Phân tích ý nghĩa ngữ liệu:** Ý thơ Chế Lan Viên qua hình"
+                "<b>2. Phân tích ý nghĩa ngữ liệu:</b> Ý thơ Chế Lan Viên qua hình"
                 " ảnh 'nơi đất ở' và 'đất hóa tâm hồn' làm nổi bật mối quan hệ"
-                " gắn kết giữa cá nhân và tập thể: khi biết sống cống hiến,"
-                " không gian sống sẽ trở nên gắn bó nghĩa tình."
+                " gắn kết sâu sắc: khi con người biết sống cống hiến và trách"
+                " nhiệm, không gian sống vô tri sẽ hóa thành nghĩa tình gắn"
+                " bó."
             ),
         ],
         "vdnl_ket_luan": (
@@ -174,25 +175,26 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             " con người với con người trong xã hội hiện đại."
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
             (
-                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **thấu cảm** là năng"
-                " lực đặt mình vào vị trí người khác; **lắng nghe chân thành**"
-                " là thái độ kiên nhẫn, không phán xét để xoa dịu nỗi đau."
+                "<b>1. Giải thích từ khóa trong VĐNL:</b> <i>Thấu cảm</i> là"
+                " năng lực đặt mình vào vị trí người khác; <i>lắng nghe chân"
+                " thành</i> là thái độ kiên nhẫn, không phán xét để xoa dịu nỗi"
+                " đau."
             ),
             (
-                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh ẩn dụ 'cơn bão lòng'"
+                "<b>2. Phân tích ý nghĩa ý kiến:</b> Hình ảnh ẩn dụ 'cơn bão lòng'"
                 " chỉ những biến cố dữ dội, tổn thương tâm lý; qua đó khẳng định"
                 " sự cần thiết của sự thấu hiểu để cùng nhau vượt qua khủng"
                 " hoảng."
             ),
         ],
         "vdnl_ket_luan": (
-            "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
-            " con người với con người trong xã hội hiện đại."
+            "Sức mạnh của sự thấu cảm và lắng nghe chân thành giữa con người"
+            " với con người trong xã hội hiện đại."
         ),
         "questions": [{
             "cau_hoi": (
@@ -235,19 +237,19 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
             " hệ trẻ trong bối cảnh hội nhập."
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
             (
-                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **bản sắc văn hóa"
-                " dân tộc** là giá trị cốt lõi, tinh hoa truyền thống; **trách"
-                " nhiệm giữ gìn** là bổn phận bảo vệ và phát huy cội nguồn."
+                "<b>1. Giải thích từ khóa trong VĐNL:</b> <i>Bản sắc văn hóa dân"
+                " tộc</i> là giá trị cốt lõi, tinh hoa truyền thống; <i>trách"
+                " nhiệm giữ gìn</i> là bổn phận bảo vệ và phát huy cội nguồn."
             ),
             (
-                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh 'toàn cầu hóa' và 'chiếc"
-                " mỏ neo' đặt ra vấn đề: hội nhập quốc tế rộng mở nhưng cội"
-                " nguồn văn hóa là điểm tựa giữ vững bản lĩnh dân tộc."
+                "<b>2. Phân tích ý nghĩa ý kiến:</b> Hình ảnh 'toàn cầu hóa' và"
+                " 'chiếc mỏ neo' đặt ra vấn đề: hội nhập quốc tế rộng mở nhưng"
+                " cội nguồn văn hóa là điểm tựa giữ vững bản lĩnh dân tộc."
             ),
         ],
         "vdnl_ket_luan": (
@@ -305,16 +307,16 @@ for i in range(4, 16):
             f"Tầm quan trọng và ý nghĩa của phẩm chất đạo đức trong đề số {i}."
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
             (
-                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa định nghĩa và bản"
-                " chất khái niệm chính được đặt ra trong đề bài."
+                "<b>1. Giải thích từ khóa trong VĐNL:</b> Cắt nghĩa định nghĩa và"
+                " bản chất khái niệm chính được đặt ra trong đề bài."
             ),
             (
-                "**2. Phân tích ý nghĩa ngữ liệu:** Làm rõ thông điệp nhân sinh"
+                "<b>2. Phân tích ý nghĩa ngữ liệu:</b> Làm rõ thông điệp nhân sinh"
                 " tích cực mà ngữ liệu hướng tới."
             ),
         ],
@@ -356,17 +358,17 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             " của đám đông."
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
             (
-                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **bản sắc riêng**"
-                " là cá tính độc đáo; **chính kiến** là tư duy độc lập làm nên"
+                "<b>1. Giải thích từ khóa trong VĐNL:</b> <i>Bản sắc riêng</i> là"
+                " cá tính độc đáo; <i>chính kiến</i> là tư duy độc lập làm nên"
                 " phẩm giá cá nhân."
             ),
             (
-                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh ẩn dụ 'con sông' và"
+                "<b>2. Phân tích ý nghĩa ý kiến:</b> Hình ảnh ẩn dụ 'con sông' và"
                 " 'ghềnh thác' tượng trưng cho thử thách; đòi hỏi bản lĩnh giữ"
                 " vững dòng chảy cá nhân trước áp lực hòa tan."
             ),
@@ -406,70 +408,152 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
     }
 }
 
+# Kho dẫn chứng mở rộng phong phú hơn
 KHO_DAN_CHUNG_8_CHU_DIEM = {
-    "1. Trách nhiệm, Cống hiến & Phụng sự cộng đồng": [{
-        "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
-        "noi_dung": (
-            "Kết nối nhận nuôi cơm trưa cho hơn 60.000 học sinh vùng cao khó"
-            " khăn."
-        ),
-        "nguon": "Báo Tuổi Trẻ, Trung ương Đoàn",
-    }],
-    "2. Thấu cảm, Lắng nghe & Tử tế": [{
-        "ten": "TS. Đặng Hoàng Giang & 'Tổng đài Ngày Mai'",
-        "noi_dung": (
-            "Tổng đài tham vấn tâm lý phi lợi nhuận hỗ trợ tinh thần cho người"
-            " trẻ khủng hoảng."
-        ),
-        "nguon": "Báo Thanh Niên, VTV",
-    }],
-    "3. Giữ gìn Bản sắc văn hóa & Di sản dân tộc": [{
-        "ten": "Dự án phục dựng cổ phục 'Đại Việt Cổ Phong'",
-        "noi_dung": (
-            "Gen Z nghiên cứu, phục dựng chuẩn xác cổ phục Triều Nguyễn, Lê"
-            " ứng dụng vào đời sống."
-        ),
-        "nguon": "Báo VnExpress",
-    }],
-    "4. Bản lĩnh trước đám đông & Tư duy độc lập": [{
-        "ten": "Nhà bác học Galileo Galilei",
-        "noi_dung": (
-            "Kiên cường bảo vệ chân lý thuyết Nhật tâm trước tòa án dị giáo"
-            " Trung cổ."
-        ),
-        "nguon": "Lịch sử Khoa học thế giới",
-    }],
-    "5. Dũng cảm, Vượt khó & Kiên trì": [{
-        "ten": "VĐV Nguyễn Thị Oanh (SEA Games 32)",
-        "noi_dung": (
-            "Vượt qua lịch thi đấu khắc nghiệt cách nhau 20 phút giành 2 HCV"
-            " điền kinh."
-        ),
-        "nguon": "Báo Thể thao & Văn hóa",
-    }],
-    "6. Tự học, Thích ứng & Tri thức thời đại AI": [{
-        "ten": "Chủ tịch Hồ Chí Minh - Tấm gương tự học vĩ đại",
-        "noi_dung": (
-            "Tự học thông thạo hơn 10 ngoại ngữ khi bôn ba tìm đường cứu nước."
-        ),
-        "nguon": "Tư liệu Lịch sử Đảng",
-    }],
-    "7. Bảo vệ Môi trường & Lối sống xanh": [{
-        "ten": "Nhóm tình nguyện 'Sài Gòn Xanh'",
-        "noi_dung": (
-            "Dầm mình dưới các kênh rạch ô nhiễm vớt hàng chục tấn rác trả lại"
-            " nguồn nước sạch."
-        ),
-        "nguon": "VTV1, Báo Tuổi Trẻ",
-    }],
-    "8. Lòng biết ơn, Khoan dung & Nhân ái": [{
-        "ten": "Chính sách Khoan hồng và Đặc xá của Nhà nước",
-        "noi_dung": (
-            "Trao cơ hội đặc xá cho phạm nhân cải tạo tốt dịp 2/9 làm lại cuộc"
-            " đời."
-        ),
-        "nguon": "Báo Nhân Dân",
-    }],
+    "1. Trách nhiệm, Cống hiến & Phụng sự cộng đồng": [
+        {
+            "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
+            "noi_dung": (
+                "Kết nối nhận nuôi cơm trưa cho hơn 60.000 học sinh vùng cao"
+                " khó khăn."
+            ),
+            "nguon": "Báo Tuổi Trẻ, Trung ương Đoàn",
+        },
+        {
+            "ten": "Đội cứu trợ thiện nguyện 'SOS Vũng Tàu'",
+            "noi_dung": (
+                "Hàng chục thành viên tự nguyện vá đường, hỗ trợ sửa xe và cấp"
+                " cứu người tai nạn đêm hôm hoàn toàn miễn phí."
+            ),
+            "nguon": "Báo Thanh Niên",
+        },
+    ],
+    "2. Thấu cảm, Lắng nghe & Tử tế": [
+        {
+            "ten": "TS. Đặng Hoàng Giang & 'Tổng đài Ngày Mai'",
+            "noi_dung": (
+                "Tổng đài tham vấn tâm lý phi lợi nhuận hỗ trợ tinh thần cho người"
+                " trẻ khủng hoảng."
+            ),
+            "nguon": "Báo Thanh Niên, VTV",
+        },
+        {
+            "ten": "Cây ATM gạo miễn phí trong đại dịch Covid-19",
+            "noi_dung": (
+                "Sáng kiến của Hoàng Tuấn Anh giúp hàng triệu người nghèo vượt"
+                " qua cơn hoạn nạn ngặt nghèo."
+            ),
+            "nguon": "Báo Nhân Dân",
+        },
+    ],
+    "3. Giữ gìn Bản sắc văn hóa & Di sản dân tộc": [
+        {
+            "ten": "Dự án phục dựng cổ phục 'Đại Việt Cổ Phong'",
+            "noi_dung": (
+                "Gen Z nghiên cứu, phục dựng chuẩn xác cổ phục Triều Nguyễn,"
+                " Lê ứng dụng vào đời sống."
+            ),
+            "nguon": "Báo VnExpress",
+        },
+        {
+            "ten": "Nghệ sĩ nhân dân Thanh Hải & Âm nhạc Cung đình Huế",
+            "noi_dung": (
+                "Cả đời miệt mài gìn giữ, truyền dạy nhã nhạc cung đình Huế cho"
+                " thế hệ trẻ."
+            ),
+            "nguon": "Báo Văn Hóa",
+        },
+    ],
+    "4. Bản lĩnh trước đám đông & Tư duy độc lập": [
+        {
+            "ten": "Nhà bác học Galileo Galilei",
+            "noi_dung": (
+                "Kiên cường bảo vệ chân lý thuyết Nhật tâm trước tòa án dị giáo"
+                " Trung cổ."
+            ),
+            "nguon": "Lịch sử Khoa học thế giới",
+        },
+        {
+            "ten": "Thiếu niên anh hùng Cù Huy Cận",
+            "noi_dung": (
+                "Bản lĩnh bảo vệ chính kiến và con đường học tập sáng tạo trước"
+                " định kiến thời đại."
+            ),
+            "nguon": "Tư liệu Lịch sử Việt Nam",
+        },
+    ],
+    "5. Dũng cảm, Vượt khó & Kiên trì": [
+        {
+            "ten": "VĐV Nguyễn Thị Oanh (SEA Games 32)",
+            "noi_dung": (
+                "Vượt qua lịch thi đấu khắc nghiệt cách nhau 20 phút giành 2 HCV"
+                " điền kinh."
+            ),
+            "nguon": "Báo Thể thao & Văn hóa",
+        },
+        {
+            "ten": "Thầy giáo mất đôi tay Nguyễn Ngọc Ký",
+            "noi_dung": (
+                "Kiên trì dùng chân tập viết, vượt qua nghịch cảnh nghiệt ngã để"
+                " trở thành nhà giáo ưu tú."
+            ),
+            "nguon": "Báo Giáo dục & Thời đại",
+        },
+    ],
+    "6. Tự học, Thích ứng & Tri thức thời đại AI": [
+        {
+            "ten": "Chủ tịch Hồ Chí Minh - Tấm gương tự học vĩ đại",
+            "noi_dung": (
+                "Tự học thông thạo hơn 10 ngoại ngữ khi bôn ba tìm đường cứu"
+                " nước."
+            ),
+            "nguon": "Tư liệu Lịch sử Đảng",
+        },
+        {
+            "ten": "GS. Ngô Bảo Châu",
+            "noi_dung": (
+                "Tinh thần tự nghiên cứu toán học đỉnh cao, giành giải thưởng"
+                " Fields danh giá."
+            ),
+            "nguon": "Báo Khoa Học Phát Triển",
+        },
+    ],
+    "7. Bảo vệ Môi trường & Lối sống xanh": [
+        {
+            "ten": "Nhóm tình nguyện 'Sài Gòn Xanh'",
+            "noi_dung": (
+                "Dầm mình dưới các kênh rạch ô nhiễm vớt hàng chục tấn rác trả"
+                " lại nguồn nước sạch."
+            ),
+            "nguon": "VTV1, Báo Tuổi Trẻ",
+        },
+        {
+            "ten": "Hành trình 'Green Generation' của giới trẻ",
+            "noi_dung": (
+                "Phong trào sống không rác thải nhựa, đổi rác lấy cây xanh lan"
+                " tỏa mạnh mẽ trường học."
+            ),
+            "nguon": "Báo Môi Trường & Đời Sống",
+        },
+    ],
+    "8. Lòng biết ơn, Khoan dung & Nhân ái": [
+        {
+            "ten": "Chính sách Khoan hồng và Đặc xá của Nhà nước",
+            "noi_dung": (
+                "Trao cơ hội đặc xá cho phạm nhân cải tạo tốt dịp 2/9 làm lại cuộc"
+                " đời."
+            ),
+            "nguon": "Báo Nhân Dân",
+        },
+        {
+            "ten": "Đại đức Thích Minh Phúc & Mái ấm tình thương",
+            "noi_dung": (
+                "Nhận nuôi hàng trăm trẻ mồ côi bằng tấm lòng bao dung, nhân ái"
+                " vô điều kiện."
+            ),
+            "nguon": "Báo Giác Ngộ",
+        },
+    ],
 }
 
 # ==============================================================================
@@ -518,7 +602,7 @@ with st.sidebar:
   st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
 
 
-# Hàm gọi AI chuẩn mực, tối ưu hóa xử lý lỗi kết nối
+# Hàm gọi AI sử dụng google.generativeai chuẩn mực, chống lỗi mã hóa ASCII
 def call_gemini_engine(prompt_text):
   api_key = st.session_state.get("gemini_api_key", "").strip()
   if not api_key:
@@ -528,10 +612,9 @@ def call_gemini_engine(prompt_text):
     )
 
   try:
-    client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
-        model="gemini-1.5-flash", contents=prompt_text
-    )
+    genai_legacy.configure(api_key=api_key)
+    model = genai_legacy.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(prompt_text)
     if response and response.text:
       return response.text
     return (
@@ -539,8 +622,7 @@ def call_gemini_engine(prompt_text):
     )
   except Exception as e:
     return (
-        f"Lỗi kết nối AI: {str(e)}. Các em vui lòng kiểm tra lại API Key hoặc"
-        " kết nối mạng nhé!"
+        f"Lỗi kết nối AI: {str(e)}. Các em vui lòng kiểm tra lại API Key nhé!"
     )
 
 
@@ -600,8 +682,8 @@ Trả về JSON duy nhất:
   "status": "DUNG" | "LECH" | "SAI",
   "feedback": "Nhận xét sư phạm (xưng cô - em)",
   "vdnl_chuan": "VĐNL cốt lõi chuẩn",
-  "explain_guide": "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*",
-  "explain_items": ["**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa...", "**2. Phân tích ý nghĩa ngữ liệu:** ..."],
+  "explain_guide": "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.",
+  "explain_items": ["<b>1. Giải thích từ khóa trong VĐNL:</b> Cắt nghĩa...", "<b>2. Phân tích ý nghĩa ngữ liệu:</b> ..."],
   "vdnl_ket_luan": "Chốt lại Vấn đề nghị luận chuẩn",
   "questions": [{{"cau_hoi": "Câu hỏi bàn luận?", "y_tra_loi": ["Ý bàn luận 1", "Ý bàn luận 2"]}}],
   "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết sự kiện", "y_nghia": "Ý nghĩa phân tích", "nguon": "Nguồn báo chí"}}],
@@ -624,11 +706,11 @@ Trả về JSON duy nhất:
             student_guess if student_guess else "Vấn đề nghị luận từ đề bài"
         ),
         "explain_guide": (
-            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
+            "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+            " liệu/ý kiến -> Chốt vấn đề."
         ),
         "explain_items": [
-            "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa bản chất khái niệm."
+            "<b>1. Giải thích từ khóa trong VĐNL:</b> Cắt nghĩa bản chất khái niệm."
         ],
         "vdnl_ket_luan": (
             student_guess if student_guess else "Vấn đề nghị luận trọng tâm."
@@ -868,14 +950,14 @@ with tabs[1]:
         unsafe_allow_html=True,
     )
 
-    # Thao tác 1: Giải thích từ khóa VĐNL trước -> Phân tích ý kiến/ngữ liệu -> Chốt
+    # Thao tác 1: Trình bày sạch sẽ, không dấu ** rối mắt, chuẩn thứ tự sư phạm
     with st.expander(
         "📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True
     ):
       guide_txt = cur_de_info.get(
           "explain_guide",
-          "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
-          " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*",
+          "Định hướng: Giải thích từ khóa VĐNL trước -> Phân tích ý nghĩa ngữ"
+          " liệu/ý kiến -> Chốt vấn đề.",
       )
       items = cur_de_info.get("explain_items", [])
       vdnl_kl = cur_de_info.get(
@@ -884,15 +966,15 @@ with tabs[1]:
 
       items_html = ""
       for itm in items:
-        items_html += f"<li style='margin-bottom: 8px;'>{itm}</li>"
+        items_html += f"<p style='margin-bottom: 10px;'>• {itm}</p>"
 
       st.markdown(
           f"""
-            <div class='explain-box-chuan'>
-                <p style='margin:0 0 10px 0; font-style:italic; color:#475569;'>{guide_txt}</p>
-                <ul style='margin:0 0 12px 0; padding-left: 20px;'>
+            <div class='explain-box-clean'>
+                <p style='margin:0 0 10px 0; font-style:italic; color:#475569;'><i>{guide_txt}</i></p>
+                <div style='margin:0 0 12px 0;'>
                     {items_html}
-                </ul>
+                </div>
                 <p style='margin:0; font-weight:700; color:#166534;'>
                     👉 Chốt lại Vấn đề nghị luận (VĐNL): <span style='font-weight:normal; font-style:italic;'>{vdnl_kl}</span>
                 </p>
@@ -933,7 +1015,14 @@ with tabs[1]:
           st.markdown(f"<div class='evidence-card'>{ev}</div>", unsafe_allow_html=True)
 
       st.markdown("---")
-      st.markdown("##### 📚 Tra cứu Kho dẫn chứng mở rộng (8 nhóm chủ điểm):")
+      st.markdown(
+          "##### 📚 🔍 Tra cứu thêm Kho dẫn chứng mở rộng (8 nhóm chủ điểm):"
+      )
+      st.info(
+          "👉 *Mẹo nhỏ:* Các em có thể bấm vào hộp chọn bên dưới để mở rộng"
+          " thêm nhiều nhóm dẫn chứng thực tế phong phú khác cho bài văn của"
+          " mình!"
+      )
       selected_topic = st.selectbox(
           "Chọn chủ điểm dẫn chứng cần tra cứu:",
           options=list(KHO_DAN_CHUNG_8_CHU_DIEM.keys()),
@@ -953,13 +1042,13 @@ with tabs[1]:
         st.markdown(f"- {c}")
 
     # ==========================================================================
-    # CẢI TIẾN: GIÀN GIÁO LẬP DÀN Ý CHI TIẾT (KHÔNG CÒN CHÊNH VÊNH)
+    # CẢI TIẾN: GIÀN GIÁO DÀN Ý CHI TIẾT CHUẨN 3 PHẦN (MỞ BÀI - THÂN BÀI - KẾT BÀI)
     # ==========================================================================
     st.markdown("---")
     st.markdown("#### 📝 Xây Dựng Giàn Giáo Dàn Ý Chi Tiết")
     st.info(
-        "💡 *Các em hãy điền các ý chính dựa trên phần gợi ý tư duy ở các thao"
-        " tác trên để hoàn thiện khung dàn ý cho bài viết của mình nhé!*"
+        "💡 *Các em hãy điền các ý chính vào các mục dưới đây theo cấu trúc 3"
+        " phần chuẩn mực để làm khung sườn vững chắc cho bài viết!*"
     )
 
     if "outline_parts" not in st.session_state:
@@ -973,76 +1062,72 @@ with tabs[1]:
       }
 
     with st.container(border=True):
-      st.markdown("##### 1. Phần Mở bài")
+      st.markdown("##### I. PHẦN MỞ BÀI")
       st.session_state["outline_parts"]["mb"] = st.text_area(
-          "Dẫn dắt và giới thiệu Vấn đề nghị luận:",
+          "1. Dẫn dắt & Giới thiệu Vấn đề nghị luận (VĐNL):",
           value=st.session_state["outline_parts"]["mb"],
-          height=70,
+          height=75,
           placeholder=(
-              "Ví dụ: Từ câu thơ/câu nói..., ta nhận thấy một vấn đề sâu sắc"
-              f" trong đời sống: {cur_de_info.get('vdnl_chuan', '')}"
+              "Dẫn dắt từ ngữ liệu/câu nói và nêu trực tiếp VĐNL..."
           ),
           key="ta_mb",
       )
 
-      st.markdown("##### 2. Phần Thân bài - Ý Giải thích")
+      st.markdown("##### II. PHẦN THÂN BÀI")
       st.session_state["outline_parts"]["gt"] = st.text_area(
-          "Cắt nghĩa từ khóa VĐNL và ý nghĩa ngữ liệu:",
+          "1. Mục Giải thích (Cắt nghĩa từ khóa VĐNL & ý nghĩa ngữ liệu):",
           value=st.session_state["outline_parts"]["gt"],
           height=90,
-          placeholder=(
-              "Giải thích rõ các từ khóa trọng tâm và thông điệp từ ngữ liệu..."
-          ),
+          placeholder="Làm rõ bản chất khái niệm và thông điệp nhận định...",
           key="ta_gt",
       )
 
-      st.markdown("##### 3. Phần Thân bài - Ý Bàn luận trọng tâm")
       st.session_state["outline_parts"]["bl"] = st.text_area(
-          "Triển khai các luận điểm trả lời câu hỏi vì sao/như thế nào:",
+          "2. Mục Bàn luận trọng tâm (Hệ thống luận điểm vì sao/như thế nào):",
           value=st.session_state["outline_parts"]["bl"],
           height=100,
-          placeholder="Nêu ít nhất 2-3 luận điểm chính để bàn luận sâu sắc...",
+          placeholder="Triển khai các ý bàn luận sâu sắc, đa chiều...",
           key="ta_bl",
       )
 
-      st.markdown("##### 4. Phần Thân bài - Dẫn chứng thực tế")
       st.session_state["outline_parts"]["dc"] = st.text_area(
-          "Chọn lọc dẫn chứng tiêu biểu (từ mục Thao tác 3):",
+          "3. Mục Dẫn chứng thực tế (Lựa chọn nhân vật/sự việc tiêu biểu):",
           value=st.session_state["outline_parts"]["dc"],
           height=80,
-          placeholder="Ví dụ: Tấm gương Hoàng Hoa Trung / Đen Vâu...",
+          placeholder=(
+              "Trình bày ngắn gọn dẫn chứng và ý nghĩa làm sáng tỏ..."
+          ),
           key="ta_dc",
       )
 
-      st.markdown("##### 5. Phần Thân bài - Phản biện & Mở rộng")
       st.session_state["outline_parts"]["pb"] = st.text_area(
-          "Lật lại vấn đề / Phê phán những biểu hiện lệch lạc:",
+          "4. Mục Phản biện & Mở rộng (Lật lại vấn đề / Phê phán bệnh vô cảm):",
           value=st.session_state["outline_parts"]["pb"],
           height=80,
-          placeholder="Phê phán lối sống trái ngược hoặc mở rộng góc nhìn...",
+          placeholder="Nêu ý kiến phản biện trái chiều hoặc mở rộng góc nhìn...",
           key="ta_pb",
       )
 
-      st.markdown("##### 6. Phần Kết bài")
+      st.markdown("##### III. PHẦN KẾT BÀI")
       st.session_state["outline_parts"]["kb"] = st.text_area(
-          "Bài học nhận thức và hành động cho bản thân:",
+          "1. Tổng kết VĐNL & Rút ra bài học nhận thức, hành động:",
           value=st.session_state["outline_parts"]["kb"],
-          height=70,
+          height=75,
           placeholder=(
-              "Rút ra bài học thiết thực cho bản thân và thế hệ trẻ..."
+              "Khẳng định lại giá trị vấn đề và lời nhắn gửi đến thế hệ trẻ..."
           ),
           key="ta_kb",
       )
 
-    # Tự động tổng hợp thành bản dàn ý hoàn chỉnh để học sinh tiện copy hoặc đối chiếu
-    complete_outline = f"""I. MỞ BÀI:
+    # Tổng hợp hoàn chỉnh theo 3 phần Mở - Thân - Kết
+    complete_outline = f"""I. MỞ BÀI
 - Dẫn dắt & Giới thiệu VĐNL: {st.session_state["outline_parts"]["mb"]}
 
-II. THÂN BÀI:
-1. Giải thích khái niệm & ngữ liệu:
+II. THÂN BÀI
+1. Giải thích (Cắt nghĩa từ khóa VĐNL & ngữ liệu):
 {st.session_state["outline_parts"]["gt"]}
 
-2. Bàn luận các khía cạnh trọng tâm:
+2. Bàn luận trọng tâm (Các khía cạnh ý nghĩa & nguyên nhân/giải pháp):
 {st.session_state["outline_parts"]["bl"]}
 
 3. Dẫn chứng thực tế tiêu biểu:
@@ -1051,16 +1136,19 @@ II. THÂN BÀI:
 4. Phản biện & Mở rộng vấn đề:
 {st.session_state["outline_parts"]["pb"]}
 
-III. KẾT BÀI:
-- Bài học nhận thức & Hành động: {st.session_state["outline_parts"]["kb"]}"""
+III. KẾT BÀI
+- Tổng kết vấn đề & Bài học nhận thức, hành động: {st.session_state["outline_parts"]["kb"]}"""
 
     st.session_state["user_outline"] = complete_outline
 
-    with st.expander("📄 Xem toàn bộ cấu trúc Dàn ý đã tổng hợp", expanded=False):
+    with st.expander(
+        "📄 Xem bản Dàn ý tổng hợp hoàn chỉnh (3 phần Mở - Thân - Kết)",
+        expanded=False,
+    ):
       st.text_area(
-          "Dàn ý tổng hợp:",
+          "Dàn ý tổng hợp chuẩn mực:",
           value=st.session_state["user_outline"],
-          height=250,
+          height=260,
       )
 
   with c_right:
