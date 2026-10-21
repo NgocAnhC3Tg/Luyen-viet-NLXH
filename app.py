@@ -100,18 +100,13 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (BIÊN SOẠN TƯỜNG MINH, SÂU SẮC)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐÃ KIỂM TRA KỸ CÚ PHÁP NHÁY BA)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
-        "text": (
-            'Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:\n>'
-            ' *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm'
-            ' hồn!"*\nTừ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời'
-            " sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về"
-            " ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng"
-            " của thế hệ trẻ hôm nay."
-        ),
+        "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:
+> *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*
+Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm hôm nay.""",
         "vdnl_chuan": (
             "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho"
             " cộng đồng của thế hệ trẻ."
@@ -136,30 +131,29 @@ DE_BAI_CO_BAN = {
             "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho"
             " cộng đồng của thế hệ trẻ hôm nay."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao con người, đặc biệt là thế hệ trẻ, cần phải sống có"
-                    " trách nhiệm và gắn bó với cộng đồng?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao con người, đặc biệt là thế hệ trẻ, cần phải sống có"
+                " trách nhiệm và gắn bó với cộng đồng?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Con người là thực thể xã hội, không ai có thể tồn tại biệt"
+                    " lập; sự phát triển của mỗi cá nhân luôn bắt nguồn từ nền"
+                    " tảng vững chắc của tập thể."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Con người là thực thể xã hội, sự phát triển cá nhân"
-                        " luôn bắt nguồn từ nền tảng vững chắc của tập thể."
-                    ),
-                    (
-                        "Lối sống có trách nhiệm giúp đẩy lùi căn bệnh vô cảm,"
-                        " tạo dựng một cộng đồng nhân ái, kết nối con người bằng"
-                        " tình thương."
-                    ),
-                    (
-                        "Cống hiến cho cộng đồng chính là con đường nhanh nhất"
-                        " để định vị giá trị bản thân, làm cho thanh xuân trở"
-                        " nên rực rỡ và có ý nghĩa sâu sắc."
-                    ),
-                ],
-            }
-        ],
+                (
+                    "Lối sống có trách nhiệm giúp đẩy lùi căn bệnh vô cảm, tạo"
+                    " dựng một cộng đồng nhân ái, kết nối con người bằng tình"
+                    " thương."
+                ),
+                (
+                    "Cống hiến cho cộng đồng chính là con đường nhanh nhất để"
+                    " định vị giá trị bản thân, làm cho thanh xuân trở nên rực"
+                    " rỡ và có ý nghĩa sâu sắc."
+                ),
+            ],
+        }],
         "evidence": [
             {
                 "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
@@ -181,9 +175,8 @@ DE_BAI_CO_BAN = {
                     " miễn phí."
                 ),
                 "y_nghia": (
-                    "Minh chứng cho thấy dấu chân cống hiến của tuổi trẻ làm"
-                    " cho 'đất hóa tâm hồn', đem lại diện mạo mới cho vùng khó"
-                    " khăn."
+                    "Minh chứng cho thấy dấu chân cống hiến của tuổi trẻ làm cho"
+                    " 'đất hóa tâm hồn', đem lại diện mạo mới cho vùng khó khăn."
                 ),
                 "nguon": "Báo Tiền Phong, Hội Sinh viên Việt Nam",
             },
@@ -201,14 +194,8 @@ DE_BAI_CO_BAN = {
         ],
     },
     "Đề 02: Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
-        "text": (
-            'Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn'
-            " bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng"
-            " để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu"
-            " hiểu.\nHãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về"
-            " sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong"
-            " cuộc sống hôm nay."
-        ),
+        "text": """Nhà văn Haruki Murakami từng chia sẻ: "Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa." Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
+Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
         "vdnl_chuan": (
             "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
             " con người với con người trong xã hội hiện đại."
@@ -232,30 +219,28 @@ DE_BAI_CO_BAN = {
             "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa"
             " con người với con người trong xã hội hiện đại."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Tại sao trong thời đại số, con người lại khao khát sự thấu"
-                    " cảm và lắng nghe?"
+        "questions": [{
+            "cau_hoi": (
+                "Tại sao trong thời đại số, con người lại khao khát sự thấu"
+                " cảm và lắng nghe?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Sự bùng nổ mạng xã hội tạo ra hiện tượng 'kết nối mạng nhưng"
+                    " mất kết nối thực', làm gia tăng sự cô đơn lạc lõng ngay"
+                    " giữa đám đông."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Sự bùng nổ mạng xã hội tạo ra hiện tượng 'kết nối mạng"
-                        " nhưng mất kết nối thực', làm gia tăng sự cô đơn lạc"
-                        " lõng ngay giữa đám đông."
-                    ),
-                    (
-                        "Áp lực đồng trang lứa và nhịp sống hối hả dễ đẩy người"
-                        " trẻ vào khủng hoảng; một lời lắng nghe chân thành có"
-                        " sức nặng cứu rỗi tinh thần."
-                    ),
-                    (
-                        "Thấu cảm giúp xóa bỏ định kiến, thu hẹp khoảng cách"
-                        " thế hệ và xây dựng một xã hội nhân văn."
-                    ),
-                ],
-            }
-        ],
+                (
+                    "Áp lực đồng trang lứa và nhịp sống hối hả dễ đẩy người trẻ"
+                    " vào khủng hoảng; một lời lắng nghe chân thành có sức nặng"
+                    " cứu rỗi tinh thần."
+                ),
+                (
+                    "Thấu cảm giúp xóa bỏ định kiến, thu hẹp khoảng cách thế hệ"
+                    " và xây dựng một xã hội nhân văn."
+                ),
+            ],
+        }],
         "evidence": [
             {
                 "ten": "TS. Đặng Hoàng Giang & Dự án 'Tổng đài Ngày Mai'",
@@ -266,8 +251,8 @@ DE_BAI_CO_BAN = {
                 ),
                 "y_nghia": (
                     "Minh chứng hùng hồn cho thấy một không gian an toàn để"
-                    " được lắng nghe không phán xét có thể giữ lại một cuộc"
-                    " đời trước bờ vực tuyệt vọng."
+                    " được lắng nghe không phán xét có thể giữ lại một cuộc đời"
+                    " trước bờ vực tuyệt vọng."
                 ),
                 "nguon": "Báo Thanh Niên, VTV Digital",
             },
@@ -288,21 +273,14 @@ DE_BAI_CO_BAN = {
                 "nguon": "Đài Truyền hình Việt Nam (VTV1), Báo Nhân Dân",
             },
         ],
-        "counter": [
-            (
-                "Phê phán thói vô cảm, tâm lý phán xét vội vàng, bạo lực ngôn từ"
-                " (cyberbullying) trên không gian mạng."
-            )
-        ],
+        "counter": [(
+            "Phê phán thói vô cảm, tâm lý phán xét vội vàng, bạo lực ngôn từ"
+            " (cyberbullying) trên không gian mạng."
+        )],
     },
     "Đề 03: Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
-        "text": (
-            'Có ý kiến cho rằng: *"Toàn cầu hóa mở ra cánh cửa nhìn ra thế'
-            " giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con"
-            ' tàu không bị trôi dạt."*\nViết bài văn nghị luận (khoảng 600 chữ)'
-            " bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của"
-            " thế hệ trẻ hôm nay."
-        ),
+        "text": """Có ý kiến cho rằng: "Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ hôm nay.""",
         "vdnl_chuan": (
             "Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế"
             " hệ trẻ trong bối cảnh hội nhập."
@@ -326,30 +304,27 @@ DE_BAI_CO_BAN = {
             "Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế"
             " hệ trẻ trong bối cảnh hội nhập quốc tế."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao việc bảo tồn và phát huy bản sắc văn hóa lại là sứ"
-                    " mệnh sinh tồn của tuổi trẻ?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao việc bảo tồn và phát huy bản sắc văn hóa lại là sứ mệnh"
+                " sinh tồn của tuổi trẻ?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Văn hóa là cội nguồn, là căn cước định danh dân tộc; mất"
+                    " văn hóa là mất tất cả."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Văn hóa là cội nguồn, là căn cước định danh dân tộc; mất"
-                        " văn hóa là mất tất cả."
-                    ),
-                    (
-                        "Trong dòng chảy hội nhập ồ ạt, nếu không có phễu lọc"
-                        " văn hóa, người trẻ rất dễ bị cuốn theo lối sống ngoại"
-                        " lai, đánh mất truyền thống."
-                    ),
-                    (
-                        "Giữ gìn bản sắc không phải là bảo thủ đóng khung, mà"
-                        " là kết hợp tinh hoa truyền thống với hiện đại để văn"
-                        " hóa vươn xa."
-                    ),
-                ],
-            }
-        ],
+                (
+                    "Trong dòng chảy hội nhập ồ ạt, nếu không có phễu lọc văn"
+                    " hóa, người trẻ rất dễ bị cuốn theo lối sống ngoại lai,"
+                    " đánh mất truyền thống."
+                ),
+                (
+                    "Giữ gìn bản sắc không phải là bảo thủ đóng khung, mà là kết"
+                    " hợp tinh hoa truyền thống với hiện đại để văn hóa vươn xa."
+                ),
+            ],
+        }],
         "evidence": [
             {
                 "ten": "Rapper Đen Vâu & Ca sĩ Hoàng Thùy Linh",
@@ -365,7 +340,9 @@ DE_BAI_CO_BAN = {
                 "nguon": "Báo Tuổi Trẻ, Báo Lao Động",
             },
             {
-                "ten": "Dự án phục dựng cổ phục Việt 'Đại Việt Cổ Phong'",
+                "ten": (
+                    "Dự án phục dựng cổ phục Việt 'Đại Việt Cổ Phong'"
+                ),
                 "chi_tiet": (
                     "Một tập thể các bạn trẻ Gen Z tự nguyện nghiên cứu, phục"
                     " dựng chuẩn xác các bộ cổ phục thời Nguyễn, thời Lê ứng"
@@ -378,20 +355,15 @@ DE_BAI_CO_BAN = {
                 "nguon": "Báo VnExpress, Báo Văn Hóa",
             },
         ],
-        "counter": [
-            (
-                "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt"
-                " và các giá trị truyền thống dân tộc."
-            )
-        ],
+        "counter": [(
+            "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt và"
+            " các giá trị truyền thống dân tộc."
+        )],
     },
     "Đề 04: Ý nghĩa của lòng biết ơn trong đời sống con người": {
-        "text": (
-            'Danh ngôn dân gian có câu:\n> *"Uống nước nhớ nguồn, ăn quả nhớ'
-            ' kẻ trồng cây."*\nTừ cội nguồn đạo lý ấy, hãy viết bài văn nghị luận'
-            " (khoảng 600 chữ) bàn về ý nghĩa của lòng biết ơn trong đời sống"
-            " con người hôm nay."
-        ),
+        "text": """Danh ngôn dân gian có câu:
+> "Uống nước nhớ nguồn, ăn quả nhớ kẻ trồng cây."
+Từ cội nguồn đạo lý ấy, hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lòng biết ơn trong đời sống con người hôm nay.""",
         "vdnl_chuan": (
             "Ý nghĩa và giá trị đạo đức của lòng biết ơn trong đời sống con"
             " người."
@@ -416,55 +388,44 @@ DE_BAI_CO_BAN = {
             "Ý nghĩa và giá trị đạo đức cốt lõi của lòng biết ơn trong đời"
             " sống con người."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao lòng biết ơn lại là nền tảng đạo đức bền vững nhất"
-                    " của nhân cách?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao lòng biết ơn lại là nền tảng đạo đức bền vững nhất của"
+                " nhân cách?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Lòng biết ơn giúp con người kết nối với cội nguồn, nuôi"
+                    " dưỡng lòng trắc ẩn và sự tử tế."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Lòng biết ơn giúp con người kết nối với cội nguồn, nuôi"
-                        " dưỡng lòng trắc ẩn và sự tử tế."
-                    ),
-                    (
-                        "Biết ơn giúp xã hội gắn kết bằng tình nghĩa, ngăn chặn"
-                        " sự lạnh lùng và tính toán thiệt hơn."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": (
-                    "Hoạt động Đền ơn đáp nghĩa nhân ngày Thương binh Liệt sĩ"
-                    " 27/7"
+                (
+                    "Biết ơn giúp xã hội gắn kết bằng tình nghĩa, ngăn chặn sự"
+                    " lạnh lùng và tính toán thiệt hơn."
                 ),
-                "chi_tiet": (
-                    "Hàng năm, toàn xã hội và thế hệ trẻ tổ chức thăm hỏi Mẹ"
-                    " Việt Nam anh hùng, thắp nến tri ân các anh hùng liệt sĩ."
-                ),
-                "y_nghia": (
-                    "Truyền thống uống nước nhớ nguồn được thể hiện sinh động"
-                    " bằng hành động thiết thực."
-                ),
-                "nguon": "Báo Nhân Dân, Cổng thông tin Chính phủ",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói vô ơn, ăn cháo đá bát, vong ân bội nghĩa, xem"
-                " công sức người khác là điều hiển nhiên."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": (
+                "Hoạt động Đền ơn đáp nghĩa nhân ngày Thương binh Liệt sĩ 27/7"
+            ),
+            "chi_tiet": (
+                "Hàng năm, toàn xã hội và thế hệ trẻ tổ chức thăm hỏi Mẹ Việt"
+                " Nam anh hùng, thắp nến tri ân các anh hùng liệt sĩ."
+            ),
+            "y_nghia": (
+                "Truyền thống uống nước nhớ nguồn được thể hiện sinh động bằng"
+                " hành động thiết thực."
+            ),
+            "nguon": "Báo Nhân Dân, Cổng thông tin Chính phủ",
+        }],
+        "counter": [(
+            "Phê phán thói vô ơn, ăn cháo đá bát, vong ân bội nghĩa, xem công"
+            " sức người khác là điều hiển nhiên."
+        )],
     },
     "Đề 05: Sức mạnh và giá trị của niềm tin vào bản thân": {
-        "text": (
-            'Có câu nói nổi tiếng: *"Tin rằng bạn có thể làm được là bạn đã đi'
-            " được nửa đường."* (Theodore Roosevelt)\nHãy viết bài văn nghị"
-            " luận (khoảng 600 chữ) bàn về sức mạnh của niềm tin vào bản thân"
-            " trong hành trình vươn tới thành công."
-        ),
+        "text": """Có câu nói nổi tiếng: "Tin rằng bạn có thể làm được là bạn đã đi được nửa đường." (Theodore Roosevelt)
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của niềm tin vào bản thân trong hành trình vươn tới thành công.""",
         "vdnl_chuan": (
             "Sức mạnh và vai trò quyết định của niềm tin vào bản thân trong"
             " cuộc sống."
@@ -487,53 +448,44 @@ DE_BAI_CO_BAN = {
             "Sức mạnh và vai trò quyết định của niềm tin vào bản thân trong"
             " hành trình vươn tới thành công."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao niềm tin vào bản thân lại là chiếc chìa khóa vạn"
-                    " năng mở cánh cửa thành công?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao niềm tin vào bản thân lại là chiếc chìa khóa vạn năng"
+                " mở cánh cửa thành công?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Niềm tin giúp con người chiến thắng nỗi sợ thất bại, dám"
+                    " đương đầu với thử thách lớn."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Niềm tin giúp con người chiến thắng nỗi sợ thất bại,"
-                        " dám đương đầu với thử thách lớn."
-                    ),
-                    (
-                        "Khi mất niềm tin, con người sẽ bỏ cuộc ngay trước"
-                        " vạch xuất phát; niềm tin chính là ngọn đuốc soi đường"
-                        " trong nghịch cảnh."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Diễn giả khuyết tật Nick Vujicic",
-                "chi_tiet": (
-                    "Sinh ra không có cả tay lẫn chân, ông đã chiến thắng sự"
-                    " tuyệt vọng, tin vào giá trị bản thân để trở thành diễn"
-                    " giả truyền cảm hứng toàn cầu."
+                (
+                    "Khi mất niềm tin, con người sẽ bỏ cuộc ngay trước vạch"
+                    " xuất phát; niềm tin chính là ngọn đuốc soi đường trong"
+                    " nghịch cảnh."
                 ),
-                "y_nghia": (
-                    "Minh chứng hùng hồn cho thấy niềm tin vào bản thân có thể"
-                    " chiến thắng mọi giới hạn thể xác."
-                ),
-                "nguon": "Báo Tuổi Trẻ",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán căn bệnh tự ti, nhút nhát, rụt rè hoặc ngược lại là"
-                " sự ảo tưởng sức mạnh, tự phụ mù quáng."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Diễn giả khuyết tật Nick Vujicic",
+            "chi_tiet": (
+                "Sinh ra không có cả tay lẫn chân, ông đã chiến thắng sự tuyệt"
+                " vọng, tin vào giá trị bản thân để trở thành diễn giả truyền"
+                " cảm hứng toàn cầu."
+            ),
+            "y_nghia": (
+                "Minh chứng hùng hồn cho thấy niềm tin vào bản thân có thể"
+                " chiến thắng mọi giới hạn thể xác."
+            ),
+            "nguon": "Báo Tuổi Trẻ",
+        }],
+        "counter": [(
+            "Phê phán căn bệnh tự ti, nhút nhát, rụt rè hoặc ngược lại là sự"
+            " ảo tưởng sức mạnh, tự phụ mù quáng."
+        )],
     },
     "Đề 06: Giá trị của sự kiên trì và bền bỉ trong cuộc sống": {
-        "text": (
-            'Ngạn ngữ dân gian có câu: *"Nước chảy đá mòn."*\nViết bài văn'
-            " nghị luận (khoảng 600 chữ) bàn về giá trị của sự kiên trì, bền bỉ"
-            " trong hành trình chinh phục mục tiêu của người trẻ."
-        ),
+        "text": """Ngạn ngữ dân gian có câu: "Nước chảy đá mòn."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị của sự kiên trì, bền bỉ trong hành trình chinh phục mục tiêu của người trẻ.""",
         "vdnl_chuan": (
             "Giá trị của sự kiên trì, bền bỉ và ý chí vượt qua gian khó để đạt"
             " ước mơ."
@@ -557,54 +509,43 @@ DE_BAI_CO_BAN = {
             "Giá trị của sự kiên trì, bền bỉ và ý chí vượt qua gian khó trong"
             " hành trình chinh phục mục tiêu."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao thành công thực sự trong đời sống luôn đòi hỏi sự"
-                    " kiên trì và bền bỉ?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao thành công thực sự trong đời sống luôn đòi hỏi sự kiên"
+                " trì và bền bỉ?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Mọi giá trị lớn lao đều cần thời gian hun đúc; không có"
+                    " thành công đích thực nào đạt được sau một đêm."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Mọi giá trị lớn lao đều cần thời gian hun đúc; không"
-                        " có thành công đích thực nào đạt được sau một đêm."
-                    ),
-                    (
-                        "Sự kiên trì giúp rèn luyện bản lĩnh thép, biến sức ép"
-                        " thành động lực hoàn thiện."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Vận động viên Nguyễn Thị Ánh Viên",
-                "chi_tiet": (
-                    "Dậy từ 4 giờ sáng mỗi ngày, bơi lội hàng chục km suốt"
-                    " nhiều năm liền không nghỉ để giành hàng trăm huy chương"
-                    " vàng cho thể thao Việt Nam."
+                (
+                    "Sự kiên trì giúp rèn luyện bản lĩnh thép, biến sức ép thành"
+                    " động lực hoàn thiện."
                 ),
-                "y_nghia": (
-                    "Minh chứng cho thấy thành tích đỉnh cao chỉ đến từ sự"
-                    " kiên trì luyện tập khổ hạnh."
-                ),
-                "nguon": "Báo Thể Thao & Văn Hóa",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán lối sống cả thèm chóng chán, dễ nản lòng, gặp khó khăn"
-                " là buông xuôi bỏ cuộc."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Vận động viên Nguyễn Thị Ánh Viên",
+            "chi_tiet": (
+                "Dậy từ 4 giờ sáng mỗi ngày, bơi lội hàng chục km suốt nhiều"
+                " năm liền không nghỉ để giành hàng trăm huy chương vàng cho"
+                " thể thao Việt Nam."
+            ),
+            "y_nghia": (
+                "Minh chứng cho thấy thành tích đỉnh cao chỉ đến từ sự kiên"
+                " trì luyện tập khổ hạnh."
+            ),
+            "nguon": "Báo Thể Thao & Văn Hóa",
+        }],
+        "counter": [(
+            "Phê phán lối sống cả thèm chóng chán, dễ nản lòng, gặp khó khăn là"
+            " buông xuôi bỏ cuộc."
+        )],
     },
     "Đề 07: Ý nghĩa của việc trân trọng những giá trị bình dị quanh ta": {
-        "text": (
-            'Có ý kiến cho rằng: *"Hạnh phúc đôi khi không phải là những điều lớn'
-            " lao, mà ẩn giấu trong những điều bình dị nhất của đời"
-            ' thường."*\nViết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa'
-            " của việc biết trân trọng những giá trị bình dị xung quanh cuộc"
-            " sống."
-        ),
+        "text": """Có ý kiến cho rằng: "Hạnh phúc đôi khi không phải là những điều lớn lao, mà ẩn giấu trong những điều bình dị nhất của đời thường."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của việc biết trân trọng những giá trị bình dị xung quanh cuộc sống.""",
         "vdnl_chuan": (
             "Ý nghĩa của việc trân trọng những giá trị bình dị để tìm thấy hạnh"
             " phúc đích thực."
@@ -628,57 +569,47 @@ DE_BAI_CO_BAN = {
             "Ý nghĩa của việc biết trân trọng những giá trị bình dị để tìm"
             " thấy hạnh phúc đích thực trong đời sống."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao con người hiện đại thường hay đánh mất sự trân"
-                    " trọng đối với những điều bình dị?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao con người hiện đại thường hay đánh mất sự trân trọng"
+                " đối với những điều bình dị?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Nhịp sống hối hả và áp lực thành công vật chất ảo khiến"
+                    " con người lao đi tìm kiếm những điều xa vời mà quên mất"
+                    " hiện tại."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Nhịp sống hối hả và áp lực thành công vật chất ảo"
-                        " khiến con người lao đi tìm kiếm những điều xa vời mà"
-                        " quên mất hiện tại."
-                    ),
-                    (
-                        "Chỉ khi trải qua mất mát hoặc khủng hoảng, con người"
-                        " mới nhận ra sự bình yên trong những điều nhỏ bé mới"
-                        " là tài sản quý giá nhất."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": (
-                    "Trào lưu 'Chữa lành' (Healing) và lối sống tối giản"
-                    " (Minimalism)"
+                (
+                    "Chỉ khi trải qua mất mát hoặc khủng hoảng, con người mới"
+                    " nhận ra sự bình yên trong những điều nhỏ bé mới là tài"
+                    " sản quý giá nhất."
                 ),
-                "chi_tiet": (
-                    "Giới trẻ ngày nay có xu hướng tìm về thiên nhiên, tự"
-                    " nấu ăn, chăm sóc cây cối để tìm lại sự cân bằng nội tâm."
-                ),
-                "y_nghia": (
-                    "Minh chứng cho thấy sự thức tỉnh về việc quay về trân"
-                    " trọng những giá trị bình dị nguyên bản."
-                ),
-                "nguon": "Báo Dân Trí",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng, xem"
-                " thường những hạnh phúc mộc mạc xung quanh."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": (
+                "Trào lưu 'Chữa lành' (Healing) và lối sống tối giản"
+                " (Minimalism)"
+            ),
+            "chi_tiet": (
+                "Giới trẻ ngày nay có xu hướng tìm về thiên nhiên, tự nấu ăn,"
+                " chăm sóc cây cối để tìm lại sự cân bằng nội tâm."
+            ),
+            "y_nghia": (
+                "Minh chứng cho thấy sự thức tỉnh về việc quay về trân trọng"
+                " những giá trị bình dị nguyên bản."
+            ),
+            "nguon": "Báo Dân Trí",
+        }],
+        "counter": [(
+            "Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng, xem"
+            " thường những hạnh phúc mộc mạc xung quanh."
+        )],
     },
     "Đề 08: Vai trò của sách và văn hóa đọc trong thời đại số": {
-        "text": (
-            'Maxim Gorky từng khẳng định: *"Sách mở ra trước mắt tôi những chân'
-            ' trời mới."*\nTrong thời đại bùng nổ công nghệ số, em hãy viết bài'
-            " văn nghị luận (khoảng 600 chữ) bàn về vai trò và giá trị của việc"
-            " đọc sách."
-        ),
+        "text": """Maxim Gorky từng khẳng định: "Sách mở ra trước mắt tôi những chân trời mới."
+Trong thời đại bùng nổ công nghệ số, em hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò và giá trị của việc đọc sách.""",
         "vdnl_chuan": (
             "Vai trò, ý nghĩa của sách và văn hóa đọc đối với sự phát triển"
             " nhân cách con người."
@@ -701,54 +632,44 @@ DE_BAI_CO_BAN = {
             "Vai trò, ý nghĩa của sách và văn hóa đọc đối với sự phát triển"
             " nhân cách con người trong thời đại số."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao trong thời đại Internet bùng nổ, sách giấy và văn"
-                    " hóa đọc vẫn giữ giá trị độc tôn?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao trong thời đại Internet bùng nổ, sách giấy và văn hóa"
+                " đọc vẫn giữ giá trị độc tôn?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Internet cung cấp thông tin bề mặt nhanh chóng nhưng rời"
+                    " rạc; sách mang lại tri thức có hệ thống và chiều sâu tư"
+                    " duy."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Internet cung cấp thông tin bề mặt nhanh chóng nhưng"
-                        " rời rạc; sách mang lại tri thức có hệ thống và chiều"
-                        " sâu tư duy."
-                    ),
-                    (
-                        "Đọc sách là quá trình tương tác tĩnh lặng giúp bồi"
-                        " dưỡng tâm hồn, rèn luyện sự tập trung và trí tưởng"
-                        " tượng phong phú."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Đường sách TP.HCM và Hà Nội",
-                "chi_tiet": (
-                    "Thu hút hàng triệu lượt bạn trẻ đến tham quan, đọc sách,"
-                    " mua sắm và giao lưu văn hóa mỗi năm."
+                (
+                    "Đọc sách là quá trình tương tác tĩnh lặng giúp bồi dưỡng"
+                    " tâm hồn, rèn luyện sự tập trung và trí tưởng tượng phong"
+                    " phú."
                 ),
-                "y_nghia": (
-                    "Minh chứng cho sức sống bền bỉ của văn hóa đọc giữa lòng"
-                    " đô thị hiện đại."
-                ),
-                "nguon": "Sở Thông tin và Truyền thông TP.HCM",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán tình trạng lười đọc sách, nghiện mạng xã hội, chỉ"
-                " chuộng thông tin 'mì ăn liền' nông cạn."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Đường sách TP.HCM và Hà Nội",
+            "chi_tiet": (
+                "Thu hút hàng triệu lượt bạn trẻ đến tham quan, đọc sách, mua"
+                " sắm và giao lưu văn hóa mỗi năm."
+            ),
+            "y_nghia": (
+                "Minh chứng cho sức sống bền bỉ của văn hóa đọc giữa lòng đô"
+                " thị hiện đại."
+            ),
+            "nguon": "Sở Thông tin và Truyền thông TP.HCM",
+        }],
+        "counter": [(
+            "Phê phán tình trạng lười đọc sách, nghiện mạng xã hội, chỉ chuộng"
+            " thông tin 'mì ăn liền' nông cạn."
+        )],
     },
     "Đề 09: Lòng dũng cảm bảo vệ cái đúng, cái thiện": {
-        "text": (
-            'Có ý kiến cho rằng: *"Lòng dũng cảm không phải là không sợ hãi, mà'
-            " là sự chiến thắng nỗi sợ hãi."*\nViết bài văn nghị luận (khoảng"
-            " 600 chữ) bàn về vai trò của lòng dũng cảm trong việc bảo vệ lẽ"
-            " phải và công lý."
-        ),
+        "text": """Có ý kiến cho rằng: "Lòng dũng cảm không phải là không sợ hãi, mà là sự chiến thắng nỗi sợ hãi."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của lòng dũng cảm trong việc bảo vệ lẽ phải và công lý.""",
         "vdnl_chuan": (
             "Vai trò của lòng dũng cảm trong đấu tranh bảo vệ cái đúng, cái"
             " thiện và lẽ công bằng."
@@ -772,53 +693,43 @@ DE_BAI_CO_BAN = {
             "Vai trò của lòng dũng cảm trong việc bảo vệ lẽ phải, công lý và"
             " thúc đẩy xã hội văn minh."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao sự im lặng trước cái xấu đôi khi còn nguy hiểm hơn"
-                    " cả cái ác?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao sự im lặng trước cái xấu đôi khi còn nguy hiểm hơn cả"
+                " cái ác?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Sự im lặng, dĩ hòa vi quý, sợ liên lụy chính là tấm áo giáp"
+                    " dung dưỡng, tiếp tay cho cái ác lộng hành."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Sự im lặng, dĩ hòa vi quý, sợ liên lụy chính là tấm áo"
-                        " giáp dung dưỡng, tiếp tay cho cái ác lộng hành."
-                    ),
-                    (
-                        "Lòng dũng cảm lên tiếng bảo vệ lẽ phải là thước đo"
-                        " phẩm giá làm người."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Những tấm gương cứu người trong lũ dữ",
-                "chi_tiet": (
-                    "Nhiều người dân bình thường không quản hiểm nguy lao mình"
-                    " vào dòng nước xiết để cứu học sinh, người già mắc kẹt"
-                    " trong mưa bão."
+                (
+                    "Lòng dũng cảm lên tiếng bảo vệ lẽ phải là thước đo phẩm"
+                    " giá làm người."
                 ),
-                "y_nghia": (
-                    "Lòng dũng cảm xả thân vì đồng loại tỏa sáng rực rỡ trong"
-                    " nghịch cảnh."
-                ),
-                "nguon": "Báo Công An Nhân Dân",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thái độ hèn nhát, vô cảm, 'thấy việc nghĩa không làm',"
-                " sợ chuốc họa vào thân."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Những tấm gương cứu người trong lũ dữ",
+            "chi_tiet": (
+                "Nhiều người dân bình thường không quản hiểm nguy lao mình vào"
+                " dòng nước xiết để cứu học sinh, người già mắc kẹt trong mưa"
+                " bão."
+            ),
+            "y_nghia": (
+                "Lòng dũng cảm xả thân vì đồng loại tỏa sáng rực rỡ trong"
+                " nghịch cảnh."
+            ),
+            "nguon": "Báo Công An Nhân Dân",
+        }],
+        "counter": [(
+            "Phê phán thái độ hèn nhát, vô cảm, 'thấy việc nghĩa không làm', sợ"
+            " chuốc họa vào thân."
+        )],
     },
     "Đề 10: Ứng xử văn minh trên không gian mạng": {
-        "text": (
-            "Mạng xã hội giống như con dao hai lưỡi vừa kết nối toàn cầu vừa"
-            " tiềm ẩn nhiều hệ lụy văn hóa.\nHãy viết bài văn nghị luận (khoảng"
-            " 600 chữ) bàn về cách ứng xử thông minh và văn minh của người trẻ"
-            " trên không gian mạng."
-        ),
+        "text": """Mạng xã hội giống như con dao hai lưỡi vừa kết nối toàn cầu vừa tiềm ẩn nhiều hệ lụy văn hóa.
+Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về cách ứng xử thông minh và văn minh của người trẻ trên không gian mạng.""",
         "vdnl_chuan": (
             "Cách ứng xử thông minh, làm chủ công nghệ và bản lĩnh văn hóa"
             " trên không gian mạng."
@@ -841,54 +752,42 @@ DE_BAI_CO_BAN = {
             "Cách ứng xử thông minh, làm chủ công nghệ và bản lĩnh văn hóa của"
             " người trẻ trên không gian mạng."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao người trẻ dễ sa ngã trở thành 'anh hùng bàn phím'"
-                    " trên không gian mạng?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao người trẻ dễ sa ngã trở thành 'anh hùng bàn phím' trên"
+                " không gian mạng?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Tính ẩn danh của tài khoản ảo tạo ra cảm giác vô trách"
+                    " nhiệm, phóng thích những bức xúc cá nhân."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Tính ẩn danh của tài khoản ảo tạo ra cảm giác vô trách"
-                        " nhiệm, phóng thích những bức xúc cá nhân."
-                    ),
-                    (
-                        "Tâm lý đám đông thiếu tư duy phản biện khiến nhiều"
-                        " người hùa theo tấn công người khác."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Bộ Quy tắc ứng xử trên mạng xã hội (Bộ TT&TT)",
-                "chi_tiet": (
-                    "Ban hành nhằm định hướng người dùng hành xử chuẩn mực,"
-                    " tôn trọng pháp luật và đạo đức trực tuyến."
+                (
+                    "Tâm lý đám đông thiếu tư duy phản biện khiến nhiều người"
+                    " hùa theo tấn công người khác."
                 ),
-                "y_nghia": (
-                    "Khung pháp lý và đạo đức thiết thực xây dựng môi trường"
-                    " mạng lành mạnh."
-                ),
-                "nguon": (
-                    "Cổng thông tin Bộ Thông tin và Truyền thông"
-                ),
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán hiện tượng miệt thị ngoại hình, lăng mạ, tung tin giả"
-                " câu view trên mạng xã hội."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Bộ Quy tắc ứng xử trên mạng xã hội (Bộ TT&TT)",
+            "chi_tiet": (
+                "Ban hành nhằm định hướng người dùng hành xử chuẩn mực, tôn"
+                " trọng pháp luật và đạo đức trực tuyến."
+            ),
+            "y_nghia": (
+                "Kh khung pháp lý và đạo đức thiết thực xây dựng môi trường mạng"
+                " lành mạnh."
+            ),
+            "nguon": "Cổng thông tin Bộ Thông tin và Truyền thông",
+        }],
+        "counter": [(
+            "Phê phán hiện tượng miệt thị ngoại hình, lăng mạ, tung tin giả"
+            " câu view trên mạng xã hội."
+        )],
     },
     "Đề 11: Giá trị của sự trung thực trong học tập và đời sống": {
-        "text": (
-            'Có ý kiến cho rằng: *"Sự thật có thể gây tổn thương trong chốc'
-            " lát, nhưng dối trá để lại vết sẹo vĩnh viễn."*\nViết bài văn"
-            " nghị luận (khoảng 600 chữ) bàn về giá trị và ý nghĩa của phẩm chất"
-            " trung thực trong học tập và đời sống."
-        ),
+        "text": """Có ý kiến cho rằng: "Sự thật có thể gây tổn thương trong chốc lát, nhưng dối trá để lại vết sẹo vĩnh viễn."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị và ý nghĩa của phẩm chất trung thực trong học tập và đời sống.""",
         "vdnl_chuan": (
             "Ý nghĩa và giá trị của phẩm chất trung thực đối với sự trưởng"
             " thành nhân cách."
@@ -912,53 +811,42 @@ DE_BAI_CO_BAN = {
             "Ý nghĩa và giá trị của phẩm chất trung thực đối với sự trưởng"
             " thành nhân cách con người."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao bệnh gian lận trong học tập và đời sống lại là mối"
-                    " nguy hại lớn?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao bệnh gian lận trong học tập và đời sống lại là mối nguy"
+                " hại lớn?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Gian lận làm thui chột năng lực thực chất, tạo ra 'giả học"
+                    " thức, thật bằng cấp', làm xói mòn kỷ cương đạo đức."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Gian lận làm thui chột năng lực thực chất, tạo ra 'giả"
-                        " học thức, thật bằng cấp', làm xói mòn kỷ cương đạo"
-                        " đức."
-                    ),
-                    (
-                        "Sự dối trá một khi bị lật tẩy sẽ phá vỡ hoàn toàn uy"
-                        " tín và sự tôn trọng."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Cuộc vận động 'Nói không với tiêu cực trong thi cử'",
-                "chi_tiet": (
-                    "Do Bộ GD&ĐT phát động nhằm siết chặt kỷ luật phòng thi, đề"
-                    " cao giá trị thực chất."
+                (
+                    "Sự dối trá một khi bị lật tẩy sẽ phá vỡ hoàn toàn uy tín"
+                    " và sự tôn trọng."
                 ),
-                "y_nghia": (
-                    "Khẳng định nền tảng trung thực trong giáo dục là cốt lõi"
-                    " của quốc gia."
-                ),
-                "nguon": "Bộ Giáo dục và Đào tạo",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói gian lận thi cử, đạo văn (plagiarism) và bệnh"
-                " thành tích dối trá."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Cuộc vận động 'Nói không với tiêu cực trong thi cử'",
+            "chi_tiet": (
+                "Do Bộ GD&ĐT phát động nhằm siết chặt kỷ luật phòng thi, đề cao"
+                " giá trị thực chất."
+            ),
+            "y_nghia": (
+                "Khẳng định nền tảng trung thực trong giáo dục là cốt lõi của"
+                " quốc gia."
+            ),
+            "nguon": "Bộ Giáo dục và Đào tạo",
+        }],
+        "counter": [(
+            "Phê phán thói gian lận thi cử, đạo văn (plagiarism) và bệnh"
+            " thành tích dối trá."
+        )],
     },
     "Đề 12: Tầm quan trọng của tinh thần tự học đối với học sinh": {
-        "text": (
-            'Chủ tịch Hồ Chí Minh từng căn dặn: *"Học ở trường, học ở sách vở,'
-            ' học lẫn nhau và học nhân dân."*\nViết bài văn nghị luận (khoảng'
-            " 600 chữ) bàn về tầm quan trọng của tinh thần tự học đối với học"
-            " sinh trong thời đại mới."
-        ),
+        "text": """Chủ tịch Hồ Chí Minh từng căn dặn: "Học ở trường, học ở sách vở, học lẫn nhau và học nhân dân."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng của tinh thần tự học đối với học sinh trong thời đại mới.""",
         "vdnl_chuan": (
             "Tầm quan trọng và giá trị của tinh thần tự học đối với sự phát"
             " triển của người trẻ."
@@ -981,53 +869,44 @@ DE_BAI_CO_BAN = {
             "Tầm quan trọng và giá trị quyết định của tinh thần tự học đối với"
             " học sinh."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao học sinh ngày nay buộc phải trang bị năng lực tự"
-                    " học làm kim chỉ nam?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao học sinh ngày nay buộc phải trang bị năng lực tự học"
+                " làm kim chỉ nam?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Sự bùng nổ tri thức khiến sách giáo khoa chỉ là nền tảng"
+                    " cơ bản; thế giới thay đổi từng ngày đòi hỏi phải học"
+                    " suốt đời."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Sự bùng nổ tri thức khiến sách giáo khoa chỉ là nền"
-                        " tảng cơ bản; thế giới thay đổi từng ngày đòi hỏi phải"
-                        " học suốt đời."
-                    ),
-                    (
-                        "Tự học giúp rèn luyện tư duy độc lập, khả năng thích"
-                        " ứng và sự sáng tạo."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Tấm gương tự học của Chủ tịch Hồ Chí Minh",
-                "chi_tiet": (
-                    "Người tự học thông thạo hơn 10 ngoại ngữ và nghiên cứu"
-                    " chính trị khi bôn ba khắp thế giới."
+                (
+                    "Tự học giúp rèn luyện tư duy độc lập, khả năng thích ứng"
+                    " và sự sáng tạo."
                 ),
-                "y_nghia": (
-                    "Biểu tượng vĩ đại về tinh thần tự học suốt đời vì sự"
-                    " nghiệp cứu nước."
-                ),
-                "nguon": "Tư liệu Lịch sử Đảng Cộng sản Việt Nam",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói quen ỷ lại, học vẹt, lười suy nghĩ, chờ 'dọn sẵn"
-                " mâm' kiến thức từ thầy cô."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Tấm gương tự học của Chủ tịch Hồ Chí Minh",
+            "chi_tiet": (
+                "Người tự học thông thạo hơn 10 ngoại ngữ và nghiên cứu chính"
+                " trị khi bôn ba khắp thế giới."
+            ),
+            "y_nghia": (
+                "Biểu tượng vĩ đại về tinh thần tự học suốt đời vì sự nghiệp"
+                " cứu nước."
+            ),
+            "nguon": "Tư liệu Lịch sử Đảng Cộng sản Việt Nam",
+        }],
+        "counter": [(
+            "Phê phán thói quen ỷ lại, học vẹt, lười suy nghĩ, chờ 'dọn sẵn"
+            " mâm' kiến thức từ thầy cô."
+        )],
     },
     "Đề 13: Sức mạnh của lời nói tử tế trong giao tiếp": {
-        "text": (
-            "Ca dao dân gian có câu:\n> *\"Lời nói không mất tiền mua / Lựa"
-            ' lời mà nói cho vừa lòng nhau."*\nViết bài văn nghị luận (khoảng'
-            " 600 chữ) bàn về sức mạnh của lời nói tử tế và văn hóa ứng xử"
-            " trong đời sống hiện đại."
-        ),
+        "text": """Ca dao dân gian có câu:
+> "Lời nói không mất tiền mua / Lựa lời mà nói cho vừa lòng nhau."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của lời nói tử tế và văn hóa ứng xử trong đời sống hiện đại.""",
         "vdnl_chuan": (
             "Sức mạnh của lời nói tử tế và tầm quan trọng của văn hóa ứng xử"
             " trong giao tiếp."
@@ -1050,52 +929,42 @@ DE_BAI_CO_BAN = {
             "Sức mạnh của lời nói tử tế và tầm quan trọng của văn hóa ứng xử"
             " trong giao tiếp hiện đại."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao con người đôi khi dễ thốt ra lời cay độc thay vì"
-                    " sự tử tế?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao con người đôi khi dễ thốt ra lời cay độc thay vì sự"
+                " tử tế?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Áp lực cuộc sống và cái tôi ích kỷ khiến con người dễ phóng"
+                    " thích sự cáu giận lên người khác."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Áp lực cuộc sống và cái tôi ích kỷ khiến con người dễ"
-                        " phóng thích sự cáu giận lên người khác."
-                    ),
-                    (
-                        "Lời nói sắc nhọn có sức sát thương tâm lý sâu sắc;"
-                        " ngược lại lời tử tế là liều thuốc chữa lành."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Mô hình 'Quán ăn 0 đồng' cho người nghèo",
-                "chi_tiet": (
-                    "Nơi người lao động nghèo nhận bữa ăn miễn phí kèm theo"
-                    " những lời chào hỏi, cử chỉ tôn trọng ấm áp."
+                (
+                    "Lời nói sắc nhọn có sức sát thương tâm lý sâu sắc; ngược"
+                    " lại lời tử tế là liều thuốc chữa lành."
                 ),
-                "y_nghia": (
-                    "Minh chứng cho sức mạnh của lời nói tử tế sưởi ấm những"
-                    " phận đời bất hạnh."
-                ),
-                "nguon": "Báo Thanh Niên",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói chửi tục, miệt thị, dùng ngôn từ thô lỗ sát"
-                " thương tâm lý người khác."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Mô hình 'Quán ăn 0 đồng' cho người nghèo",
+            "chi_tiet": (
+                "Nơi người lao động nghèo nhận bữa ăn miễn phí kèm theo những"
+                " lời chào hỏi, cử chỉ tôn trọng ấm áp."
+            ),
+            "y_nghia": (
+                "Minh chứng cho sức mạnh của lời nói tử tế sưởi ấm những phận"
+                " đời bất hạnh."
+            ),
+            "nguon": "Báo Thanh Niên",
+        }],
+        "counter": [(
+            "Phê phán thói chửi tục, miệt thị, dùng ngôn từ thô lỗ sát thương"
+            " tâm lý người khác."
+        )],
     },
     "Đề 14: Vai trò của tính tự lập trong hành trình trưởng thành": {
-        "text": (
-            'Có ý kiến cho rằng: *"Chim non muốn bay cao phải tự vẫy đôi cánh'
-            ' của chính mình."*\nViết bài văn nghị luận (khoảng 600 chữ) bàn về'
-            " vai trò của tính tự lập đối với bạn trẻ trong hành trình bước vào"
-            " đời."
-        ),
+        "text": """Có ý kiến cho rằng: "Chim non muốn bay cao phải tự vẫy đôi cánh của chính mình."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của tính tự lập đối với bạn trẻ trong hành trình bước vào đời.""",
         "vdnl_chuan": (
             "Vai trò và ý nghĩa của tính tự lập trong hành trình trưởng thành"
             " của tuổi trẻ."
@@ -1119,51 +988,40 @@ DE_BAI_CO_BAN = {
             "Vai trò và ý nghĩa quyết định của tính tự lập trong hành trình"
             " trưởng thành của tuổi trẻ."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao hội chứng ỷ lại vào gia đình lại là nỗi trăn trở"
-                    " lớn của thế hệ trẻ?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao hội chứng ỷ lại vào gia đình lại là nỗi trăn trở lớn"
+                " của thế hệ trẻ?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Sự bao bọc quá mức của cha mẹ tước đi cơ hội va vấp, tự"
+                    " chịu trách nhiệm của con cái."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Sự bao bọc quá mức của cha mẹ tước đi cơ hội va vấp,"
-                        " tự chịu trách nhiệm của con cái."
-                    ),
-                    (
-                        "Tự lập là chiếc vé thông hành duy nhất giúp người trẻ"
-                        " đứng vững trên đôi chân của mình."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "Lối sống tự lập của thanh niên các nước phát triển",
-                "chi_tiet": (
-                    "Từ 18 tuổi, thanh niên chủ động đi làm thêm trang trải học"
-                    " phí, tự thuê nhà và tự quyết định tương lai."
+                (
+                    "Tự lập là chiếc vé thông hành duy nhất giúp người trẻ đứng"
+                    " vững trên đôi chân của mình."
                 ),
-                "y_nghia": (
-                    "Bài học về tinh thần tự lập giúp trưởng thành vững vàng."
-                ),
-                "nguon": "Báo Dân Trí",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói quen 'công tử bột', 'bám váy mẹ', lười biếng, ỷ"
-                " lại mọi thứ vào cha mẹ."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Lối sống tự lập của thanh niên các nước phát triển",
+            "chi_tiet": (
+                "Từ 18 tuổi, thanh niên chủ động đi làm thêm trang trải học"
+                " phí, tự thuê nhà và tự quyết định tương lai."
+            ),
+            "y_nghia": "Bài học về tinh thần tự lập giúp trưởng thành vững vàng.",
+            "nguon": "Báo Dân Trí",
+        }],
+        "counter": [(
+            "Phê phán thói quen 'công tử bột', 'bám váy mẹ', lười biếng, ỷ lại"
+            " mọi thứ vào cha mẹ."
+        )],
     },
     "Đề 15: Sức mạnh to lớn của tinh thần đoàn kết": {
-        "text": (
-            'Chủ tịch Hồ Chí Minh từng đúc kết chân lý lịch sử:\n> *"Đoàn'
-            " kết, đoàn kết, đại đoàn kết / Thành công, thành công, đại thành"
-            ' công."*\nViết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh'
-            " của tinh thần đoàn kết trong việc vượt qua thử thách."
-        ),
+        "text": """Chủ tịch Hồ Chí Minh từng đúc kết chân lý lịch sử:
+> "Đoàn kết, đoàn kết, đại đoàn kết / Thành công, thành công, đại thành công."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của tinh thần đoàn kết trong việc vượt qua thử thách.""",
         "vdnl_chuan": (
             "Sức mạnh to lớn của tinh thần đoàn kết trong việc tạo nên sức"
             " mạnh tập thể."
@@ -1186,59 +1044,46 @@ DE_BAI_CO_BAN = {
             "Sức mạnh to lớn của tinh thần đoàn kết trong việc vượt qua nghịch"
             " cảnh và xây dựng đất nước."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao đoàn kết luôn là vũ khí tối thượng của dân tộc Việt"
-                    " Nam qua các thời kỳ?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao đoàn kết luôn là vũ khí tối thượng của dân tộc Việt Nam"
+                " qua các thời kỳ?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Lịch sử dựng nước và giữ nước của ta luôn phải đối mặt với"
+                    " thiên tai và ngoại xâm khốc liệt; chỉ đoàn kết mới tạo"
+                    " thành bức tường thành bất bại."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Lịch sử dựng nước và giữ nước của ta luôn phải đối mặt"
-                        " với thiên tai và ngoại xâm khốc liệt; chỉ đoàn kết"
-                        " mới tạo thành bức tường thành bất bại."
-                    ),
-                    (
-                        "Đoàn kết nhân đôi sức mạnh, biến điều không thể thành"
-                        " có thể."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": (
-                    "Tinh thần chống dịch Covid-19 và cứu trợ bão lũ lịch sử"
+                (
+                    "Đoàn kết nhân đôi sức mạnh, biến điều không thể thành có"
+                    " thể."
                 ),
-                "chi_tiet": (
-                    "Hàng ngàn chuyến xe cứu trợ, ATM gạo, bếp ăn 0 đồng ra đời"
-                    " từ sự chung tay của toàn xã hội."
-                ),
-                "y_nghia": (
-                    "Minh chứng hùng hồn cho sức mạnh đại đoàn kết dân tộc"
-                    " trong hoạn nạn."
-                ),
-                "nguon": "Báo Nhân Dân",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán tư tưởng cục bộ, ích kỷ, chia rẽ bè phái làm suy yếu"
-                " sức mạnh tập thể."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "Tinh thần chống dịch Covid-19 và cứu trợ bão lũ lịch sử",
+            "chi_tiet": (
+                "Hàng ngàn chuyến xe cứu trợ, ATM gạo, bếp ăn 0 đồng ra đời từ"
+                " sự chung tay của toàn xã hội."
+            ),
+            "y_nghia": (
+                "Minh chứng hùng hồn cho sức mạnh đại đoàn kết dân tộc trong"
+                " hoạn nạn."
+            ),
+            "nguon": "Báo Nhân Dân",
+        }],
+        "counter": [(
+            "Phê phán tư tưởng cục bộ, ích kỷ, chia rẽ bè phái làm suy yếu sức"
+            " mạnh tập thể."
+        )],
     },
 }
 
 DE_BAI_NANG_CAO = {
     "Đề 16: Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
-        "text": (
-            'Có ý kiến cho rằng: *"Con sông nào cũng phải chảy qua ghềnh thác'
-            " để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó"
-            ' sẽ hòa tan vào những con lạch nhỏ mà biến mất."*\nViết bài văn'
-            " nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng"
-            " và chính kiến trước áp lực số đông."
-        ),
+        "text": """Có ý kiến cho rằng: "Con sông nào cũng phải chảy qua ghềnh thác để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó sẽ hòa tan vào những con lạch nhỏ mà biến mất."
+Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực số đông.""",
         "vdnl_chuan": (
             "Bản lĩnh giữ gìn bản sắc riêng và chính kiến cá nhân trước áp lực"
             " của đám đông."
@@ -1261,48 +1106,41 @@ DE_BAI_NANG_CAO = {
             "Bản lĩnh giữ gìn bản sắc riêng và chính kiến cá nhân trước áp lực"
             " của đám đông trong thời đại số."
         ),
-        "questions": [
-            {
-                "cau_hoi": (
-                    "Vì sao việc giữ gìn bản sắc riêng trước áp lực đám đông"
-                    " lại là thử thách khốc liệt?"
+        "questions": [{
+            "cau_hoi": (
+                "Vì sao việc giữ gìn bản sắc riêng trước áp lực đám đông lại là"
+                " thử thách khốc liệt?"
+            ),
+            "y_tra_loi": [
+                (
+                    "Tâm lý bầy đàn và nỗi sợ bị cô lập khiến con người dễ sa"
+                    " vào lối sống hùa theo phong trào."
                 ),
-                "y_tra_loi": [
-                    (
-                        "Tâm lý bầy đàn và nỗi sợ bị cô lập khiến con người dễ"
-                        " sa vào lối sống hùa theo phong trào."
-                    ),
-                    (
-                        "Giữ bản sắc đòi hỏi tư duy phản biện sắc bén và sự"
-                        " dũng cảm đối lập với định kiến."
-                    ),
-                ],
-            }
-        ],
-        "evidence": [
-            {
-                "ten": "VĐV Nguyễn Thị Oanh (SEA Games 32)",
-                "chi_tiet": (
-                    "Bất chấp lịch thi đấu đổi đột ngột cách nhau 20 phút, cô"
-                    " kiên định chiến thuật riêng để giành cả 2 HCV."
+                (
+                    "Giữ bản sắc đòi hỏi tư duy phản biện sắc bén và sự dũng"
+                    " cảm đối lập với định kiến."
                 ),
-                "y_nghia": (
-                    "Bản lĩnh giữ vững phong độ và cá tính độc lập trước nghịch"
-                    " cảnh."
-                ),
-                "nguon": "Báo Thể thao & Văn hóa",
-            }
-        ],
-        "counter": [
-            (
-                "Phê phán thói hùa theo phong trào vô thức hoặc biến khác biệt"
-                " thành ngông cuồng."
-            )
-        ],
+            ],
+        }],
+        "evidence": [{
+            "ten": "VĐV Nguyễn Thị Oanh (SEA Games 32)",
+            "chi_tiet": (
+                "Bất chấp lịch thi đấu đổi đột ngột cách nhau 20 phút, cô kiên"
+                " định chiến thuật riêng để giành cả 2 HCV."
+            ),
+            "y_nghia": (
+                "Bản lĩnh giữ vững phong độ và cá tính độc lập trước nghịch"
+                " cảnh."
+            ),
+            "nguon": "Báo Thể thao & Văn hóa",
+        }],
+        "counter": [(
+            "Phê phán thói hùa theo phong trào vô thức hoặc biến khác biệt"
+            " thành ngông cuồng."
+        )],
     }
 }
 
-# Kho dẫn chứng 8 chủ điểm
 KHO_DAN_CHUNG_8_CHU_DIEM = {
     "1. Trách nhiệm, Cống hiến & Phụng sự cộng đồng": [{
         "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
@@ -1956,7 +1794,7 @@ with tabs[2]:
 # ------------------------------------------------------------------------------
 with tabs[3]:
   st.markdown(
-      '<div class="section-title">🔍 Giám Khảo AI Chấm Điểm Điểm Theo Bảng Rubric 10'
+      '<div class="section-title">🔍 Giám Khảo AI Chấm Điểm Theo Bảng Rubric 10'
       " Điểm</div>",
       unsafe_allow_html=True,
   )
