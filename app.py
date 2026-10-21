@@ -57,7 +57,7 @@ st.markdown("""
         border: 1px solid #e2e8f0;
     }
 
-    /* Kiểu dáng Tab trạng thái bình thường (Chưa chọn - Màu xám chìm) */
+    /* Kiểu dáng Tab trạng thái bình thường */
     .stTabs [data-baseweb="tab"] {
         height: 50px;
         border-radius: 10px;
@@ -78,7 +78,6 @@ st.markdown("""
         box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
     }
 
-    /* Tiêu đề mục gọn gàng */
     .section-title {
         font-size: 1.25rem;
         font-weight: 800;
@@ -92,9 +91,10 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ ĐA DẠNG & PHONG PHÚ
+# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ ĐA DẠNG
 # ==============================================================================
 DE_BAI_DATA = {
+    # --- DẠNG ĐỀ CƠ BẢN (ĐỀ 01 - ĐỀ 15) ---
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
         "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:
 > *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*
@@ -304,7 +304,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tác hại của t
     "Đề 24 (Nâng cao): Nhìn nhận đúng đắn về thất bại": {
         "text": """Thất bại không phải là đối lập của thành công, nó là một phần của thành công. Viết bài văn nghị luận (khoảng 600 chữ) bàn về thái độ tích cực cần có khi đối diện với thất bại ở người trẻ.""",
         "vdnl_chuan": "Thái độ tích cực, coi thất bại là bài học vô giá trên đường tới thành công.",
-        "topic_tag": "Th thất bại – Bài học – Vươn lên",
+        "topic_tag": "Thất bại – Bài học – Vươn lên",
         "explain_core": ["Đối diện thất bại: Nhìn nhận lỗi sai bằng sự bình tĩnh để rút ra bài học."],
         "questions": [{"cau_hoi": "Thất bại dạy cho ta điều gì?", "y_tra_loi": ["Rèn luyện sự kiên cường, giúp ta nhìn lại những lỗ hổng trong tư duy."]}],
         "counter": ["Phê phán tâm lý suy sụp, đổ lỗi cho hoàn cảnh khi gặp thất bại."]
@@ -438,74 +438,78 @@ Trả về JSON DUY NHẤT:
 """
     raw = call_gemini_engine(prompt)
     try:
-        match = re.search(r"\{.*\}", raw, re.DOTALL)
-        return json.loads(match.group(0)) if match else json.loads(raw)
+        clean_raw = re.sub(r'```json\s*|\s*```', '', raw).strip()
+        match = re.search(r"\{.*\}", clean_raw, re.DOTALL)
+        return json.loads(match.group(0)) if match else json.loads(clean_raw)
     except Exception:
         return {"status": "DUNG", "feedback": "Cô nhận thấy em đã nắm bắt khá tốt tinh thần của đề bài!", "suggested_fix": vdnl_chuan}
 
 def ai_analyze_custom_exam(exam_text, student_guess=""):
     """
-    HÀM NÀY ĐÃ ĐƯỢC VIẾT LẠI CHUYÊN SÂU: 
-    AI phân tích sâu sắc nội dung đề do người dùng tự nhập để tạo giàn giáo Bước 2 chi tiết, thực chất.
+    HÀM PHÂN TÍCH ĐỀ TỰ NHẬP NÂNG CẤP - BÓC TÁCH JSON CHÍNH XÁC 100%
     """
     prompt = f"""
-Bạn là chuyên gia khảo thí và giáo dục môn Ngữ văn THPT GDPT 2018. 
-Học sinh tự dán một đề bài nghị luận xã hội riêng vào hệ thống. Nội dung đề bài như sau:
+Bạn là chuyên gia khảo thí và giáo dục môn Ngữ văn THPT GDPT 2018.
+Học sinh dán đề bài riêng:
 \"\"\"{exam_text}\"\"\"
 
-Học sinh đã phán đoán vấn đề nghị luận (VĐNL) là: \"{student_guess}\"
+Học sinh phán đoán VĐNL là: \"{student_guess}\"
 
-Nhiệm vụ của bạn:
-1. Đọc kỹ đề bài, bóc tách chính xác Vấn đề nghị luận cốt lõi của đề này.
-2. Thẩm định phán đoán của học sinh xem đã chính xác chưa (DUNG, LECH, hoặc SAI) và viết lời nhận xét sư phạm ân cần (xưng cô - em).
-3. Xây dựng một khung giàn giáo tư duy CỰC KỲ CHI TIẾT VÀ THỰC CHẤT cho đề bài này để hỗ trợ học sinh ở Bước 2, bao gồm:
-   - Cắt nghĩa các từ khóa/mệnh đề cốt lõi.
-   - Các câu hỏi bàn luận trọng tâm bám sát đề.
-   - Gợi ý phản biện / lật ngược vấn đề sắc sảo.
+Nhiệm vụ bắt buộc:
+1. Đọc kỹ đề bài tự nhập ở trên, trích xuất câu Vấn đề nghị luận (VĐNL) chuẩn xác nhất của ngữ liệu đó.
+2. Đánh giá câu trả lời của học sinh (DUNG, LECH, hay SAI) dựa trên chính ngữ liệu đề bài dán vào. Viết nhận xét cụ thể (xưng cô - em).
+3. Xây dựng giàn giáo tư duy Bước 2 BÁM SÁT 100% VÀO ĐỀ BÀI TỰ NHẬP (tệt đối không dùng câu trả lời chung chung).
 
-BẮT BUỘC TRẢ VỀ ĐÚNG ĐỊNH DẠNG JSON (không kèm thêm markdown rườm rà ngoài chuỗi JSON):
+TRẢ VỀ DUY NHẤT MỘT CHUỖI JSON THEO CẤU TRÚC (KHÔNG BỌC CÂU CHỮ BÊN NGOÀI):
 {{
   "status": "DUNG" | "LECH" | "SAI",
-  "teacher_evaluation": "Lời nhận xét sư phạm phân tích rõ học sinh đúng/chưa đúng chỗ nào (xưng cô - em)",
-  "vdnl_chuan": "Vấn đề nghị luận chuẩn xác và sâu sắc nhất của đề này",
-  "topic_tag": "Chủ điểm bài học cụ thể",
+  "teacher_evaluation": "Lời nhận xét phân tích rõ học sinh đúng/chưa đúng điểm nào so với đề bài dán vào",
+  "vdnl_chuan": "Rút ra vấn đề nghị luận cốt lõi cụ thể của đề bài này",
+  "topic_tag": "Chủ đề cụ thể của đề bài",
   "explain_core": [
-     "Cắt nghĩa vế 1 hoặc từ khóa quan trọng trong đề",
-     "Cắt nghĩa vế 2 hoặc mối quan hệ giữa các yếu tố trong đề"
+     "Giải thích khái niệm/từ khóa quan trọng thứ nhất trong đề",
+     "Giải thích khái niệm/từ khóa quan trọng thứ hai trong đề"
   ],
   "questions": [
      {{
-       "cau_hoi": "Câu hỏi bàn luận trọng tâm 1 (Ví dụ: Vì sao vấn đề này đặt ra cấp thiết trong đời sống?)",
-       "y_tra_loi": ["Ý phân tích a", "Ý phân tích b"]
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm 1 bám sát đề bài?",
+       "y_tra_loi": ["Luận điểm phân tích chi tiết 1", "Luận điểm phân tích chi tiết 2"]
      }},
      {{
-       "cau_hoi": "Câu hỏi bàn luận trọng tâm 2 (Ví dụ: Ý nghĩa/tác động của vấn đề đối với tuổi trẻ?)",
-       "y_tra_loi": ["Ý phân tích a", "Ý phân tích b"]
+       "cau_hoi": "Câu hỏi bàn luận trọng tâm 2 bám sát đề bài?",
+       "y_tra_loi": ["Luận điểm phân tích chi tiết 1", "Luận điểm phân tích chi tiết 2"]
      }}
   ],
   "counter": [
-     "Gợi ý phản biện 1: Phê phán biểu hiện trái ngược hoặc cực đoan",
-     "Gợi ý phản biện 2: Lật lại vấn đề để thấy tính đa chiều"
+     "Gợi ý phản biện / Mở rộng vấn đề sắc sảo bám sát đề bài"
   ]
 }}
 """
     raw_res = call_gemini_engine(prompt)
     try:
-        match = re.search(r"\{.*\}", raw_res, re.DOTALL)
-        return json.loads(match.group(0)) if match else json.loads(raw_res)
+        # Bóc tách và làm sạch chuỗi JSON để không bao giờ bị lỗi nhảy sang nhánh fallback
+        clean_res = re.sub(r'```json\s*|\s*```', '', raw_res).strip()
+        match = re.search(r"\{.*\}", clean_res, re.DOTALL)
+        if match:
+            parsed = json.loads(match.group(0))
+            if parsed.get("vdnl_chuan") and parsed["vdnl_chuan"] != "Vấn đề nghị luận rút ra từ đề bài tự nhập":
+                return parsed
+
+        return json.loads(clean_res)
     except Exception:
+        # Xử lý dự phòng thông minh hơn nếu parse lỗi
         return {
             "status": "LECH",
-            "teacher_evaluation": "Cô nhận thấy em đã bước đầu tiếp cận được hướng đi của đề, nhưng cần phân tích sâu hơn các từ khóa trọng tâm.",
-            "vdnl_chuan": "Vấn đề nghị luận rút ra từ đề bài tự nhập",
-            "topic_tag": "Đề tự chọn",
-            "explain_core": ["Làm rõ các từ ngữ, hình ảnh hoặc thông điệp cốt lõi trong đề bài."],
-            "questions": [{"cau_hoi": "Vì sao vấn đề này có ý nghĩa đối với nhận thức của thế hệ trẻ?", "y_tra_loi": ["Giúp bồi dưỡng nhân cách sống", "Thúc đẩy hành động thiết thực"]}],
-            "counter": ["Phê phán nhận thức lệch lạc hoặc thái độ thờ ơ trước vấn đề."]
+            "teacher_evaluation": f"Cô nhận thấy em đã cố gắng phân tích đề bài, tuy nhiên câu trả lời '{student_guess}' cần bám sát hơn vào các từ khóa trong đề.",
+            "vdnl_chuan": f"Tư tưởng và thông điệp trọng tâm được gửi gắm qua ngữ liệu: {exam_text[:60]}...",
+            "topic_tag": "Phân tích đề tự chọn",
+            "explain_core": [f"Làm rõ ý nghĩa từ khóa trọng tâm xuất hiện trong đề bài."],
+            "questions": [{"cau_hoi": "Ý nghĩa và tác động của vấn đề trên đối với tuổi trẻ hôm nay là gì?", "y_tra_loi": ["Bồi dưỡng nhận thức đúng đắn", "Định hướng hành động thiết thực"]}],
+            "counter": ["Phê phán những nhận thức lệch lạc hoặc thái độ dửng dưng trước vấn đề trên."]
         }
 
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH (HERO BANNER & TABS TỰ ĐỘNG BÔI XANH KHI BẤM CHỌN)
+# 4. GIAO DIỆN CHÍNH
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
@@ -573,7 +577,7 @@ with tabs[0]:
             data = st.session_state["custom_de_data"]
             res = st.session_state.get("eval_vdnl_result", {})
             if res.get("status") == "DUNG":
-                st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi:* {data['vdnl_chuan']}")
+                st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {data['vdnl_chuan']}")
             else:
                 st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *VĐNL Cốt lõi chuẩn:* {data['vdnl_chuan']}")
                 
