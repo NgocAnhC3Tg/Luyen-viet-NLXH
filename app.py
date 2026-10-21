@@ -88,14 +88,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ CHI TIẾT (CÓ KHO DẪN CHỨNG)
+# 2. NGÂN HÀNG ĐỀ THI ĐẦY ĐỦ 30 ĐỀ CHI TIẾT (KHO DẪN CHỨNG & LẬP LUẬN SÂU)
 # ==============================================================================
 DE_BAI_DATA = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
         "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:
 > *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*
 Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nay.""",
-        "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cốnghiến cho cộng đồng của thế hệ trẻ.",
+        "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ.",
         "topic_tag": "Trách nhiệm – Cống hiến – Tình người",
         "explain_core": [
             "**Lối sống có trách nhiệm:** Nhận thức rõ bổn phận, nghĩa vụ của bản thân đối với gia đình và xã hội; không thờ ơ trước đời sống.",
@@ -128,12 +128,12 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             {"cau_hoi": "Vì sao con người hiện đại rất cần sự thấu cảm và lắng nghe?", "y_tra_loi": ["Áp lực cuộc sống và mạng xã hội dễ khiến con người rơi vào cô độc.", "Sự thấu cảm giúp xoa dịu tổn thương tinh thần và giải tỏa khủng hoảng tâm lý."]}
         ],
         "evidence": [
-            "**Các đường dây nóng tư vấn tâm lý học đường:** Nơi các chuyên gia và tình nguyện viên kiên nhẫn lắng nghe nỗi niềm của tuổi mới lớn.",
-            "**Câu chuyện về sự đồng cảm trong đại dịch:** Những bữa ăn 0 đồng, ATM gạo được trao đi từ sự thấu hiểu khó khăn của người lao động nghèo."
+            "**Dự án Tổng đài Ngày Mai:** Nơi các chuyên gia tâm lý lắng nghe và tham vấn trầm cảm miễn phí cho người trẻ.",
+            "**Phong trào giúp đỡ người yếu thế trong thiên tai:** Những chuyến xe cứu trợ bão lũ ấm áp nghĩa tình xuất phát từ sự thấu cảm."
         ],
         "counter": [
             "Phê phán thói vô cảm, thói quen phán xét, công kích cá nhân trên không gian mạng.",
-            "Lật lại vấn đề: Thấu cảm không có nghĩa là đồng lõa cho cái sai hay để cảm xúc chi phối nguyên tắc pháp luật."
+            "Lật lại vấn đề: Thấu cảm không có nghĩa là đồng lõa cho cái sai hay để cảm xúc chi phối nguyên tắc."
         ]
     },
     "Đề 03 (Cơ bản): Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
@@ -150,7 +150,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
         ],
         "evidence": [
             "**Rapper Đen Vâu, Hoàng Thùy Linh:** Đưa âm hưởng dân ca, nhạc cụ dân tộc vào âm nhạc hiện đại vươn tầm quốc tế.",
-            "**Dự án Cổ Yêu:** Các bạn trẻ phục dựng trang phục cổ truyền Việt Nam trên không gian số."
+            "**Dự án Cổ Yêu / Đại Việt Cổ Phong:** Các bạn trẻ phục dựng trang phục cổ truyền Việt Nam trên không gian số."
         ],
         "counter": [
             "Phê phán tâm lý sính ngoại mù quáng, quay lưng với giá trị truyền thống.",
@@ -159,7 +159,7 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
     }
 }
 
-# Tự động bổ sung các đề từ 04 đến 30 với kho dữ liệu chuẩn
+# Tự động bổ sung các đề từ 04 đến 30 với bộ dữ liệu chuẩn sâu
 for i in range(4, 31):
     k_name = f"Đề {i:02d}"
     if not any(k_name in k for k in DE_BAI_DATA.keys()):
@@ -270,7 +270,7 @@ Trả về JSON DUY NHẤT:
 
 def ai_analyze_custom_exam_deep(exam_text, student_guess=""):
     """
-    HÀM PHÂN TÍCH ĐỀ TỰ NHẬP CHUYÊN SÂU - BÓC TÁCH CHI TIẾT KÈM KHO DẪN CHỨNG
+    HÀM PHÂN TÍCH ĐỀ TỰ NHẬP CHUYÊN SÂU - TẠO KHO DẪN CHỨNG & BẮT AI TRẢ LỜI CỤ THỂ
     """
     prompt = f"""
 Bạn là chuyên gia khảo thí Ngữ văn THPT GDPT 2018. 
@@ -281,41 +281,41 @@ Học sinh trả lời Vấn đề nghị luận (VĐNL) cốt lõi là:
 \"\"\"{student_guess}\"\"\"
 
 Nhiệm vụ bắt buộc:
-1. Bóc tách thật chi tiết đề bài trên.
-2. Thẩm định xem câu trả lời của học sinh đúng/chưa sát điểm nào (xưng cô - em).
-3. Tạo giàn giáo Bước 2 ĐẦY ĐỦ 4 THAO TÁC (Giải thích, Bàn luận, Kho dẫn chứng thực tế, Phản biện) BÁM SÁT 100% VÀO NỘI DUNG ĐỀ BÀI TRÊN.
+1. Phân tích chi tiết ngữ liệu và yêu cầu đề bài trên.
+2. Thẩm định câu trả lời của học sinh (xưng cô - em). Nếu đúng thì khen ngợi và khẳng định lại VĐNL.
+3. BẮT BUỘC tạo giàn giáo Bước 2 ĐẦY ĐỦ 4 THAO TÁC (Giải thích, Bàn luận, Kho dẫn chứng thực tế, Phản biện) BÁM SÁT 100% VÀO NỘI DUNG ĐỀ BÀI TRÊN (Tệt đối không dùng các câu chung chung).
 
 Trả về cấu trúc JSON duy nhất:
 {{
   "status": "DUNG" | "LECH" | "SAI",
-  "teacher_evaluation": "Lời nhận xét chi tiết khích lệ hoặc chỉnh sửa nhẹ nhàng (xưng cô - em)",
-  "vdnl_chuan": "Vấn đề nghị luận cốt lõi chính xác tuyệt đối từ ngữ liệu đề bài",
+  "teacher_evaluation": "Lời nhận xét chi tiết khích lệ hoặc hướng dẫn nhẹ nhàng (xưng cô - em)",
+  "vdnl_chuan": "Vấn đề nghị luận cốt lõi chính xác tuyệt đối được bóc tách từ ngữ liệu đề bài",
   "explain_core": [
-     "**Cắt nghĩa từ khóa 1:** Giải thích nghĩa đen, nghĩa bóng hoặc thông điệp cốt lõi trong đề",
-     "**Cắt nghĩa từ khóa 2:** Giải thích mối quan hệ giữa các yếu tố trong đề"
+     "**Cắt nghĩa từ khóa 1:** Giải thích nghĩa đen, nghĩa bóng hoặc thông điệp cốt lõi trong đề bài này",
+     "**Cắt nghĩa từ khóa 2:** Giải thích mối quan hệ giữa các yếu tố trong đề bài này"
   ],
   "questions": [
      {{
        "cau_hoi": "Câu hỏi bàn luận trọng tâm 1 bám sát ngữ liệu đề bài?",
        "y_tra_loi": [
-          "Luận điểm phân tích sâu sắc a",
-          "Luận điểm phân tích sâu sắc b"
+          "Luận điểm phân tích sâu sắc a cho đề này",
+          "Luận điểm phân tích sâu sắc b cho đề này"
        ]
      }},
      {{
        "cau_hoi": "Câu hỏi bàn luận trọng tâm 2 bám sát ngữ liệu đề bài?",
        "y_tra_loi": [
-          "Luận điểm phân tích sâu sắc a",
-          "Luận điểm phân tích sâu sắc b"
+          "Luận điểm phân tích sâu sắc a cho đề này",
+          "Luận điểm phân tích sâu sắc b cho đề này"
        ]
      }}
   ],
   "evidence": [
-     "**Dẫn chứng tiêu biểu 1:** Tên nhân vật/sự kiện thực tế kèm phân tích ngắn gọn gắn với đề",
-     "**Dẫn chứng tiêu biểu 2:** Tên dự án/hành động xã hội tiêu biểu kèm phân tích gắn với đề"
+     "**Dẫn chứng tiêu biểu 1:** Tên nhân vật/sự kiện thực tế kèm phân tích ngắn gắn trực tiếp với đề bài này",
+     "**Dẫn chứng tiêu biểu 2:** Tên dự án/hành động xã hội tiêu biểu kèm phân tích gắn với đề bài này"
   ],
   "counter": [
-     "Phê phán biểu hiện tiêu cực hoặc cực đoan liên quan tới đề bài",
+     "Phê phán biểu hiện tiêu cực hoặc cực đoan liên quan tới đề bài này",
      "Lật lại vấn đề sắc sảo để bài viết đa chiều"
   ]
 }}
@@ -332,10 +332,10 @@ Trả về cấu trúc JSON duy nhất:
             "status": "DUNG",
             "teacher_evaluation": f"Cô khen em đã nắm đúng vấn đề trọng tâm của đề bài: '{student_guess}'!",
             "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận cốt lõi từ ngữ liệu đề bài",
-            "explain_core": [f"**Giải thích cốt lõi:** Làm rõ bản chất và thông điệp của đề bài bài dán vào."],
+            "explain_core": [f"**Giải thích cốt lõi:** Làm rõ bản chất và thông điệp của đề bài dán vào."],
             "questions": [
                 {
-                    "cau_hoi": f"Vì sao {student_guess} lại quan trọng?",
+                    "cau_hoi": f"Vì sao {student_guess} lại quan trọng đối với đời sống?",
                     "y_tra_loi": ["Giúp bồi dưỡng nhận thức đúng đắn", "Định hướng hành động tích cực cho tuổi trẻ"]
                 }
             ],
