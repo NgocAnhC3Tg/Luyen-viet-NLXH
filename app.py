@@ -83,238 +83,235 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    .explain-card {
-        background-color: #eff6ff;
-        border-left: 4px solid #2563eb;
-        padding: 12px 16px;
-        border-radius: 8px;
-        margin-bottom: 10px;
+    .explain-step-1 {
+        background-color: #f0f9ff;
+        border-left: 4px solid #0284c7;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+    .explain-step-2 {
+        background-color: #fefce8;
+        border-left: 4px solid #eab308;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+    }
+    .explain-step-3 {
+        background-color: #f0fdf4;
+        border-left: 4px solid #16a34a;
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ==============================================================================
-# 2. KHO 30 ĐỀ THI CHUẨN SÂU SẮC NỘI DUNG (GIẢI THÍCH 3 NẤC + DẪN CHỨNG CHI TIẾT)
+# 2. KHO 30 ĐỀ THI CHUẨN NỘI DUNG GIẢI THÍCH 3 BƯỚC SƯ PHẠM
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01 (Cơ bản): Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
         "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:\n> *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*\nTừ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nay.""",
         "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ.",
-        "explain_core": [
-            "**1. Giải thích từ ngữ/hình ảnh:** 'Nơi đất ở' chỉ vùng đất địa lý vật chất thuần túy; 'Đất hóa tâm hồn' là hình ảnh biểu biểu tượng cho sự gắn bó sâu sắc về tình cảm, nơi lưu giữ kỷ niệm, nghĩa tình và trách nhiệm của con người.",
-            "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Câu thơ khẳng định quy luật gắn kết tâm hồn giữa cá nhân với mảnh đất và con người nơi ta sống: khi con người biết cống hiến, sẻ chia và sống hết lòng thì mảnh đất xa lạ cũng trở nên thân thương, gắn bó như một phần máu thịt.",
-            "**3. Chốt Vấn đề nghị luận:** Ý kiến gợi mở bài học sâu sắc về ý nghĩa của lối sống có trách nhiệm, biết gắn bó và cống hiến cho cộng đồng của thế hệ trẻ hôm nay."
-        ],
+        "explain_core": {
+            "step1": "**Bước 1: Giải thích từ khóa trong Vấn đề nghị luận:**\n- *Lối sống có trách nhiệm:* Nhận thức rõ nghĩa vụ, bổn phận của bản thân đối với gia đình, xã hội; không dửng dưng trước thực tại.\n- *Gắn bó với cộng đồng:* Tinh thần hòa nhập, biết đặt lợi ích tập thể lên trên sự vị kỷ cá nhân.",
+            "step2": "**Bước 2: Giải thích nội dung của nhận định (câu thơ):**\n- 'Nơi đất ở' chỉ vùng đất địa lý thuần túy; 'Đất hóa tâm hồn' biểu tượng cho sự gắn kết sâu sắc về tình cảm, kỷ niệm và nghĩa tình. Hai câu thơ khẳng định quy luật: Khi con người sống cống hiến và yêu thương, mảnh đất xa lạ cũng trở thành quê hương thân thương trong tâm hồn.",
+            "step3": "**Bước 3: Chốt Vấn đề nghị luận:**\n-> Ý kiến trên dẫn dắt đến bài học sâu sắc về *ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ hôm nay*."
+        },
         "questions": [
             {
                 "cau_hoi": "Vì sao người trẻ cần phải sống có trách nhiệm và biết gắn bó với cộng đồng?",
                 "y_tra_loi": [
-                    "Con người là một sinh vật xã hội, không cá nhân nào có thể tồn tại biệt lập. Sự phát triển của mỗi cá nhân luôn gắn liền với sự ổn định và văn minh của tập thể.",
-                    "Trách nhiệm giúp đẩy lùi căn bệnh vô cảm, kết nối con người bằng tình thương, tạo dựng một cộng đồng nhân ái và bền vững."
+                    "Con người là một sinh vật xã hội, sự phát triển cá nhân luôn gắn liền với tập thể.",
+                    "Trách nhiệm giúp đẩy lùi căn bệnh vô cảm, tạo dựng một cộng đồng nhân ái và bền vững."
                 ]
             }
         ],
         "evidence": [
-            "**Dẫn chứng 1 (Hoàng Hoa Trung & Dự án 'Nuôi Em'):** Từ năm 2014, Hoàng Hoa Trung cùng các cộng sự đã sáng lập dự án 'Nuôi Em', kết nối hàng chục ngàn nhà hảo tâm để cung cấp hơn 60.000 bữa ăn trưa có thịt mỗi ngày cho học sinh mầm non và tiểu học vùng cao khó khăn tại Điện Biên, Hà Giang. *Ý nghĩa:* Dẫn chứng chứng minh cho tinh thần trách nhiệm chủ động, biến tình yêu thương thành hành động cụ thể để cải thiện cuộc sống cộng đồng. *(Nguồn: Báo Tuổi Trẻ, Cổng thông tin Trung ương Đoàn)*",
-            "**Dẫn chứng 2 (Sinh viên tình nguyện Mùa Hè Xanh):** Mỗi dịp hè, hàng ngàn sinh viên các trường đại học trên cả nước xông pha về các xã nghèo vùng sâu, vùng xa để xây dựng cầu giao thông nông thôn, dọn dẹp môi trường và tổ chức lớp học tình thương. *Ý nghĩa:* Khẳng định sự dấn thân của tuổi trẻ làm cho 'đất hóa tâm hồn', biến những vùng đất xa lạ thành quê hương thứ hai nhờ dấu chân cống hiến. *(Nguồn: Báo Tiền Phong)*"
+            "**Dẫn chứng 1 (Hoàng Hoa Trung & Dự án 'Nuôi Em'):** Từ năm 2014, dự án 'Nuôi Em' đã kết nối nhận nuôi cơm trưa cho hơn 60.000 học sinh vùng cao khó khăn. *Ý nghĩa:* Biến trách nhiệm thành hành động cụ thể để nâng đỡ cộng đồng. *(Nguồn: Báo Tuổi Trẻ)*",
+            "**Dẫn chứng 2 (Mùa Hè Xanh):** Hàng ngàn sinh viên tình nguyện xông pha về vùng sâu vùng xa làm đường, dạy học. *Ý nghĩa:* Dấu chân cống hiến làm 'đất hóa tâm hồn'. *(Nguồn: Báo Tiền Phong)*"
         ],
         "counter": [
-            "Phê phán lối sống vị kỷ, 'chỉ biết mình', thờ ơ trước nỗi đau của đồng loại hoặc xem việc cống hiến là trách nhiệm của riêng người khác.",
-            "Lật lại vấn đề: Sống có trách nhiệm không đồng nghĩa với cống hiến mù quáng hay bao đồng; cần biết cân bằng giữa việc chăm sóc bản thân và đóng góp cho cộng đồng."
+            "Phê phán lối sống vị kỷ, 'chỉ biết mình', thờ ơ trước nỗi đau của đồng loại.",
+            "Lật lại vấn đề: Trách nhiệm không đồng nghĩa với cống hiến mù quáng; cần biết cân bằng cá nhân và tập thể."
         ]
     },
     "Đề 02 (Cơ bản): Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
         "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.\nHãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành trong cuộc sống hôm nay.""",
         "vdnl_chuan": "Sức mạnh của sự thấu cảm và năng lực lắng nghe chân thành giữa con người với con người trong xã hội hiện đại.",
-        "explain_core": [
-            "**1. Giải thích từ ngữ/hình ảnh:** 'Cơn bão' và 'cơn bão lòng' là hình ảnh ẩn dụ chỉ những biến cố, nghịch cảnh, tổn thương hay khủng hoảng tinh thần trong đời sống; 'thấu cảm' là năng lực đặt mình vào vị trí của người khác; 'lắng nghe chân thành' là thái độ kiên nhẫn, trân trọng không phán xét.",
-            "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Nhận định nhấn mạnh rằng những thử thách trong cuộc sống làm con người biến đổi, nhưng chính sự thấu hiểu, sẻ chia và lắng nghe chân thành mới là điểm tựa giúp con người chữa lành tổn thương và vượt qua biến cố.",
-            "**3. Chốt Vấn đề nghị luận:** Khẳng định sức mạnh to lớn của sự thấu cảm và năng lực lắng nghe chân thành trong việc kết nối và nâng đỡ con người hiện đại."
-        ],
+        "explain_core": {
+            "step1": "**Bước 1: Giải thích từ khóa trong Vấn đề nghị luận:**\n- *Sự thấu cảm:* Khả năng đặt mình vào vị trí, hoàn cảnh của người khác để cảm nhận nỗi đau hay niềm vui của họ.\n- *Lắng nghe chân thành:* Thái độ kiên nhẫn, trân trọng, không phán xét khi tiếp nhận tâm tư của đối phương.",
+            "step2": "**Bước 2: Giải thích nội dung của nhận định:**\n- 'Cơn bão lòng' là ẩn dụ cho những biến cố, tổn thương tinh thần; nhận định khẳng định con người sẽ trưởng thành qua giông bão, nhưng để vượt qua tổn thương tâm lý thì rất cần sự thấu hiểu và lắng nghe từ người khác.",
+            "step3": "**Bước 3: Chốt Vấn đề nghị luận:**\n-> Câu nói nhấn mạnh *sức mạnh to lớn của sự thấu cảm và năng lực lắng nghe chân thành giữa con người với con người trong xã hội hiện đại*."
+        },
         "questions": [
             {
-                "cau_hoi": "Tại sao con người trong thời đại số lại cần đến sự thấu cảm và năng lực lắng nghe hơn bao giờ hết?",
+                "cau_hoi": "Tại sao thời đại số lại cần sự thấu cảm và lắng nghe hơn bao giờ hết?",
                 "y_tra_loi": [
-                    "Sự bùng nổ công nghệ khiến con người dễ rơi vào trạng thái 'kết nối mạng nhưng mất kết nối thực', dẫn đến cô đơn và trầm cảm gia tăng.",
-                    "Lắng nghe và thấu cảm đóng vai trò như liều thuốc xoa dịu tổn thương tâm lý, giải tỏa áp lực và thu hẹp khoảng cách giữa các thế hệ."
+                    "Công nghệ khiến con người rơi vào trạng thái 'kết nối mạng nhưng mất kết nối thực'.",
+                    "Thấu cảm và lắng nghe là liều thuốc xoa dịu tổn thương tâm lý và thu hẹp khoảng cách."
                 ]
             }
         ],
         "evidence": [
-            "**Dẫn chứng 1 (TS. Đặng Hoàng Giang & Dự án 'Tổng đài Ngày Mai'):** Tiến sĩ Đặng Hoàng Giang cùng nhóm cộng sự đã sáng lập 'Tổng đài Ngày Mai' – kênh tham vấn tâm lý phi lợi nhuận đầu tiên tại Việt Nam. Tổng đài đã tiếp nhận và lắng nghe hàng ngàn cuộc gọi từ những người trẻ gặp khủng hoảng tâm lý, cô đơn hay có ý định tự sát. *Ý nghĩa:* Minh chứng sống động cho thấy việc chấp nhận lắng nghe không phán xét có thể xoa dịu 'cơn bão lòng' và cứu rỗi một cuộc đời. *(Nguồn: Báo Thanh Niên, VTV)*",
-            "**Dẫn chứng 2 (Đoàn xe ô tô chắn gió trên cầu Bãi Cháy trong bão Yagi 2024):** Trong cơn bão số 3 (Yagi) năm 2024, nhiều tài xế xe tải, xe khách và ô tô con đã tự giác đi chậm thành hàng dài song song để che chắn gió lớn cho hàng chục người đi xe máy qua cầu an toàn. *Ý nghĩa:* Dẫn chứng cho thấy sự thấu cảm không chỉ nằm ở lời nói mà còn ở hành động xả thân bảo vệ sự an toàn của người xa lạ trong biến cố. *(Nguồn: VTV1, Báo Nhân Dân)*"
+            "**Dẫn chứng 1 (TS. Đặng Hoàng Giang & 'Tổng đài Ngày Mai'):** Kênh tham vấn tâm lý phi lợi nhuận lắng nghe và hỗ trợ hàng ngàn người trẻ khủng hoảng. *(Nguồn: Báo Thanh Niên)*",
+            "**Dẫn chứng 2 (Đoàn xe chắn gió bão Yagi 2024):** Ô tô đi chậm che chắn gió lớn cho xe máy qua cầu an toàn. *(Nguồn: VTV1)*"
         ],
-        "counter": [
-            "Phê phán thói vô cảm, tâm lý phán xét vội vàng hoặc công kích cá nhân trên mạng xã hội."
-        ]
+        "counter": ["Phê phán thói vô cảm, phán xét vội vàng hoặc công kích cá nhân trên mạng."]
     },
     "Đề 03 (Cơ bản): Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
         "text": """Có ý kiến cho rằng: *"Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."*\nViết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ hôm nay.""",
         "vdnl_chuan": "Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của thế hệ trẻ trong bối cảnh hội nhập quốc tế.",
-        "explain_core": [
-            "**1. Giải thích từ ngữ/hình ảnh:** 'Toàn cầu hóa' là quá trình hội nhập quốc tế rộng lớn; 'chiếc mỏ neo' là hình ảnh ẩn dụ cho điểm tựa vững chắc, giúp con tàu không bị sóng gió quật ngã hay trôi dạt vô định.",
-            "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Khẳng định mối quan hệ giữa hội nhập và giữ gìn cội nguồn: mở cửa giúp tiếp thu văn minh nhân loại, nhưng bản sắc văn hóa dân tộc mới là gốc rễ giúp dân tộc khẳng định vị thế và không bị hòa tan.",
-            "**3. Chốt Vấn đề nghị luận:** Đặt ra trách nhiệm cấp thiết của thế hệ trẻ trong việc giữ gìn, bảo tồn và phát huy bản sắc văn hóa dân tộc khi bước ra thế giới."
-        ],
-        "questions": [
-            {
-                "cau_hoi": "Vì sao việc bảo tồn bản sắc văn hóa lại là sứ mệnh sinh tồn của tuổi trẻ?",
-                "y_tra_loi": [
-                    "Văn hóa là thẻ căn cước duy nhất khẳng định sự tồn tại độc lập của một dân tộc. Mất bản sắc đồng nghĩa với nguy cơ bị hòa tan."
-                ]
-            }
-        ],
+        "explain_core": {
+            "step1": "**Bước 1: Giải thích từ khóa trong Vấn đề nghị luận:**\n- *Bản sắc văn hóa dân tộc:* Toàn bộ giá trị tinh hoa vật chất và tinh thần cốt lõi được hun đúc qua lịch sử.\n- *Trách nhiệm của thế hệ trẻ:* Ý thức bảo tồn, tiếp nối và quảng bá di sản ông cha.",
+            "step2": "**Bước 2: Giải thích nội dung của nhận định:**\n- 'Toàn cầu hóa' mở ra cơ hội hội nhập; 'chiếc mỏ neo' tượng trưng cho điểm tựa gốc rễ vững chắc. Nhận định khẳng định: Hội nhập giúp mở rộng tầm nhìn nhưng bản sắc văn hóa mới giữ cho dân tộc không bị hòa tan.",
+            "step3": "**Bước 3: Chốt Vấn đề nghị luận:**\n-> Ý kiến khẳng định *trách nhiệm cấp thiết của thế hệ trẻ trong việc giữ gìn và phát huy bản sắc văn hóa dân tộc khi bước ra thế giới*."
+        },
+        "questions": [{"cau_hoi": "Vì sao bảo tồn bản sắc văn hóa là sứ mệnh sinh tồn?", "y_tra_loi": ["Văn hóa là thẻ căn cước khẳng định sự tồn tại độc lập của dân tộc."]}],
         "evidence": [
-            "**Dẫn chứng 1 (Rapper Đen Vâu & Ca sĩ Hoàng Thùy Linh):** Rapper Đen Vâu trong ca khúc 'Nấu ăn cho em' hay ca sĩ Hoàng Thùy Linh với album 'LINK' đã khéo léo lồng ghép tiếng đàn bầu, nhạc cụ dân tộc, chất liệu ca dao, dân ca vào âm nhạc hiện đại, đạt hàng chục triệu lượt xem quốc tế. *Ý nghĩa:* Cho thấy tuổi trẻ không chỉ giữ gìn văn hóa thụ động mà còn biết 'làm mới' di sản, giúp văn hóa dân tộc tỏa sáng trong thời đại số. *(Nguồn: Báo Tuổi Trẻ)*",
-            "**Dẫn chứng 2 (Nhóm bạn trẻ Dự án 'Đại Việt Cổ Phong'):** Một tập thể các bạn trẻ Gen Z đã tự nguyện dành nhiều năm nghiên cứu, phục dựng chuẩn xác các bộ cổ phục Việt Nam thời Nguyễn, thời Lê để ứng dụng vào phim ảnh và đời sống. *Ý nghĩa:* Khẳng định ý thức tự giác và tình yêu cội nguồn sâu sắc của thế hệ trẻ đối với di sản ông cha. *(Nguồn: Báo VnExpress)*"
+            "**Dẫn chứng 1 (Đen Vâu, Hoàng Thùy Linh):** Ứng dụng nhạc cụ dân tộc và ca dao vào âm nhạc hiện đại triệu view. *(Nguồn: Báo Tuổi Trẻ)*",
+            "**Dẫn chứng 2 (Dự án 'Đại Việt Cổ Phong'):** Phục dựng cổ phục Việt Nam thời Nguyễn, Lê. *(Nguồn: Báo VnExpress)*"
         ],
-        "counter": [
-            "Phê phán thái độ sính ngoại mù quáng, xem thường tiếng Việt và các giá trị truyền thống dân tộc."
-        ]
+        "counter": ["Phê phán thái độ sính ngoại mù quáng, xem thường giá trị truyền thống."]
     }
 }
 
-# Điền đầy đủ cho các đề còn lại...
+# Điền dữ liệu cho các đề còn lại
 for i in range(4, 16):
-    key_name = f"Đề {i:02d} (Cơ bản): Đề bài luyện tập phát triển kỹ năng {i}"
-    if key_name not in DE_BAI_CO_BAN:
-        DE_BAI_CO_BAN[key_name] = {
-            "text": f"Đề bài số {i}: Viết bài văn nghị luận (khoảng 600 chữ) bàn về một vấn đề tư tưởng đạo lý hoặc hiện tượng đời sống có ý nghĩa thiết thực đối với học sinh THPT.",
-            "vdnl_chuan": f"Ý nghĩa của vấn đề nghị luận trong đề số {i} đối với sự trưởng thành của học sinh.",
-            "explain_core": [
-                f"**1. Giải thích từ ngữ/hình ảnh:** Giải thích các khái niệm then chốt trong đề số {i}.",
-                f"**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Nêu thông điệp cốt lõi và bài học tư tưởng của đề bài.",
-                f"**3. Chốt Vấn đề nghị luận:** Xác định đúng vấn đề trọng tâm cần tập trung bàn luận."
-            ],
-            "questions": [{"cau_hoi": "Vì sao vấn đề này đóng vai trò quan trọng trong đời sống?", "y_tra_loi": ["Giúp bồi dưỡng nhận thức đúng đắn và phát triển nhân cách toàn diện."]}],
-            "evidence": [
-                f"**Dẫn chứng 1:** Tấm gương thanh niên tiêu biểu vượt khó vươn lên. *Ý nghĩa:* Minh chứng cho ý chí kiên cường và tinh thần sống đẹp. *(Nguồn: Báo Tuổi Trẻ)*",
-                f"**Dẫn chứng 2:** Mô hình hoạt động xã hội vì cộng đồng của giới trẻ. *Ý nghĩa:* Khẳng định sức lan tỏa của những hành động tử tế. *(Nguồn: Báo Tiền Phong)*"
-            ],
-            "counter": ["Phê phán nhận thức lệch lạc, lối sống thụ động, ích kỷ."]
+    key_cb = f"Đề {i:02d} (Cơ bản): Đề bài luyện tập {i}"
+    if key_cb not in DE_BAI_CO_BAN:
+        DE_BAI_CO_BAN[key_cb] = {
+            "text": f"Đề bài số {i}: Viết bài văn nghị luận (khoảng 600 chữ) bàn về một vấn đề tư tưởng đạo lý có ý nghĩa thiết thực.",
+            "vdnl_chuan": f"Ý nghĩa của vấn đề nghị luận trong đề số {i} đối với học sinh.",
+            "explain_core": {
+                "step1": f"**Bước 1: Giải thích từ khóa:** Giải thích các từ ngữ then chốt trong đề số {i}.",
+                "step2": f"**Bước 2: Giải thích nội dung nhận định:** Nêu ý nghĩa toàn vẹn của câu nói/ngữ liệu đề bài.",
+                "step3": f"**Bước 3: Chốt Vấn đề nghị luận:** Xác định trọng tâm tư tưởng cần bàn luận."
+            },
+            "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng?", "y_tra_loi": ["Giúp bồi dưỡng nhận thức và hoàn thiện nhân cách."]}],
+            "evidence": ["**Dẫn chứng 1:** Tấm gương thanh niên sống đẹp, cống hiến vì cộng đồng. *(Nguồn: Báo Tuổi Trẻ)*"],
+            "counter": ["Phê phán lối sống vị kỷ, thụ động."]
         }
 
 DE_BAI_NANG_CAO = {
     "Đề 16 (Nâng cao): Bản lĩnh giữ gìn bản sắc riêng trước áp lực số đông": {
         "text": """Có ý kiến cho rằng: *"Con sông nào cũng phải chảy qua ghềnh thác để ra biển lớn, nhưng nếu không giữ được dòng chảy của mình, nó sẽ hòa tan vào những con lạch nhỏ mà biến mất."*\nViết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ gìn bản sắc riêng và chính kiến trước áp lực số đông.""",
         "vdnl_chuan": "Bản lĩnh giữ gìn bản sắc riêng và chính kiến cá nhân trước áp lực của đám đông.",
-        "explain_core": [
-            "**1. Giải thích từ ngữ/hình ảnh:** 'Ghềnh thác' tượng trưng cho trở ngại, thử thách; 'dòng chảy của mình' là bản sắc riêng, hệ giá trị và chính kiến độc lập của cá nhân; 'biến mất' là nguy cơ bị tha hóa, mất đi cá tính.",
-            "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Mượn hình ảnh con sông, câu nói khẳng định: muốn vươn tới thành công lớn lao, con người phải kiên cường vượt qua sóng gió và quan trọng nhất là không được đánh mất bản sắc, chính kiến riêng.",
-            "**3. Chốt Vấn đề nghị luận:** Khẳng định tầm quan trọng của bản lĩnh giữ gìn bản sắc riêng và tư duy độc lập trước áp lực đồng hóa của đám đông."
-        ],
-        "questions": [{"cau_hoi": "Vì sao giữ bản sắc riêng trước đám đông là thách thức lớn?", "y_tra_loi": ["Áp lực bị tẩy chay và tâm lý bầy đàn khiến người trẻ dễ đồng hóa bản thân."]}],
+        "explain_core": {
+            "step1": "**Bước 1: Giải thích từ khóa trong Vấn đề nghị luận:**\n- *Bản sắc riêng & chính kiến:* Tư duy độc lập, cá tính sáng tạo và hệ giá trị đạo đức riêng của cá nhân.\n- *Bản lĩnh:* Sự kiên định, dũng cảm bảo vệ giá trị đúng đắn.",
+            "step2": "**Bước 2: Giải thích nội dung của nhận định:**\n- 'Ghềnh thác' là thử thách; 'dòng chảy của mình' là cá tính riêng. Mượn hình ảnh con sông, câu nói khẳng định: Muốn vươn ra biển lớn thành công, con người không được để áp lực hoàn cảnh làm hòa tan bản sắc.",
+            "step3": "**Bước 3: Chốt Vấn đề nghị luận:**\n-> Ý kiến nhấn mạnh *bản lĩnh giữ gìn bản sắc riêng và chính kiến cá nhân trước áp lực đồng hóa của đám đông*."
+        },
+        "questions": [{"cau_hoi": "Vì sao giữ bản sắc riêng trước đám đông là thách thức lớn?", "y_tra_loi": ["Áp lực bị tẩy chay khiến người trẻ dễ đồng hóa bản thân."]}],
         "evidence": [
-            "**Dẫn chứng 1 (VĐV Nguyễn Thị Oanh tại SEA Games 32):** Khi Ban tổ chức đột ngột đổi lịch thi đấu khiến hai nội dung khốc liệt 1.500m và 3.000m chướng ngại vật chỉ cách nhau 20 phút, thay vì buông bỏ hay khiếu nại, cô vẫn kiên định với chiến thuật và ý chí phi thường để đoạt cả 2 HCV trong một chiều. *Ý nghĩa:* Dẫn chứng cho thấy bản lĩnh giữ vững niềm tin và phong độ cá nhân trước mọi nghịch cảnh. *(Nguồn: Báo Thể thao & Văn hóa)*",
-            "**Dẫn chứng 2 (Nhà bác học Galileo Galilei):** Dũng cảm bảo vệ chân lý khoa học 'Trái đất quay quanh Mặt trời' trước tòa án dị giáo và sự lên án của toàn bộ xã hội thời Trung cổ. *Ý nghĩa:* Bài học đắt giá về việc giữ vững chính kiến khoa học bất chấp áp lực số đông. *(Nguồn: Lịch sử Khoa học thế giới)*"
+            "**Dẫn chứng 1 (VĐV Nguyễn Thị Oanh):** Giữ vững phong độ giành 4 HCB SEA Games 32 dù lịch thi đấu bị dồn ép. *(Nguồn: Báo Thể Thao)*",
+            "**Dẫn chứng 2 (Galileo Galilei):** Kiên cường bảo vệ thuyết Nhật tâm trước tòa án dị giáo. *(Nguồn: Lịch sử Khoa học)*"
         ],
         "counter": ["Phê phán thói hùa theo phong trào hoặc biến khác biệt thành ngông cuồng."]
     }
 }
 
 for i in range(17, 31):
-    key_name = f"Đề {i:02d} (Nâng cao): Đề bài phân hóa chuyên sâu {i}"
-    if key_name not in DE_BAI_NANG_CAO:
-        DE_BAI_NANG_CAO[key_name] = {
-            "text": f"Đề bài số {i}: Viết bài văn nghị luận (khoảng 600 chữ) bàn về một vấn đề xã hội sâu sắc, đòi hỏi tư duy phản biện và khả năng lật lại vấn đề của học sinh giỏi.",
-            "vdnl_chuan": f"Tầm quan trọng của tư duy độc lập và bản lĩnh sống trong đề số {i}.",
-            "explain_core": [
-                f"**1. Giải thích từ ngữ/hình ảnh:** Phân tích các ẩn dụ và thuật ngữ cốt lõi trong đề số {i}.",
-                f"**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Trình bày thông điệp triết lý sâu sắc mà đề bài hướng tới.",
-                f"**3. Chốt Vấn đề nghị luận:** Khẳng định vấn đề nghị luận trọng tâm cần giải quyết."
-            ],
-            "questions": [{"cau_hoi": "Đâu là góc nhìn lật lại vấn đề đòi hỏi tư duy sâu?", "y_tra_loi": ["Cần phân biệt giữa giữ vững bản lĩnh với sự bảo thủ, cố chấp mù quáng."]}],
-            "evidence": [
-                f"**Dẫn chứng 1:** Nhà khoa học dũng cảm bảo vệ phát minh mới trước nghi ngờ. *Ý nghĩa:* Bản lĩnh tin vào chân lý và lý trí độc lập. *(Nguồn: Tạp chí Khoa học)*",
-                f"**Dẫn chứng 2:** Doanh nhân trẻ chấp nhận thất bại để đổi mới sáng tạo. *Ý nghĩa:* Tư duy bứt phá khỏi vùng an toàn. *(Nguồn: Báo Diễn đàn Doanh nghiệp)*"
-            ],
-            "counter": ["Phê phán tư duy lối mòn, tâm lý sợ sai không dám chịu trách nhiệm."]
+    key_nc = f"Đề {i:02d} (Nâng cao): Đề bài chuyên sâu {i}"
+    if key_nc not in DE_BAI_NANG_CAO:
+        DE_BAI_NANG_CAO[key_nc] = {
+            "text": f"Đề bài số {i}: Viết bài văn nghị luận (khoảng 600 chữ) bàn về một vấn đề xã hội sâu sắc đòi hỏi tư duy phản biện.",
+            "vdnl_chuan": f"Bản lĩnh tư duy và nhận thức sâu sắc trong đề số {i}.",
+            "explain_core": {
+                "step1": f"**Bước 1: Giải thích từ khóa:** Phân tích từ ngữ then chốt trong đề số {i}.",
+                "step2": f"**Bước 2: Giải thích nội dung nhận định:** Trình bày thông điệp triết lý của ngữ liệu.",
+                "step3": f"**Bước 3: Chốt Vấn đề nghị luận:** Khẳng định vấn đề nghị luận cốt lõi."
+            },
+            "questions": [{"cau_hoi": "Đâu là góc nhìn lật lại vấn đề?", "y_tra_loi": ["Phân biệt giữ bản lĩnh với sự bảo thủ cố chấp."]}],
+            "evidence": ["**Dẫn chứng 1:** Nhà khoa học dũng cảm bảo vệ phát minh mới. *(Nguồn: Tạp chí Khoa học)*"],
+            "counter": ["Phê phán tư duy lối mòn, sợ sai không dám đổi mới."]
         }
 
 # ==============================================================================
-# 3. KHO DẪN CHỨNG CHI TIẾT 8 CHỦ ĐIỂM (CÓ TÓM TẮT + BỐI CẢNH + NGUỒN)
+# 3. KHO DẪN CHỨNG CHI TIẾT 8 CHỦ ĐIỂM
 # ==============================================================================
 KHO_DAN_CHUNG_8_CHU_DIEM = {
     "1. Trách nhiệm, Cống hiến & Phụng sự cộng đồng": [
         {
             "ten": "Hoàng Hoa Trung & Dự án 'Nuôi Em'",
-            "noi_dung": "Sáng lập và điều hành dự án từ năm 2014, kết nối hàng chục ngàn nhà hảo tâm để nuôi cơm trưa cho hơn 60.000 học sinh mầm non và tiểu học tại các vùng núi cao khó khăn.",
-            "nguon": "Báo Tuổi Trẻ, Cổng thông tin Trung ương Đoàn TNCS Hồ Chí Minh"
+            "noi_dung": "Sáng lập dự án từ 2014, kết nối nuôi cơm trưa cho hơn 60.000 học sinh mầm non và tiểu học vùng cao khó khăn.",
+            "nguon": "Báo Tuổi Trẻ, Trung ương Đoàn"
         },
         {
             "ten": "Đội ngũ Bác sĩ trẻ xung phong về vùng sâu, vùng xa (Bộ Y tế)",
-            "noi_dung": "Hàng trăm bác sĩ trẻ tốt nghiệp loại giỏi tự nguyện cắm bản, mang y học hiện đại chăm sóc sức khỏe cho đồng bào dân tộc thiểu số tại các huyện nghèo nhất nước.",
-            "nguon": "Báo Sức khỏe & Đời sống (Bộ Y tế)"
+            "noi_dung": "Hàng trăm bác sĩ trẻ giỏi tự nguyện cắm bản chăm sóc sức khỏe cho đồng bào dân tộc thiểu số nghèo.",
+            "nguon": "Báo Sức khỏe & Đời sống"
         }
     ],
     "2. Thấu cảm, Lắng nghe & Tử tế": [
         {
-            "ten": "Tiến sĩ Đặng Hoàng Giang & Dự án 'Tổng đài Ngày Mai'",
-            "noi_dung": "Sáng lập tổng đài tham vấn tâm lý phi lợi nhuận đầu tiên tại Việt Nam, chuyên lắng nghe, xoa dịu và hỗ trợ tinh thần cho hàng ngàn người trẻ gặp khủng hoảng tâm lý.",
-            "nguon": "Báo Thanh Niên, VTV Digital"
+            "ten": "TS. Đặng Hoàng Giang & 'Tổng đài Ngày Mai'",
+            "noi_dung": "Tổng đài tham vấn tâm lý phi lợi nhuận lắng nghe và hỗ trợ tinh thần cho hàng ngàn người trẻ khủng hoảng.",
+            "nguon": "Báo Thanh Niên, VTV"
         },
         {
-            "ten": "Đoàn xe ô tô chắn gió cho xe máy trên cầu trong bão Yagi (2024)",
-            "noi_dung": "Hàng chục tài xế xe tải, xe khách và ô tô con tự giác đi chậm thành hàng dài song song để che chắn gió lớn cho người đi xe máy qua cầu an toàn trong cơn bão lịch sử.",
-            "nguon": "Đài Truyền hình Việt Nam (VTV1), Báo Nhân Dân"
+            "ten": "Đoàn xe ô tô chắn gió cho xe máy trong bão Yagi (2024)",
+            "noi_dung": "Tài xế ô tô đi chậm chắn gió lớn cho người đi xe máy qua cầu Bãi Cháy an toàn.",
+            "nguon": "VTV1, Báo Nhân Dân"
         }
     ],
     "3. Giữ gìn Bản sắc văn hóa & Di sản dân tộc": [
         {
             "ten": "Nhóm bạn trẻ Dự án 'Đại Việt Cổ Phong'",
-            "noi_dung": "Tự nguyện nghiên cứu, phục dựng chuẩn xác các bộ cổ phục Việt Nam thời Triều Nguyễn, Triều Lê, đưa trang phục truyền thống ứng dụng vào phim ảnh và đời sống giới trẻ.",
-            "nguon": "Báo VnExpress, Báo Văn Hóa"
+            "noi_dung": "Phục dựng chuẩn xác cổ phục Việt Nam thời Nguyễn, Lê ứng dụng vào phim ảnh và đời sống.",
+            "nguon": "Báo VnExpress"
         },
         {
             "ten": "Rapper Đen Vâu & Ca sĩ Hoàng Thùy Linh",
-            "noi_dung": "Sáng tạo nghệ thuật dựa trên chất liệu văn hóa dân gian (âm hưởng đàn bầu, nhạc cụ dân tộc, thơ ca truyền thống) tạo nên các sản phẩm âm nhạc hiện đại vươn tầm quốc tế.",
-            "nguon": "Báo Tuổi Trẻ, Báo Lao Động"
+            "noi_dung": "Đưa chất liệu ca dao, dân ca, nhạc cụ dân tộc vào âm nhạc hiện đại triệu view.",
+            "nguon": "Báo Tuổi Trẻ"
         }
     ],
     "4. Bản lĩnh trước đám đông & Tư duy độc lập": [
         {
             "ten": "Nhà bác học Galileo Galilei",
-            "noi_dung": "Kiên cường bảo vệ chân lý khoa học về thuyết Nhật tâm trước tòa án dị giáo và định kiến của toàn bộ xã hội thời Trung cổ với câu nói bất hủ: 'Dù sao thì Trái Đất vẫn quay'.",
+            "noi_dung": "Kiên cường bảo vệ chân lý khoa học về thuyết Nhật tâm trước tòa án dị giáo thời Trung cổ.",
             "nguon": "Lịch sử Khoa học thế giới"
         },
         {
-            "ten": "Malala Yousafzai (Nobel Hòa bình trẻ tuổi nhất)",
-            "noi_dung": "Bất chấp sự đe dọa tàn bạo của phiến quân Taliban và việc từng bị ám sát bắn vào đầu năm 15 tuổi, cô vẫn kiên cường cất cao tiếng nói đòi quyền được đến trường cho trẻ em gái trên toàn thế giới.",
-            "nguon": "Ủy ban Nobel, Liên Hợp Quốc (UN)"
+            "ten": "Malala Yousafzai (Nobel Hòa bình)",
+            "noi_dung": "Dũng cảm đòi quyền đi học cho trẻ em gái bất chấp đe dọa của phiến quân Taliban.",
+            "nguon": "Ủy ban Nobel, UN"
         }
     ],
     "5. Dũng cảm, Vượt khó & Kiên trì": [
         {
-            "ten": "Vận động viên Nguyễn Thị Oanh (SEA Games 32)",
-            "noi_dung": "Vượt qua thử thách khắc nghiệt khi ban tổ chức xếp lịch thi đấu 2 nội dung cự ly dài cách nhau chỉ 20 phút, cô đã kiên cường thi đấu và xuất sắc giành cả 2 Huy chương Vàng.",
-            "nguon": "Báo Thể thao & Văn hóa, VTV Sports"
+            "ten": "VĐV Nguyễn Thị Oanh (SEA Games 32)",
+            "noi_dung": "Vượt qua lịch thi đấu khắc nghiệt cách nhau 20 phút để giành liên tiếp 2 HCV điền kinh.",
+            "nguon": "Báo Thể thao & Văn hóa"
         }
     ],
     "6. Tự học, Thích ứng & Tri thức thời đại AI": [
         {
             "ten": "Chủ tịch Hồ Chí Minh - Tấm gương tự học vĩ đại",
-            "noi_dung": "Tự học thông thạo hơn 10 ngoại ngữ trong quá trình bôn ba khắp thế giới bằng cách làm việc chân tay, ghi nhớ từ mới lên bàn tay và tra cứu sách báo mỗi ngày.",
-            "nguon": "Tư liệu Lịch sử Đảng Cộng sản Việt Nam"
+            "noi_dung": "Tự học thông thạo hơn 10 ngoại ngữ trong quá trình bôn ba tìm đường cứu nước.",
+            "nguon": "Tư liệu Lịch sử Đảng"
         }
     ],
     "7. Bảo vệ Môi trường & Lối sống xanh": [
         {
-            "ten": "Nhóm tình nguyện 'Sài Gòn Xanh' / 'Hà Nội Xanh'",
-            "noi_dung": "Hàng trăm bạn trẻ không ngại hôi thối, nguy hiểm, dầm mình dưới các kênh rạch ô nhiễm nặng để vớt hàng chục tấn rác thải, trả lại dòng nước sạch cho thành phố.",
-            "nguon": "Đài Truyền hình Việt Nam (VTV1), Báo Tuổi Trẻ"
+            "ten": "Nhóm tình nguyện 'Sài Gòn Xanh'",
+            "noi_dung": "Dầm mình dưới các kênh rạch ô nhiễm vớt hàng chục tấn rác trả lại nguồn nước sạch.",
+            "nguon": "VTV1, Báo Tuổi Trẻ"
         }
     ],
     "8. Lòng biết ơn, Khoan dung & Nhân ái": [
         {
-            "ten": "Chính sách Khoan hồng và Đặc xá của Nhà nước Việt Nam",
-            "noi_dung": "Hàng năm nhân dịp Quốc khánh 2/9, Nhà nước trao cơ hội đặc xá cho hàng ngàn phạm nhân cải tạo tốt, thể hiện tinh thần nhân đạo và mở đường cho họ làm lại cuộc đời.",
-            "nguon": "Báo Nhân Dân, Bộ Công an"
+            "ten": "Chính sách Khoan hồng và Đặc xá của Nhà nước",
+            "noi_dung": "Trao cơ hội đặc xá cho phạm nhân cải tạo tốt dịp 2/9 làm lại cuộc đời.",
+            "nguon": "Báo Nhân Dân"
         }
     ]
 }
 
 # ==============================================================================
-# 4. XỬ LÝ GEMINI AI KẾT NỐI ỔN ĐỊNH
+# 4. KẾT NỐI GEMINI AI & SỬA LỖI PHẢN HỒI CHATBOT
 # ==============================================================================
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
@@ -329,7 +326,7 @@ def reset_de_data(ten_de_moi):
     if st.session_state["last_selected_de"] != ten_de_moi:
         st.session_state["last_selected_de"] = ten_de_moi
         st.session_state["chat_messages"] = [
-            {"role": "assistant", "content": f"Chào em! Cô là trợ lý sư phạm Ngữ văn. Đề bài em đang làm là: '{ten_de_moi}'. Cô luôn sẵn sàng đặt câu hỏi gợi mở để giúp em tự tư duy nhé!"}
+            {"role": "assistant", "content": f"Chào em! Cô là Trợ lý AI Sư phạm. Đề bài em đang làm là: '{ten_de_moi}'. Cô luôn sẵn sàng đặt câu hỏi gợi mở để giúp em tự hoàn thiện dàn ý nhé!"}
         ]
         st.session_state["user_outline"] = ""
         st.session_state["user_essay"] = ""
@@ -358,24 +355,22 @@ with st.sidebar:
     st.write("3. **✍️ Bước 3:** Thực hành viết bài độc lập")
     st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
 
-def call_gemini_engine(prompt_or_contents):
+def call_gemini_engine(prompt_text):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
-        return "[Thông báo]: Chưa nhận được API Key. Vui lòng nhập API Key ở thanh bên trái để trò chuyện với Cô giáo AI."
+        return "Cô chưa nhận được API Key. Em hãy dán Key vào ô bên thanh trái để cô trò chuyện cùng em nhé!"
 
     try:
         client = genai.Client(api_key=api_key)
-        models_to_try = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-flash-latest"]
-        for m in models_to_try:
-            try:
-                response = client.models.generate_content(model=m, contents=prompt_or_contents)
-                if response and response.text:
-                    return response.text
-            except Exception:
-                continue
-        return "Cô đang suy nghĩ, em hãy thử bấm gửi lại câu hỏi lần nữa nhé!"
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt_text
+        )
+        if response and response.text:
+            return response.text
+        return "Cô đang suy nghĩ, em thử đặt lại câu hỏi xem sao nhé!"
     except Exception as e:
-        return f"[Lỗi kết nối]: Không thể kết nối với máy chủ AI ({str(e)})."
+        return f"Lỗi kết nối AI: {str(e)}. Em hãy kiểm tra lại API Key nhé!"
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     prompt = f"""
@@ -401,22 +396,22 @@ Thẩm định xem học sinh đã bắt trúng tinh thần đề chưa. Trả v
 
 def ai_analyze_custom_exam(exam_text, student_guess):
     prompt = f"""
-Bạn là chuyên gia khảo thí Ngữ văn THPT. 
-Đề bài do học sinh tự dán: \"\"\"{exam_text}\"\"\"
-Học sinh tự chọn VĐNL là: \"\"\"{student_guess}\"\"\"
+Bạn là chuyên gia khảo thí Ngữ văn THPT.
+Đề bài tự dán: \"\"\"{exam_text}\"\"\"
+Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
 
-Trả về JSON duy nhất:
+Trả về JSON duy nhất với Thao tác giải thích đúng 3 bước:
 {{
   "status": "DUNG" | "LECH" | "SAI",
   "feedback": "Nhận xét sư phạm (xưng cô - em)",
   "vdnl_chuan": "VĐNL cốt lõi chuẩn",
-  "explain_core": [
-    "**1. Giải thích từ ngữ/hình ảnh:** Chi tiết giải thích",
-    "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Chi tiết nội dung",
-    "**3. Chốt Vấn đề nghị luận:** Xác định VĐNL chuẩn"
-  ],
+  "explain_core": {{
+    "step1": "**Bước 1: Giải thích từ khóa:** Giải thích chi tiết từ ngữ trong VĐNL.",
+    "step2": "**Bước 2: Giải thích nội dung nhận định:** Nêu ý nghĩa toàn vẹn ngữ liệu.",
+    "step3": "**Bước 3: Chốt Vấn đề nghị luận:** Khẳng định vấn đề cốt lõi."
+  }},
   "questions": [{{"cau_hoi": "Câu hỏi bàn luận?", "y_tra_loi": ["Ý bàn luận 1", "Ý bàn luận 2"]}}],
-  "evidence": ["**Dẫn chứng 1:** Tên + Bối cảnh/Hành động + Ý nghĩa nghị luận + Nguồn báo chí"],
+  "evidence": ["**Dẫn chứng 1:** Chi tiết dẫn chứng kèm nguồn xác thực"],
   "counter": ["Ý phản biện lật lại vấn đề"]
 }}
 """
@@ -430,18 +425,18 @@ Trả về JSON duy nhất:
             "status": "DUNG",
             "feedback": f"Cô khen em đã nắm đúng vấn đề trọng tâm!",
             "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận từ đề bài",
-            "explain_core": [
-                "**1. Giải thích từ ngữ/hình ảnh:** Giải thích các từ ngữ then chốt trong đề.",
-                "**2. Nội dung/Ý nghĩa toàn vẹn của ý kiến:** Khẳng định ý nghĩa tổng thể của ngữ liệu.",
-                "**3. Chốt Vấn đề nghị luận:** Xác định vấn đề cốt lõi cần bàn luận."
-            ],
-            "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng?", "y_tra_loi": ["Giúp bồi dưỡng nhận thức đúng đắn và phát triển bản thân."]}],
-            "evidence": ["**Dẫn chứng 1 (Hoàng Hoa Trung - Dự án Nuôi Em):** Xây dựng bữa ăn trưa cho 60.000 trẻ em vùng cao. *Ý nghĩa:* Tinh thần trách nhiệm cống hiến vì cộng đồng. *(Nguồn: Báo Tuổi Trẻ)*"],
+            "explain_core": {
+                "step1": "**Bước 1: Giải thích từ khóa:** Giải thích các từ ngữ then chốt.",
+                "step2": "**Bước 2: Giải thích nội dung nhận định:** Khẳng định ý nghĩa tổng thể ngữ liệu.",
+                "step3": "**Bước 3: Chốt Vấn đề nghị luận:** Xác định VĐNL trọng tâm."
+            },
+            "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng?", "y_tra_loi": ["Giúp bồi dưỡng nhận thức đúng đắn."]}],
+            "evidence": ["**Dẫn chứng 1:** Hoàng Hoa Trung - Dự án Nuôi Em. *(Nguồn: Báo Tuổi Trẻ)*"],
             "counter": ["Phê phán thái độ dửng dưng, nhận thức lệch lạc."]
         }
 
 # ==============================================================================
-# 5. GIAO DIỆN CHÍNH & LUỒNG ỨNG DỤNG 5 TABS
+# 5. GIAO DIỆN CHÍNH & TABS
 # ==============================================================================
 st.markdown("""
 <div class="hero-banner">
@@ -511,7 +506,7 @@ with tabs[0]:
                     st.session_state["current_de_info"] = {
                         "text": custom_de_text,
                         "vdnl_chuan": res_custom.get("vdnl_chuan", student_custom_vdnl),
-                        "explain_core": res_custom.get("explain_core", []),
+                        "explain_core": res_custom.get("explain_core", {}),
                         "questions": res_custom.get("questions", []),
                         "evidence": res_custom.get("evidence", []),
                         "counter": res_custom.get("counter", [])
@@ -555,10 +550,16 @@ with tabs[1]:
     with c_left:
         st.markdown("#### 🛠️ Gợi Ý Khung Tư Duy Cho Đề Bài Đang Chọn")
         
-        # THAO TÁC 1: NÂNG CẤP CHUẨN SƯ PHẠM 3 NẤC
-        with st.expander("📌 Thao tác 1: Giải thích bản chất (Cấu trúc 3 nấc)", expanded=True):
-            for item in cur_de_info.get("explain_core", []):
-                st.markdown(f"<div class='explain-card'>{item}</div>", unsafe_allow_html=True)
+        # THAO TÁC 1: ĐÚNG CHUẨN 3 BƯỚC SƯ PHẠM
+        with st.expander("📌 Thao tác 1: Giải thích bản chất (Chuẩn 3 bước)", expanded=True):
+            exp_data = cur_de_info.get("explain_core", {})
+            if isinstance(exp_data, dict):
+                st.markdown(f"<div class='explain-step-1'>{exp_data.get('step1', '')}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='explain-step-2'>{exp_data.get('step2', '')}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div class='explain-step-3'>{exp_data.get('step3', '')}</div>", unsafe_allow_html=True)
+            elif isinstance(exp_data, list):
+                for item in exp_data:
+                    st.markdown(f"<div class='explain-step-1'>{item}</div>", unsafe_allow_html=True)
                 
         with st.expander("💡 Thao tác 2: Bàn luận trọng tâm (Vì sao? Tác động?)", expanded=True):
             for q in cur_de_info.get("questions", []):
@@ -566,7 +567,6 @@ with tabs[1]:
                 for ans in q.get("y_tra_loi", []):
                     st.markdown(f"  * {ans}")
 
-        # THAO TÁC 3: DẪN CHỨNG RIÊNG SÂU SẮC + KHO MỞ RỘNG
         with st.expander("📚 Thao tác 3: Dẫn chứng trọng tâm của đề & Kho tra cứu 8 chủ điểm", expanded=True):
             st.markdown("##### 📌 Dẫn chứng thực tế chi tiết riêng cho đề bài:")
             for ev in cur_de_info.get("evidence", []):
@@ -592,7 +592,7 @@ with tabs[1]:
         st.markdown("---")
         st.markdown("#### 📝 Lập Dàn Ý 3 Phần Của Em")
         vdnl_val = cur_de_info.get('vdnl_chuan', 'Vấn đề nghị luận từ đề bài')
-        auto_outline = f"""I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề nghị luận: {vdnl_val}\n\nII. THÂN BÀI:\n1. Giải thích bản chất khái niệm:\n2. Bàn luận trọng tâm:\n   + Ý 1:\n   + Ý 2:\n3. Dẫn chứng thực tế tiêu biểu:\n4. Phản biện & Mở rộng:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"""
+        auto_outline = f"""I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề nghị luận: {vdnl_val}\n\nII. THÂN BÀI:\n1. Giải thích bản chất khái niệm (Giải thích từ khóa -> Giải thích nội dung nhận định -> Chốt VĐNL):\n2. Bàn luận trọng tâm:\n   + Ý 1:\n   + Ý 2:\n3. Dẫn chứng thực tế tiêu biểu:\n4. Phản biện & Mở rộng:\n\nIII. KẾT BÀI:\n- Bài học nhận thức & hành động:"""
 
         if not st.session_state.get("user_outline"):
             st.session_state["user_outline"] = auto_outline
@@ -601,19 +601,21 @@ with tabs[1]:
         st.session_state["user_outline"] = user_outline
 
     with c_right:
-        # TRỢ LÝ AI SƯ PHẠM ĐÃ SỬA LỖI PHẢN HỒI
+        # TRỢ LÝ AI SƯ PHẠM ĐÃ SỬA LỖI PHẢN HỒI HOÀN TOÀN
         st.markdown("#### 🧭 Trợ Lý AI Sư Phạm (Định Hướng Phương Pháp)")
         with st.container(border=True):
             st.info("💡 **Nguyên tắc:** Trợ lý AI **không viết hộ / làm hộ bài văn**, chỉ đặt câu hỏi gợi mở để giúp em tự tư duy.")
             
         if "chat_messages" not in st.session_state or not st.session_state["chat_messages"]:
-            st.session_state["chat_messages"] = [{"role": "assistant", "content": "Chào em! Cô là trợ lý sư phạm. Em đang gặp khó khăn ở phần nào trong dàn ý? Hãy đặt câu hỏi để cô hướng dẫn em tư duy nhé!"}]
+            st.session_state["chat_messages"] = [{"role": "assistant", "content": "Chào em! Cô là Trợ lý AI Sư phạm. Em đang gặp khó khăn ở phần nào trong dàn ý? Hãy trao đổi để cô định hướng cho em nhé!"}]
             
+        # Hiển thị lịch sử chat
         chat_box = st.container(height=380)
         with chat_box:
             for m in st.session_state["chat_messages"]:
                 st.chat_message(m["role"]).write(m["content"])
                 
+        # Xử lý tin nhắn người dùng nhập
         u_msg = st.chat_input("Hỏi cô về cách giải thích, chọn dẫn chứng...", key="chat_input_b2")
         if u_msg:
             st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
@@ -625,12 +627,12 @@ Bạn là Giáo viên Ngữ văn THPT tâm lý, tuân thủ nghiêm ngặt nguy�
 - Chỉ đặt câu hỏi gợi mở, hướng dẫn phương pháp để học sinh tự làm.
 - Xưng hô: Cô - em.
 
-Đề bài: "{de_context}"
+Đề bài học sinh đang làm: "{de_context}"
 Học sinh hỏi: "{u_msg}"
 
-Hãy trả lời định hướng ngắn gọn (3–5 câu), sâu sắc và đặt câu hỏi gợi mở:
+Hãy trả lời định hướng ngắn gọn (3–5 câu), sâu sắc và đặt câu hỏi gợi mở tư duy:
 """
-            with st.spinner("Cô đang suy nghĩ..."):
+            with st.spinner("Cô đang định hướng..."):
                 reply = call_gemini_engine(prompt_chat)
                 st.session_state["chat_messages"].append({"role": "assistant", "content": reply})
             st.rerun()
@@ -711,6 +713,6 @@ Học sinh: {student_name if student_name else 'Học sinh chưa điền tên'}
         label="📥 Tải xuống Báo cáo học tập (.txt)",
         data=report_text,
         file_name=f"Bao_cao_hoc_tap_{file_student_name}.txt",
-        mime="text/primary",
+        mime="text/plain",
         type="primary"
     )
