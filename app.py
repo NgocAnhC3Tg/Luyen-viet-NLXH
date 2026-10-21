@@ -100,7 +100,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (CHUẨN SƯ PHẠM)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (CHUẨN TRÌNH TỰ SƯ PHẠM)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -112,19 +112,21 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             " cộng đồng của thế hệ trẻ."
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
             (
-                "**Nơi đất ở & Đất hóa tâm hồn:** Cắt nghĩa **nơi đất ở** là không"
-                " gian vật chất thuần túy; **đất hóa tâm hồn** là sự gắn kết"
-                " sâu sắc về tình cảm, nghĩa tình."
+                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **lối sống có"
+                " trách nhiệm** là nhận thức đúng đắn về bổn phận đối với tập"
+                " thể; **gắn bó với cộng đồng** là sự sẻ chia và tinh thần cống"
+                " hiến."
             ),
             (
-                "**Lối sống có trách nhiệm & Gắn bó:** Bản chất là sự nhận thức"
-                " đúng đắn về bổn phận của cá nhân đối với tập thể, sẵn sàng"
-                " dấn thân cống hiến."
+                "**2. Phân tích ý nghĩa ngữ liệu:** Ý thơ Chế Lan Viên qua hình"
+                " ảnh 'nơi đất ở' và 'đất hóa tâm hồn' làm nổi bật mối quan hệ"
+                " gắn kết giữa cá nhân và tập thể: khi biết sống cống hiến,"
+                " không gian sống sẽ trở nên gắn bó nghĩa tình."
             ),
         ],
         "vdnl_ket_luan": (
@@ -172,18 +174,20 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             " con người với con người trong xã hội hiện đại."
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
             (
-                "**Cơn bão & Cơn bão lòng:** Cắt nghĩa hình ảnh ẩn dụ chỉ những"
-                " biến cố dữ dội, tổn thương tâm lý và khủng hoảng tinh thần."
+                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **thấu cảm** là năng"
+                " lực đặt mình vào vị trí người khác; **lắng nghe chân thành**"
+                " là thái độ kiên nhẫn, không phán xét để xoa dịu nỗi đau."
             ),
             (
-                "**Thấu cảm & Lắng nghe chân thành:** Năng lực đặt mình vào vị"
-                " trí người khác và thái độ kiên nhẫn, không phán xét để xoa dịu"
-                " nỗi đau."
+                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh ẩn dụ 'cơn bão lòng'"
+                " chỉ những biến cố dữ dội, tổn thương tâm lý; qua đó khẳng định"
+                " sự cần thiết của sự thấu hiểu để cùng nhau vượt qua khủng"
+                " hoảng."
             ),
         ],
         "vdnl_ket_luan": (
@@ -231,18 +235,19 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
             " hệ trẻ trong bối cảnh hội nhập."
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
             (
-                "**Toàn cầu hóa & Mỏ neo:** Cắt nghĩa **toàn cầu hóa** là xu thế"
-                " hội nhập quốc tế rộng mở; **mỏ neo** là điểm tựa cội nguồn vững"
-                " chắc."
+                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **bản sắc văn hóa"
+                " dân tộc** là giá trị cốt lõi, tinh hoa truyền thống; **trách"
+                " nhiệm giữ gìn** là bổn phận bảo vệ và phát huy cội nguồn."
             ),
             (
-                "**Bản sắc văn hóa dân tộc:** Toàn bộ giá trị tinh hoa cốt lõi"
-                " được hun đúc qua lịch sử lâu đời của dân tộc."
+                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh 'toàn cầu hóa' và 'chiếc"
+                " mỏ neo' đặt ra vấn đề: hội nhập quốc tế rộng mở nhưng cội"
+                " nguồn văn hóa là điểm tựa giữ vững bản lĩnh dân tộc."
             ),
         ],
         "vdnl_ket_luan": (
@@ -284,7 +289,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
     },
 }
 
-# Bổ sung các đề từ 04 đến 15 đầy đủ chuẩn chỉnh tương tự
 for i in range(4, 16):
   k = (
       f"Đề {i:02d}: Ý nghĩa rèn luyện kỹ năng và phẩm chất đạo đức của người"
@@ -301,24 +305,27 @@ for i in range(4, 16):
             f"Tầm quan trọng và ý nghĩa của phẩm chất đạo đức trong đề số {i}."
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
             (
-                "**Từ khóa cốt lõi:** Cắt nghĩa định nghĩa và bản chất khái niệm"
-                " chính được đặt ra trong đề bài."
+                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa định nghĩa và bản"
+                " chất khái niệm chính được đặt ra trong đề bài."
             ),
             (
-                "**Ý nghĩa ngữ liệu:** Làm rõ thông điệp nhân sinh tích cực mà"
-                " ngữ liệu hướng tới."
+                "**2. Phân tích ý nghĩa ngữ liệu:** Làm rõ thông điệp nhân sinh"
+                " tích cực mà ngữ liệu hướng tới."
             ),
         ],
         "vdnl_ket_luan": f"Ý nghĩa và giá trị của vấn đề nghị luận trong đề số {i}.",
         "questions": [{
             "cau_hoi": "Vì sao vấn đề này đóng vai trò thiết yếu đối với học sinh?",
             "y_tra_loi": [
-                "Giúp bồi dưỡng nhận thức đúng đắn và hoàn thiện nhân cách toàn diện."
+                (
+                    "Giúp bồi dưỡng nhận thức đúng đắn và hoàn thiện nhân cách"
+                    " toàn diện."
+                )
             ],
         }],
         "evidence": [{
@@ -333,7 +340,10 @@ for i in range(4, 16):
             "nguon": "Báo Tuổi Trẻ, Báo Thanh Niên",
         }],
         "counter": [
-            "Phê phán những biểu hiện lệch lạc, xem nhẹ giá trị đạo đức truyền thống."
+            (
+                "Phê phán những biểu hiện lệch lạc, xem nhẹ giá trị đạo đức"
+                " truyền thống."
+            )
         ],
     }
 
@@ -346,18 +356,19 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             " của đám đông."
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
             (
-                "**Bản sắc riêng & chính kiến:** Cắt nghĩa **bản sắc riêng** là cá"
-                " tính độc đáo; **chính kiến** là tư duy độc lập làm nên phẩm giá"
-                " cá nhân."
+                "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa **bản sắc riêng**"
+                " là cá tính độc đáo; **chính kiến** là tư duy độc lập làm nên"
+                " phẩm giá cá nhân."
             ),
             (
-                "**Áp lực số đông:** Sự lôi kéo, phán xét từ đám đông trên mạng"
-                " xã hội dễ đẩy con người vào lối sống hòa tan."
+                "**2. Phân tích ý nghĩa ý kiến:** Hình ảnh ẩn dụ 'con sông' và"
+                " 'ghềnh thác' tượng trưng cho thử thách; đòi hỏi bản lĩnh giữ"
+                " vững dòng chảy cá nhân trước áp lực hòa tan."
             ),
         ],
         "vdnl_ket_luan": (
@@ -479,8 +490,8 @@ if "chat_messages" not in st.session_state:
   st.session_state["chat_messages"] = [{
       "role": "assistant",
       "content": (
-          "Chào em! Cô là Trợ lý Ngữ văn. Em cần cô hướng dẫn thêm ở phần nào"
-          " trong dàn ý?"
+          "Chào em! Cô là Trợ lý Ngữ văn. Các em cần cô hướng dẫn thêm ở phần"
+          " nào trong dàn ý?"
       ),
   }]
 
@@ -507,37 +518,30 @@ with st.sidebar:
   st.write("4. **🔍 Bước 4:** Đánh giá & Chỉnh sửa theo Rubric")
 
 
+# Hàm gọi AI chuẩn mực, tối ưu hóa xử lý lỗi kết nối
 def call_gemini_engine(prompt_text):
   api_key = st.session_state.get("gemini_api_key", "").strip()
   if not api_key:
     return (
-        "Cô chưa nhận được API Key. Em hãy dán Key vào ô bên thanh trái để cô"
-        " trò chuyện cùng em nhé!"
+        "Cô chưa nhận được API Key. Các em hãy dán Key vào ô bên thanh trái để"
+        " cô trò chuyện cùng các em nhé!"
     )
 
   try:
     client = genai.Client(api_key=api_key)
-    models_to_try = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash",
-        "gemini-1.5-pro",
-    ]
-    for m in models_to_try:
-      try:
-        response = client.models.generate_content(
-            model=m, contents=prompt_text
-        )
-        if response and response.text:
-          return response.text
-      except Exception:
-        continue
+    response = client.models.generate_content(
+        model="gemini-1.5-flash", contents=prompt_text
+    )
+    if response and response.text:
+      return response.text
     return (
-        "Lỗi kết nối AI: Không thể kết nối với các mô hình Gemini. Kiểm tra lại"
-        " API Key!"
+        "Cô đang suy nghĩ, các em hãy bấm gửi lại câu hỏi lần nữa nhé!"
     )
   except Exception as e:
-    return f"Lỗi kết nối AI: {str(e)}"
+    return (
+        f"Lỗi kết nối AI: {str(e)}. Các em vui lòng kiểm tra lại API Key hoặc"
+        " kết nối mạng nhé!"
+    )
 
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
@@ -596,8 +600,8 @@ Trả về JSON duy nhất:
   "status": "DUNG" | "LECH" | "SAI",
   "feedback": "Nhận xét sư phạm (xưng cô - em)",
   "vdnl_chuan": "VĐNL cốt lõi chuẩn",
-  "explain_guide": "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*",
-  "explain_items": ["**Từ khóa 1:** Giải thích ý nghĩa", "**Từ khóa 2:** Giải thích ý nghĩa"],
+  "explain_guide": "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*",
+  "explain_items": ["**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa...", "**2. Phân tích ý nghĩa ngữ liệu:** ..."],
   "vdnl_ket_luan": "Chốt lại Vấn đề nghị luận chuẩn",
   "questions": [{{"cau_hoi": "Câu hỏi bàn luận?", "y_tra_loi": ["Ý bàn luận 1", "Ý bàn luận 2"]}}],
   "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết sự kiện", "y_nghia": "Ý nghĩa phân tích", "nguon": "Nguồn báo chí"}}],
@@ -620,11 +624,11 @@ Trả về JSON duy nhất:
             student_guess if student_guess else "Vấn đề nghị luận từ đề bài"
         ),
         "explain_guide": (
-            "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-            " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*"
+            "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+            " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*"
         ),
         "explain_items": [
-            "**Từ khóa chính:** Giải thích bản chất khái niệm."
+            "**1. Giải thích từ khóa trong VĐNL:** Cắt nghĩa bản chất khái niệm."
         ],
         "vdnl_ket_luan": (
             student_guess if student_guess else "Vấn đề nghị luận trọng tâm."
@@ -644,7 +648,7 @@ Trả về JSON duy nhất:
 
 
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH & TABS
+# 5. GIAO DIỆN CHÍNH & TABS
 # ==============================================================================
 st.markdown(
     """
@@ -864,14 +868,14 @@ with tabs[1]:
         unsafe_allow_html=True,
     )
 
-    # Thao tác 1: Giải thích ưu tiên từ khóa trước, sau đó nghĩa nhận định và chốt VĐNL
+    # Thao tác 1: Giải thích từ khóa VĐNL trước -> Phân tích ý kiến/ngữ liệu -> Chốt
     with st.expander(
         "📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True
     ):
       guide_txt = cur_de_info.get(
           "explain_guide",
-          "*Định hướng: Ưu tiên giải thích từ khóa trong ngữ liệu trước, sau"
-          " đó mở rộng ý nghĩa nhận định và chốt vấn đề nghị luận.*",
+          "*Định hướng: Giải thích từ khóa trong VĐNL trước -> Phân tích ý"
+          " nghĩa ngữ liệu/ý kiến -> Chốt vấn đề.*",
       )
       items = cur_de_info.get("explain_items", [])
       vdnl_kl = cur_de_info.get(
@@ -948,26 +952,116 @@ with tabs[1]:
       for c in cur_de_info.get("counter", []):
         st.markdown(f"- {c}")
 
+    # ==========================================================================
+    # CẢI TIẾN: GIÀN GIÁO LẬP DÀN Ý CHI TIẾT (KHÔNG CÒN CHÊNH VÊNH)
+    # ==========================================================================
     st.markdown("---")
-    st.markdown("#### 📝 Lập Dàn Ý 3 Phần Của Em")
-    vdnl_val = cur_de_info.get("vdnl_chuan", "Vấn đề nghị luận từ đề bài")
-    auto_outline = (
-        "I. MỞ BÀI:\n- Dẫn dắt & nêu vấn đề nghị luận:"
-        f" {vdnl_val}\n\nII. THÂN BÀI:\n1. Giải thích bản chất khái niệm:\n2."
-        " Bàn luận trọng tâm:\n   + Ý 1:\n   + Ý 2:\n3. Dẫn chứng thực tế tiêu"
-        " biểu:\n4. Phản biện & Mở rộng:\n\nIII. KẾT BÀI:\n- Bài học nhận thức"
-        " & hành động:"
+    st.markdown("#### 📝 Xây Dựng Giàn Giáo Dàn Ý Chi Tiết")
+    st.info(
+        "💡 *Các em hãy điền các ý chính dựa trên phần gợi ý tư duy ở các thao"
+        " tác trên để hoàn thiện khung dàn ý cho bài viết của mình nhé!*"
     )
 
-    if not st.session_state.get("user_outline"):
-      st.session_state["user_outline"] = auto_outline
+    if "outline_parts" not in st.session_state:
+      st.session_state["outline_parts"] = {
+          "mb": "",
+          "gt": "",
+          "bl": "",
+          "dc": "",
+          "pb": "",
+          "kb": "",
+      }
 
-    user_outline = st.text_area(
-        "Hoàn thiện dàn ý tại đây:",
-        value=st.session_state["user_outline"],
-        height=260,
-    )
-    st.session_state["user_outline"] = user_outline
+    with st.container(border=True):
+      st.markdown("##### 1. Phần Mở bài")
+      st.session_state["outline_parts"]["mb"] = st.text_area(
+          "Dẫn dắt và giới thiệu Vấn đề nghị luận:",
+          value=st.session_state["outline_parts"]["mb"],
+          height=70,
+          placeholder=(
+              "Ví dụ: Từ câu thơ/câu nói..., ta nhận thấy một vấn đề sâu sắc"
+              f" trong đời sống: {cur_de_info.get('vdnl_chuan', '')}"
+          ),
+          key="ta_mb",
+      )
+
+      st.markdown("##### 2. Phần Thân bài - Ý Giải thích")
+      st.session_state["outline_parts"]["gt"] = st.text_area(
+          "Cắt nghĩa từ khóa VĐNL và ý nghĩa ngữ liệu:",
+          value=st.session_state["outline_parts"]["gt"],
+          height=90,
+          placeholder=(
+              "Giải thích rõ các từ khóa trọng tâm và thông điệp từ ngữ liệu..."
+          ),
+          key="ta_gt",
+      )
+
+      st.markdown("##### 3. Phần Thân bài - Ý Bàn luận trọng tâm")
+      st.session_state["outline_parts"]["bl"] = st.text_area(
+          "Triển khai các luận điểm trả lời câu hỏi vì sao/như thế nào:",
+          value=st.session_state["outline_parts"]["bl"],
+          height=100,
+          placeholder="Nêu ít nhất 2-3 luận điểm chính để bàn luận sâu sắc...",
+          key="ta_bl",
+      )
+
+      st.markdown("##### 4. Phần Thân bài - Dẫn chứng thực tế")
+      st.session_state["outline_parts"]["dc"] = st.text_area(
+          "Chọn lọc dẫn chứng tiêu biểu (từ mục Thao tác 3):",
+          value=st.session_state["outline_parts"]["dc"],
+          height=80,
+          placeholder="Ví dụ: Tấm gương Hoàng Hoa Trung / Đen Vâu...",
+          key="ta_dc",
+      )
+
+      st.markdown("##### 5. Phần Thân bài - Phản biện & Mở rộng")
+      st.session_state["outline_parts"]["pb"] = st.text_area(
+          "Lật lại vấn đề / Phê phán những biểu hiện lệch lạc:",
+          value=st.session_state["outline_parts"]["pb"],
+          height=80,
+          placeholder="Phê phán lối sống trái ngược hoặc mở rộng góc nhìn...",
+          key="ta_pb",
+      )
+
+      st.markdown("##### 6. Phần Kết bài")
+      st.session_state["outline_parts"]["kb"] = st.text_area(
+          "Bài học nhận thức và hành động cho bản thân:",
+          value=st.session_state["outline_parts"]["kb"],
+          height=70,
+          placeholder=(
+              "Rút ra bài học thiết thực cho bản thân và thế hệ trẻ..."
+          ),
+          key="ta_kb",
+      )
+
+    # Tự động tổng hợp thành bản dàn ý hoàn chỉnh để học sinh tiện copy hoặc đối chiếu
+    complete_outline = f"""I. MỞ BÀI:
+- Dẫn dắt & Giới thiệu VĐNL: {st.session_state["outline_parts"]["mb"]}
+
+II. THÂN BÀI:
+1. Giải thích khái niệm & ngữ liệu:
+{st.session_state["outline_parts"]["gt"]}
+
+2. Bàn luận các khía cạnh trọng tâm:
+{st.session_state["outline_parts"]["bl"]}
+
+3. Dẫn chứng thực tế tiêu biểu:
+{st.session_state["outline_parts"]["dc"]}
+
+4. Phản biện & Mở rộng vấn đề:
+{st.session_state["outline_parts"]["pb"]}
+
+III. KẾT BÀI:
+- Bài học nhận thức & Hành động: {st.session_state["outline_parts"]["kb"]}"""
+
+    st.session_state["user_outline"] = complete_outline
+
+    with st.expander("📄 Xem toàn bộ cấu trúc Dàn ý đã tổng hợp", expanded=False):
+      st.text_area(
+          "Dàn ý tổng hợp:",
+          value=st.session_state["user_outline"],
+          height=250,
+      )
 
   with c_right:
     st.markdown("#### 🧭 Trợ lý Ngữ văn (Định Hướng Phương Pháp)")
@@ -1011,7 +1105,7 @@ Bạn là Giáo viên Ngữ văn THPT tâm lý, tuân thủ nghiêm ngặt nguy�
 Nội dung đề bài: "{cur_de_info.get('text', '')}"
 Học sinh hỏi: "{u_msg}"
 
-Hãy trả lời định hướng ngắn gọn (3–5 câu), sâu sắc bám sát đúng đề bài này và đặt câu hỏi gợi mở tư duy:
+Hãy trả lời định hướng ngắn gọn (3–5 câu), bám sát đúng đề bài này và đặt câu hỏi gợi mở tư duy cho học sinh:
 """
       with st.spinner("Trợ lý Ngữ văn đang định hướng..."):
         reply = call_gemini_engine(prompt_chat)
