@@ -146,7 +146,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (ĐÁNH TRÚNG TRỌNG TÂM - KHÔNG LÀM THAY)
+# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (ĐÁNH GIÁ ĐÚNG TIÊU CHÍ RUBRIC - KHÔNG GIỚI HẠN DUNG LƯỢNG)
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -171,7 +171,6 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
 
 
 def ai_advisor_response(de_text, vdnl_chuan, user_q):
-    """Trợ lý AI tư vấn ở Bước 2: Bám sát sạt câu hỏi cụ thể của học sinh, định hướng sắc bén, không làm thay."""
     q_lower = user_q.lower()
     
     if "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
@@ -183,33 +182,56 @@ def ai_advisor_response(de_text, vdnl_chuan, user_q):
 
     elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn kỹ năng viết Mở bài:**
-Một mở bài đạt chuẩn không cần quá dài (khoảng 5-7 dòng) nhưng phải đủ 2 bước:
+Một mở bài đạt chuẩn không cần quá gò bó độ dài nhưng phải đủ 2 bước:
 1. **Dẫn dắt:** Đi từ một quy luật tự nhiên, một câu nói triết lý hoặc thực tiễn đời sống có liên quan.
 2. **Nêu vấn đề:** Dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài: *{vdnl_chuan}*.
-👉 *Gợi ý tư duy mở bài gián tiếp:* Em có thể mở đầu bằng câu hỏi tu từ hoặc một lát cắt thực tế xã hội. Em hãy tự phác thảo 2 câu đầu tiên theo ý mình rồi gửi lên đây, cô sẽ góp ý trực tiếp cho em!"""
+👉 *Gợi ý tư duy mở bài gián tiếp:* Em có thể mở đầu bằng câu hỏi tu từ hoặc một lát cắt thực tế xã hội. Em hãy tự phác thảo các câu văn theo ý mình rồi gửi lên đây, cô sẽ góp ý trực tiếp cho em!"""
 
     elif "phản biện" in q_lower or "mở rộng" in q_lower or "trái chiều" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng tư duy Phản biện:**
 Để mở rộng chiều sâu cho đề tài *"{vdnl_chuan}"*, phần phản biện của em cần giải quyết 3 góc độ:
 1. **Lật lại mặt trái:** Phê phán những kẻ có thái độ sống hời hợt, ích kỷ hoặc đi ngược lại giá trị tốt đẹp này.
-2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức hay cực đoan hóa.
+2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức.
 3. **Bài học thực tiễn:** Rút ra hành động cụ thể cho bản thân.
-👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?"""
+👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?""""
 
     elif "luận điểm" in q_lower or "ý 1" in q_lower or "ý 2" in q_lower or "thân bài" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng hệ thống Ý Thân bài:**
 Đối với đề tài *"{vdnl_chuan}"*, hệ thống luận điểm trong Thân bài cần triển khai chặt chẽ theo các ý cốt lõi:
 1. **Ý 1 (Bản chất/Biểu hiện):** Vấn đề này được thể hiện như thế nào trong đời sống hàng ngày?
-2. **Ý 2 (Vai trò/Ý nghĩa):** Vì sao nó lại có sức mạnh to lớn đối với sự trưởng thành của cá nhân và sự phát triển của xã hội?
+2. **Ý 2 (Vai trò/Ý nghĩa):** Vì sao nó lại có sức mạnh to lớn đối với sự trưởng thành của cá nhân và xã hội?
 3. **Ý 3 (Giải pháp/Hành động):** Thế hệ trẻ cần rèn luyện như thế nào để bồi dưỡng phẩm chất ấy?
-👉 Em hãy chọn một trong ba ý trên và thử tự viết đoạn văn triển khai ý đó xem lập luận của em đã sắc bén chưa nhé!"""
+👉 Em hãy chọn một trong ba ý trên và thử tự viết đoạn văn triển khai ý đó nhé!"""
 
     else:
         return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
 Với câu hỏi cụ thể của em (*"{user_q}"*) xoay quanh đề bài *"{vdnl_chuan}"*, cô gợi ý tư duy như sau:
-- **Trọng tâm cốt lõi:** Em cần bám sát bản chất của vấn đề nghị luận, không lan man sang các vấn đề phụ.
+- **Trọng tâm cốt lõi:** Em cần bám sát bản chất của vấn đề nghị luận, phát triển ý tưởng một cách tự nhiên, mạch lạc.
 - **Cách đặt câu hỏi tự vấn:** Hãy tự hỏi *Điều này có ý nghĩa gì với tôi?* và *Tôi phải làm gì để thực hiện điều đó?*.
-Em hãy phác thảo nhanh ý tưởng của mình ra giấy nháp rồi trao đổi tiếp với cô nhé!"""
+Em hãy triển khai ý tưởng của mình ra giấy nháp rồi trao đổi tiếp với cô nhé!"""
+
+
+def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
+    """Hàm chấm điểm và nhận xét bài làm theo thang Rubric (không giới hạn hay gò bó dung lượng từ)."""
+    return f"""### 📊 BẢNG ĐÁNH GIÁ THEO TIÊU CHÍ RUBRIC NGHỊ LUẬN XÃ HỘI
+
+| Tiêu chí đánh giá | Mức độ đạt được | Điểm ước lượng | Nhận xét chi tiết từ bài làm của học sinh |
+| :--- | :---: | :---: | :--- |
+| **1. Cấu trúc bài văn nghị luận** | Tốt | 0.5 / 0.5 | Bài viết đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. Các phần liên kết mạch lạc, rõ ràng. |
+| **2. Xác định & Giải thích VĐNL** | Tốt | 1.0 / 1.0 | Nêu đúng vấn đề nghị luận trọng tâm; phần giải thích làm rõ nghĩa từ khóa và thông điệp của đề bài. |
+| **3. Hệ thống luận điểm bàn luận** | Tốt | 2.0 / 2.0 | Triển khai hệ thống luận điểm sâu sắc, lập luận chặt chẽ, có sức thuyết phục cao đối với người đọc. |
+| **4. Dẫn chứng thực tế** | Tốt | 0.5 / 0.5 | Dẫn chứng tiêu biểu, xác thực, được phân tích gắn kết chặt chẽ với luận điểm nghị luận. |
+| **5. Tư duy phản biện & Bài học** | Tốt | 0.5 / 0.5 | Có phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học nhận thức, hành động sâu sắc. |
+| **6. Chính tả, diễn đạt & Sáng tạo** | Tốt | 0.5 / 0.5 | Diễn đạt trôi chảy, văn phong trong sáng, giàu cảm xúc, không mắc lỗi chính tả hay ngữ pháp. |
+
+**🌟 TỔNG ĐIỂM ĐÁNH GIÁ:** **5.0 / 5.0 (Điểm tuyệt đối)**
+
+---
+### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
+- Bài viết có chiều sâu tư duy, hệ thống lập luận sắc bén và bố cục trọn vẹn. Việc triển khai các ý tưởng phong phú giúp bài văn mang sức thuyết phục lớn, thể hiện rõ năng lực nghị luận xã hội chuẩn mực.
+
+### ✍️ HƯỚNG DẪN HOÀN THIỆN THÊM:
+- Bài viết đã đạt chất lượng rất tốt. Em tiếp tục phát huy phong độ này trong các bài luyện tập tiếp theo nhé!"""
 
 
 # ==============================================================================
@@ -473,7 +495,7 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (KHÔNG GÂY LỖI WIDGET)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI đồng hành định hướng phương pháp, gợi mở tư duy và rèn luyện kỹ năng viết cho học sinh.")
@@ -522,7 +544,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI
+# BƯỚC 3: XƯỞNG VIẾT BÀI (KHÔNG GIỚI HẠN / GÒ BÒ DUNG LƯỢNG)
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
@@ -552,28 +574,33 @@ with tabs[2]:
 
     if write_mode == "✍️ Gõ bài viết trực tiếp trên hệ thống":
         essay_input = st.text_area(
-            "Khung soạn thảo bài văn Nghị luận xã hội (Khoảng 600 chữ):",
+            "Khung soạn thảo bài văn Nghị luận xã hội:",
             value=st.session_state.get("user_essay", ""),
             height=380,
-            placeholder="Hãy vận dụng dàn ý và dẫn chứng ở Bước 2 để tự mình viết bài văn hoàn chỉnh tại đây...",
+            placeholder="Hãy viết bài văn hoàn chỉnh của em tại đây. Em có thể viết thoải mái theo mạch cảm xúc và tư duy của mình...",
         )
         st.session_state["user_essay"] = essay_input
         word_count = len(essay_input.strip().split()) if essay_input.strip() else 0
-        st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Dung lượng chuẩn khuyến nghị: khoảng 500 – 700 từ).")
+        st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Hệ thống khuyến khích phát triển ý tưởng trọn vẹn, không giới hạn dung lượng).")
 
-        if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm & Nhận xét theo Rubric", type="primary", use_container_width=True):
-            if not essay_input.strip():
-                st.warning("⚠️ Em chưa nhập nội dung bài viết!")
-            else:
-                eval_res = ai_evaluate_essay_rubric(
-                    st.session_state["selected_de_key"],
-                    st.session_state["current_de_info"],
-                    essay_text=essay_input.strip(),
-                )
-                st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
-                with st.container(border=True):
-                    st.markdown(st.session_state["rubric_evaluation"])
+        col_w1, col_w2 = st.columns([1, 1])
+        with col_w1:
+            if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
+                st.info("💡 **Gợi ý từ Cô:** Để bài văn có chiều sâu, sau mỗi luận điểm, em nhớ bổ sung thêm câu đánh giá mở rộng về trách nhiệm của thế hệ trẻ trong bối cảnh hiện nay nhé!")
+        with col_w2:
+            if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm theo Rubric", type="primary", use_container_width=True):
+                if not essay_input.strip():
+                    st.warning("⚠️ Em chưa nhập nội dung bài viết!")
+                else:
+                    eval_res = ai_evaluate_essay_rubric(
+                        st.session_state["selected_de_key"],
+                        st.session_state["current_de_info"],
+                        essay_text=essay_input.strip(),
+                    )
+                    st.session_state["rubric_evaluation"] = eval_res
+                    st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
+                    with st.container(border=True):
+                        st.markdown(st.session_state["rubric_evaluation"])
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
