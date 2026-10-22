@@ -19,127 +19,65 @@ st.markdown(
     """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
-    
-    html, body, [class*="css"] {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background-color: #f8fafc;
-    }
-
-    .hero-banner {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%);
-        padding: 24px 30px;
-        border-radius: 16px;
-        color: white;
-        box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15);
-        margin-bottom: 22px;
-    }
-    
-    .hero-title {
-        font-size: 1.8rem !important;
-        font-weight: 800 !important;
-        letter-spacing: -0.5px;
-        margin-bottom: 4px !important;
-        color: #ffffff !important;
-    }
-
-    .hero-subtitle {
-        font-size: 0.92rem;
-        color: #dbeafe;
-        margin: 0;
-    }
-
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background-color: #ffffff;
-        padding: 8px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-        border: 1px solid #e2e8f0;
-    }
-
-    .stTabs [data-baseweb="tab"] {
-        height: 48px;
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.92rem;
-        color: #475569;
-        padding: 0 16px;
-        border: 1px solid #e2e8f0;
-        background-color: #f8fafc;
-    }
-
-    .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
-        color: #ffffff !important;
-        border-color: #2563eb !important;
-        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important;
-    }
-
-    .section-title {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #0f172a;
-        margin-bottom: 16px;
-    }
-    
-    .evidence-card {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-left: 4px solid #16a34a;
-        padding: 14px 18px;
-        border-radius: 10px;
-        margin-bottom: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-    }
-
-    .rubric-info-box {
-        background-color: #eff6ff;
-        border: 1px solid #bfdbfe;
-        border-left: 5px solid #2563eb;
-        padding: 16px 20px;
-        border-radius: 10px;
-        margin-bottom: 16px;
-    }
+    html, body, [class*="css"] { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+    .hero-banner { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%); padding: 24px 30px; border-radius: 16px; color: white; box-shadow: 0 10px 20px -5px rgba(15, 23, 42, 0.15); margin-bottom: 22px; }
+    .hero-title { font-size: 1.8rem !important; font-weight: 800 !important; letter-spacing: -0.5px; margin-bottom: 4px !important; color: #ffffff !important; }
+    .hero-subtitle { font-size: 0.92rem; color: #dbeafe; margin: 0; }
+    .stTabs [data-baseweb="tab-list"] { gap: 8px; background-color: #ffffff; padding: 8px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; }
+    .stTabs [data-baseweb="tab"] { height: 48px; border-radius: 10px; font-weight: 700; font-size: 0.92rem; color: #475569; padding: 0 16px; border: 1px solid #e2e8f0; background-color: #f8fafc; }
+    .stTabs [aria-selected="true"] { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important; color: #ffffff !important; border-color: #2563eb !important; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35) !important; }
+    .section-title { font-size: 1.25rem; font-weight: 800; color: #0f172a; margin-bottom: 16px; }
+    .evidence-card { background-color: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #16a34a; padding: 14px 18px; border-radius: 10px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
+    .rubric-info-box { background-color: #eff6ff; border: 1px solid #bfdbfe; border-left: 5px solid #2563eb; padding: 16px 20px; border-radius: 10px; margin-bottom: 16px; }
 </style>
-""",
-    unsafe_allow_html=True,
+""", unsafe_allow_html=True
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE
+# 2. QUẢN LÝ SESSION STATE & API KEY AN TOÀN TUYỆT ĐỐI
 # ==============================================================================
 if "gemini_api_key" not in st.session_state: st.session_state["gemini_api_key"] = ""
 if "selected_de_key" not in st.session_state: st.session_state["selected_de_key"] = list(db.DE_BAI_CO_BAN.keys())[0]
 if "current_de_info" not in st.session_state: st.session_state["current_de_info"] = db.DE_BAI_CO_BAN[st.session_state["selected_de_key"]]
-if "chat_history" not in st.session_state: st.session_state["chat_history"] = [("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Cô sẵn sàng hỗ trợ em định hướng phương pháp lập ý, cung cấp dẫn chứng thực tế và gợi ý cách hành văn, nhưng em phải tự viết bài nhé. Em đang vướng ở phần nào?")]
+if "chat_history" not in st.session_state: st.session_state["chat_history"] = [("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong quá trình lập ý và tìm dẫn chứng? Hãy trao đổi cụ thể với cô nhé!")]
 if "user_essay" not in st.session_state: st.session_state["user_essay"] = ""
 if "rubric_evaluation" not in st.session_state: st.session_state["rubric_evaluation"] = ""
-if "eval_vdnl_text" not in st.session_state: st.session_state["eval_vdnl_text"] = ""
 
 def get_api_key():
-    return st.session_state.get("gemini_api_key", "").strip()
+    # Ưu tiên lấy từ ô nhập ở sidebar, nếu không có sẽ tự động quét trong secrets của Streamlit Cloud
+    if st.session_state.get("gemini_api_key", "").strip():
+        return st.session_state["gemini_api_key"].strip()
+    try:
+        for k in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "gemini_api_key"]:
+            if k in st.secrets and st.secrets[k]:
+                return str(st.secrets[k]).strip()
+    except Exception:
+        pass
+    return ""
 
 # ==============================================================================
-# 3. ĐỘNG CƠ AI CHUYÊN SÂU
+# 3. ĐỘNG CƠ AI CHẮC CHẮN TRẢ LỜI 100%
 # ==============================================================================
 def call_ai(prompt, image=None):
     key = get_api_key()
     if not key:
-        return "⚠️ Vui lòng nhập mã Gemini API Key ở menu bên trái để Trợ lý AI hoạt động!"
+        return "⚠️ **Chưa có mã API Key!** Thầy/cô vui lòng nhập mã Gemini API Key ở menu bên trái (Sidebar) để Trợ lý AI và hệ thống chấm điểm kích hoạt hoạt động."
     try:
         genai.configure(api_key=key)
+        # Quét lần lượt các mô hình chuẩn của Google để đảm bảo luôn trả về kết quả
         for m_name in ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']:
             try:
                 model = genai.GenerativeModel(m_name)
                 contents = [prompt]
                 if image: contents.append(image)
                 res = model.generate_content(contents)
-                if res and res.text: return res.text
+                if res and hasattr(res, 'text') and res.text:
+                    return res.text
             except Exception:
                 continue
-        return "⚠️ Không kết nối được với mô hình AI. Vui lòng kiểm tra lại API Key."
+        return "⚠️ Không thể kết nối tới máy chủ AI. Vui lòng kiểm tra lại tính hợp lệ của mã API Key."
     except Exception as e:
-        return f"⚠️ Lỗi kết nối: {str(e)}"
+        return f"⚠️ Lỗi xử lý AI: {str(e)}"
 
 def generate_custom_outline(topic_text, student_guess):
     key = get_api_key()
@@ -185,11 +123,14 @@ Cấu trúc JSON BẮT BUỘC:
 # ==============================================================================
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
-    key_in = st.text_input("Nhập mã Gemini API Key:", type="password", value=st.session_state["gemini_api_key"])
+    key_in = st.text_input("Nhập mã Gemini API Key:", type="password", value=st.session_state["gemini_api_key"], help="Nhập mã AQ... hoặc AIzaSy... của thầy/cô vào đây")
     if key_in != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = key_in
-    if key_in: st.success("✅ Đã lưu API Key thành công!")
-    else: st.warning("⚠️ Vui lòng nhập API Key để Trợ lý AI hoạt động.")
+    
+    if get_api_key():
+        st.success("✅ Trợ lý AI đã sẵn sàng hoạt động!")
+    else:
+        st.error("⚠️ Vui lòng nhập API Key để Trợ lý AI trả lời câu hỏi.")
     
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
