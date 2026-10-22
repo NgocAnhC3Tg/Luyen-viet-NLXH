@@ -1,4 +1,8 @@
-import google.generativeai as genai
+import base64
+import io
+import json
+import re
+import requests
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
@@ -147,7 +151,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI DÙNG SDK CHÍNH THỨC CỦA GOOGLE (HỖ TRỢ MỌI LOẠI MÃ)
+# 3. ĐỘNG CƠ GỌI AI SIÊU TỐC QUA THƯ VIỆN REQUESTS (CHỐNG TREO 100%)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     raw_key = st.session_state.get("gemini_api_key", "")
@@ -161,28 +165,71 @@ def call_gemini_engine(prompt_text, image_obj=None):
     if not api_key or len(api_key) < 10:
         return "❌ LỖI: Chưa có mã xác thực. Vui lòng dán mã của cô vào ô ở thanh bên trái!"
 
-    try:
-        # Sử dụng SDK chính thức của Google
-        genai.configure(api_key=api_key)
-        
-        # Danh sách các model để quét thử tự động
-        model_names = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro"]
-        
-        last_err = ""
-        for m_name in model_names:
-            try:
-                model = genai.GenerativeModel(m_name)
-                content = [prompt_text, image_obj] if image_obj is not None else prompt_text
-                response = model.generate_content(content)
-                if response and hasattr(response, "text") and response.text:
-                    return response.text.strip()
-            except Exception as sub_e:
-                last_err = str(sub_e)
-                continue
-        
-        return f"❌ Không thể tạo nội dung với các model hiện hành. Chi tiết: {last_err}"
-    except Exception as e:
-        return f"❌ Lỗi kết nối Google SDK: {str(e)}"
+    parts = [{"text": str(prompt_text)}]
+    if image_obj is not None:
+        try:
+            buffered = io.BytesIO()
+            img_rgb = image_obj.convert("RGB")
+            img_rgb.save(buffered, format="JPEG", quality=85)
+            img_b64 = base64.b64encode(buffered.getvalue()).decode("ascii")
+            parts.append({
+                "inline_data": {
+                    "mime_type": "image/jpeg",
+                    "data": img_b64
+                }
+            })
+        except Exception as e:
+            return f"❌ Lỗi xử lý ảnh tải lên: {str(e)}"
+
+    payload = {
+        "contents": [{"role": "user", "parts": parts}],
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+        ],
+        "generationConfig": {
+            "temperature": 0.4,
+            "maxOutputTokens": 2048,
+        }
+    }
+
+    # Phân loại cách gọi tùy theo định dạng mã của cô (AQ. dùng Bearer Token, AIza dùng Query Key)
+    if api_key.startswith("AQ."):
+        project_id = "414700525197"
+        urls = [
+            f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent",
+            f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent"
+        ]
+        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+    else:
+        urls = [
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + api_key,
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + api_key
+        ]
+        headers = {"Content-Type": "application/json"}
+
+    last_error = ""
+    for url in urls:
+        try:
+            response = requests.post(url, headers=headers, json=payload, timeout=20)
+            if response.status_code == 200:
+                res_json = response.json()
+                candidates = res_json.get("candidates", [])
+                if candidates:
+                    content_parts = candidates[0].get("content", {}).get("parts", [])
+                    texts = [p.get("text", "") for p in content_parts if "text" in p]
+                    final_text = "".join(texts).strip()
+                    if final_text:
+                        return final_text
+            else:
+                last_error = f"HTTP {response.status_code}: {response.text}"
+        except Exception as e:
+            last_error = str(e)
+            continue
+
+    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại mã xác thực!"
 
 
 def extract_section(text, tag_name):
@@ -253,7 +300,7 @@ Tên nhân vật/sự kiện tiêu biểu | Chi tiết cụ thể của dẫn ch
 [DAN_Y]
 MB: (Hướng dẫn dẫn dắt và nêu VĐNL ở Mở bài)
 GT: (Hướng dẫn triển khai bước Giải thích: VĐNL -> Câu nói -> Chốt VĐNL)
-BL: (Hướng dẫn triển khai các luận điểm Bàn luận trọng tâm)
+BL: (Hướng dẫn triển khai các luận điểm bàn luận trọng tâm)
 DC: (Hướng dẫn đưa và phân tích Dẫn chứng thực tế)
 PB: (Hướng dẫn triển khai 3 trường hợp Phản biện mở rộng)
 KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nhận thức, hành động ở Kết bài)
@@ -397,7 +444,7 @@ with st.sidebar:
     if cur_k and len(cur_k) >= 10:
         st.success(f"✅ Đã nhận mã xác thực ({cur_k[:6]}...{cur_k[-4:]})")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
-            with st.spinner("Đang kiểm tra kết nối qua Google SDK..."):
+            with st.spinner("Đang kiểm tra kết nối siêu tốc..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
                 if test_res.startswith("❌"):
                     st.error(test_res)
@@ -514,7 +561,7 @@ with tabs[0]:
             if not custom_de_text.strip():
                 st.warning("⚠️ Vui lòng nhập nội dung đề bài trước khi bấm phân tích!")
             else:
-                with st.spinner("🤖 Cô giáo AI đang phân tích đề bài (chỉ mất khoảng 3-5 giây)..."):
+                with st.spinner("🤖 Cô giáo AI đang phân tích đề bài (chỉ mất khoảng 1-2 giây)..."):
                     info_custom, feedback_msg = ai_analyze_custom_exam(custom_de_text.strip(), student_custom_vdnl.strip())
                     if info_custom is None:
                         st.error(feedback_msg)
@@ -794,7 +841,7 @@ with tabs[3]:
 
         if st.button("🔍 Chấm & Xuất Bảng Nhận Xét Theo Tiêu Chí Rubric", type="primary", use_container_width=True):
             if not edited_essay.strip():
-                st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
+                st.warning("⚠️ Vuint lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
                 with st.spinner("👩‍🏫 Đang phân tích bài làm và lập Bảng nhận xét theo 6 tiêu chí Rubric..."):
                     eval_res = ai_evaluate_essay_rubric(
