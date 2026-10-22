@@ -146,7 +146,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (ĐÁNH GIÁ ĐÚNG TIÊU CHÍ RUBRIC - KHÔNG GIỚI HẠN DUNG LƯỢNG)
+# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (THANG ĐIỂM 10 CHUẨN MỰC)
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -182,7 +182,7 @@ def ai_advisor_response(de_text, vdnl_chuan, user_q):
 
     elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn kỹ năng viết Mở bài:**
-Một mở bài đạt chuẩn không cần quá gò bó độ dài nhưng phải đủ 2 bước:
+Một mở bài đạt chuẩn không gò bó độ dài nhưng phải đủ 2 bước:
 1. **Dẫn dắt:** Đi từ một quy luật tự nhiên, một câu nói triết lý hoặc thực tiễn đời sống có liên quan.
 2. **Nêu vấn đề:** Dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài: *{vdnl_chuan}*.
 👉 *Gợi ý tư duy mở bài gián tiếp:* Em có thể mở đầu bằng câu hỏi tu từ hoặc một lát cắt thực tế xã hội. Em hãy tự phác thảo các câu văn theo ý mình rồi gửi lên đây, cô sẽ góp ý trực tiếp cho em!"""
@@ -212,26 +212,26 @@ Em hãy triển khai ý tưởng của mình ra giấy nháp rồi trao đổi t
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    """Hàm chấm điểm và nhận xét bài làm theo thang Rubric (không giới hạn hay gò bó dung lượng từ)."""
-    return f"""### 📊 BẢNG ĐÁNH GIÁ THEO TIÊU CHÍ RUBRIC NGHỊ LUẬN XÃ HỘI
+    """Hàm chấm điểm và nhận xét bài làm theo THANG ĐIỂM 10 CHUẨN MỰC (không gò bó dung lượng từ)."""
+    return f"""### 📊 BẢNG ĐÁNH GIÁ THEO THANG ĐIỂM 10 RUBRIC NGHỊ LUẬN XÃ HỘI
 
-| Tiêu chí đánh giá | Mức độ đạt được | Điểm ước lượng | Nhận xét chi tiết từ bài làm của học sinh |
+| Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết từ bài làm của học sinh |
 | :--- | :---: | :---: | :--- |
-| **1. Cấu trúc bài văn nghị luận** | Tốt | 0.5 / 0.5 | Bài viết đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. Các phần liên kết mạch lạc, rõ ràng. |
-| **2. Xác định & Giải thích VĐNL** | Tốt | 1.0 / 1.0 | Nêu đúng vấn đề nghị luận trọng tâm; phần giải thích làm rõ nghĩa từ khóa và thông điệp của đề bài. |
-| **3. Hệ thống luận điểm bàn luận** | Tốt | 2.0 / 2.0 | Triển khai hệ thống luận điểm sâu sắc, lập luận chặt chẽ, có sức thuyết phục cao đối với người đọc. |
-| **4. Dẫn chứng thực tế** | Tốt | 0.5 / 0.5 | Dẫn chứng tiêu biểu, xác thực, được phân tích gắn kết chặt chẽ với luận điểm nghị luận. |
-| **5. Tư duy phản biện & Bài học** | Tốt | 0.5 / 0.5 | Có phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học nhận thức, hành động sâu sắc. |
-| **6. Chính tả, diễn đạt & Sáng tạo** | Tốt | 0.5 / 0.5 | Diễn đạt trôi chảy, văn phong trong sáng, giàu cảm xúc, không mắc lỗi chính tả hay ngữ pháp. |
+| **1. Đảm bảo cấu trúc bài nghị luận** | 1.0 điểm | **1.0 / 1.0** | Bài viết đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. Các phần liên kết mạch lạc, rõ ràng. |
+| **2. Xác định & Giải thích đúng VĐNL** | 2.0 điểm | **2.0 / 2.0** | Nêu đúng vấn đề nghị luận trọng tâm; phần giải thích làm rõ nghĩa từ khóa và thông điệp của đề bài. |
+| **3. Hệ thống luận điểm bàn luận** | 4.0 điểm | **4.0 / 4.0** | Triển khai hệ thống luận điểm sâu sắc, lập luận chặt chẽ, có sức thuyết phục cao đối với người đọc. |
+| **4. Dẫn chứng thực tế** | 1.0 điểm | **1.0 / 1.0** | Dẫn chứng tiêu biểu, xác thực, được phân tích gắn kết chặt chẽ với luận điểm nghị luận. |
+| **5. Tư duy phản biện & Bài học** | 1.0 điểm | **1.0 / 1.0** | Có phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học nhận thức, hành động sâu sắc. |
+| **6. Chính tả, diễn đạt & Sáng tạo** | 1.0 điểm | **1.0 / 1.0** | Diễn đạt trôi chảy, văn phong trong sáng, giàu cảm xúc, không mắc lỗi chính tả hay ngữ pháp. |
 
-**🌟 TỔNG ĐIỂM ĐÁNH GIÁ:** **5.0 / 5.0 (Điểm tuyệt đối)**
+**🌟 TỔNG ĐIỂM ĐÁNH GIÁ:** **10.0 / 10.0 (Điểm tuyệt đối)**
 
 ---
 ### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
 - Bài viết có chiều sâu tư duy, hệ thống lập luận sắc bén và bố cục trọn vẹn. Việc triển khai các ý tưởng phong phú giúp bài văn mang sức thuyết phục lớn, thể hiện rõ năng lực nghị luận xã hội chuẩn mực.
 
 ### ✍️ HƯỚNG DẪN HOÀN THIỆN THÊM:
-- Bài viết đã đạt chất lượng rất tốt. Em tiếp tục phát huy phong độ này trong các bài luyện tập tiếp theo nhé!"""
+- Bài viết đã đạt chất lượng rất xuất sắc. Em tiếp tục phát huy phong độ này trong các bài luyện tập tiếp theo nhé!"""
 
 
 # ==============================================================================
@@ -544,7 +544,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI
+# BƯỚC 3: XƯỞNG VIẾT BÀI (CHUYỂN SANG B4 KHÔNG HIỂN THỊ KẾT QUẢ NGAY TẠI B3)
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
@@ -588,19 +588,12 @@ with tabs[2]:
             if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
                 st.info("💡 **Gợi ý từ Cô:** Để bài văn có chiều sâu, sau mỗi luận điểm, em nhớ bổ sung thêm câu đánh giá mở rộng về trách nhiệm của thế hệ trẻ trong bối cảnh hiện nay nhé!")
         with col_w2:
-            if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm theo Rubric", type="primary", use_container_width=True):
+            if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
                     st.warning("⚠️ Em chưa nhập nội dung bài viết!")
                 else:
-                    eval_res = ai_evaluate_essay_rubric(
-                        st.session_state["selected_de_key"],
-                        st.session_state["current_de_info"],
-                        essay_text=essay_input.strip(),
-                    )
-                    st.session_state["rubric_evaluation"] = eval_res
-                    st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
-                    with st.container(border=True):
-                        st.markdown(st.session_state["rubric_evaluation"])
+                    st.session_state["rubric_evaluation"] = ""  # Xóa kết quả cũ để học sinh tự bấm chấm ở B4
+                    st.success("✅ Đã chuyển bài viết sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để tiến hành đánh giá.")
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
@@ -610,37 +603,30 @@ with tabs[2]:
         if uploaded_img is not None:
             img_obj = Image.open(uploaded_img)
             st.image(img_obj, caption="Ảnh bài làm viết tay của học sinh", use_column_width=True)
-            if st.button("📊 Nhờ AI đọc bài viết tay & Chấm theo Rubric (Bước 4)", type="primary"):
-                eval_res = ai_evaluate_essay_rubric(
-                    st.session_state["selected_de_key"],
-                    st.session_state["current_de_info"],
-                    image_obj=img_obj,
-                )
-                st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã đánh giá xong! Mời em xem kết quả bên dưới hoặc mở tab **BƯỚC 4**.")
-                with st.container(border=True):
-                    st.markdown(st.session_state["rubric_evaluation"])
+            if st.button("📊 Chuyển ảnh bài làm sang Bước 4 để Kiểm tra Rubric", type="primary"):
+                st.session_state["rubric_evaluation"] = ""
+                st.success("✅ Đã chuyển bài làm sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để tiến hành kiểm tra.")
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (ĐẦU RA BẢNG NHẬN XÉT TIÊU CHÍ)
+# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (THANG ĐIỂM 10 CHUẨN MỰC)
 # ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown(
-        '<div class="section-title">📊 Bước 4: Kiểm Tra Và Chỉnh Sửa Theo Thang Đo Rubric</div>',
+        '<div class="section-title">📊 Bước 4: Kiểm Tra Và Chỉnh Sửa Theo Thang Đo Rubric (Thang điểm 10)</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown(
         """
         <div class="rubric-info-box">
-            <b>📌 Hệ thống tiêu chí Rubric chuẩn đánh giá bài văn Nghị luận xã hội THPT:</b><br>
-            1. <b>Đảm bảo cấu trúc bài nghị luận (0.5đ):</b> Mở bài, Thân bài, Kết bài rõ ràng; chia đoạn hợp lý.<br>
-            2. <b>Xác định & Giải thích đúng VĐNL (1.0đ):</b> Giải thích VĐNL ➔ Giải thích câu nói/ngữ liệu ➔ Chốt VĐNL.<br>
-            3. <b>Hệ thống luận điểm bàn luận (2.0đ):</b> Triển khai từ 3 ý bàn luận sâu sắc, lập luận chặt chẽ, thuyết phục.<br>
-            4. <b>Dẫn chứng thực tế (0.5đ):</b> Xác thực, tiêu biểu, phân tích gắn chặt với luận điểm.<br>
-            5. <b>Tư duy phản biện & Bài học (0.5đ):</b> Phản biện đa chiều (3 trường hợp) và rút ra bài học nhận thức, hành động.<br>
-            6. <b>Chính tả, diễn đạt & Sáng tạo (0.5đ):</b> Không sai chính tả/ngữ pháp, văn phong giàu sức biểu cảm.
+            <b>📌 Hệ thống tiêu chí Rubric chuẩn đánh giá bài văn Nghị luận xã hội THPT (Thang điểm 10):</b><br>
+            1. <b>Đảm bảo cấu trúc bài nghị luận (1.0đ):</b> Mở bài, Thân bài, Kết bài rõ ràng; chia đoạn hợp lý.<br>
+            2. <b>Xác định & Giải thích đúng VĐNL (2.0đ):</b> Giải thích VĐNL ➔ Giải thích câu nói/ngữ liệu ➔ Chốt VĐNL.<br>
+            3. <b>Hệ thống luận điểm bàn luận (4.0đ):</b> Triển khai từ 3 ý bàn luận sâu sắc, lập luận chặt chẽ, thuyết phục.<br>
+            4. <b>Dẫn chứng thực tế (1.0đ):</b> Xác thực, tiêu biểu, phân tích gắn chặt với luận điểm.<br>
+            5. <b>Tư duy phản biện & Bài học (1.0đ):</b> Phản biện đa chiều (3 trường hợp) và rút ra bài học nhận thức, hành động.<br>
+            6. <b>Chính tả, diễn đạt & Sáng tạo (1.0đ):</b> Không sai chính tả/ngữ pháp, văn phong giàu sức biểu cảm.
         </div>
         """,
         unsafe_allow_html=True,
@@ -659,7 +645,7 @@ with tabs[3]:
         )
         st.session_state["user_essay"] = edited_essay
 
-        if st.button("🔍 Chấm & Xuất Bảng Nhận Xét Theo Tiêu Chí Rubric", type="primary", use_container_width=True):
+        if st.button("🔍 Chấm điểm & Xuất Bảng Nhận Xét Theo Rubric", type="primary", use_container_width=True):
             if not edited_essay.strip():
                 st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
@@ -677,12 +663,12 @@ with tabs[3]:
                 f"ĐỀ BÀI: {st.session_state['selected_de_key']}\n"
                 f"NỘI DUNG ĐỀ: {st.session_state['current_de_info'].get('text', '')}\n\n"
                 f"--- BÀI LÀM CỦA HỌC SINH ---\n{edited_essay}\n\n"
-                f"--- KẾT QUẢ ĐÁNH GIÁ THEO RUBRIC ---\n{st.session_state.get('rubric_evaluation', 'Chưa có đánh giá.')}\n"
+                f"--- KẾT QUẢ ĐÁNH GIÁ THEO RUBRIC (THANG 10) ---\n{st.session_state.get('rubric_evaluation', 'Chưa có đánh giá.')}\n"
             )
             st.download_button(
                 label="📥 Tải xuống Hồ sơ bài làm & Bảng đánh giá Rubric (.txt)",
                 data=export_content.encode("utf-8"),
-                file_name="Ho_so_bai_lam_NLXH_Rubric.txt",
+                file_name="Ho_so_bai_lam_NLXH_Rubric_Thang10.txt",
                 mime="text/plain",
                 use_container_width=True,
             )
@@ -694,5 +680,5 @@ with tabs[3]:
                 st.markdown(st.session_state["rubric_evaluation"])
         else:
             st.info(
-                "💡 Chưa có bảng nhận xét. Học sinh hãy nhập bài làm ở cột bên trái (hoặc từ Bước 3) và bấm nút **'🔍 Chấm & Xuất Bảng Nhận Xét Theo Tiêu Chí Rubric'** để nhận kết quả đánh giá chi tiết."
+                "💡 Chưa có bảng nhận xét. Học sinh hãy kiểm tra lại bài làm ở cột bên trái và bấm nút **'🔍 Chấm điểm & Xuất Bảng Nhận Xét Theo Rubric'** để nhận kết quả đánh giá chi tiết theo thang điểm 10."
             )
