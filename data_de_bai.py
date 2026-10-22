@@ -1,16 +1,16 @@
 # ==============================================================================
-# KHO DỮ LIỆU ĐỀ BÀI NGHỊ LUẬN XÃ HỘI (30 ĐỀ CHUẨN SƯ PHẠM, GIẢI THÍCH ĐÚNG TRỌNG TÂM)
+# KHO DỮ LIỆU ĐỀ BÀI NGHỊ LUẬN XÃ HỘI (30 ĐỀ - CHUẨN TRẬT TỰ SƯ PHẠM)
 # ==============================================================================
 
 DE_BAI_CO_BAN = {
     "Đề 01: Sự cần thiết phải biết sống cống hiến": {
         "text": "Trong bài thơ Tiếng hát con tàu, Chế Lan Viên từng viết: Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn! Từ ý nghĩa câu thơ, em hãy viết bài văn nghị luận bàn về ý nghĩa của lối sống có trách nhiệm và biết cống hiến cho cộng đồng.",
         "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ.",
-        "explain_guide": "Giải thích từ khóa và ý nghĩa ngữ liệu.",
+        "explain_guide": "Thao tác giải thích theo đúng chuẩn: Giải thích VĐNL trước -> Giải thích câu nói/ngữ liệu -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Sống có trách nhiệm' là nhận thức đúng đắn về bổn phận của cá nhân đối với tập thể; 'cống hiến' là sự dấn thân đem tài năng, sức lực để đóng góp xây dựng những giá trị tốt đẹp cho cộng đồng.",
-            "- **Giải thích ý nghĩa ngữ liệu:** Hình ảnh thơ của Chế Lan Viên gợi nhắc sự biến đổi kỳ diệu từ không gian vô tri ('đất ở') thành không gian mang nặng nghĩa tình ('hóa tâm hồn') chính là nhờ vào sự gắn bó, vun đắp và cống hiến của con người.",
-            "- **Khái quát vấn đề:** Khẳng định lối sống có trách nhiệm và biết cống hiến cho cộng đồng."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Sống có trách nhiệm' là nhận thức đúng đắn về bổn phận của cá nhân đối với tập thể; 'cống hiến' là sự dấn thân đem tài năng, sức lực để đóng góp xây dựng những giá trị tốt đẹp cho cộng đồng.",
+            "- **Giải thích câu nói/ngữ liệu:** Hình ảnh thơ của Chế Lan Viên gợi nhắc sự biến đổi kỳ diệu từ không gian vô tri ('đất ở') thành không gian mang nặng nghĩa tình ('hóa tâm hồn') chính là nhờ vào sự gắn bó, vun đắp và cống hiến của con người.",
+            "- **Chốt lại VĐNL:** Từ đó, câu thơ khẳng định ý nghĩa cao đẹp và sự cần thiết của lối sống có trách nhiệm và biết cống hiến cho cộng đồng."
         ],
         "vdnl_ket_luan": "Ý nghĩa của lối sống có trách nhiệm và cống hiến cho cộng đồng.",
         "questions": [{
@@ -28,11 +28,11 @@ DE_BAI_CO_BAN = {
     "Đề 02: Trách nhiệm tiếp bước các thế hệ đi trước": {
         "text": "Viết bài văn nghị luận bàn về trách nhiệm của thế hệ trẻ trong việc tiếp bước các thế hệ đi trước để xây dựng và bảo vệ đất nước.",
         "vdnl_chuan": "Trách nhiệm, sứ mệnh lịch sử của thế hệ trẻ trong việc kế thừa truyền thống cha ông.",
-        "explain_guide": "Giải thích khái niệm tiếp bước truyền thống.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Tiếp bước' là hành động kế thừa, phát huy những thành quả, truyền thống tốt đẹp mà các thế hệ cha ông đã đổ xương máu gây dựng.",
-            "- **Giải thích nội dung vấn đề:** Tiếp bước không phải là sự sao chép máy móc quá khứ mà là sự tiếp nối mạch nguồn lòng yêu nước, tinh thần tự tôn dân tộc bằng tư duy và hành động phù hợp với thời đại mới.",
-            "- **Khái quát vấn đề:** Trách nhiệm của thế hệ trẻ trong việc tiếp bước các thế hệ đi trước."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tiếp bước' là hành động kế thừa, phát huy những thành quả, truyền thống tốt đẹp mà các thế hệ cha ông đã đổ xương máu gây dựng để xây dựng và bảo vệ đất nước.",
+            "- **Giải thích nội dung/bản chất:** Tiếp bước không phải là sự sao chép máy móc quá khứ mà là sự tiếp nối mạch nguồn lòng yêu nước, tinh thần tự tôn dân tộc bằng tư duy và hành động phù hợp với thời đại mới.",
+            "- **Chốt lại VĐNL:** Qua đó, làm nổi bật sứ mệnh lịch sử của thế hệ trẻ trong công cuộc xây dựng và bảo vệ Tổ quốc."
         ],
         "vdnl_ket_luan": "Sứ mệnh kế thừa và phát huy truyền thống cha ông.",
         "questions": [{
@@ -50,11 +50,11 @@ DE_BAI_CO_BAN = {
     "Đề 03: Trân trọng những giá trị bình dị": {
         "text": "Có ý kiến cho rằng: Hạnh phúc đôi khi không phải là những điều lớn lao, mà ẩn giấu trong những điều bình dị nhất của đời thường. Viết bài văn nghị luận bàn về ý nghĩa của việc trân trọng những giá trị bình dị.",
         "vdnl_chuan": "Ý nghĩa của việc biết trân trọng những điều giản dị để tìm thấy hạnh phúc đích thực.",
-        "explain_guide": "Giải thích ý kiến và các từ khóa.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ý kiến -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Giá trị bình dị' là những điều mộc mạc, gần gũi, diễn ra hằng ngày trong đời sống; 'trân trọng' là thái độ nâng niu, biết ơn và gìn giữ.",
-            "- **Giải thích ý nghĩa nhận định:** Ý kiến đặt ra mối quan hệ giữa hạnh phúc và sự giản dị: hạnh phúc đích thực không nằm ở ảo ảnh vinh quang xa vời mà neo đậu ở những khoảnh khắc đời thường nhất.",
-            "- **Khái quát vấn đề:** Ý nghĩa của việc trân trọng những giá trị bình dị."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Giá trị bình dị' là những điều mộc mạc, gần gũi, diễn ra hằng ngày trong đời sống; 'trân trọng' là thái độ nâng niu, biết ơn và gìn giữ để tìm thấy hạnh phúc.",
+            "- **Giải thích ý kiến:** Ý kiến đặt ra mối quan hệ giữa hạnh phúc và sự giản dị: hạnh phúc đích thực không nằm ở ảo ảnh vinh quang xa vời mà neo đậu ở những khoảnh khắc đời thường nhất.",
+            "- **Chốt vấn đề:** Từ đó, khẳng định ý nghĩa to lớn của việc biết trân trọng giá trị bình dị đối với sự bình an trong tâm hồn."
         ],
         "vdnl_ket_luan": "Ý nghĩa của việc trân trọng giá trị bình dị.",
         "questions": [{
@@ -72,11 +72,11 @@ DE_BAI_CO_BAN = {
     "Đề 04: Sức mạnh ý chí vượt qua nghịch cảnh": {
         "text": "Ngạn ngữ có câu: Lửa thử vàng, gian nan thử sức. Viết bài văn nghị luận bàn về sức mạnh của ý chí con người trong hành trình vượt qua nghịch cảnh.",
         "vdnl_chuan": "Vai trò quyết định của ý chí, nghị lực trong việc chiến thắng nghịch cảnh, vươn tới thành công.",
-        "explain_guide": "Giải thích ý nghĩa câu ngạn ngữ.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích câu ngạn ngữ -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích ý nghĩa câu ngạn ngữ:** 'Lửa thử vàng' là hình ảnh quá trình tôi luyện khắc nghiệt; 'gian nan thử sức' khẳng định khó khăn, thử thách chính là thước đo bản lĩnh con người.",
-            "- **Giải thích từ khóa:** 'Nghịch cảnh' là những hoàn cảnh bất như ý, trắc trở; 'ý chí' là sức mạnh tinh thần giúp con người không gục ngã.",
-            "- **Khái quát vấn đề:** Vai trò của ý chí trong hành trình vượt qua nghịch cảnh."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Nghịch cảnh' là những hoàn cảnh bất như ý, trắc trở; 'ý chí' là sức mạnh tinh thần giúp con người không gục ngã để vượt qua nghịch cảnh và vươn tới thành công.",
+            "- **Giải thích ý nghĩa câu ngạn ngữ:** 'Lửa thử vàng' là quá trình tôi luyện khắc nghiệt; 'gian nan thử sức' khẳng định khó khăn, thử thách chính là thước đo bản lĩnh con người.",
+            "- **Chốt vấn đề:** Khẳng định vai trò quyết định của ý chí, nghị lực trong hành trình vượt qua nghịch cảnh."
         ],
         "vdnl_ket_luan": "Giá trị to lớn của ý chí kiên cường.",
         "questions": [{
@@ -94,11 +94,11 @@ DE_BAI_CO_BAN = {
     "Đề 05: Sứ mệnh đánh thức tiềm lực bản thân": {
         "text": "Viết bài văn nghị luận bàn về sứ mệnh đánh thức tiềm lực của chính bản thân mỗi cá nhân trong thời đại mới.",
         "vdnl_chuan": "Trách nhiệm khai phá, phát huy tối đa tiềm năng ẩn giấu của bản thân.",
-        "explain_guide": "Giải thích khái niệm tiềm lực cá nhân.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích nội dung -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Tiềm lực' là những năng lực, phẩm chất quý giá nhưng còn ẩn giấu bên trong mỗi con người chưa được khai thác hết; 'đánh thức' là hành động khơi nguồn, kích hoạt.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tiềm lực' là những năng lực, phẩm chất quý giá nhưng còn ẩn giấu bên trong mỗi con người; 'đánh thức' là hành động khơi nguồn, kích hoạt để phát huy tối đa tiềm năng bản thân.",
             "- **Giải thích nội dung vấn đề:** Mỗi cá nhân sinh ra đều mang trong mình những giá trị độc bản, nhưng nếu thiếu đi sự dấn thân và ý chí khai phá, tiềm năng ấy sẽ bị chôn vùi.",
-            "- **Khái quát vấn đề:** Sứ mệnh đánh thức tiềm lực của bản thân."
+            "- **Chốt vấn đề:** Khẳng định sứ mệnh cấp thiết của việc đánh thức tiềm lực bản thân."
         ],
         "vdnl_ket_luan": "Tầm quan trọng của việc khai phá tiềm năng cá nhân.",
         "questions": [{
@@ -116,11 +116,11 @@ DE_BAI_CO_BAN = {
     "Đề 06: Ý nghĩa của sự thấu hiểu chính bản thân mình": {
         "text": "Càng đi sâu vào trái tim mình, thế giới càng trở nên dễ hiểu hơn (Mark Nepo). Viết bài văn nghị luận làm rõ ý nghĩa của sự thấu hiểu chính bản thân mình.",
         "vdnl_chuan": "Ý nghĩa và tầm quan trọng của việc thấu hiểu chính bản thân.",
-        "explain_guide": "Giải thích ý nghĩa nhận định.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ý kiến -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích ý nghĩa nhận định:** 'Đi sâu vào trái tim mình' là hành trình quay về nội tâm, tự phản tỉnh và thấu hiểu chính mình; 'thế giới dễ hiểu hơn' là khi hiểu mình, ta sẽ có cái nhìn bao dung, thấu suốt vạn vật.",
-            "- **Giải thích mối quan hệ:** Mọi mối quan hệ và nhận thức về thế giới bên ngoài đều bắt nguồn từ gốc rễ thế giới bên trong.",
-            "- **Khái quát vấn đề:** Ý nghĩa của sự thấu hiểu chính bản thân mình."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Thấu hiểu chính bản thân' là hành trình quay về nội tâm, tự phản tỉnh để nhận thức sâu sắc về giá trị và bản ngã của chính mình.",
+            "- **Giải thích ý nghĩa nhận định:** 'Đi sâu vào trái tim mình' là hành trình quay về nội tâm; 'thế giới dễ hiểu hơn' là khi hiểu mình, ta sẽ có cái nhìn bao dung, thấu suốt vạn vật.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa quyết định của sự thấu hiểu chính bản thân mình."
         ],
         "vdnl_ket_luan": "Ý nghĩa quyết định của việc thấu hiểu bản thân.",
         "questions": [{
@@ -138,11 +138,11 @@ DE_BAI_CO_BAN = {
     "Đề 07: Tác hại của thói quen trì hoãn": {
         "text": "Viết bài văn nghị luận chỉ ra những hệ lụy của thói quen trì hoãn đối với mỗi cá nhân trong xã hội hiện đại.",
         "vdnl_chuan": "Hệ lụy tiêu cực của thói quen trì hoãn đối với sự phát triển và thành công.",
-        "explain_guide": "Giải thích khái niệm trì hoãn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Trì hoãn' là hành vi cố ý lùi thời gian thực hiện công việc cần làm sang một thời điểm khác một cách vô lý.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Trì hoãn' là hành vi cố ý lùi thời gian thực hiện công việc cần làm sang một thời điểm khác một cách vô lý, gây ra những hệ lụy tiêu cực.",
             "- **Giải thích nội dung vấn đề:** Trì hoãn là 'kẻ cắp thời gian' thầm lặng, bào mòn ý chí và biến những dự định tốt đẹp thành ảo ảnh.",
-            "- **Khái quát vấn đề:** Tác hại của thói quen trì hoãn đối với con người."
+            "- **Chốt vấn đề:** Khẳng định tác hại và hệ lụy của thói quen trì hoãn đối với con người."
         ],
         "vdnl_ket_luan": "Yêu cầu cấp bách phải rèn luyện tác phong hành động quyết đoán.",
         "questions": [{
@@ -160,11 +160,11 @@ DE_BAI_CO_BAN = {
     "Đề 08: Nuôi dưỡng lòng biết ơn trong đời sống": {
         "text": "Viết bài văn nghị luận trình bày suy nghĩ về những điều cần làm để nuôi dưỡng lòng biết ơn trong cuộc sống hàng ngày.",
         "vdnl_chuan": "Phương pháp và hành động thiết thực để nuôi dưỡng, thực hành lòng biết ơn mỗi ngày.",
-        "explain_guide": "Giải thích lòng biết ơn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Lòng biết ơn' là sự ghi nhận, trân trọng và đền đáp những ân huệ, sự giúp đỡ hoặc những điều tốt đẹp mà mình nhận được.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Lòng biết ơn' là sự ghi nhận, trân trọng và đền đáp những ân huệ, sự giúp đỡ hoặc những điều tốt đẹp mà mình nhận được trong cuộc sống.",
             "- **Giải thích nội dung vấn đề:** Biết ơn không chỉ là cảm xúc nhất thời mà là đạo lý sống, là thước đo văn hóa nhân cách của con người.",
-            "- **Khái quát vấn đề:** Vấn đề nuôi dưỡng lòng biết ơn trong đời sống."
+            "- **Chốt vấn đề:** Khẳng định tầm quan trọng của việc nuôi dưỡng lòng biết ơn."
         ],
         "vdnl_ket_luan": "Tầm quan trọng của việc thực hành lòng biết ơn.",
         "questions": [{
@@ -182,11 +182,11 @@ DE_BAI_CO_BAN = {
     "Đề 09: Trách nhiệm sử dụng mạng xã hội văn minh": {
         "text": "Viết bài văn nghị luận bàn về trách nhiệm của mỗi người trong việc sử dụng mạng xã hội một cách văn minh.",
         "vdnl_chuan": "Trách nhiệm pháp lý, đạo đức và ý thức văn minh khi tham gia không gian mạng.",
-        "explain_guide": "Giải thích mạng xã hội và ứng xử văn minh.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Mạng xã hội' là không gian kết nối ảo nhưng có sức tác động thật; 'sử dụng văn minh' là ứng xử có chuẩn mực đạo đức, tuân thủ pháp luật và kiểm chứng thông tin.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Sử dụng mạng xã hội văn minh' là ứng xử có chuẩn mực đạo đức, tuân thủ pháp luật và kiểm chứng thông tin khi tham gia không gian mạng.",
             "- **Giải thích nội dung vấn đề:** Không gian mạng phản chiếu trực diện trình độ văn hóa và ý thức trách nhiệm của mỗi công dân thời số.",
-            "- **Khái quát vấn đề:** Trách nhiệm sử dụng mạng xã hội một cách văn minh."
+            "- **Chốt vấn đề:** Khẳng định trách nhiệm sử dụng mạng xã hội một cách văn minh."
         ],
         "vdnl_ket_luan": "Xây dựng môi trường mạng lành mạnh từ ý thức mỗi cá nhân.",
         "questions": [{
@@ -204,11 +204,11 @@ DE_BAI_CO_BAN = {
     "Đề 10: Nuôi dưỡng niềm đam mê đẹp đẽ": {
         "text": "Từ bài thơ Mùa hạ (Xuân Quỳnh), hãy viết bài văn nghị luận trình bày suy nghĩ về sự cần thiết phải nuôi dưỡng những niềm đam mê đẹp đẽ.",
         "vdnl_chuan": "Vai trò, ý nghĩa thiết yếu của việc nuôi dưỡng đam mê chân chính đối với tuổi trẻ.",
-        "explain_guide": "Giải thích đam mê qua thơ Xuân Quỳnh.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Đam mê đẹp đẽ' là khát khao hướng tới những giá trị chân - thiện - mỹ, phục vụ sự phát triển bản thân và cống hiến cho xã hội.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Niềm đam mê đẹp đẽ' là khát khao hướng tới những giá trị chân - thiện - mỹ, phục vụ sự phát triển bản thân và cống hiến cho xã hội.",
             "- **Giải thích ý nghĩa ngữ liệu:** Thơ Xuân Quỳnh khơi gợi sức sống sục sôi, mãnh liệt của tuổi trẻ; đam mê chính là ngọn lửa giữ cho tuổi trẻ không bị nguội lạnh.",
-            "- **Khái quát vấn đề:** Sự cần thiết phải nuôi dưỡng những niềm đam mê đẹp đẽ."
+            "- **Chốt vấn đề:** Khẳng định sự cần thiết phải nuôi dưỡng những niềm đam mê đẹp đẽ."
         ],
         "vdnl_ket_luan": "Sức mạnh của ngọn lửa đam mê.",
         "questions": [{
@@ -226,11 +226,11 @@ DE_BAI_CO_BAN = {
     "Đề 11: Sự cần thiết của tính kỉ luật": {
         "text": "Viết bài văn nghị luận trình bày suy nghĩ của em về sự cần thiết của tính kỉ luật trong cuộc sống mỗi con người.",
         "vdnl_chuan": "Vai trò quyết định của tính kỉ luật đối với sự thành công và hoàn thiện nhân cách.",
-        "explain_guide": "Giải thích kỉ luật.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Kỉ luật' là sự tự giác tuân thủ các quy tắc, chuẩn mực chung hoặc kế hoạch do chính mình đề ra để đạt được mục tiêu.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tính kỉ luật' là sự tự giác tuân thủ các quy tắc, chuẩn mực chung hoặc kế hoạch do chính mình đề ra để đạt được mục tiêu.",
             "- **Giải thích nội dung vấn đề:** Kỉ luật không phải là sự gò bó áp đặt mà là biểu hiện cao nhất của sự tự do đích thực và ý chí kiên định.",
-            "- **Khái quát vấn đề:** Sự cần thiết của tính kỉ luật trong cuộc sống."
+            "- **Chốt vấn đề:** Khẳng định sự cần thiết của tính kỉ luật trong cuộc sống."
         ],
         "vdnl_ket_luan": "Kỉ luật là cầu nối giữa mục tiêu và thành tựu.",
         "questions": [{
@@ -248,11 +248,11 @@ DE_BAI_CO_BAN = {
     "Đề 12: Dám bước ra khỏi vùng an toàn": {
         "text": "Viết bài văn nghị luận bàn về ý nghĩa của việc dám bước ra khỏi vùng an toàn để khám phá giới hạn bản thân.",
         "vdnl_chuan": "Ý nghĩa của lòng dũng cảm bứt phá giới hạn, từ bỏ sự an nhàn để trưởng thành.",
-        "explain_guide": "Giải thích vùng an toàn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Vùng an toàn' là không gian quen thuộc, nơi con người cảm thấy thoải mái, không phải đối mặt với rủi ro hay thử thách.",
-            "- **Giải thích nội dung vấn đề:** Sự an nhàn kéo dài là liều thuốc độc làm thui chột tiềm năng; chỉ khi bước ra ngoài vùng an toàn, con người mới thực sự bắt đầu lớn lên.",
-            "- **Khái quát vấn đề:** Ý nghĩa của việc dám bước ra khỏi vùng an toàn."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Bước ra khỏi vùng an toàn' là hành động dũng cảm từ bỏ không gian quen thuộc, không rủi ro để dấn thân vào thử thách.",
+            "- **Giải thích nội dung vấn đề:** Sự an nhàn kéo dài làm thui chột tiềm năng; chỉ khi bước ra ngoài vùng an toàn, con người mới thực sự bắt đầu lớn lên.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa của việc dám bước ra khỏi vùng an toàn."
         ],
         "vdnl_ket_luan": "Sự cần thiết vượt qua giới hạn an toàn.",
         "questions": [{
@@ -270,11 +270,11 @@ DE_BAI_CO_BAN = {
     "Đề 13: Thái độ sống tích cực trước nghịch cảnh": {
         "text": "Viết bài văn nghị luận bàn về vai trò của thái độ sống tích cực, lạc quan khi đối diện với những điều bất như ý.",
         "vdnl_chuan": "Sức mạnh chuyển hóa nghịch cảnh của thái độ sống tích cực.",
-        "explain_guide": "Giải thích điều bất như ý và lạc quan.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Điều bất như ý' là những nghịch cảnh, trắc trở đi ngược lại mong muốn; 'thái độ tích cực' là góc nhìn hướng sáng, kiên cường tìm giải pháp.",
-            "- **Giải thích nội dung vấn đề:** Hoàn cảnh khách quan chỉ chiếm 10%, còn 90% quyết định thuộc về cách ta phản ứng với nó.",
-            "- **Khái quát vấn đề:** Vai trò của thái độ sống tích cực trước nghịch cảnh."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Thái độ sống tích cực' là góc nhìn hướng sáng, kiên cường tìm giải pháp khi đối diện với những điều bất như ý, nghịch cảnh.",
+            "- **Giải thích nội dung vấn đề:** Hoàn cảnh khách quan chỉ chiếm 10%, còn 90% quyết định thuộc về cách ta phản ứng tích cực với nó.",
+            "- **Chốt vấn đề:** Khẳng định vai trò của thái độ sống tích cực trước nghịch cảnh."
         ],
         "vdnl_ket_luan": "Lạc quan là chìa khóa vàng mở lối thoát.",
         "questions": [{
@@ -292,11 +292,11 @@ DE_BAI_CO_BAN = {
     "Đề 14: Hành động thiết thực để sống xanh": {
         "text": "Viết bài văn nghị luận trình bày những hành động thiết thực để sống xanh hơn mỗi ngày.",
         "vdnl_chuan": "Trách nhiệm bảo vệ môi trường và lối sống xanh bền vững của thế hệ trẻ.",
-        "explain_guide": "Giải thích sống xanh.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Sống xanh' là lối sống thân thiện với môi trường, tối ưu hóa việc tiết kiệm tài nguyên và giảm thiểu rác thải phát thải.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Sống xanh' là lối sống thân thiện với môi trường, tối ưu hóa việc tiết kiệm tài nguyên và giảm thiểu rác thải phát thải.",
             "- **Giải thích nội dung vấn đề:** Khủng hoảng sinh thái toàn cầu đặt ra yêu cầu cấp bách: bảo vệ môi trường không còn là khẩu hiệu mà là nghĩa vụ đạo đức sinh tồn.",
-            "- **Khái quát vấn đề:** Hành động thiết thực để sống xanh."
+            "- **Chốt vấn đề:** Khẳng định sự cần thiết của hành động thiết thực để sống xanh."
         ],
         "vdnl_ket_luan": "Trách nhiệm sinh thái của mỗi cá nhân.",
         "questions": [{
@@ -314,11 +314,11 @@ DE_BAI_CO_BAN = {
     "Đề 15: Sức mạnh của lòng trắc ẩn": {
         "text": "Viết bài văn nghị luận phân tích sức mạnh của lòng trắc ẩn đối với cuộc sống của mỗi con người.",
         "vdnl_chuan": "Giá trị của lòng trắc ẩn trong việc kết nối con người và sưởi ấm xã hội.",
-        "explain_guide": "Giải thích lòng trắc ẩn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Phân tích bản chất -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích từ khóa:** 'Lòng trắc ẩn' là sự đồng cảm sâu sắc trước nỗi đau, bất hạnh của đồng loại và mong muốn hành động để xoa dịu nỗi đau ấy.",
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Lòng trắc ẩn' là sự đồng cảm sâu sắc trước nỗi đau, bất hạnh của đồng loại và mong muốn hành động để xoa dịu nỗi đau ấy.",
             "- **Giải thích nội dung vấn đề:** Lòng trắc ẩn chính là phần người thiêng liêng nhất giúp con người vượt qua ranh giới của sự ích kỷ sinh học.",
-            "- **Khái quát vấn đề:** Sức mạnh của lòng trắc ẩn đối với con người."
+            "- **Chốt vấn đề:** Khẳng định sức mạnh to lớn của lòng trắc ẩn đối với con người."
         ],
         "vdnl_ket_luan": "Sức mạnh cảm hóa và lan tỏa yêu thương.",
         "questions": [{
@@ -339,11 +339,11 @@ DE_BAI_NANG_CAO = {
     "Đề 16: Hành trình trở về với chính mình": {
         "text": "Trong cuốn Khai vấn trong từng hơi thở, Ruby Nguyen viết: Kì quan lớn nhất nằm ngay bên trong chính mình. Viết bài văn nghị luận bàn về chủ đề: Trở về với chính mình.",
         "vdnl_chuan": "Ý nghĩa của hành trình quay về thấu hiểu và trân trọng giá trị nội tại.",
-        "explain_guide": "Giải thích kì quan bên trong.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích nhận định -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích ý nghĩa nhận định:** 'Kì quan bên trong' là vẻ đẹp tâm hồn, kho tàng tiềm năng vô tận và giá trị độc bản bên trong mỗi con người.",
-            "- **Giải thích nội dung vấn đề:** 'Trở về với chính mình' là hành trình quay kính chiếu hậu vào nội tâm, buông bỏ những áp đặt ngoại biên để đối thoại chân thành với bản ngã.",
-            "- **Khái quát vấn đề:** Ý nghĩa của hành trình trở về với chính mình."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Trở về với chính mình' là hành trình quay kính chiếu hậu vào nội tâm, buông bỏ những áp đặt ngoại biên để đối thoại chân thành với bản ngã.",
+            "- **Giải thích ý nghĩa nhận định:** 'Kì quan lớn nhất nằm ngay bên trong chính mình' khẳng định vẻ đẹp tâm hồn và kho tàng tiềm năng vô tận bên trong mỗi con người.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa của hành trình trở về với chính mình."
         ],
         "vdnl_ket_luan": "Sự cần thiết trở về với chính mình tìm bình yên.",
         "questions": [{
@@ -361,11 +361,11 @@ DE_BAI_NANG_CAO = {
     "Đề 17: Lựa chọn thái độ trước vật chất (Seneca)": {
         "text": "Seneca viết: Một người đáng ngưỡng mộ có thể dùng đồ đất nung như đồ vàng, nhưng cũng vĩ đại nếu dùng đồ vàng như đất nung. Viết bài văn trình bày suy nghĩ.",
         "vdnl_chuan": "Giá trị nội tại của con người quyết định ý nghĩa vật chất.",
-        "explain_guide": "Giải thích chủ nghĩa Khắc kỉ.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích triết lý -> Chốt lại VĐNL.",
         "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Lựa chọn thái độ sống đúng đắn, làm chủ thế giới vật chất thay vì để vật chất chi phối phẩm giá con người.",
             "- **Giải thích triết lý:** Dùng 'đồ đất nung như đồ vàng' là bản lĩnh sống thanh bần mà cao quý; dùng 'đồ vàng như đất nung' là sự tự chủ, không bị xiềng xích bởi xa hoa.",
-            "- **Giải thích bản chất:** Vật chất vốn vô tri, chính thái độ và phẩm giá của con người mới định đoạt giá trị của nó.",
-            "- **Khái quát vấn đề:** Lựa chọn thái độ sống trước vật chất."
+            "- **Chốt vấn đề:** Khẳng định giá trị nội tại quyết định thái độ trước vật chất."
         ],
         "vdnl_ket_luan": "Bản lĩnh làm chủ vật chất.",
         "questions": [{
@@ -383,11 +383,11 @@ DE_BAI_NANG_CAO = {
     "Đề 18: Tìm thấy hạnh phúc trong giờ phút tăm tối": {
         "text": "Hiệu trưởng Dumbledore phát biểu: Mọi người vẫn có thể tìm thấy hạnh phúc, ngay trong giờ phút tăm tối nhất, chỉ cần họ nhớ bật đèn lên (J.K. Rowling).",
         "vdnl_chuan": "Khả năng tự tạo hạnh phúc và duy trì lạc quan trong nghịch cảnh.",
-        "explain_guide": "Giải thích ẩn dụ tăm tối và bật đèn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ẩn dụ -> Chốt lại VĐNL.",
         "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Khả năng tự tạo hạnh phúc và duy trì thái độ lạc quan, kiên cường ngay trong những nghịch cảnh tối tăm nhất của cuộc đời.",
             "- **Giải thích ẩn dụ:** 'Giờ phút tăm tối nhất' tượng trưng cho nghịch cảnh, tuyệt vọng; 'bật đèn lên' là hành động tự thắp sáng niềm tin và hy vọng.",
-            "- **Giải thích nội dung vấn đề:** Hạnh phúc không phải là món quà được ban phát mà là khả năng tự chủ tinh thần của con người trước hoàn cảnh.",
-            "- **Khái quát vấn đề:** Khả năng tìm thấy hạnh phúc trong giờ phút tăm tối."
+            "- **Chốt vấn đề:** Khẳng định khả năng tìm thấy hạnh phúc trong giờ phút tăm tối."
         ],
         "vdnl_ket_luan": "Sức mạnh thái độ sống tích cực.",
         "questions": [{
@@ -405,11 +405,11 @@ DE_BAI_NANG_CAO = {
     "Đề 19: Tôi là người, nghĩa là một kẻ chiến đấu": {
         "text": "Goethe viết: Tôi là người, nghĩa là một kẻ chiến đấu. Viết bài văn trình bày suy nghĩ.",
         "vdnl_chuan": "Bản chất cuộc sống con người là chuỗi chiến đấu vươn lên.",
-        "explain_guide": "Giải thích danh ngôn của Goethe.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích danh ngôn -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích danh ngôn:** Định nghĩa bản chất con người ('tôi là người') đồng nhất với hành động ('một kẻ chiến đấu'); sống là không ngừng tranh đấu, vượt qua giới hạn.",
-            "- **Giải thích nội dung vấn đề:** Cuộc đời không phải chốn bình yên hưởng thụ mà là trường tranh đấu giữa ánh sáng và bóng tối, giữa tiến bộ và trì trệ.",
-            "- **Khái quát vấn đề:** Bản chất cuộc sống con người là chuỗi chiến đấu vươn lên."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Lẽ sống dấn thân, tinh thần không ngừng tranh đấu, vượt qua mọi giới hạn để khẳng định phẩm giá con người.",
+            "- **Giải thích danh ngôn:** Định nghĩa bản chất con người ('tôi là người') đồng nhất với hành động ('một kẻ chiến đấu'); sống là không ngừng vươn lên.",
+            "- **Chốt vấn đề:** Khẳng định bản chất cuộc sống là chuỗi chiến đấu vươn lên."
         ],
         "vdnl_ket_luan": "Sức mạnh ý chí chiến đấu khẳng định phẩm giá.",
         "questions": [{
@@ -427,11 +427,11 @@ DE_BAI_NANG_CAO = {
     "Đề 20: Sự tiên phong và cú nhảy Fosbury": {
         "text": "Dick Fosbury thay đổi cách nhảy cao bằng cách quay lưng, lập kỉ lục thế giới bằng cách nghĩ ngược lại với mọi người.",
         "vdnl_chuan": "Giá trị của tư duy đột phá, dám nghĩ ngược lại để mở ra giới hạn mới.",
-        "explain_guide": "Giải thích hiện tượng nhảy cao.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích hiện tượng -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích hiện tượng:** Cú nhảy Fosbury quay lưng thay vì úp bụng truyền thống là minh chứng đỉnh cao cho tư duy 'nghĩ ngược lại' (think differently).",
-            "- **Giải thích nội dung vấn đề:** Sự tiên phong đòi hỏi lòng dũng cảm phá vỡ những quy chuẩn xơ cứng đã ngự trị lâu đời để tìm ra chân trời mới.",
-            "- **Khái quát vấn đề:** Giá trị của tư duy đột phá và sự tiên phong."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tư duy đột phá' là bản lĩnh dám nghĩ ngược lại với số đông, phá vỡ lối mòn để mở ra những giới hạn mới.",
+            "- **Giải thích hiện tượng:** Cú nhảy Fosbury quay lưng thay vì úp bụng truyền thống là minh chứng đỉnh cao cho tư duy tiên phong 'nghĩ khác' (think differently).",
+            "- **Chốt vấn đề:** Khẳng định giá trị của tư duy đột phá và sự tiên phong."
         ],
         "vdnl_ket_luan": "Sức mạnh tư duy sáng tạo.",
         "questions": [{
@@ -449,11 +449,11 @@ DE_BAI_NANG_CAO = {
     "Đề 21: Vết nứt là nơi ánh sáng rọi vào (Kintsugi)": {
         "text": "Kintsugi là nghệ thuật sửa đồ gốm vỡ bằng bột vàng. Viết bài văn với nhan đề: Vết nứt là nơi ánh sáng rọi vào.",
         "vdnl_chuan": "Thái độ chấp nhận khiếm khuyết, tổn thương để biến thành động lực.",
-        "explain_guide": "Giải thích nghệ thuật Kintsugi.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích biểu tượng -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích biểu tượng:** 'Vết nứt' là những tổn thương, vấp ngã, khiếm khuyết; 'ánh sáng rọi vào' là sự thức tỉnh, chữa lành và vẻ đẹp tỏa ra từ sự kiên cường.",
-            "- **Giải thích nội dung vấn đề:** Nghệ thuật Kintsugi dạy ta rằng cái đẹp không đến từ sự hoàn hảo không tì vết mà đến từ cách ta hàn gắn những đổ vỡ.",
-            "- **Khái quát vấn đề:** Thái độ chấp nhận khiếm khuyết và tổn thương."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Thái độ dũng cảm chấp nhận những khiếm khuyết, tổn thương trong cuộc đời để biến chúng thành động lực vươn lên.",
+            "- **Giải thích biểu tượng:** Nghệ thuật Kintsugi dùng bột vàng hàn gắn đồ gốm vỡ biểu tượng cho việc biến vết thương thành vẻ đẹp độc bản.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa của thái độ đối diện với tổn thương."
         ],
         "vdnl_ket_luan": "Sức mạnh đối diện tổn thương.",
         "questions": [{
@@ -471,11 +471,11 @@ DE_BAI_NANG_CAO = {
     "Đề 22: Lựa chọn làm núi hay làm sông": {
         "text": "Lâm An viết: 'Có người chọn làm núi kiên định, có người chọn làm sông uốn mình.' Em chọn làm núi hay làm sông?",
         "vdnl_chuan": "Bản lĩnh kiên định bảo vệ nguyên tắc hay linh hoạt thích ứng.",
-        "explain_guide": "Giải thích hình ảnh núi và sông.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích hình tượng -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích hình tượng:** 'Núi' biểu trưng cho sự sừng sững, kiên định, bất biến trước phong ba; 'sông' biểu trưng cho sự uyển chuyển, linh hoạt, uốn mình vượt qua chướng ngại.",
-            "- **Giải thích nội dung vấn đề:** Núi và sông là hai mặt biện chứng của nhân cách: nguyên tắc vững vàng kết hợp với phương pháp linh hoạt.",
-            "- **Khái quát vấn đề:** Lựa chọn giữa kiên định nguyên tắc và linh hoạt thích ứng."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Sự lựa chọn giữa bản lĩnh kiên định bảo vệ nguyên tắc sống và sự uyển chuyển, linh hoạt thích ứng trước hoàn cảnh.",
+            "- **Giải thích hình tượng:** 'Núi' biểu trưng cho sự kiên định, bất biến; 'sông' biểu trưng cho sự uyển chuyển, linh hoạt vượt qua chướng ngại.",
+            "- **Chốt vấn đề:** Khẳng định sự lựa chọn giữa kiên định nguyên tắc và linh hoạt thích ứng."
         ],
         "vdnl_ket_luan": "Sự kết hợp biện chứng kiên định và linh hoạt.",
         "questions": [{
@@ -493,11 +493,11 @@ DE_BAI_NANG_CAO = {
     "Đề 23: Dọn sạch cỏ dại trong tâm hồn": {
         "text": "Minh sư dạy diệt cỏ dại không phải đốt mà hãy gieo hạt giống tốt, cỏ dại tự nhường đất. Suy nghĩ về bài học.",
         "vdnl_chuan": "Phương pháp triệt tiêu cái xấu: Chủ động gieo mầm và nuôi dưỡng cái thiện.",
-        "explain_guide": "Giải thích ẩn dụ cỏ dại và hạt giống.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngụ ngôn -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích ngụ ngôn:** 'Cỏ dại' là thói hư tật xấu, tư tưởng tiêu cực; 'hạt giống tốt' là phẩm chất cao đẹp; thay vì đối đầu bạo lực, hãy lấp đầy tâm hồn bằng ánh sáng thiện lương.",
-            "- **Giải thích nội dung vấn đề:** Tâm hồn con người giống mảnh đất màu mỡ, bỏ trống cái thiện thì cái ác tự khắc mọc lên.",
-            "- **Khái quát vấn đề:** Phương pháp triệt tiêu cái xấu bằng cách nuôi dưỡng cái thiện."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Phương pháp triệt tiêu cái xấu, thói hư tật xấu trong tâm hồn bằng cách chủ động nuôi dưỡng và bồi đắp những phẩm chất tốt đẹp.",
+            "- **Giải thích ngụ ngôn:** 'Cỏ dại' là thói xấu, tư tưởng tiêu cực; 'hạt giống tốt' là phẩm chất cao đẹp; thay vì đối đầu bạo lực, hãy lấp đầy tâm hồn bằng ánh sáng thiện lương.",
+            "- **Chốt vấn đề:** Khẳng định phương pháp nuôi dưỡng cái thiện để đẩy lùi cái ác."
         ],
         "vdnl_ket_luan": "Sức mạnh nuôi dưỡng cái thiện đẩy lùi cái ác.",
         "questions": [{
@@ -515,11 +515,11 @@ DE_BAI_NANG_CAO = {
     "Đề 24: Lòng tốt đích thực và sự trao đi": {
         "text": "Viktor Frankl viết: 'Sức mạnh thực sự không nằm ở những gì ta chiếm lấy mà ở những gì ta dám trao đi.'",
         "vdnl_chuan": "Giá trị của hy sinh, lòng vị tha và sẻ chia.",
-        "explain_guide": "Giải thích nhận định của Viktor Frankl.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích nhận định -> Chốt lại VĐNL.",
         "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Giá trị cao đẹp của lòng vị tha, sự hy sinh và sẻ chia tình yêu thương để kiến tạo những giá trị đích thực trong cuộc sống.",
             "- **Giải thích nhận định:** 'Chiếm lấy' là tham vọng thu vén vật chất cho riêng mình; 'trao đi' là sự sẻ chia tình yêu thương, giá trị tốt đẹp cho đời.",
-            "- **Giải thích nội dung vấn đề:** Thước đo quyền năng và bản lĩnh thực sự của con người không phải ở số lượng của cải sở hữu mà ở độ lượng của sự dâng hiến.",
-            "- **Khái quát vấn đề:** Giá trị của lòng vị tha và sự trao đi."
+            "- **Chốt vấn đề:** Khẳng định giá trị của lòng vị tha và sự trao đi."
         ],
         "vdnl_ket_luan": "Tầm quan trọng của lòng tốt kiến tạo xã hội.",
         "questions": [{
@@ -537,11 +537,11 @@ DE_BAI_NANG_CAO = {
     "Đề 25: Tinh thần tự chịu trách nhiệm (Máy soát vé hỏng)": {
         "text": "Cậu bé Andrew qua máy soát vé hỏng bị phạt, cãi do máy hỏng. Người soát vé đáp cháu cũng có trách nhiệm do lơ đãng.",
         "vdnl_chuan": "Vai trò tính tự giác, cẩn trọng và tinh thần chịu trách nhiệm cá nhân.",
-        "explain_guide": "Giải thích câu chuyện.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích câu chuyện -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích tình huống:** Cậu bé đổ lỗi cho máy hỏng ('lỗi khách quan'), còn người soát vé chỉ ra lỗi thiếu quan sát ('lỗi chủ quan'); câu chuyện ngụ ngôn về văn hóa nhận trách nhiệm.",
-            "- **Giải thích nội dung vấn đề:** Con người thường có xu hướng tìm lý do ngoại cảnh để ngụy biện cho sự cẩu thả của bản thân thay vì đối mặt thừa nhận.",
-            "- **Khái quát vấn đề:** Vai trò của tinh thần tự chịu trách nhiệm cá nhân."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Tinh thần tự giác, cẩn trọng và trách nhiệm cá nhân đối với mọi hành vi, sự việc diễn ra xung quanh mình.",
+            "- **Giải thích câu chuyện:** Cậu bé đổ lỗi cho máy hỏng ('lỗi khách quan'), còn người soát vé chỉ ra lỗi thiếu quan sát ('lỗi chủ quan'); câu chuyện ngụ ngôn về văn hóa nhận trách nhiệm.",
+            "- **Chốt vấn đề:** Khẳng định vai trò của tinh thần tự chịu trách nhiệm cá nhân."
         ],
         "vdnl_ket_luan": "Xây dựng văn hóa chịu trách nhiệm, từ bỏ đổ lỗi.",
         "questions": [{
@@ -559,11 +559,11 @@ DE_BAI_NANG_CAO = {
     "Đề 26: Khi nước tĩnh lặng, ta mới thấy rõ đáy": {
         "text": "Thích Nhất Hạnh: 'Khi nước tĩnh lặng, ta mới thấy rõ đáy. Khi tâm an nhiên, ta mới hiểu thấu chính mình'.",
         "vdnl_chuan": "Giá trị sự tĩnh tại tâm hồn để thấu hiểu bản thân.",
-        "explain_guide": "Giải thích hình ảnh nước tĩnh.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích câu nói -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải thích hình tượng:** 'Nước đục' là tâm trí hỗn loạn bởi vì sân si, danh lợi; 'nước tĩnh lặng' là tâm hồn an nhiên, tĩnh thức.",
-            "- **Giải thích ý nghĩa câu nói:** Chỉ khi dẹp bỏ những vọng tưởng xô bồ bên ngoài, con người mới có đủ tuệ giác để soi thấu bản ngã.",
-            "- **Khái quát vấn đề:** Giá trị của sự tĩnh tại tâm hồn để thấu hiểu bản thân."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Giá trị của sự tĩnh tại, an nhiên trong tâm hồn giúp con người tự thấu hiểu và làm chủ sâu sắc bản ngã.",
+            "- **Giải thích câu nói:** 'Nước đục' là tâm trí hỗn loạn vì sân si; 'nước tĩnh lặng' là tâm hồn an nhiên, tĩnh thức giúp nhìn thấu bản ngã bên trong.",
+            "- **Chốt vấn đề:** Khẳng định giá trị của sự tĩnh tại tâm hồn để thấu hiểu bản thân."
         ],
         "vdnl_ket_luan": "Ý nghĩa giữ gìn sự tĩnh lặng tâm hồn.",
         "questions": [{
@@ -581,11 +581,11 @@ DE_BAI_NANG_CAO = {
     "Đề 27: Sức mạnh niềm tin nội tại (Thanh kiếm vô hình)": {
         "text": "Câu chuyện kiếm khách trao thanh kiếm vải đen không lưỡi, học trò chiến thắng nhờ niềm tin và gục ngã khi biết sự thật.",
         "vdnl_chuan": "Sức mạnh tối thượng của niềm tin vào bản thân và nội tại.",
-        "explain_guide": "Giải mã câu chuyện ngụ ngôn.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngụ ngôn -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải mã ngụ ngôn:** Thanh kiếm vải không có sức sát thương thực tế nhưng chiến thắng nhờ 'niềm tin tuyệt đối' của người kiếm khách vào nội lực bản thân.",
-            "- **Giải thích nội dung vấn đề:** Vũ khí mạnh nhất của con người không nằm ở ngoại vật bên ngoài mà nằm ở sức mạnh tâm trí bên trong.",
-            "- **Khái quát vấn đề:** Sức mạnh tối thượng của niềm tin vào bản thân."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Sức mạnh tối thượng của niềm tin vào nội lực và bản lĩnh tự thân của mỗi con người.",
+            "- **Giải mã ngụ ngôn:** Thanh kiếm vải không có sát thương nhưng giúp học trò chiến thắng nhờ 'niềm tin tuyệt đối' vào nội lực bản thân.",
+            "- **Chốt vấn đề:** Khẳng định sức mạnh tối thượng của niềm tin vào bản thân."
         ],
         "vdnl_ket_luan": "Niềm tin nội tại là bệ phóng quyết định.",
         "questions": [{
@@ -603,11 +603,11 @@ DE_BAI_NANG_CAO = {
     "Đề 28: Viên thuốc đỏ và viên thuốc xanh (Đối diện sự thật)": {
         "text": "Trong phim Ma trận, Neo chọn viên thuốc đỏ để đối diện sự thật phũ phàng thay vì viên thuốc xanh ảo giác êm đềm.",
         "vdnl_chuan": "Lẽ sống dũng cảm đối mặt sự thật phũ phàng thay vì trốn chạy ảo giác.",
-        "explain_guide": "Giải mã biểu tượng hai viên thuốc.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích biểu tượng -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải mã biểu tượng:** 'Viên thuốc xanh' là sự u mê, sống trong ảo giác êm đềm; 'viên thuốc đỏ' là sự thức tỉnh, dũng cảm đối diện thực tại khốc liệt.",
-            "- **Giải thích nội dung vấn đề:** Sự thật dẫu gai góc, phũ phàng vẫn là nền tảng duy nhất giúp con người giành lại quyền tự chủ cuộc đời.",
-            "- **Khái quát vấn đề:** Lẽ sống dũng cảm đối mặt sự thật."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Lẽ sống dũng cảm đối mặt với thực tại khốc liệt, phũ phàng thay vì trốn chạy vào những ảo giác êm đềm, giả tạo.",
+            "- **Giải thích biểu tượng:** 'Viên thuốc xanh' là sự u mê, sống trong ảo giác; 'viên thuốc đỏ' là sự thức tỉnh, dũng cảm đương đầu thực tế.",
+            "- **Chốt vấn đề:** Khẳng định lẽ sống dũng cảm đối mặt sự thật."
         ],
         "vdnl_ket_luan": "Sức mạnh bản lĩnh dám đối mặt sự thật.",
         "questions": [{
@@ -625,11 +625,11 @@ DE_BAI_NANG_CAO = {
     "Đề 29: Mục đích sống: Giỏi nhất hay phiên bản tốt nhất?": {
         "text": "Oprah Winfrey: Mục đích là trở thành phiên bản tốt nhất. Robin Sharma: Đạt tới vị trí cao nhất. Ý nghĩa cuộc sống là gì?",
         "vdnl_chuan": "Định nghĩa ý nghĩa cuộc sống: Vượt lên chính mình, hoàn thiện phiên bản tốt đẹp.",
-        "explain_guide": "Giải thích hai quan điểm sống.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích quan điểm -> Chốt lại VĐNL.",
         "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Hành trình vươn lên hoàn thiện bản thân, vượt qua chính mình thay vì áp lực ganh đua vị trí dẫn đầu.",
             "- **Giải thích quan điểm:** Robin Sharma đề cao khát vọng đỉnh cao ('giỏi nhất', dẫn đầu); Oprah Winfrey đề cao chiều sâu nội tại ('phiên bản tốt nhất', hoàn thiện bản ngã).",
-            "- **Giải thích nội dung vấn đề:** Đua tranh để đứng số một dễ làm con người kiệt sức; vươn lên thành phiên bản tốt hơn của chính mình mới mang lại sự bình an bền vững.",
-            "- **Khái quát vấn đề:** Ý nghĩa cuộc sống nằm ở hành trình vượt lên chính mình."
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa cuộc sống nằm ở việc hoàn thiện phiên bản tốt nhất của chính mình."
         ],
         "vdnl_ket_luan": "Ý nghĩa cuộc sống nằm ở hành trình hoàn thiện bản ngã.",
         "questions": [{
@@ -647,11 +647,11 @@ DE_BAI_NANG_CAO = {
     "Đề 30: Sống mạo hiểm bứt phá ra đường biên": {
         "text": "Trần Ngọc Hiếu viết: 'Tư duy mạo hiểm xê dịch ra đường biên... từ đường biên ấy sẽ thấy có những đường bay.' Viết bài văn trình bày suy nghĩ.",
         "vdnl_chuan": "Khát vọng vượt giới hạn an toàn, dũng cảm tiến ra đường biên trí tuệ để tạo đột phá.",
-        "explain_guide": "Giải mã ẩn dụ đường biên.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ẩn dụ -> Chốt lại VĐNL.",
         "explain_items": [
-            "- **Giải mã ẩn dụ:** 'Trung tâm' là vùng an toàn, lối mòn quen thuộc; 'đường biên' là ranh giới giữa cái cũ và cái mới, nơi chứa đựng rủi ro và tiềm năng cách mạng; 'đường bay' là tầm cao sáng tạo.",
-            "- **Giải thích nội dung vấn đề:** Sáng tạo thực sự không bao giờ nằm ở vùng an toàn mà luôn đòi hỏi sự dấn thân mạo hiểm ra đường biên.",
-            "- **Khái quát vấn đề:** Khát vọng vượt giới hạn an toàn để tạo đột phá."
+            "- **Giải thích vấn đề nghị luận (VĐNL):** Khát vọng vượt qua giới hạn an toàn, dũng cảm dấn thân vào những vùng đất mới để tạo ra sự đột phá sáng tạo.",
+            "- **Giải thích ẩn dụ:** 'Trung tâm' là vùng an toàn, lối mòn quen thuộc; 'đường biên' là ranh giới giữa cái cũ và cái mới; 'đường bay' là tầm cao sáng tạo.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa của tư duy mạo hiểm bứt phá ra đường biên."
         ],
         "vdnl_ket_luan": "Sức mạnh tư duy dấn thân, mạo hiểm bứt phá giới hạn.",
         "questions": [{
