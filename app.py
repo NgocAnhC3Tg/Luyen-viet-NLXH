@@ -48,35 +48,43 @@ if "rubric_evaluation" not in st.session_state: st.session_state["rubric_evaluat
 if "eval_vdnl_text" not in st.session_state: st.session_state["eval_vdnl_text"] = ""
 
 # ==============================================================================
-# 3. ĐỘNG CƠ AI THỰC CHẤT VÀ KHẮT KHE
+# 3. ĐỘNG CƠ AI AN TOÀN & TỰ ĐỘNG KHỚP MODEL
 # ==============================================================================
-def call_gemini_api(prompt_text, image_obj=None, max_tokens=2000):
+def call_gemini_api(prompt_text, image_obj=None):
     api_key = get_api_key()
     if not api_key: return None
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        contents = [prompt_text]
-        if image_obj: contents.append(image_obj)
-        response = model.generate_content(contents)
-        return response.text
+        # Thử lần lượt các tên model chuẩn để tránh lỗi 404
+        models_to_try = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+        last_err = None
+        for m_name in models_to_try:
+            try:
+                model = genai.GenerativeModel(m_name)
+                contents = [prompt_text]
+                if image_obj: contents.append(image_obj)
+                response = model.generate_content(contents)
+                if response and response.text:
+                    return response.text
+            except Exception as ex:
+                last_err = ex
+                continue
+        return f"⚠️ Lỗi kết nối AI: {str(last_err)}"
     except Exception as e:
-        return f"⚠️ Lỗi kết nối AI: {str(e)}"
+        return f"⚠️ Lỗi cấu hình AI: {str(e)}"
 
 def generate_custom_outline(topic_text, student_guess):
-    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn. Phân tích đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (chỉ xuất JSON, không text thừa).
+    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn. Phân tích đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (chỉ xuất JSON, không markdown).
 Đề bài: "{topic_text}"
 Dự đoán của học sinh: "{student_guess}"
-
-YÊU CẦU NGHIÊM NGẶT: Đi thẳng vào nội dung cốt lõi của đề này. TUYỆT ĐỐI KHÔNG dùng các câu văn mẫu chung chung như "Cắt nghĩa từ khóa", "Rút ra thông điệp". Phải trích xuất và chỉ rõ từ khóa đó là gì, biểu hiện cụ thể ra sao.
 
 Cấu trúc JSON BẮT BUỘC:
 {{
   "text": "{topic_text}",
   "vdnl_chuan": "[Xác định trực diện vấn đề cốt lõi]",
   "explain_items": [
-    "- Giải thích cụ thể khái niệm [A] trong đề nghĩa là...",
-    "- Giải thích ý nghĩa của hình ảnh/nhận định [B]..."
+    "- Giải thích cụ thể khái niệm trong đề...",
+    "- Giải thích ý nghĩa thông điệp..."
   ],
   "vdnl_ket_luan": "Vấn đề trên muốn nhấn mạnh điều gì...",
   "questions": [
@@ -87,20 +95,20 @@ Cấu trúc JSON BẮT BUỘC:
   ],
   "evidence": [
     {{
-      "ten": "Tên một nhân vật/sự kiện CÓ THẬT và RẤT NỔI TIẾNG",
-      "chi_tiet": "Mô tả sắc bén hành động của họ liên quan mật thiết đến đề",
-      "y_nghia": "Hành động đó chứng minh điều gì cho luận điểm",
-      "nguon": "Thực tiễn đời sống/Lịch sử"
+      "ten": "Tên nhân vật/sự kiện CÓ THẬT",
+      "chi_tiet": "Mô tả sắc bén hành động của họ liên quan đến đề",
+      "y_nghia": "Hành động đó chứng minh điều gì",
+      "nguon": "Thực tiễn đời sống"
     }}
   ],
   "counter": [
-    "- Lên án cụ thể hạng người nào trong xã hội hiện nay?...",
+    "- Lên án cụ thể biểu hiện trái ngược...",
     "- Bài học lật lại vấn đề để tránh hiểu cực đoan..."
   ],
   "dani_chi_tiet": {{"mb": "...", "gt": "...", "bl": "...", "dc": "...", "pb": "...", "kb": "..."}}
 }}"""
     res = call_gemini_api(prompt)
-    if res:
+    if res and not res.startswith("⚠️"):
         try:
             match = re.search(r'\{.*\}', res, re.DOTALL)
             if match: return json.loads(match.group(0))
@@ -109,44 +117,41 @@ Cấu trúc JSON BẮT BUỘC:
     
     return {
         "text": topic_text, "vdnl_chuan": student_guess if student_guess else "Chưa xác định",
-        "explain_items": ["⚠️ Lỗi: Không thể tải AI động do chưa cấu hình API Key. Vui lòng nhập API Key để tạo dàn ý thực chất."],
-        "vdnl_ket_luan": "Vui lòng nhập API Key.", "questions": [], "evidence": [], "counter": [], "dani_chi_tiet": {}
+        "explain_items": ["⚠️ Vui lòng đảm bảo đã nhập đúng Gemini API Key ở thanh bên trái để AI tự động phân tích đề."],
+        "vdnl_ket_luan": "Chưa có dữ liệu.", "questions": [], "evidence": [], "counter": [], "dani_chi_tiet": {}
     }
 
 def ai_advisor_response(de_text, vdnl_chuan, user_q, chat_history):
-    # Lọc yêu cầu viết hộ cực mạnh
     h_verb = any(v in user_q.lower() for v in ["viết", "làm", "soạn", "giải"])
     h_obj = any(o in user_q.lower() for o in ["hộ", "giùm", "giúp", "cho em", "cho mình", "mẫu", "liên hệ đi"])
     if (h_verb and h_obj) or "bài văn mẫu" in user_q.lower():
-        return "👩‍🏫 **Trợ lý Ngữ văn:** Cô tuyệt đối không viết thay hay làm hộ em bất cứ đoạn văn nào. Việc ỷ lại sẽ giết chết tư duy của em. Cô chỉ gợi ý phương pháp, dẫn chứng hoặc lập dàn ý. Em hãy tự cầm bút lên và nháp thử suy nghĩ của mình trước đi!"
+        return "👩‍🏫 **Trợ lý Ngữ văn:** Cô tuyệt đối không viết thay hay làm hộ em bất cứ đoạn văn nào. Việc ỷ lại sẽ làm thui chột tư duy của em. Cô chỉ gợi ý phương pháp, dẫn chứng hoặc lập dàn ý. Em hãy tự cầm bút lên và nháp thử suy nghĩ của mình trước đi!"
 
-    # Gọi AI thực sự để chat
     history_text = "\n".join([f"{'HS' if r=='user' else 'GV'}: {m}" for r, m in chat_history[-4:]])
-    prompt = f"""Đóng vai giáo viên Ngữ văn THPT xuất sắc, nghiêm khắc nhưng tận tâm. Bạn đang chat với học sinh để hướng dẫn làm bài nghị luận.
+    prompt = f"""Đóng vai giáo viên Ngữ văn THPT xuất sắc, nghiêm khắc nhưng tận tâm. Bạn đang chat với học sinh để hướng dẫn làm bài nghị luận xã hội.
 Đề bài: "{de_text}"
 Vấn đề nghị luận: "{vdnl_chuan}"
 Lịch sử chat gần nhất:
 {history_text}
 Câu hỏi hiện tại của học sinh: "{user_q}"
 
-NGUYÊN TẮC TRẢ LỜI CỦA BẠN:
-1. KHÔNG BAO GIỜ viết hộ, viết thành đoạn văn mẫu hoàn chỉnh cho học sinh chép.
-2. TRẢ LỜI ĐÚNG TRỌNG TÂM CÂU HỎI. Nếu HS xin dẫn chứng, cung cấp 2 nhân vật có thật cụ thể và phân tích sâu sắc hành động của họ khớp với đề bài như thế nào. Không dùng dẫn chứng sáo rỗng.
-3. Nếu HS hỏi cách lập ý, hãy cung cấp 3-5 gạch đầu dòng luận điểm CỤ THỂ, sâu sắc về nguyên nhân, biểu hiện, tác động của riêng đề bài này.
-4. Xưng "Cô" và gọi "em". Trả lời ngắn gọn, khúc chiết, mang tính khơi gợi tư duy."""
+NGUYÊN TẮC:
+1. KHÔNG BAO GIỜ viết hộ, viết thành đoạn văn mẫu hoàn chỉnh.
+2. TRẢ LỜI ĐÚNG TRỌNG TÂM CÂU HỎI. Nếu HS xin dẫn chứng, cung cấp 2 nhân vật có thật cụ thể và phân tích sâu sắc hành động của họ.
+3. Nếu HS hỏi cách lập ý, cung cấp 3-5 gạch đầu dòng luận điểm CỤ THỂ về đề này.
+4. Xưng "Cô" và gọi "em". Ngắn gọn, khúc chiết."""
     
     res = call_gemini_api(prompt)
-    if res: 
-        return res
-    return "👩‍🏫 **Trợ lý Ngữ văn:** ⚠️ Hệ thống chưa kết nối não bộ AI. Thầy/cô vui lòng nhập mã Gemini API Key ở menu bên trái để kích hoạt tính năng vấn đáp chuyên sâu."
+    if res: return res
+    return "👩‍🏫 **Trợ lý Ngữ văn:** ⚠️ Chưa kết nối được AI. Thầy/cô vui lòng kiểm tra lại mã Gemini API Key ở menu bên trái."
 
 def ai_evaluate_strict_rubric(de_key, de_info, essay_text, image_obj=None):
-    prompt = f"""Đóng vai giáo viên Ngữ văn THPT chấm thi CỰC KỲ KHẮT KHE, SOI MÓI TỪNG LỖI SAI. Chấm bài văn nghị luận sau theo chuẩn Rubric 7 tiêu chí (Thang 10).
+    prompt = f"""Đóng vai giáo viên Ngữ văn THPT chấm thi CỰC KỲ KHẮT KHE. Chấm bài văn nghị luận sau theo chuẩn Rubric 7 tiêu chí (Thang 10).
 
-LUẬT CHẤM ĐIỂM (BẮT BUỘC TUÂN THỦ 100%):
-1. Bước nhảy điểm khắt khe: Chỉ cho 0.25, 0.5, 0.75, 1.0. 
-2. Đánh giá THỰC CHẤT: Bài viết ngắn, lủng củng, ít luận điểm tuyệt đối KHÔNG ĐƯỢC QUÁ 6.0 điểm. 
-3. YÊU CẦU BẮT BUỘC TRONG BẢNG: Cột "Nhận xét & Minh chứng", BẠN PHẢI COPY & DÁN (trong ngoặc kép "") chính xác câu văn ngô nghê, lủng củng, sáo rỗng hoặc sai kiến thức của học sinh từ bài làm để làm bằng chứng trừ điểm. Không được nhận xét chung chung.
+LUẬT CHẤM ĐIỂM:
+1. Chỉ dùng bước nhảy điểm: 0.25, 0.5, 0.75, 1.0. 
+2. Bài viết ngắn, lủng củng, ít luận điểm tuyệt đối KHÔNG ĐƯỢC QUÁ 6.0 điểm. 
+3. BẮT BUỘC: Cột "Nhận xét & Minh chứng", BẠN PHẢI COPY & DÁN (trong ngoặc kép "") chính xác câu văn ngô nghê, lủng củng hoặc sai kiến thức của học sinh từ bài làm để làm bằng chứng trừ điểm.
 
 Đề bài: "{de_key}" - {de_info.get('text', '')}
 Bài làm của học sinh:
@@ -161,31 +166,29 @@ TRẢ VỀ ĐÚNG ĐỊNH DẠNG MARKDOWN SAU:
 | **1. Bố cục (Mở-Thân-Kết)** | 0.5 | [Điểm] | [Nhận xét + quote lỗi] |
 | **2. Xác định VĐNL** | 0.5 | [Điểm] | [Nhận xét + quote lỗi] |
 | **3. Giải thích khái niệm** | 1.0 | [Điểm] | [Nhận xét + quote lỗi] |
-| **4. Hệ thống luận điểm** | 3.5 | [Điểm] | [Chỉ rõ HS thiếu ý nào, quote câu văn lập luận nông cạn] |
-| **5. Dẫn chứng thực tế** | 2.5 | [Điểm] | [Chỉ rõ dẫn chứng bị sai/cũ/kể lể ở đâu, quote lại] |
+| **4. Hệ thống luận điểm** | 3.5 | [Điểm] | [Chỉ rõ HS thiếu ý nào, quote câu văn lập luận] |
+| **5. Dẫn chứng thực tế** | 2.5 | [Điểm] | [Chỉ rõ dẫn chứng bị sai/cũ, quote lại] |
 | **6. Phản đề & Bài học** | 1.0 | [Điểm] | [Nhận xét + quote lỗi] |
-| **7. Diễn đạt & Chính tả** | 1.0 | [Điểm] | [Quote chính xác từ/câu dùng sai, lủng củng] |
+| **7. Diễn đạt & Chính tả** | 1.0 | [Điểm] | [Quote chính xác từ/câu dùng sai] |
 
 **📌 TỔNG ĐIỂM THỰC TẾ: [X]/10.0**
 
-**📝 LỜI PHÊ CỦA GIÁO VIÊN (SẮC BÉN, THỰC TẾ):**
-[Chỉ ra tử huyệt trong bài viết của học sinh, khuyên học sinh phải sửa ngay điều gì để không ảo tưởng sức mạnh]"""
+**📝 LỜI PHÊ CỦA GIÁO VIÊN:**
+[Chỉ ra tử huyệt trong bài viết của học sinh, khuyên học sinh phải sửa ngay điều gì]"""
     
     res = call_gemini_api(prompt, image_obj)
     if res: return res
-    return "⚠️ Lỗi: Không thể chấm bài. Vui lòng nhập Gemini API Key ở menu trái."
+    return "⚠️ Lỗi: Không thể chấm bài. Vui lòng kiểm tra lại Gemini API Key."
 
 # ==============================================================================
 # 4. GIAO DIỆN CHÍNH
 # ==============================================================================
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
-    api_key_input = st.text_input("Nhập mã Gemini API Key để kết nối lõi AI:", type="password", value=st.session_state["gemini_api_key"])
+    api_key_input = st.text_input("Nhập mã Gemini API Key:", type="password", value=st.session_state["gemini_api_key"])
     if api_key_input != st.session_state["gemini_api_key"]: st.session_state["gemini_api_key"] = api_key_input
-    if st.session_state["gemini_api_key"]:
-        st.success("✅ Đã kết nối AI chuyên sâu!")
-    else:
-        st.error("⚠️ Cần nhập API Key để dùng web!")
+    if st.session_state["gemini_api_key"]: st.success("✅ Đã kết nối AI chuyên sâu!")
+    else: st.error("⚠️ Cần nhập API Key để dùng web!")
     
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC\n1. Xác định VĐNL\n2. Lập dàn ý & Chat AI\n3. Xưởng viết bài\n4. Chấm điểm khắt khe")
 
