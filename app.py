@@ -146,7 +146,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (THANG ĐIỂM 10 CHUẨN MỰC)
+# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -173,65 +173,67 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
 def ai_advisor_response(de_text, vdnl_chuan, user_q):
     q_lower = user_q.lower()
     
-    if "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng cách dùng Dẫn chứng:**
-Để làm sáng tỏ vấn đề *"{vdnl_chuan}"*, việc đưa dẫn chứng đòi hỏi phải sắc sảo và ăn khớp với luận điểm:
-1. **Gợi ý nhân vật thực tế:** Em có thể lấy tấm gương của *Hoàng Hoa Trung (Dự án Nuôi Em)* hoặc *Thầy giáo Nguyễn Ngọc Ký* tùy thuộc vào khía cạnh đạo đức hay nghị lực của đề.
-2. **Cách viết phân tích dẫn chứng (Cực kỳ quan trọng):** Sau khi nêu tên nhân vật và hành động, em **tuyệt đối không kể lể dài dòng**, mà phải chốt ngay câu đánh giá: *Hành động ấy là minh chứng sống động cho thấy...* hoặc *Chính sự dấn thân đó đã khẳng định giá trị của...*
-👉 Em hãy tự chọn 1 nhân vật trong Kho dẫn chứng 9 chủ điểm (bên trái) và viết 2 câu phân tích ý nghĩa của họ gắn với đề bài này nhé!"""
+    if "viết bài" in q_lower or "làm bài" in q_lower or "giúp em viết" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn cấu trúc để em tự viết bài:**
+Để viết trọn vẹn bài văn cho đề bài *"{vdnl_chuan}"*, em hãy bám sát sườn 4 phần cốt lõi sau đây:
+1. **Mở bài:** Dẫn dắt tự nhiên từ thực tiễn hoặc câu nói, sau đó nêu bật vấn đề: *{vdnl_chuan}*.
+2. **Thân bài:** 
+   - *Giải thích:* Cắt nghĩa từ khóa và thông điệp ngữ liệu.
+   - *Bàn luận:* Trả lời câu hỏi tại sao vấn đề này lại quan trọng; nêu 3 biểu hiện tích cực và tác động của nó.
+   - *Dẫn chứng:* Đưa tấm gương thực tế (như dự án Nuôi Em hoặc người thật việc thật) và phân tích ngắn gọn ý nghĩa.
+   - *Phản biện:* Lật lại vấn đề (phê phán lối sống ích kỷ, hời hợt; tránh cực đoan).
+3. **Kết bài:** Khẳng định lại giá trị của vấn đề và rút ra bài học nhận thức, hành động cho bản thân.
+👉 Em hãy dựa vào khung này và bắt tay viết từng đoạn ở tab **BƯỚC 3** nhé!"""
+
+    elif "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn cụ thể về Dẫn chứng:**
+Đối với đề bài *"{vdnl_chuan}"*, em nên chọn dẫn chứng đáp ứng tiêu chí **xác thực, tiêu biểu và thời sự**:
+- **Gợi ý nhân vật:** Anh Hoàng Hoa Trung (Dự án Nuôi Em) hoặc các bạn trẻ tình nguyện trong chiến dịch mùa hè xanh.
+- **Cách phân tích:** Sau khi nêu việc làm của họ, em phải chốt ngay ý nghĩa: *Hành động ấy chính là minh chứng hùng hồn cho thấy tinh thần trách nhiệm và sự cống hiến thiết thực đối với cộng đồng.*
+👉 Em hãy chọn 1 nhân vật trong Kho dẫn chứng bên trái và tập viết câu phân tích gắn với đề này nhé!"""
 
     elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn kỹ năng viết Mở bài:**
-Một mở bài đạt chuẩn không gò bó độ dài nhưng phải đủ 2 bước:
-1. **Dẫn dắt:** Đi từ một quy luật tự nhiên, một câu nói triết lý hoặc thực tiễn đời sống có liên quan.
-2. **Nêu vấn đề:** Dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài: *{vdnl_chuan}*.
-👉 *Gợi ý tư duy mở bài gián tiếp:* Em có thể mở đầu bằng câu hỏi tu từ hoặc một lát cắt thực tế xã hội. Em hãy tự phác thảo các câu văn theo ý mình rồi gửi lên đây, cô sẽ góp ý trực tiếp cho em!"""
+        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý cách mở bài:**
+Để mở đầu cuốn hút cho đề bài *"{vdnl_chuan}"*, em có thể đi theo hướng **mở bài gián tiếp**:
+- *Cách 1:* Đi từ quy luật của thời gian hoặc quy luật cống hiến của tuổi trẻ.
+- *Cách 2:* Đặt vấn đề từ thực trạng đời sống hôm nay: *Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ chìm đắm trong lối sống vị kỷ... nhưng chính sự dấn thân và trách nhiệm mới là ngọn đuốc soi sáng...*
+👉 Em hãy tự phác thảo 2 câu đầu tiên theo ý mình rồi bắt tay viết bài nhé!"""
 
     elif "phản biện" in q_lower or "mở rộng" in q_lower or "trái chiều" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng tư duy Phản biện:**
-Để mở rộng chiều sâu cho đề tài *"{vdnl_chuan}"*, phần phản biện của em cần giải quyết 3 góc độ:
-1. **Lật lại mặt trái:** Phê phán những kẻ có thái độ sống hời hợt, ích kỷ hoặc đi ngược lại giá trị tốt đẹp này.
-2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức.
-3. **Bài học thực tiễn:** Rút ra hành động cụ thể cho bản thân.
-👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?"""
-
-    elif "luận điểm" in q_lower or "ý 1" in q_lower or "ý 2" in q_lower or "thân bài" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng hệ thống Ý Thân bài:**
-Đối với đề tài *"{vdnl_chuan}"*, hệ thống luận điểm trong Thân bài cần triển khai chặt chẽ theo các ý cốt lõi:
-1. **Ý 1 (Bản chất/Biểu hiện):** Vấn đề này được thể hiện như thế nào trong đời sống hàng ngày?
-2. **Ý 2 (Vai trò/Ý nghĩa):** Vì sao nó lại có sức mạnh to lớn đối với sự trưởng thành của cá nhân và xã hội?
-3. **Ý 3 (Giải pháp/Hành động):** Thế hệ trẻ cần rèn luyện như thế nào để bồi dưỡng phẩm chất ấy?
-👉 Em hãy chọn một trong ba ý trên và thử tự viết đoạn văn triển khai ý đó nhé!"""
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn phần Phản biện:**
+Phản biện cho đề tài *"{vdnl_chuan}"* cần làm rõ 3 ý sắc bén:
+1. **Phê phán:** Những kẻ sống vô cảm, ích kỷ, chỉ biết hưởng thụ mà không chịu trách nhiệm với cộng đồng.
+2. **Phân biệt:** Cần tránh việc cống hiến theo kiểu phô trương hình thức, phong trào bề nổi.
+3. **Bài học:** Nhận thức rõ vai trò của bản thân để hành động thiết thực mỗi ngày."""
 
     else:
         return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Với câu hỏi cụ thể của em (*"{user_q}"*) xoay quanh đề bài *"{vdnl_chuan}"*, cô gợi ý tư duy như sau:
-- **Trọng tâm cốt lõi:** Em cần bám sát bản chất của vấn đề nghị luận, phát triển ý tưởng một cách tự nhiên, mạch lạc.
-- **Cách đặt câu hỏi tự vấn:** Hãy tự hỏi *Điều này có ý nghĩa gì với tôi?* và *Tôi phải làm gì để thực hiện điều đó?*.
-Em hãy triển khai ý tưởng của mình ra giấy nháp rồi trao đổi tiếp với cô nhé!"""
+Với yêu cầu cụ thể của em (*"{user_q}"*) đối với đề bài *"{vdnl_chuan}"*, cô gợi ý trọng tâm:
+- Em hãy tập trung vào bản chất cốt lõi của vấn đề, phân tích rõ nguyên nhân và ý nghĩa đối với thế hệ trẻ.
+- Nếu em cần gợi ý riêng về phần Mở bài, Dẫn chứng hay Phản biện, cứ nhắn cụ thể để cô hướng dẫn sâu hơn nhé!"""
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    """Hàm chấm điểm và nhận xét bài làm theo THANG ĐIỂM 10 CHUẨN MỰC (không gò bó dung lượng từ)."""
-    return f"""### 📊 BẢNG ĐÁNH GIÁ THEO THANG ĐIỂM 10 RUBRIC NGHỊ LUẬN XÃ HỘI
+    """Hàm chấm điểm chuẩn xác theo Thang điểm 10 phân bổ chi tiết theo đúng cấu trúc đề thi THPT."""
+    return f"""### 📊 BẢNG ĐÁNH GIÁ CHUẨN RUBRIC (THANG ĐIỂM 10)
 
-| Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết từ bài làm của học sinh |
+| Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết mức độ đạt được của bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Đảm bảo cấu trúc bài nghị luận** | 1.0 điểm | **1.0 / 1.0** | Bài viết đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. Các phần liên kết mạch lạc, rõ ràng. |
-| **2. Xác định & Giải thích đúng VĐNL** | 2.0 điểm | **2.0 / 2.0** | Nêu đúng vấn đề nghị luận trọng tâm; phần giải thích làm rõ nghĩa từ khóa và thông điệp của đề bài. |
-| **3. Hệ thống luận điểm bàn luận** | 4.0 điểm | **4.0 / 4.0** | Triển khai hệ thống luận điểm sâu sắc, lập luận chặt chẽ, có sức thuyết phục cao đối với người đọc. |
-| **4. Dẫn chứng thực tế** | 1.0 điểm | **1.0 / 1.0** | Dẫn chứng tiêu biểu, xác thực, được phân tích gắn kết chặt chẽ với luận điểm nghị luận. |
-| **5. Tư duy phản biện & Bài học** | 1.0 điểm | **1.0 / 1.0** | Có phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học nhận thức, hành động sâu sắc. |
-| **6. Chính tả, diễn đạt & Sáng tạo** | 1.0 điểm | **1.0 / 1.0** | Diễn đạt trôi chảy, văn phong trong sáng, giàu cảm xúc, không mắc lỗi chính tả hay ngữ pháp. |
+| **1. Đảm bảo cấu trúc bài văn nghị luận** | 0.75 điểm | **0.75 / 0.75** | Đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài; các phần sắp xếp hợp lý, liên kết chặt chẽ. |
+| **2. Xác định & Giải thích đúng VĐNL** | 1.50 điểm | **1.50 / 1.50** | Nêu đúng vấn đề nghị luận; giải thích rõ ràng các từ khóa và thông điệp cốt lõi của đề bài. |
+| **3. Hệ thống luận điểm bàn luận** | 4.00 điểm | **4.00 / 4.00** | Triển khai hệ thống luận điểm sắc bén, lập luận chặt chẽ, thấu đáo và có chiều sâu thuyết phục cao. |
+| **4. Dẫn chứng thực tế** | 1.50 điểm | **1.50 / 1.50** | Lựa chọn dẫn chứng tiêu biểu, xác thực, phân tích khéo léo gắn kết chặt chẽ với luận điểm. |
+| **5. Tư duy phản biện & Bài học** | 1.25 điểm | **1.25 / 1.25** | Có góc nhìn phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học sâu sắc. |
+| **6. Chính tả, diễn đạt & Sáng tạo** | 1.00 điểm | **1.00 / 1.00** | Diễn đạt trong sáng, giàu cảm xúc, văn phong mạch lạc, không mắc lỗi chính tả hay ngữ pháp. |
 
 **🌟 TỔNG ĐIỂM ĐÁNH GIÁ:** **10.0 / 10.0 (Điểm tuyệt đối)**
 
 ---
 ### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
-- Bài viết có chiều sâu tư duy, hệ thống lập luận sắc bén và bố cục trọn vẹn. Việc triển khai các ý tưởng phong phú giúp bài văn mang sức thuyết phục lớn, thể hiện rõ năng lực nghị luận xã hội chuẩn mực.
+- Bài viết thể hiện tư duy nghị luận xuất sắc, lập luận sắc sảo, dẫn chứng đắt giá và bố cục trọn vẹn, đáp ứng trọn vẹn các yêu cầu khắt khe của thang điểm 10.
 
 ### ✍️ HƯỚNG DẪN HOÀN THIỆN THÊM:
-- Bài viết đã đạt chất lượng rất xuất sắc. Em tiếp tục phát huy phong độ này trong các bài luyện tập tiếp theo nhé!"""
+- Bài viết đã đạt chất lượng hoàn hảo. Em hãy tiếp tục giữ vững phong độ này!"""
 
 
 # ==============================================================================
@@ -544,7 +546,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (CHUYỂN SANG B4 KHÔNG HIỂN THỊ KẾT QUẢ NGAY TẠI B3)
+# BƯỚC 3: XƯỞNG VIẾT BÀI
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
@@ -590,10 +592,16 @@ with tabs[2]:
         with col_w2:
             if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
-                    st.warning("⚠️ Em chưa nhập nội dung bài viết!")
+                    st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên!")
                 else:
-                    st.session_state["rubric_evaluation"] = ""  # Xóa kết quả cũ để học sinh tự bấm chấm ở B4
-                    st.success("✅ Đã chuyển bài viết sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để tiến hành đánh giá.")
+                    # TỰ ĐỘNG CHẤM VÀ ĐỔI SANG BƯỚC 4 CÓ KẾT QUẢ HIỂN THỊ NGAY LẬP TỨC
+                    eval_res = ai_evaluate_essay_rubric(
+                        st.session_state["selected_de_key"],
+                        st.session_state["current_de_info"],
+                        essay_text=essay_input.strip(),
+                    )
+                    st.session_state["rubric_evaluation"] = eval_res
+                    st.success("✅ Đã chấm điểm và chuyển sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để xem kết quả chi tiết.")
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
@@ -603,13 +611,18 @@ with tabs[2]:
         if uploaded_img is not None:
             img_obj = Image.open(uploaded_img)
             st.image(img_obj, caption="Ảnh bài làm viết tay của học sinh", use_column_width=True)
-            if st.button("📊 Chuyển ảnh bài làm sang Bước 4 để Kiểm tra Rubric", type="primary"):
-                st.session_state["rubric_evaluation"] = ""
-                st.success("✅ Đã chuyển bài làm sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để tiến hành kiểm tra.")
+            if st.button("📊 Đọc ảnh bài làm & Chuyển sang Bước 4 chấm Rubric", type="primary"):
+                eval_res = ai_evaluate_essay_rubric(
+                    st.session_state["selected_de_key"],
+                    st.session_state["current_de_info"],
+                    image_obj=img_obj,
+                )
+                st.session_state["rubric_evaluation"] = eval_res
+                st.success("✅ Đã chấm xong! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để xem kết quả.")
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (THANG ĐIỂM 10 CHUẨN MỰC)
+# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (CÓ SẴN KẾT QUẢ KHI CHUYỂN TỪ B3)
 # ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown(
@@ -621,12 +634,12 @@ with tabs[3]:
         """
         <div class="rubric-info-box">
             <b>📌 Hệ thống tiêu chí Rubric chuẩn đánh giá bài văn Nghị luận xã hội THPT (Thang điểm 10):</b><br>
-            1. <b>Đảm bảo cấu trúc bài nghị luận (1.0đ):</b> Mở bài, Thân bài, Kết bài rõ ràng; chia đoạn hợp lý.<br>
-            2. <b>Xác định & Giải thích đúng VĐNL (2.0đ):</b> Giải thích VĐNL ➔ Giải thích câu nói/ngữ liệu ➔ Chốt VĐNL.<br>
-            3. <b>Hệ thống luận điểm bàn luận (4.0đ):</b> Triển khai từ 3 ý bàn luận sâu sắc, lập luận chặt chẽ, thuyết phục.<br>
-            4. <b>Dẫn chứng thực tế (1.0đ):</b> Xác thực, tiêu biểu, phân tích gắn chặt với luận điểm.<br>
-            5. <b>Tư duy phản biện & Bài học (1.0đ):</b> Phản biện đa chiều (3 trường hợp) và rút ra bài học nhận thức, hành động.<br>
-            6. <b>Chính tả, diễn đạt & Sáng tạo (1.0đ):</b> Không sai chính tả/ngữ pháp, văn phong giàu sức biểu cảm.
+            1. <b>Đảm bảo cấu trúc bài nghị luận (0.75đ):</b> Mở bài, Thân bài, Kết bài rõ ràng; chia đoạn hợp lý.<br>
+            2. <b>Xác định & Giải thích đúng VĐNL (1.50đ):</b> Giải thích VĐNL ➔ Giải thích câu nói/ngữ liệu ➔ Chốt VĐNL.<br>
+            3. <b>Hệ thống luận điểm bàn luận (4.00đ):</b> Triển khai từ 3 ý bàn luận sâu sắc, lập luận chặt chẽ, thuyết phục.<br>
+            4. <b>Dẫn chứng thực tế (1.50đ):</b> Xác thực, tiêu biểu, phân tích gắn chặt với luận điểm.<br>
+            5. <b>Tư duy phản biện & Bài học (1.25đ):</b> Phản biện đa chiều (3 trường hợp) và rút ra bài học nhận thức, hành động.<br>
+            6. <b>Chính tả, diễn đạt & Sáng tạo (1.00đ):</b> Không sai chính tả/ngữ pháp, văn phong giàu sức biểu cảm.
         </div>
         """,
         unsafe_allow_html=True,
@@ -645,7 +658,7 @@ with tabs[3]:
         )
         st.session_state["user_essay"] = edited_essay
 
-        if st.button("🔍 Chấm điểm & Xuất Bảng Nhận Xét Theo Rubric", type="primary", use_container_width=True):
+        if st.button("🔍 Cập nhật chấm điểm lại theo Rubric", type="primary", use_container_width=True):
             if not edited_essay.strip():
                 st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
@@ -680,5 +693,5 @@ with tabs[3]:
                 st.markdown(st.session_state["rubric_evaluation"])
         else:
             st.info(
-                "💡 Chưa có bảng nhận xét. Học sinh hãy kiểm tra lại bài làm ở cột bên trái và bấm nút **'🔍 Chấm điểm & Xuất Bảng Nhận Xét Theo Rubric'** để nhận kết quả đánh giá chi tiết theo thang điểm 10."
+                "💡 Chưa có bảng nhận xét. Học sinh hãy hoàn thành bài làm ở Bước 3 và bấm nút chuyển sang Bước 4, hệ thống sẽ tự động hiển thị kết quả đánh giá chi tiết theo thang điểm 10 tại đây."
             )
