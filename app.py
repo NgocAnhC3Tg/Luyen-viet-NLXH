@@ -121,7 +121,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HÀM CHUẨN HÓA LỆNH ĐỀ BÀI (ĐẢM BẢO YÊU CẦU BÀI VĂN KHOẢNG 600 CHỮ)
+# 2. HÀM CHUẨN HÓA LỆNH ĐỀ BÀI (BÀI VĂN KHOẢNG 600 CHỮ)
 # ==============================================================================
 def ensure_600_words_prompt(raw_text):
     text = raw_text.strip()
@@ -212,7 +212,7 @@ def call_gemini_rest_api(prompt, pil_image=None):
     return None
 
 # ==============================================================================
-# 5. BỘ MÁY NLP SƯ PHẠM NỘI BỘ: GIẢI THÍCH TINH GỌN, ĐÚNG DẠNG ĐỀ
+# 5. HỆ THỐNG XỬ LÝ SƯ PHẠM THÔNG MINH (GIẢI THÍCH LINH HOẠT THEO DẠNG ĐỀ)
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
@@ -303,7 +303,6 @@ def extract_clean_topic_noun(text):
     return clean if clean else text.strip()
 
 def is_metaphorical_quote_topic(topic_text):
-    # Kiểm tra xem đề bài là câu nói ẩn dụ/danh ngôn hay là đề nêu trực tiếp vấn đề
     if '"' in topic_text or '“' in topic_text or '”' in topic_text:
         return True
     if any(w in topic_text.lower() for w in ["có ý kiến cho rằng", "ngạn ngữ", "danh ngôn", "nhà văn", "từng nói"]):
@@ -317,27 +316,27 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl):
 
     # 1. Thử gọi Gemini REST API nếu có khóa hợp lệ
     explain_instruction = (
-        "Vì đây là đề bài nêu trực tiếp vấn đề nghị luận, ở phần Giải thích CHỈ CẦN 1 Ý DUY NHẤT định nghĩa ngắn gọn, trực diện khái niệm cốt lõi là gì (tuyệt đối không chẻ thành 2-3 lớp nghĩa cồng kềnh)."
+        "Vì đề bài nêu trực tiếp vấn đề, phần Giải thích cần cắt nghĩa tường minh khái niệm cốt lõi là gì, làm rõ bản chất vấn đề."
         if not is_quote else
-        "Vì đây là đề bài dạng câu nói/ý kiến có hình ảnh ẩn dụ, hãy giải thích ngắn gọn từ khóa/hình ảnh ẩn dụ rồi rút ra ý nghĩa cả câu."
+        "Vì đề bài chứa ý kiến/câu nói ẩn dụ, ở phần Giải thích bắt buộc phải giải thích rõ nghĩa đen, nghĩa bóng của các từ ngữ/hình ảnh trong câu nói rồi rút ra thông điệp ý nghĩa."
     )
-    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy cho đề bài NLXH (khoảng 600 chữ) sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):
+    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy chuẩn mực cho đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):
 Đề bài: "{formatted_topic}"
 Vấn đề nghị luận: "{direct_problem}"
 
 YÊU CẦU SƯ PHẠM QUAN TRỌNG:
 - {explain_instruction}
-- Hệ thống 5 luận điểm bàn luận rõ ràng, sâu sắc, đúng trọng tâm.
-- Dẫn chứng người thật việc thật cụ thể.
+- Hệ thống 5 luận điểm bàn luận sâu sắc, bám sát vấn đề.
+- Dẫn chứng thực tế xác thực.
 
 Cấu trúc JSON BẮT BUỘC:
 {{
   "text": "{formatted_topic}",
   "vdnl_chuan": "{direct_problem}",
   "explain_items": [
-    "- **Giải thích khái niệm:** (Viết ngắn gọn, trực diện, đúng trọng tâm tại đây)..."
+    "- **Giải thích khái niệm/nhận định:** (Viết đầy đủ, sâu sắc tại đây)..."
   ],
-  "vdnl_ket_luan": "Câu chốt ngắn gọn dẫn vào phần bàn luận",
+  "vdnl_ket_luan": "Câu chốt vấn đề nghị luận sắc bén",
   "questions": [
     {{
       "cau_hoi": "Hệ thống 5 luận điểm bàn luận trọng tâm:",
@@ -364,7 +363,7 @@ Cấu trúc JSON BẮT BUỘC:
   ],
   "dani_chi_tiet": {{
     "mb": "Dẫn dắt và nêu trực diện vấn đề nghị luận.",
-    "gt": "Giải thích ngắn gọn, súc tích khái niệm trọng tâm.",
+    "gt": "Giải thích khái niệm hoặc ý nghĩa câu nói.",
     "bl": "Triển khai 5 luận điểm bàn luận.",
     "dc": "Đưa dẫn chứng thực tế và phân tích.",
     "pb": "Phê phán biểu hiện ngược lại và mở rộng vấn đề.",
@@ -383,7 +382,7 @@ Cấu trúc JSON BẮT BUỘC:
         except Exception:
             pass
 
-    # 2. Xử lý bằng Bộ máy NLP Sư phạm Nội bộ (Tinh gọn Giải thích theo đúng dạng đề)
+    # 2. Xử lý bằng Bộ máy NLP Sư phạm Nội bộ (Giải thích sâu sắc, đúng dạng đề)
     combined_low = (raw_topic_text + " " + student_vdnl).lower()
     matched_concept = None
     for kw, data in CONCEPT_DICTIONARY.items():
@@ -394,29 +393,31 @@ Cấu trúc JSON BẮT BUỘC:
     if matched_concept:
         kw_name, c_data = matched_concept
         vdnl_final = student_vdnl.strip() if student_vdnl.strip() else direct_problem
-        # Chỉ giải thích 1 ý trực diện nếu đề nêu trực tiếp vấn đề
         if not is_quote:
-            explain_list = [f"- **Giải thích khái niệm:** {c_data['def']}"]
+            explain_list = [
+                f"- **Giải thích khái niệm:** {c_data['def']}",
+                f"- **Ý nghĩa tư tưởng:** Đề bài khẳng định vai trò thiết thực của **{kw_name}** như một phẩm chất nền tảng giúp con người vượt qua thách thức và hoàn thiện nhân cách."
+            ]
         else:
             explain_list = [
-                f"- **Giải thích khái niệm trọng tâm:** {c_data['def']}",
-                f"- **Ý nghĩa câu nói:** Nhấn mạnh vai trò và giá trị to lớn của **{kw_name}** đối với sự trưởng thành của mỗi cá nhân và sự phát triển của xã hội."
+                f"- **Giải thích ý nghĩa câu nói/nhận định:** Câu nói đã sử dụng hình ảnh ẩn dụ sâu sắc để tôn vinh giá trị của **{kw_name}**, qua đó nhắc nhở con người về thái độ sống và hành động đúng đắn trong cuộc đời.",
+                f"- **Bản chất vấn đề:** {c_data['def']}"
             ]
 
         return {
             "text": formatted_topic,
             "vdnl_chuan": vdnl_final,
             "explain_items": explain_list,
-            "vdnl_ket_luan": f"Qua đó, đề bài đặt ra vấn đề cần bàn luận sâu sắc là: **{vdnl_final}**.",
+            "vdnl_ket_luan": f"Từ góc nhìn đó, vấn đề nghị luận trọng tâm được đặt ra là: **{vdnl_final}**.",
             "questions": [
                 {
                     "cau_hoi": f"Hệ thống 5 luận điểm bàn luận trọng tâm về: {vdnl_final}",
                     "y_tra_loi": [
-                        f"- **Luận điểm 1 (Biểu hiện trong đời sống):** {c_data['manifest']}",
-                        f"- **Luận điểm 2 (Vì sao cần có {kw_name}?):** {c_data['why']}",
-                        f"- **Luận điểm 3 (Giá trị đối với sự phát triển cá nhân):** Giúp mỗi người phát huy tối đa nội lực, vượt qua giới hạn của bản thân và tạo dựng những thành quả có giá trị thực chất.",
-                        f"- **Luận điểm 4 (Ý nghĩa đối với cộng đồng, xã hội):** Tạo ra sức mạnh cộng hưởng, lan tỏa tinh thần tích cực và thúc đẩy xã hội phát triển văn minh, hiện đại.",
-                        f"- **Luận điểm 5 (Hệ lụy nếu thiếu vắng {kw_name}):** Con người dễ rơi vào sự trì trệ, bế tắc, tụt hậu và đánh mất cơ hội khẳng định mình."
+                        f"- **Luận điểm 1 (Biểu hiện sinh động):** {c_data['manifest']}",
+                        f"- **Luận điểm 2 (Lý giải nguyên nhân & Ý nghĩa):** {c_data['why']}",
+                        f"- **Luận điểm 3 (Sức mạnh đối với cá nhân):** Giúp mỗi người rèn luyện nội lực vững vàng, khơi dậy tiềm năng sáng tạo và sống một cuộc đời có ý nghĩa thực chất.",
+                        f"- **Luận điểm 4 (Giá trị lan tỏa đối với xã hội):** Gắn kết tình cảm cộng đồng, tạo động lực thúc đẩy xã hội phát triển văn minh, nhân ái.",
+                        f"- **Luận điểm 5 (Hệ lụy nếu thiếu vắng):** Khi con người đánh mất **{kw_name}**, cuộc sống dễ trở nên ích kỷ, lạnh lùng và trì trệ."
                     ]
                 }
             ],
@@ -430,66 +431,66 @@ Cấu trúc JSON BẮT BUỘC:
             ],
             "counter": [
                 f"- **Phê phán biểu hiện lệch lạc:** {c_data['counter']}",
-                f"- **Mở rộng & Bài học nhận thức:** Phát huy **{kw_name}** cần đi đôi với nền tảng đạo đức, tri thức vững vàng và sự kiên trì rèn luyện mỗi ngày."
+                f"- **Mở rộng & Biện chứng:** Cần nhận thức đúng đắn về **{kw_name}**, tránh biến phẩm chất cao đẹp thành sự giáo điều hình thức hoặc cực đoan cực đoan."
             ],
             "dani_chi_tiet": {
-                "mb": f"Dẫn dắt ngắn gọn và nêu trực diện vấn đề nghị luận: {vdnl_final}.",
-                "gt": f"Giải thích ngắn gọn khái niệm '{c_data['term']}' là gì.",
-                "bl": f"Phân tích 5 luận điểm: Biểu hiện -> Lý do cốt lõi -> Sức mạnh với cá nhân -> Ý nghĩa với xã hội -> Hệ lụy nếu thiếu vắng '{kw_name}'.",
-                "dc": f"Đưa dẫn chứng thực tế ({c_data['ev_ten']}) và phân tích gắn với luận điểm.",
-                "pb": f"Phê phán lối sống ngược lại và rút ra cái nhìn toàn diện.",
-                "kb": f"Khẳng định lại tầm quan trọng của {vdnl_final} và liên hệ hành động của bản thân."
+                "mb": f"Dẫn dắt tự nhiên từ thực tiễn đời sống -> Trích dẫn đề bài -> Nêu vấn đề nghị luận: {vdnl_final}.",
+                "gt": f"Giải thích rõ ràng khái niệm hoặc thông điệp từ câu nói của đề bài.",
+                "bl": f"Phân tích 5 luận điểm: Biểu hiện -> Lý giải nguyên nhân -> Tác động cá nhân -> Ý nghĩa xã hội -> Hệ lụy.",
+                "dc": f"Đưa dẫn chứng thực tế ({c_data['ev_ten']}) và phân tích gắn kết chặt chẽ.",
+                "pb": f"Phê phán lối sống trái ngược và mở rộng góc nhìn biện chứng.",
+                "kb": f"Khẳng định lại giá trị trường tồn của {vdnl_final} và liên hệ bài học tuổi trẻ."
             }
         }
     else:
-        # Đề tự nhập bất kỳ khác: Giải thích trực diện, ngắn gọn 1 lớp nếu là đề trực tiếp
         vdnl_final = student_vdnl.strip() if student_vdnl.strip() else direct_problem
         if not is_quote:
             explain_list = [
-                f"- **Giải thích khái niệm:** **{vdnl_final}** được hiểu là phẩm chất, thái độ sống hoặc năng lực nhận thức và hành động tích cực của con người nhằm hướng tới những giá trị tốt đẹp, tiến bộ trong đời sống cá nhân và cộng đồng."
+                f"- **Giải thích khái niệm:** **{vdnl_final}** được hiểu là nhận thức đúng đắn, thái độ sống tích cực và hành động thiết thực của con người nhằm tạo ra những giá trị tốt đẹp cho bản thân và cộng đồng.",
+                f"- **Hàm ý đề bài:** Đề cao vai trò định hướng nhân cách và khẳng định sức mạnh thực chất của vấn đề trong đời sống hiện đại."
             ]
         else:
             explain_list = [
-                f"- **Giải thích từ ngữ/hình ảnh trong câu nói:** Làm rõ nghĩa đen và nghĩa bóng của các từ khóa trọng tâm trong nhận định.",
-                f"- **Ý nghĩa cả câu:** Khẳng định tầm quan trọng của **{vdnl_final}** đối với nhân cách và sự trưởng thành của con người."
+                f"- **Giải thích ý nghĩa câu nói/nhận định:** Cắt nghĩa các lớp nghĩa tường minh và hàm ẩn từ nhận định của đề bài.",
+                f"- **Bản chất tư tưởng:** Khẳng định tầm quan trọng quyết định của **{vdnl_final}** đối với sự phát triển của con người."
             ]
 
         return {
             "text": formatted_topic,
             "vdnl_chuan": vdnl_final,
             "explain_items": explain_list,
-            "vdnl_ket_luan": f"Trọng tâm bài viết cần tập trung làm sáng tỏ giá trị và ý nghĩa của **{vdnl_final}**.",
+            "vdnl_ket_luan": f"Qua đó, đề bài định hướng chúng ta suy ngẫm sâu sắc về: **{vdnl_final}**.",
             "questions": [
                 {
                     "cau_hoi": f"Hệ thống 5 luận điểm bàn luận trọng tâm về: {vdnl_final}",
                     "y_tra_loi": [
-                        f"- **Luận điểm 1 (Biểu hiện cụ thể):** **{vdnl_final}** được thể hiện trực tiếp qua nhận thức, thái độ ứng xử và hành động nỗ lực mỗi ngày của con người trước công việc và cuộc sống.",
-                        f"- **Luận điểm 2 (Tác động đối với cá nhân):** Giúp con người hoàn thiện nhân cách, phát huy tiềm năng nội tại và vững vàng vượt qua những thử thách.",
-                        f"- **Luận điểm 3 (Ý nghĩa đối với xã hội):** Góp phần lan tỏa những giá trị tốt đẹp, thúc đẩy cộng đồng phát triển văn minh và bền vững.",
-                        f"- **Luận điểm 4 (Hệ lụy nếu thiếu vắng):** Nếu thờ ơ hoặc đi ngược lại giá trị này, cá nhân dễ rơi vào sự trì trệ, mất phương hướng và giảm sút giá trị bản thân.",
-                        f"- **Luận điểm 5 (Phương hướng rèn luyện của người trẻ):** Chủ động trau dồi nhận thức và biến thành hành động thiết thực ngay từ khi còn ngồi trên ghế nhà trường."
+                        f"- **Luận điểm 1 (Biểu hiện thực tế):** **{vdnl_final}** hiện hữu qua thái độ sống, cách ứng xử và sự nỗ lực không ngừng nghỉ trong công việc, học tập hàng ngày.",
+                        f"- **Luận điểm 2 (Tác động tới cá nhân):** Giúp con người tôi luyện bản lĩnh, khai phóng trí tuệ và vượt qua mọi nghịch cảnh.",
+                        f"- **Luận điểm 3 (Ý nghĩa đối với cộng đồng):** Góp phần xây dựng lối sống văn minh, nhân ái, kết nối những tấm lòng và tạo sức mạnh chung.",
+                        f"- **Luận điểm 4 (Hệ lụy khi lãng quên):** Nếu thiếu vắng điều này, con người dễ rơi vào sự hời hợt, vô cảm, đánh mất phương hướng sống.",
+                        f"- **Luận điểm 5 (Bài học hành động cho tuổi trẻ):** Chủ động tu dưỡng tri thức, rèn luyện đạo đức và hành động từ những việc nhỏ nhất."
                     ]
                 }
             ],
             "evidence": [
                 {
-                    "ten": "Tấm gương thầy giáo Nguyễn Ngọc Ký và những người trẻ Việt Nam giàu nghị lực, cống hiến",
-                    "chi_tiet": "Không khuất phục trước hoàn cảnh hay giới hạn bản thân, họ luôn kiên trì rèn luyện, dấn thân sáng tạo và đóng góp những giá trị thiết thực cho xã hội.",
-                    "y_nghia": f"Minh chứng thuyết phục cho sức mạnh và giá trị của {vdnl_final} trong thực tiễn.",
+                    "ten": "Tấm gương sáng trong đời sống đương đại & Thầy giáo Nguyễn Ngọc Ký",
+                    "chi_tiet": "Những con người kiên cường vượt qua nghịch cảnh, cống hiến thầm lặng và tạo ra những giá trị tốt đẹp cho xã hội.",
+                    "y_nghia": f"Minh chứng sinh động cho sức sống và giá trị thực tiễn của {vdnl_final}.",
                     "nguon": "Thực tiễn đời sống xã hội"
                 }
             ],
             "counter": [
-                f"- **Phê phán biểu hiện tiêu cực:** Lên án lối sống thụ động, hời hợt, thiếu ý thức rèn luyện hoặc chỉ nói lý thuyết suông về **{vdnl_final}**.",
-                "- **Mở rộng vấn đề:** Cần thực hành một cách tỉnh táo, phù hợp với hoàn cảnh thực tế và chuẩn mực đạo đức xã hội."
+                f"- **Phê phán biểu hiện tiêu cực:** Lên án lối sống ích kỷ, hời hợt, chỉ biết hưởng thụ hoặc nói suông mà không hành động.",
+                "- **Mở rộng vấn đề:** Cần nhìn nhận vấn đề một cách toàn diện, gắn liền giữa nhận thức tư tưởng và hành động thực tiễn."
             ],
             "dani_chi_tiet": {
-                "mb": f"Dẫn dắt và giới thiệu trực tiếp vấn đề nghị luận: {vdnl_final}.",
-                "gt": f"Giải thích ngắn gọn, trực diện khái niệm {vdnl_final} là gì.",
-                "bl": f"Triển khai 5 luận điểm: Biểu hiện -> Tác động cá nhân -> Ý nghĩa xã hội -> Hệ lụy -> Bài học hành động.",
-                "dc": "Chọn lọc dẫn chứng thực tế tiêu biểu và phân tích ngắn gọn.",
-                "pb": "Phê phán biểu hiện lệch lạc và mở rộng góc nhìn.",
-                "kb": f"Khẳng định lại giá trị của {vdnl_final} và liên hệ bản thân."
+                "mb": f"Dẫn dắt tự nhiên -> Trích dẫn đề bài -> Nêu vấn đề nghị luận: {vdnl_final}.",
+                "gt": "Giải thích khái niệm hoặc thông điệp câu nói.",
+                "bl": "Triển khai hệ thống 5 luận điểm bàn luận chi tiết.",
+                "dc": "Phân tích dẫn chứng thực tế sắc sảo.",
+                "pb": "Thực hiện phản đề, phê phán và mở rộng.",
+                "kb": "Khẳng định lại vấn đề và liên hệ bản thân."
             }
         }
 
@@ -509,8 +510,7 @@ def generate_deep_chat_response(user_q, cur_de_info):
 
 YÊU CẦU:
 1. Không viết hộ bài văn hoàn chỉnh.
-2. Nếu học sinh hỏi về giải thích: hướng dẫn giải thích ngắn gọn, trực diện đúng khái niệm trọng tâm, không rườm rà nhiều lớp nếu đề bài đã nêu trực tiếp vấn đề.
-3. Trả lời cụ thể, sát với vấn đề "{vdnl}"."""
+2. Hướng dẫn cụ thể, sâu sắc, đúng trọng tâm câu hỏi, bám sát vấn đề "{vdnl}"."""
     
     ai_reply = call_gemini_rest_api(prompt_chat)
     if ai_reply:
@@ -523,36 +523,36 @@ YÊU CẦU:
 
     if "mở bài" in q_low:
         return f"""👩‍🏫 **Hướng dẫn viết Mở bài cho bài văn (khoảng 600 chữ) về \"{vdnl}\":**
-- **Câu 1 (Dẫn dắt):** Đi từ thực tiễn cuộc sống hoặc một hình ảnh tương đồng gắn với tuổi trẻ hôm nay.
-- **Câu 2 (Nêu trực diện vấn đề):** Dẫn vào trọng tâm đề bài cần bàn luận là **{vdnl}**.
-- **Câu 3 (Định hướng):** Khẳng định đây là yếu tố quan trọng góp phần làm nên giá trị bản thân và sự tiến bộ của xã hội."""
+- **Câu 1 (Dẫn dắt):** Đi từ thực tiễn cuộc sống hoặc một lát cắt xã hội gần gũi với giới trẻ.
+- **Câu 2 (Nêu vấn đề):** Trích dẫn đề bài và giới thiệu trực diện trọng tâm bàn luận là **{vdnl}**.
+- **Câu 3 (Định hướng):** Khẳng định ý nghĩa thiết thực của vấn đề đối với nhận thức tuổi trẻ."""
 
     if "giải thích" in q_low or "từ khóa" in q_low or "khái niệm" in q_low:
-        gt_content = explain_list[0] if explain_list else f"- Làm rõ khái niệm **{vdnl}** là gì."
-        return f"""👩‍🏫 **Hướng dẫn viết đoạn Giải thích ngắn gọn, súc tích (Tránh dài dòng, máy móc):**
-- Với đề bài nêu trực tiếp vấn đề như thế này, em **không cần** chia thành nhiều lớp rườm rà mà chỉ cần giải thích trực diện trong **2 - 3 câu văn**:
+        gt_content = "\n".join(explain_list) if explain_list else f"- Giải thích rõ khái niệm **{vdnl}**."
+        return f"""👩‍🏫 **Hướng dẫn viết đoạn Giải thích sâu sắc, chuẩn xác:**
+Tùy thuộc vào dạng đề (nêu trực tiếp hay có nhận định ẩn dụ), phần Giải thích em cần làm rõ:
 {gt_content}
-- Sau đó dùng 1 câu chuyển ý để bước ngay vào phần trọng tâm nhất của bài là **Bàn luận (3.5đ)**."""
+- **Mẹo chuyển đoạn mượt mà:** *Chính vì có vai trò và ý nghĩa thiết yếu ấy, chúng ta cần phải nhìn nhận thấu đáo về bản chất cũng như các biểu hiện của vấn đề trong đời sống.*"""
 
     if "dẫn chứng" in q_low or "ví dụ" in q_low or "nhân vật" in q_low:
         ev_str = ""
         for idx, ev in enumerate(evidence_list[:2], 1):
             if isinstance(ev, dict):
-                ev_str += f"\n- **{ev.get('ten', '')}:** {ev.get('chi_tiet', '')}"
-        return f"""👩‍🏫 **Gợi ý Dẫn chứng và cách khai thác Kho dẫn chứng:**
-1. **Dẫn chứng sát hợp ngay cho đề:**{ev_str}
-2. **Mẹo tìm thêm dẫn chứng:** Em hãy nhìn sang cột bên trái, mở mục **📚 Thao tác 3: Dẫn chứng thực tế**, ở ngay phía dưới có **Kho dẫn chứng 9 chủ điểm (Mở rộng)** với hàng chục nhân vật thực tế có nguồn báo chí rõ ràng để em lựa chọn!"""
+                ev_str += f"\n- **{ev.get('ten', '')}:** {ev.get('chi_tiet', '')} *(Ý nghĩa: {ev.get('y_nghia', '')})*"
+        return f"""👩‍🏫 **Gợi ý Dẫn chứng & Cách khai thác Kho dẫn chứng:**
+1. **Dẫn chứng gợi ý sát hợp:**{ev_str}
+2. **Cách khai thác Kho dẫn chứng 9 chủ điểm:** Em hãy nhìn sang khung bên trái, mở mục **📚 Thao tác 3: Dẫn chứng thực tế**, ở ngay phía dưới có hộp chọn **Kho dẫn chứng 9 chủ điểm (Mở rộng)** với hàng chục nhân vật tiêu biểu có sẵn nguồn báo chí để em lựa chọn đưa vào bài!"""
 
     if "phản đề" in q_low or "phản biện" in q_low or "mở rộng" in q_low:
-        pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện thiếu **{vdnl}** và nhìn nhận vấn đề toàn diện."
+        pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện thiếu **{vdnl}** và mở rộng góc nhìn biện chứng."
         return f"""👩‍🏫 **Hướng dẫn viết đoạn Phản đề & Mở rộng (1.0đ):**
-Em triển khai gọn trong 1 đoạn văn khoảng 4-5 câu:
+Em triển khai trong 1 đoạn văn khoảng 4-5 câu:
 {pb_content}"""
 
     if "liên hệ" in q_low or "kết bài" in q_low or "bài học" in q_low:
         return f"""👩‍🏫 **Hướng dẫn viết Bài học liên hệ & Kết bài:**
-- Khẳng định lại giá trị của **{vdnl}** đối với mỗi người.
-- Liên hệ thực chất tới những việc làm cụ thể của bản thân trong học tập và rèn luyện hàng ngày."""
+- Tổng kết lại giá trị trường tồn của **{vdnl}**.
+- Rút ra bài học nhận thức sâu sắc và cam kết hành động thiết thực của bản thân trong học tập, rèn luyện."""
 
     bl_items = []
     for q in questions_list:
@@ -561,29 +561,29 @@ Em triển khai gọn trong 1 đoạn văn khoảng 4-5 câu:
     bl_text = "\n".join(bl_items[:5]) if bl_items else f"- Phân tích biểu hiện, nguyên nhân và ý nghĩa của **{vdnl}**."
     
     return f"""👩‍🏫 **Định hướng triển khai hệ thống luận điểm Thân bài cho \"{vdnl}\":**
-Để bài văn đạt dung lượng khoảng **600 chữ** và có chiều sâu, phần Bàn luận em nên triển khai theo các ý sau:
+Để bài văn đạt dung lượng khoảng **600 chữ** và có chiều sâu thuyết phục, phần Bàn luận em nên triển khai qua các ý chính sau:
 {bl_text}"""
 
 
 # ==============================================================================
-# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (CHUẨN BÀI VĂN KHOẢNG 600 CHỮ)
+# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (ĐẦY ĐỦ NHẬT XÉT SÂU SẮC, LỜI PHÊ CHI TIẾT)
 # ==============================================================================
 def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     text = essay_text.strip()
     topic_text = ensure_600_words_prompt(cur_de_info.get("text", ""))
     vdnl_chuan = cur_de_info.get("vdnl_chuan", "")
 
-    prompt_grade = f"""Đóng vai Giám khảo chấm thi Ngữ văn THPT công tâm, chuẩn mực. Hãy đọc kỹ từng câu trong bài làm dưới đây và chấm theo BẢNG RUBRIC 7 TIÊU CHÍ (Thang điểm 10.0, bước nhảy 0.25đ).
+    prompt_grade = f"""Đóng vai Giám khảo chấm thi Ngữ văn THPT cấp Tỉnh/Thành phố công tâm, sắc sảo. Hãy đọc kỹ từng câu trong bài làm dưới đây và chấm theo BẢNG RUBRIC 7 TIÊU CHÍ (Thang điểm 10.0, bước nhảy 0.25đ).
 - Đề bài (Yêu cầu bài văn khoảng 600 chữ): "{topic_text}"
 - Vấn đề nghị luận: "{vdnl_chuan}"
 - Bài làm của học sinh:
 \"\"\"{text}\"\"\"
 
-QUY TẮC CHẤM NGHIÊM NGẶT:
+QUY TẮC CHẤM NGHIÊM NGẶT & CHI TIẾT:
 1. Chuẩn dung lượng đề bài là bài văn khoảng 600 chữ. Nếu bài viết dưới 450 chữ, tuyệt đối KHÔNG ĐƯỢC xếp loại Giỏi/Xuất sắc (tổng điểm không quá 6.5đ vì chưa triển khai đủ độ sâu của một bài văn 600 chữ). Nếu dưới 250 chữ, tổng điểm dưới 4.5đ.
-2. Ở tiêu chí Giải thích: nếu đề nêu trực tiếp vấn đề, chỉ cần học sinh giải thích ngắn gọn, rõ khái niệm trọng tâm là đạt điểm tối đa (không đòi hỏi giải thích rườm rà nhiều lớp).
-3. BẮT BUỘC TRÍCH DẪN NGUYÊN VĂN (trong dấu ngoặc kép "...") ít nhất 3 câu văn cụ thể từ bài làm của học sinh vào cột Nhận xét để làm bằng chứng.
-4. Lập bảng Markdown đúng 4 cột: Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm."""
+2. BẮT BUỘC TRÍCH DẪN NGUYÊN VĂN (trong dấu ngoặc kép "...") ít nhất 3 câu văn cụ thể từ bài làm của học sinh vào cột Nhận xét để làm bằng chứng minh họa cho điểm số.
+3. Lập bảng Markdown đúng 4 cột: Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm.
+4. Phần Nhận xét đầu ra cuối cùng phải cực kỳ sâu sắc, chỉ rõ ưu điểm, hạn chế, trích dẫn câu văn cần sửa và hướng dẫn cụ thể cách nâng điểm."""
 
     ai_eval = call_gemini_rest_api(prompt_grade)
     if ai_eval and "|" in ai_eval:
@@ -605,7 +605,7 @@ QUY TẮC CHẤM NGHIÊM NGẶT:
     matched_topic_kws = [w for w in vdnl_tokens if w in text_low]
     topic_coverage = len(matched_topic_kws) / max(len(vdnl_tokens), 1)
 
-    explain_markers = ["là", "được hiểu là", "chính là", "nghĩa là", "khái niệm", "biểu hiện của", "thể hiện qua", "sức mạnh của", "tinh thần"]
+    explain_markers = ["là", "được hiểu là", "chính là", "nghĩa là", "khái niệm", "biểu hiện của", "thể hiện qua", "sức mạnh của", "tinh thần", "câu nói", "nhận định"]
     has_explain = sum(1 for m in explain_markers if m in text_low)
 
     argument_markers = ["trước hết", "thứ nhất", "thứ hai", "bên cạnh đó", "hơn thế nữa", "không chỉ vậy", "mặt khác", "bởi vì", "do đó", "chính vì", "nhờ có", "giúp cho", "tạo nên", "thúc đẩy", "cá nhân", "cộng đồng", "xã hội"]
@@ -647,30 +647,30 @@ QUY TẮC CHẤM NGHIÊM NGẶT:
         s2 = 0.0
         c2_note = "Chưa nêu được vấn đề nghị luận trọng tâm của đề bài."
 
-    # 3. Giải thích khái niệm (1.0đ) -> Chấm linh hoạt, chỉ cần giải thích gọn rõ khái niệm chính
+    # 3. Giải thích khái niệm (1.0đ)
     if has_explain >= 1 and word_count >= 380:
         s3 = 0.75 if word_count < 500 else 1.0
-        c3_note = "Đã giải thích trực diện, rõ ràng khái niệm trọng tâm của đề bài trước khi đi vào bàn luận."
+        c3_note = f"Đã giải thích rõ ràng khái niệm/nhận định trọng tâm của đề bài (*\"{first_sent[:90]}...\"*)."
     elif has_explain >= 1 and word_count >= 180:
         s3 = 0.5
         c3_note = "Có bước đầu cắt nghĩa khái niệm nhưng diễn đạt còn sơ lược, cần chốt rõ bản chất của vấn đề hơn."
     else:
         s3 = 0.25 if word_count >= 120 else 0.0
-        c3_note = "Thiếu thao tác giải thích khái niệm cốt lõi ở đầu phần Thân bài."
+        c3_note = "Thiếu thao tác giải thích khái niệm hoặc ý nghĩa câu nói ở đầu phần Thân bài."
 
-    # 4. Hệ thống luận điểm (3.5đ) -> Đối chiếu sát với yêu cầu bài văn khoảng 600 chữ
+    # 4. Hệ thống luận điểm (3.5đ)
     if word_count < 180:
         s4 = 0.5
-        c4_note = f"Dung lượng quá ngắn (**{word_count} chữ / ~600 chữ** theo yêu cầu đề bài). Hoàn toàn chưa triển khai được các luận điểm bàn luận. Câu viết sơ sài: *\"{shortest_sent}\"*."
+        c4_note = f"Dung lượng quá ngắn (**{word_count} chữ / ~600 chữ**). Hoàn toàn chưa triển khai được các luận điểm bàn luận. Câu viết sơ sài: *\"{shortest_sent}\"*."
     elif word_count < 350:
         s4 = 1.25 if arg_count >= 3 else 1.0
-        c4_note = f"Bài làm mới đạt **{word_count} chữ** (chỉ bằng một nửa so với yêu cầu khoảng 600 chữ). Mới nêu được vài ý bề nổi, thiếu phân tích sâu. Minh chứng câu đơn giản: *\"{shortest_sent}\"*."
+        c4_note = f"Bài làm mới đạt **{word_count} chữ**. Mới nêu được vài ý bề nổi, thiếu phân tích sâu. Minh chứng câu đơn giản: *\"{shortest_sent}\"*."
     elif word_count < 500:
         s4 = 2.0 if arg_count >= 5 else 1.5
         c4_note = f"Dung lượng đạt **{word_count} chữ** (vẫn thiếu hụt so với chuẩn bài văn khoảng 600 chữ). Đã có lập luận (*\"{longest_sent[:110]}...\"*) nhưng chưa triển khai đủ 5 luận điểm sâu sắc."
     elif word_count < 600:
         s4 = 2.5 if arg_count >= 6 else 2.25
-        c4_note = f"Dung lượng tiệm cận mức yêu cầu (**{word_count} chữ**). Có các ý bàn luận cơ bản (*\"{longest_sent[:110]}...\"*) nhưng cần đào sâu hơn ý nghĩa đối với cộng đồng và thời đại."
+        c4_note = f"Dung lượng tiệm cận mức yêu cầu (**{word_count} chữ**). Có các ý bàn luận cơ bản (*\"{longest_sent[:110]}...\"*) nhưng cần đào sâu hơn ý nghĩa xã hội."
     else:
         s4 = 3.0 if arg_count >= 7 else 2.5
         c4_note = f"Đạt chuẩn dung lượng bài văn (**{word_count} chữ**), hệ thống luận điểm triển khai đầy đặn, chặt chẽ. Minh chứng câu lập luận tốt: *\"{longest_sent[:115]}...\"*."
@@ -722,7 +722,7 @@ QUY TẮC CHẤM NGHIÊM NGẶT:
     else:
         rank = "Giỏi"
 
-    return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC 7 TIÊU CHÍ (CHUẨN BÀI VĂN KHOẢNG 600 CHỮ)
+    return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC 7 TIÊU CHÍ (KIỂM ĐỊNH CHI TIẾT SÂU SẮC)
 *📏 **Kiểm định thực tế:** Dung lượng **{word_count} chữ** (Yêu cầu đề bài: khoảng 600 chữ) | **{num_paras} đoạn văn** | **{num_sents} câu văn**.*
 
 | Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm |
@@ -738,12 +738,17 @@ QUY TẮC CHẤM NGHIÊM NGẶT:
 ---
 ### 📌 TỔNG ĐIỂM ĐẠT ĐƯỢC: **{total_score:.2f} / 10.0 điểm** — Xếp loại: **{rank}**
 
-#### 📝 NHẬN XÉT & HƯỚNG DẪN CHỈNH SỬA CỤ THỂ:
-* **Về yêu cầu dung lượng (khoảng 600 chữ):** Bài làm hiện tại đạt **{word_count} chữ** ({'đã đáp ứng tốt yêu cầu độ dài của đề bài' if word_count >= 550 else 'chưa đạt chuẩn dung lượng khoảng 600 chữ của đề bài, cần mở rộng thêm lập luận ở phần Thân bài'}).
-* **Các điểm cần hoàn thiện ngay:** 
-  1. Chỉnh sửa lại câu văn còn đơn giản/ngắn cụt trong bài: *\"{shortest_sent}\"*.
-  2. {'Em hãy quay lại Bước 2 (Thao tác 3 - Kho dẫn chứng 9 chủ điểm) để chọn lấy 1-2 nhân vật thực tế đưa vào bài viết.' if s5 < 1.5 else 'Tiếp tục trau chuốt câu văn phân tích dẫn chứng để tăng sức thuyết phục.'}
-  3. {'Bổ sung đoạn Phản đề phê phán các biểu hiện tiêu cực để bài viết toàn diện hơn.' if s6 < 0.75 else 'Giữ vững tư duy phản biện hai chiều sắc bén.'}"""
+#### 📝 ĐÁNH GIÁ SÂU SẮC & HƯỚNG DẪN CHỈNH SỬA CHI TIẾT TỪ HỆ THỐNG:
+1. **Đánh giá tổng quát về dung lượng & tư duy triển khai:** 
+   * Bài viết hiện tại đạt **{word_count} chữ** ({'đáp ứng tốt ngưỡng dung lượng khoảng 600 chữ của đề bài' if word_count >= 550 else 'còn thiếu hụt đáng kể so với yêu cầu bài văn khoảng 600 chữ, khiến các luận điểm bị triển khai dở dang, chưa tới tầm'}).
+   * Tư duy lập luận trong bài {'đã có sự kết hợp khá tốt giữa lý lẽ và thực tiễn' if arg_count >= 4 else 'còn đơn điệu, thiên về kể sự việc hoặc nêu cảm nhận chủ quan mà thiếu các tầng lập luận nguyên nhân - kết quả'}.
+
+2. **Chỉ ra các "lỗ hổng" cụ thể cần khắc phục ngay:**
+   * *Về câu chữ:* Cần gọt giũa hoặc viết lại câu văn còn đơn điệu/ngắn cụt trong bài: *\"{shortest_sent}\"*.
+   * *Về dẫn chứng:* {'Dẫn chứng trong bài chưa được phân tích sâu sắc; em cần làm rõ hành động cốt lõi của nhân vật thay vì chỉ nhắc tên chung chung.' if s5 < 1.5 else 'Phần dẫn chứng được lựa chọn và phân tích khá tốt, tạo điểm tựa thuyết phục cho bài văn.'}
+   * *Về phản đề:* {'Thiếu đoạn văn phản đề lật lại vấn đề; bài làm chỉ xuôi chiều một phía khiến chiều sâu tư duy bị hạn chế.' if s6 < 0.75 else 'Đã có ý thức phản biện hai chiều, giúp bài viết có thêm góc nhìn khách quan, đa chiều.'}
+
+3. **Gợi ý bước tiếp theo để nâng điểm:** Em hãy sửa trực tiếp các câu văn yếu tại khung soạn thảo ở cột bên trái, bổ sung thêm 1 dẫn chứng từ **Kho dẫn chứng 9 chủ điểm** ở Bước 2, sau đó bấm nút **"🔍 Cập nhật chấm lại Rubric"** để hệ thống ghi nhận sự tiến bộ và đẩy điểm số lên mức cao hơn!"""
 
 
 # ==============================================================================
@@ -822,8 +827,8 @@ with tabs[0]:
 
     with tab_de_tu_nhap:
         st.markdown("##### ✏️ Nhập đề bài riêng (Hệ thống tự động chuẩn hóa lệnh đề bài văn khoảng 600 chữ và lập dàn ý sát dạng đề):")
-        custom_de_text = st.text_area("Nội dung đề bài tự nhập:", placeholder="Ví dụ: Hãy viết một bài văn nghị luận (khoảng 600 chữ) trình bày suy nghĩ của anh/chị về sức mạnh của tinh thần sáng tạo...", height=110, key="txt_custom_de")
-        student_custom_vdnl = st.text_input("Theo em, vấn đề nghị luận trọng tâm của đề bài này là gì?", placeholder="Ví dụ: Sức mạnh của tinh thần sáng tạo...", key="txt_custom_vdnl")
+        custom_de_text = st.text_area("Nội dung đề bài tự nhập:", placeholder="Ví dụ: Có ý kiến cho rằng: 'Sự tử tế là thứ ngôn ngữ mà người điếc có thể nghe và người mù có thể thấy'... hoặc Bàn về tinh thần sáng tạo...", height=110, key="txt_custom_de")
+        student_custom_vdnl = st.text_input("Theo em, vấn đề nghị luận trọng tâm của đề bài này là gì?", placeholder="Ví dụ: Sức mạnh của lòng tử tế...", key="txt_custom_vdnl")
         if st.button("🔍 Phân tích đề tự nhập & Tạo khung định hướng Bước 2", type="primary", key="btn_custom_analyze"):
             if not custom_de_text.strip():
                 st.warning("⚠️ Vui lòng nhập nội dung đề bài trước khi bấm phân tích!")
@@ -833,7 +838,7 @@ with tabs[0]:
                     short_title = custom_de_text.strip()[:55] + ("..." if len(custom_de_text.strip()) > 55 else "")
                     st.session_state["selected_de_key"] = f"Đề tự nhập: {short_title}"
                     st.session_state["current_de_info"] = outline
-                    st.success("✅ Đã thiết lập xong Khung định hướng tư duy tinh gọn, đúng trọng tâm! Mời chuyển sang **Bước 2**.")
+                    st.success("✅ Đã thiết lập xong Khung định hướng tư duy chuẩn xác theo đúng dạng đề! Mời chuyển sang **Bước 2**.")
 
     st.markdown("---")
     cur_active_key = st.session_state["selected_de_key"]
@@ -852,15 +857,10 @@ with tabs[1]:
     with c_left:
         st.markdown(f"#### 🛠️ Khung định hướng tư duy cho: <span style='color:#2563eb;'>{cur_de_key}</span>", unsafe_allow_html=True)
         
-        with st.expander("📌 Thao tác 1: Giải thích (Ngắn gọn, đúng trọng tâm)", expanded=True):
+        with st.expander("📌 Thao tác 1: Giải thích (Linh hoạt theo dạng đề)", expanded=True):
             with st.container(border=True):
-                raw_explains = cur_de_info.get("explain_items", [])
-                # Nếu đề bài nêu trực tiếp vấn đề (không phải câu nói ẩn dụ trong ngoặc kép), chỉ hiển thị tinh gọn 1 ý giải thích khái niệm chính
-                if not is_metaphorical_quote_topic(cur_de_info.get("text", "")) and len(raw_explains) > 1:
-                    st.markdown(raw_explains[0])
-                else:
-                    for itm in raw_explains:
-                        st.markdown(itm)
+                for itm in cur_de_info.get("explain_items", []):
+                    st.markdown(itm)
                 st.markdown("---")
                 st.markdown(f"**👉 Chốt lại VĐNL:** {cur_de_info.get('vdnl_ket_luan', '')}")
 
@@ -877,7 +877,6 @@ with tabs[1]:
                 if isinstance(ev, dict):
                     st.markdown(f"<div class='evidence-card'><h5 style='margin:0 0 6px 0; color:#15803d;'>👤 {ev.get('ten', '')}</h5><p style='margin:0 0 6px 0;'><b>• Chi tiết:</b> {ev.get('chi_tiet', '')}</p><p style='margin:0 0 6px 0;'><b>• Ý nghĩa:</b> {ev.get('y_nghia', '')}</p></div>", unsafe_allow_html=True)
             
-            # Hộp chỉ dẫn nổi bật nhắc học sinh khai thác Kho dẫn chứng 9 chủ điểm
             st.markdown(
                 """
                 <div class="repo-guide-box">
@@ -963,7 +962,7 @@ with tabs[2]:
         col_w1, col_w2 = st.columns([1, 1])
         with col_w1:
             if st.button("💡 Nhắc lại tiêu chuẩn bài văn 600 chữ", use_container_width=True):
-                st.info("💡 **Lưu ý:** Bài văn cần đạt dung lượng khoảng 600 chữ, bố cục 3 phần rõ ràng, giải thích ngắn gọn trúng trọng tâm, thân bài đủ 5 luận điểm, có dẫn chứng thực tế và phản đề sắc bén!")
+                st.info("💡 **Lưu ý:** Bài văn cần đạt dung lượng khoảng 600 chữ, bố cục 3 phần rõ ràng, giải thích trúng trọng tâm, thân bài đủ 5 luận điểm, có dẫn chứng thực tế và phản đề sắc bén!")
         with col_w2:
             if st.button("📊 Nộp bài & Chấm Rubric 7 Tiêu Chí", type="primary", use_container_width=True):
                 if not essay_input.strip():
@@ -1010,7 +1009,7 @@ with tabs[3]:
             <b>📌 Hệ thống tiêu chí Rubric đánh giá bài văn Nghị luận xã hội (Chuẩn bài văn khoảng 600 chữ - Thang điểm 10):</b><br>
             1. <b>Bố cục (0.5đ):</b> Đủ 3 phần Mở - Thân - Kết, tách đoạn hợp lý.<br>
             2. <b>Xác định VĐNL (0.5đ):</b> Nêu đúng trọng tâm vấn đề nghị luận.<br>
-            3. <b>Giải thích (1.0đ):</b> Giải thích ngắn gọn, đúng trọng tâm khái niệm/hình ảnh của đề.<br>
+            3. <b>Giải thích (1.0đ):</b> Cắt nghĩa tường minh khái niệm hoặc ý nghĩa câu nói nhận định.<br>
             4. <b>Hệ thống luận điểm (3.5đ):</b> Triển khai tối thiểu 5 ý sâu sắc, đáp ứng dung lượng bài văn khoảng 600 chữ.<br>
             5. <b>Dẫn chứng (2.5đ):</b> Người thật việc thật xác thực, phân tích gắn với luận điểm.<br>
             6. <b>Phản đề & Bài học (1.0đ):</b> Có góc nhìn lật lại vấn đề hai chiều và bài học thực chất.<br>
