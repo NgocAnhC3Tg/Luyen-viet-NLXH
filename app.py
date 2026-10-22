@@ -6,7 +6,7 @@ import data_de_bai as db
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & TINH TẾ
+# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & CHUẨN SƯ PHẠM
 # ==============================================================================
 st.set_page_config(
     page_title="Hệ Thống Luyện Viết NLXH - 30 Đề Chuẩn Mực",
@@ -86,17 +86,6 @@ st.markdown(
         box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
     
-    .explain-box-clean {
-        background-color: #f0fdf4;
-        border: 1px solid #bbf7d0;
-        border-left: 5px solid #16a34a;
-        padding: 18px 22px;
-        border-radius: 10px;
-        line-height: 1.75;
-        font-size: 0.96rem;
-        color: #1e293b;
-    }
-
     .counter-box {
         background-color: #fef2f2;
         border: 1px solid #fecaca;
@@ -342,25 +331,17 @@ with tabs[1]:
             unsafe_allow_html=True,
         )
 
-        # Thao tác 1: Giải thích
+        # Thao tác 1: Giải thích (Hiển thị bằng st.markdown thuần túy để render đậm đẹp mắt)
         with st.expander("📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True):
             guide_txt = cur_de_info.get("explain_guide", "")
             items = cur_de_info.get("explain_items", [])
             vdnl_kl = cur_de_info.get("vdnl_ket_luan", "")
 
-            items_md = "\n".join([f"{it}" for it in items])
-            st.markdown(
-                f"""
-                <div class='explain-box-clean'>
-                    <p style='margin:0 0 10px 0; font-style:italic; color:#475569;'><i>{guide_txt}</i></p>
-                    <div style='margin:0 0 12px 0;'>{items_md}</div>
-                    <p style='margin:0; font-weight:700; color:#166534;'>
-                        👉 Chốt lại VĐNL (Tổng kết): <span style='font-weight:normal; font-style:italic;'>{vdnl_kl}</span>
-                    </p>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown(f"*{guide_txt}*")
+            st.markdown("---")
+            for itm in items:
+                st.markdown(itm)
+            st.markdown(f"**👉 Khái quát vấn đề cần nghị luận:** *{vdnl_kl}*")
 
         # Thao tác 2: Bàn luận trọng tâm
         with st.expander("💡 Thao tác 2: Bàn luận trọng tâm", expanded=True):
