@@ -1,4 +1,9 @@
+import base64
+import io
+import json
 import re
+import urllib.error
+import urllib.request
 import google.generativeai as genai
 import streamlit as st
 import data_de_bai as db
@@ -139,10 +144,15 @@ if "rubric_evaluation" not in st.session_state:
 if "eval_vdnl_text" not in st.session_state:
     st.session_state["eval_vdnl_text"] = ""
 
+
 # ==============================================================================
-# 3. HÀM GỌI AI TỰ ĐỘNG DÒ MODEL & CHỐNG CHẶN (ĐẢM BẢO CHẠY 100% TRÊN CLOUD)
+# 3. ĐỘNG CƠ GỌI AI QUA GIAO THỨC HTTPS REST (CHỐNG TREO 100% TRÊN STREAMLIT CLOUD)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
+    """
+    Gọi trực tiếp Gemini REST API qua HTTPS chuẩn với timeout=25s.
+    Giải quyết triệt để lỗi treo gRPC (vòng quay vô tận) trên Streamlit Cloud.
+    """
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
         api_key = get_default_api_key()
@@ -152,54 +162,95 @@ def call_gemini_engine(prompt_text, image_obj=None):
     if not api_key:
         return "❌ LỖI: Chưa có Gemini API Key. Vui lòng nhập API Key ở thanh cấu hình bên trái!"
 
-    genai.configure(api_key=api_key)
+    # Chuẩn bị nội dung gửi đi (Text hoặc Text + Ảnh bài làm)
+    parts = [{"text": prompt_text}]
+    if image_obj is not None:
+        try:
+            buffered = io.BytesIO()
+            img_rgb = image_obj.convert("RGB")
+            img_rgb.save(buffered, format="JPEG", quality=85)
+            img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            parts.append({
+                "inline_data": {
+                    "mime_type": "image/jpeg",
+                    "data": img_b64
+                }
+            })
+        except Exception as e:
+            return f"❌ Lỗi xử lý ảnh tải lên: {str(e)}"
 
-    # Cấu hình tắt bộ lọc chặn nhầm đối với các chủ đề nghị luận xã hội
-    safety_settings = [
-        {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-        {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-    ]
+    payload = {
+        "contents": [{"parts": parts}],
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+        ],
+        "generationConfig": {
+            "temperature": 0.4,
+            "maxOutputTokens": 2048,
+        }
+    }
+    data_bytes = json.dumps(payload).encode("utf-8")
 
-    # Danh sách ưu tiên các model phổ biến nhất
-    candidate_models = [
+    # Danh sách các model Gemini qua cổng HTTPS REST (tự động chuyển đổi nếu model đầu bận)
+    rest_models = [
+        "gemini-2.5-flash",
         "gemini-2.0-flash",
         "gemini-1.5-flash",
         "gemini-1.5-flash-latest",
         "gemini-1.5-pro",
-        "gemini-pro",
     ]
 
-    # Tự động quét thêm các model thực tế được cấp phép trên tài khoản API Key
-    try:
-        available = []
-        for m in genai.list_models():
-            if "generateContent" in getattr(m, "supported_generation_methods", []):
-                m_name = m.name.replace("models/", "")
-                available.append(m_name)
-        if available:
-            ordered = [c for c in candidate_models if c in available]
-            for a in available:
-                if a not in ordered:
-                    ordered.append(a)
-            candidate_models = ordered
-    except Exception:
-        pass
-
-    last_err = ""
-    for model_name in candidate_models:
+    last_error = ""
+    for model_name in rest_models:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        req = urllib.request.Request(
+            url,
+            data=data_bytes,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
         try:
-            model = genai.GenerativeModel(model_name)
-            content = [prompt_text, image_obj] if image_obj is not None else prompt_text
-            response = model.generate_content(content, safety_settings=safety_settings)
-            if response and hasattr(response, "text") and response.text:
-                return response.text.strip()
+            with urllib.request.urlopen(req, timeout=25) as resp:
+                resp_body = resp.read().decode("utf-8")
+                result_json = json.loads(resp_body)
+                candidates = result_json.get("candidates", [])
+                if candidates:
+                    content_parts = candidates[0].get("content", {}).get("parts", [])
+                    texts = [p.get("text", "") for p in content_parts if "text" in p]
+                    final_text = "".join(texts).strip()
+                    if final_text:
+                        return final_text
+        except urllib.error.HTTPError as http_err:
+            try:
+                err_detail = http_err.read().decode("utf-8")
+                err_json = json.loads(err_detail)
+                err_msg = err_json.get("error", {}).get("message", str(http_err))
+            except Exception:
+                err_msg = str(http_err)
+            last_error = f"HTTP {http_err.code} ({model_name}): {err_msg}"
+            # Nếu lỗi do API Key sai hoàn toàn thì dừng ngay để báo cho người dùng
+            if "API_KEY_INVALID" in err_msg or "API key not valid" in err_msg:
+                return "❌ LỖI: Gemini API Key không hợp lệ hoặc bị sai ký tự. Thầy/cô vui lòng kiểm tra lại mã Key ở thanh bên trái!"
+            continue
         except Exception as e:
-            last_err = str(e)
+            last_error = f"{model_name}: {str(e)}"
             continue
 
-    return f"❌ Không thể kết nối với AI. Chi tiết lỗi kỹ thuật: {last_err}. Vui lòng kiểm tra lại hiệu lực của Gemini API Key!"
+    # Phương án dự phòng cuối cùng qua SDK với transport="rest" (tắt hẳn gRPC)
+    try:
+        genai.configure(api_key=api_key, transport="rest")
+        model = genai.GenerativeModel("gemini-1.5-flash")
+        content = [prompt_text, image_obj] if image_obj is not None else prompt_text
+        resp = model.generate_content(content)
+        if resp and hasattr(resp, "text") and resp.text:
+            return resp.text.strip()
+    except Exception as e:
+        last_error = str(e)
+
+    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại Gemini API Key ở thanh bên trái!"
 
 
 def extract_section(text, tag_name):
@@ -215,23 +266,22 @@ Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm (xưng cô, gọi họ
 - Vấn đề nghị luận chuẩn của đề: "{vdnl_chuan}"
 - Câu trả lời xác định vấn đề nghị luận của học sinh: "{student_guess}"
 
-Hãy nhận xét ngắn gọn (khoảng 3-4 câu):
+Hãy nhận xét ngắn gọn (3-4 câu):
 1. Đánh giá câu trả lời của em đã ĐÚNG TRỌNG TÂM, CÒN THIẾU SÓT hay CHƯA CHÍNH XÁC.
-2. Chỉ ra điểm em làm tốt hoặc điểm cần điều chỉnh.
+2. Chỉ ra điểm em làm tốt hoặc điểm cần bổ sung.
 3. Chốt lại Vấn đề nghị luận chuẩn xác cho em: "{vdnl_chuan}".
 """
     return call_gemini_engine(prompt)
 
 
 def ai_analyze_custom_exam(exam_text, student_guess):
-    """Phân tích đề bài tự nhập bằng cơ chế Tag-based nhanh, nhẹ, không bao giờ lỗi JSON."""
     prompt = f"""
 Bạn là Giáo viên Ngữ văn THPT chuyên luyện thi Nghị luận xã hội (xưng cô - em).
 Hãy phân tích đề bài tự nhập sau đây:
 \"\"\"{exam_text}\"\"\"
 Học sinh tự xác định vấn đề nghị luận là: "{student_guess if student_guess else 'Chưa nhập'}"
 
-YÊU CẦU BẮT BUỘC: Trả lời theo ĐÚNG các thẻ đánh dấu dưới đây (giữ nguyên tên thẻ trong ngoặc vuông):
+YÊU CẦU BẮT BUỘC: Trả lời ngắn gọn, súc tích theo ĐÚNG các thẻ đánh dấu dưới đây (giữ nguyên tên thẻ trong ngoặc vuông):
 
 [NHAN_XET_VDNL]
 Nhận xét câu trả lời xác định VĐNL của học sinh (Đúng/Chưa đầy đủ/Lệch hướng) và khích lệ sư phạm.
@@ -281,8 +331,8 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
     if raw.startswith("❌"):
         return None, raw
 
-    vdnl_chuan = extract_section(raw, "VDNL_CHUAN") or "Vấn đề nghị luận trọng tâm của đề bài."
-    nhan_xet = extract_section(raw, "NHAN_XET_VDNL") or "Cô đã tiếp nhận câu trả lời của em. Em hãy đối chiếu với đáp án chuẩn bên dưới nhé."
+    vdnl_chuan = extract_section(raw, "VDNL_CHUAN") or (student_guess if student_guess else "Vấn đề nghị luận trọng tâm của đề bài.")
+    nhan_xet = extract_section(raw, "NHAN_XET_VDNL") or "Cô đã tiếp nhận câu trả lời của em. Em hãy đối chiếu với khung định hướng chuẩn bên dưới nhé."
     
     gt_raw = extract_section(raw, "GIAI_THICH")
     explain_items = [line.strip() for line in gt_raw.split("\n") if line.strip()]
@@ -360,7 +410,6 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    """Đánh giá bài làm ở Bước 4 theo đúng Thang đo Rubric chuẩn và xuất ra Bảng nhận xét."""
     rubric_prompt = f"""
 Bạn là Giám khảo và Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô - gọi học sinh là em).
 Hãy kiểm tra, đánh giá và hướng dẫn học sinh chỉnh sửa bài văn Nghị luận xã hội sau đây theo THANG RUBRIC CHUẨN.
@@ -414,7 +463,7 @@ with st.sidebar:
     if st.session_state["gemini_api_key"]:
         st.success("✅ Trợ lý Ngữ văn AI đã sẵn sàng!")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
-            with st.spinner("Đang kiểm tra kết nối với máy chủ Gemini..."):
+            with st.spinner("Đang kiểm tra kết nối qua cổng HTTPS REST..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
                 if test_res.startswith("❌"):
                     st.error(test_res)
@@ -531,7 +580,7 @@ with tabs[0]:
             if not custom_de_text.strip():
                 st.warning("⚠️ Vui lòng nhập nội dung đề bài trước khi bấm phân tích!")
             else:
-                with st.spinner("🤖 Cô giáo AI đang phân tích đề bài và xây dựng khung định hướng chi tiết cho Bước 2..."):
+                with st.spinner("🤖 Cô giáo AI đang phân tích đề bài (chỉ mất khoảng 3-5 giây)..."):
                     info_custom, feedback_msg = ai_analyze_custom_exam(custom_de_text.strip(), student_custom_vdnl.strip())
                     if info_custom is None:
                         st.error(feedback_msg)
@@ -540,7 +589,7 @@ with tabs[0]:
                         st.session_state["selected_de_key"] = f"Đề tự nhập: {short_title}"
                         st.session_state["current_de_info"] = info_custom
                         st.session_state["eval_vdnl_text"] = feedback_msg
-                        st.success("✅ Đã phân tích xong! Em hãy xem nhận xét VĐNL bên dưới và bấm sang tab **BƯỚC 2** để xem toàn bộ hướng dẫn giải thích, bàn luận, phản biện.")
+                        st.success("✅ Đã phân tích xong! Em hãy xem nhận xét VĐNL ngay bên dưới và bấm sang tab **BƯỚC 2** để xem toàn bộ khung định hướng chi tiết.")
 
     st.markdown("---")
     cur_active_key = st.session_state["selected_de_key"]
@@ -656,54 +705,56 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (ĐẢM BẢO PHẢN HỒI NGAY LẬP TỨC)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (HIỂN THỊ TRỰC TIẾP KHÔNG DÙNG RERUN GÂY KẸT)
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI luôn sẵn sàng giải đáp thắc mắc, gợi mở ý tưởng và hướng dẫn cách lập luận cho em.")
 
-        chat_display = st.container(height=420, border=True)
-        with chat_display:
-            for role, msg in st.session_state["chat_history"]:
-                if role == "user":
-                    st.markdown(f"🧑‍🎓 **Học sinh:** {msg}")
-                else:
-                    st.markdown(f"👩‍🏫 **Trợ lý Ngữ văn:**\n\n{msg}")
-                st.markdown("---")
-
         user_question = st.text_area(
             "Nhập câu hỏi của em dành cho Cô:",
-            placeholder="Ví dụ: Cô ơi gợi ý giúp em cách viết mở bài gián tiếp cho đề này, hoặc cách phân tích dẫn chứng...",
-            height=85,
+            placeholder="Ví dụ: Cô ơi gợi ý giúp em thêm dẫn chứng hoặc cách viết mở bài cho đề này ạ...",
+            height=90,
             key="txt_chat_input",
         )
 
         col_chat_1, col_chat_2 = st.columns([2, 1])
         with col_chat_1:
-            if st.button("🚀 Gửi câu hỏi cho Cô", type="primary", use_container_width=True):
-                if not user_question.strip():
-                    st.warning("⚠️ Em hãy nhập câu hỏi trước khi bấm gửi nhé!")
-                else:
-                    q_clean = user_question.strip()
-                    st.session_state["chat_history"].append(("user", q_clean))
-                    prompt_advisor = f"""
+            send_clicked = st.button("🚀 Gửi câu hỏi cho Cô", type="primary", use_container_width=True)
+        with col_chat_2:
+            clear_clicked = st.button("🗑️ Xóa lịch sử", use_container_width=True)
+
+        if clear_clicked:
+            st.session_state["chat_history"] = [
+                ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về đề bài này cứ hỏi cô nhé!")
+            ]
+
+        if send_clicked:
+            if not user_question.strip():
+                st.warning("⚠️ Em hãy nhập câu hỏi trước khi bấm gửi nhé!")
+            else:
+                q_clean = user_question.strip()
+                st.session_state["chat_history"].append(("user", q_clean))
+                prompt_advisor = f"""
 Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tâm lý (xưng cô - gọi học sinh là em).
-Nguyên tắc sư phạm: Định hướng tư duy, gợi mở phương pháp, làm mẫu câu ngắn gọn chứ không viết hộ toàn bộ bài văn.
+Nguyên tắc sư phạm: Định hướng tư duy, gợi mở phương pháp, gợi ý dẫn chứng hoặc làm mẫu câu ngắn gọn chứ không viết hộ toàn bộ bài văn.
 - Đề bài học sinh đang làm: "{cur_de_info.get('text', cur_de_key)}"
 - Vấn đề nghị luận: "{cur_de_info.get('vdnl_chuan', '')}"
 - Câu hỏi của học sinh: "{q_clean}"
 
 Hãy trả lời rõ ràng, sâu sắc, dễ hiểu để hỗ trợ học sinh:
 """
-                    with st.spinner("👩‍🏫 Cô đang suy nghĩ và viết câu trả lời cho em..."):
-                        ai_reply = call_gemini_engine(prompt_advisor)
-                    st.session_state["chat_history"].append(("assistant", ai_reply))
-                    st.rerun()
-        with col_chat_2:
-            if st.button("🗑️ Xóa lịch sử hỏi", use_container_width=True):
-                st.session_state["chat_history"] = [
-                    ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về đề bài này cứ hỏi cô nhé!")
-                ]
-                st.rerun()
+                with st.spinner("👩‍🏫 Cô đang suy nghĩ và trả lời em..."):
+                    ai_reply = call_gemini_engine(prompt_advisor)
+                st.session_state["chat_history"].append(("assistant", ai_reply))
+
+        chat_display = st.container(height=420, border=True)
+        with chat_display:
+            for role, msg in reversed(st.session_state["chat_history"]):
+                if role == "user":
+                    st.markdown(f"🧑‍🎓 **Học sinh:** {msg}")
+                else:
+                    st.markdown(f"👩‍🏫 **Trợ lý Ngữ văn:**\n\n{msg}")
+                st.markdown("---")
 
 
 # ------------------------------------------------------------------------------
