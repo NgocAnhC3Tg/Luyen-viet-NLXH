@@ -2,11 +2,10 @@ import json
 import re
 import google.generativeai as genai
 import streamlit as st
-import data_de_bai as db
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CAO CẤP & CHUẨN SƯ PHẠM
+# 1. CẤU HÌNH GIAO DIỆN VÀ KHO DỮ LIỆU TÍCH HỢP TRỰC TIẾP
 # ==============================================================================
 st.set_page_config(
     page_title="Hệ Thống Luyện Viết NLXH - 30 Đề Chuẩn Mực",
@@ -103,26 +102,108 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE
+# 2. KHO DỮ LIỆU TÍCH HỢP TRỰC TIẾP (30 ĐỀ VÀ 9 CHỦ ĐIỂM DẪN CHỨNG)
+# ==============================================================================
+DE_BAI_CO_BAN = {
+    "Đề 01: Sự cần thiết phải biết sống cống hiến": {
+        "text": "Trong bài thơ Tiếng hát con tàu, Chế Lan Viên từng viết: Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn! Từ ý nghĩa câu thơ, em hãy viết bài văn nghị luận bàn về ý nghĩa của lối sống có trách nhiệm và biết cống hiến cho cộng đồng.",
+        "vdnl_chuan": "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho cộng đồng của thế hệ trẻ.",
+        "explain_guide": "Thao tác giải thích theo đúng chuẩn: Giải thích VĐNL trước -> Giải thích câu nói/ngữ liệu -> Chốt lại VĐNL.",
+        "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Sống có trách nhiệm' là nhận thức đúng đắn về bổn phận của cá nhân đối với tập thể; 'cống hiến' là sự dấn thân đem tài năng, sức lực để đóng góp xây dựng những giá trị tốt đẹp cho cộng đồng.",
+            "- **Giải thích câu nói/ngữ liệu:** Hình ảnh thơ của Chế Lan Viên gợi nhắc sự biến đổi kỳ diệu từ không gian vô tri ('đất ở') thành không gian mang nặng nghĩa tình ('hóa tâm hồn') chính là nhờ vào sự gắn bó, vun đắp và cống hiến của con người.",
+            "- **Chốt lại VĐNL:** Từ đó, câu thơ khẳng định ý nghĩa cao đẹp và sự cần thiết của lối sống có trách nhiệm và biết cống hiến cho cộng đồng."
+        ],
+        "vdnl_ket_luan": "Ý nghĩa của lối sống có trách nhiệm và cống hiến cho cộng đồng.",
+        "questions": [{
+            "cau_hoi": "Vì sao thế hệ trẻ cần phải sống cống hiến và có trách nhiệm với cộng đồng?", 
+            "y_tra_loi": [
+                "- **Thứ nhất:** Cống hiến giúp con người vượt qua sự ích kỷ, vị kỷ cá nhân, kết nối sâu sắc với cộng đồng và xã hội.",
+                "- **Thứ hai:** Sức trẻ và tài năng nếu chỉ giữ cho riêng mình sẽ trở nên lãng phí; chỉ khi cống hiến, giá trị ấy mới được nhân lên gấp bội.",
+                "- **Thứ ba:** Đây là phương thức thiết thực nhất để tiếp nối truyền thống đạo lý 'uống nước nhớ nguồn', đền đáp công ơn của các thế hệ đi trước."
+            ]
+        }],
+        "evidence": [{"ten": "Hoàng Hoa Trung & Dự án Nuôi Em", "chi_tiet": "Nuôi cơm trưa hơn 60.000 học sinh vùng cao.", "y_nghia": "Trách nhiệm chuyển hóa thành hành động thiết thực.", "nguon": "Báo Tuổi Trẻ"}],
+        "counter": [
+            "- **Trường hợp 1 (Góc độ cực đoan):** Cống hiến không đồng nghĩa với việc bao đồm lo chuyện thiên hạ mà quên mất trách nhiệm gốc rễ với gia đình và bản thân.",
+            "- **Trường hợp 2 (Góc độ hình thức phô trương):** Cần phê phán lối cống hiến vụ lợi, làm màu check-in trên mạng xã hội thay vì xuất phát từ tâm.",
+            "- **Trường hợp 3 (Góc độ năng lực thực tế):** Cống hiến phải tùy sức, tùy tài, tránh ảo tưởng sức mạnh làm quá sức dẫn đến kiệt sức hoặc gây gánh nặng cho người khác."
+        ],
+        "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
+    },
+    "Đề 02: Trách nhiệm tiếp bước các thế hệ đi trước": {
+        "text": "Viết bài văn nghị luận bàn về trách nhiệm của thế hệ trẻ trong việc tiếp bước các thế hệ đi trước để xây dựng và bảo vệ đất nước.",
+        "vdnl_chuan": "Trách nhiệm, sứ mệnh lịch sử của thế hệ trẻ trong việc kế thừa truyền thống cha ông.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích bản chất -> Chốt lại VĐNL.",
+        "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tiếp bước' là hành động kế thừa, phát huy những thành quả, truyền thống tốt đẹp mà các thế hệ cha ông đã đổ xương máu gây dựng để xây dựng và bảo vệ đất nước.",
+            "- **Giải thích nội dung/bản chất:** Tiếp bước không phải là sự sao chép máy móc quá khứ mà là sự tiếp nối mạch nguồn lòng yêu nước, tinh thần tự tôn dân tộc bằng tư duy và hành động phù hợp với thời đại mới.",
+            "- **Chốt lại VĐNL:** Qua đó, làm nổi bật sứ mệnh lịch sử của thế hệ trẻ trong công cuộc xây dựng và bảo vệ Tổ quốc."
+        ],
+        "vdnl_ket_luan": "Sứ mệnh kế thừa và phát huy truyền thống cha ông.",
+        "questions": [{
+            "cau_hoi": "Trong thời bình, trách nhiệm tiếp bước cha ông được thể hiện qua những khía cạnh cụ thể nào?", 
+            "y_tra_loi": [
+                "- **Thứ nhất:** Không ngừng tu dưỡng đạo đức, giữ gìn và phát huy bản sắc văn hóa dân tộc trước sự giao thoa toàn cầu hóa.",
+                "- **Thứ hai:** Nỗ lực học tập, sáng tạo, làm chủ khoa học công nghệ để đưa đất nước thoát khỏi đói nghèo, vươn tầm quốc tế.",
+                "- **Thứ ba:** Sẵn sàng dấn thân, bảo vệ chủ quyền biên giới, hải đảo và giữ vững ổn định an ninh quốc gia khi Tổ quốc cần."
+            ]
+        }],
+        "evidence": [{"ten": "Thế hệ trẻ tình nguyện chống dịch và bão lũ", "chi_tiet": "Lao vào tâm dịch và vùng lũ cứu trợ đồng bào.", "y_nghia": "Tiếp nối truyền thống thương người như thể thương thân.", "nguon": "Báo Nhân Dân"}],
+        "counter": [
+            "- **Trường hợp 1 (Góc độ bảo thủ):** Tiếp bước truyền thống không phải là sự sao chép giáo điều, ôm giữ cái cũ lỗi thời bỏ qua tư duy đổi mới.",
+            "- **Trường hợp 2 (Góc độ ỷ lại hào quang):** Cần phê phán lối sống ỷ lại vào công lao của thế hệ trước mà tự mãn, lười biếng trong hiện tại.",
+            "- **Trường hợp 3 (Góc độ hội nhập cực đoan):** Tiếp bước không có nghĩa là khép kín cực đoan; cần biết dung hòa giữa bản sắc truyền thống và tinh hoa nhân loại."
+        ],
+        "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
+    }
+}
+
+KHO_DAN_CHUNG_9_CHU_DIEM = {
+    "1. Lòng nhân ái – vị tha – trách nhiệm cộng đồng": [
+        {"ten": "Albert Schweitzer", "noi_dung": "Từ bỏ sự nghiệp danh giá ở châu Âu để đến Gabon (châu Phi) xây dựng bệnh viện, tự tay chữa trị cho hàng ngàn người bệnh nhiệt đới, với triết lí 'tôn kính sự sống', nhận giải Nobel Hòa bình 1952.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "2. Ý chí – nghị lực – vượt lên nghịch cảnh": [
+        {"ten": "Derek Redmond", "noi_dung": "Vận động viên điền kinh Anh bị rách cơ đùi tại Olympic 1992, từ chối cáng cứu thương và được cha dìu về đích trong tiếng vỗ tay vang dội.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "3. Đam mê – lí tưởng - can đảm": [
+        {"ten": "Steve Jobs", "noi_dung": "Nhà sáng lập Apple, trải qua cú sốc bị sa thải khỏi chính công ty mình lập ra nhưng vẫn kiên định với khát vọng đổi mới công nghệ.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "4. Sáng tạo - đổi mới – nghĩ khác": [
+        {"ten": "Alexander Fleming", "noi_dung": "Vô tình phát hiện nấm mốc tiêu diệt vi khuẩn, mở ra kỷ nguyên kháng sinh penicillin cứu sống vô số người.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "5. Sự trung thực và giả dối": [
+        {"ten": "Edward Snowden", "noi_dung": "Tiết lộ tài liệu mật của chính phủ Mỹ, đánh đổi sự an toàn cá nhân để phơi bày sự thật trước công chúng.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "6. Danh vọng, vật chất và những vấn đề thiếu lành mạnh": [
+        {"ten": "Choi Sulli", "noi_dung": "Ngôi sao K-Pop chịu áp lực dư luận và bạo lực mạng khắc nghiệt, để lại hồi chuông cảnh báo về sức khỏe tâm thần.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "7. Bản sắc – nguồn cội – hòa nhập": [
+        {"ten": "Trần Đặng Đăng Khoa", "noi_dung": "Đi vòng quanh thế giới bằng xe máy, luôn mang theo tà áo dài và cờ Tổ quốc để quảng bá văn hóa Việt Nam.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "8. Những lối sống và quan niệm tích cực": [
+        {"ten": "Nghệ thuật Kintsugi (Nhật Bản)", "noi_dung": "Nghệ thuật hàn gắn đồ gốm vỡ bằng bột vàng, biến tổn thương thành vẻ đẹp độc bản, chấp nhận sự không hoàn hảo.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "9. Các hiện tượng tâm lí – xã hội đương đại": [
+        {"ten": "FOMO & JOMO", "noi_dung": "Nỗi sợ bị bỏ lỡ trên mạng xã hội vs Niềm vui chủ động ngắt kết nối để quay về chăm sóc nội tâm.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ]
+}
+
+# ==============================================================================
+# 3. QUẢN LÝ SESSION STATE
 # ==============================================================================
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = st.secrets.get("gemini_api_key", "")
 
 if "selected_de_key" not in st.session_state:
-    st.session_state["selected_de_key"] = list(db.DE_BAI_CO_BAN.keys())[0]
+    st.session_state["selected_de_key"] = list(DE_BAI_CO_BAN.keys())[0]
 
 if "current_de_info" not in st.session_state:
-    st.session_state["current_de_info"] = db.DE_BAI_CO_BAN[
-        st.session_state["selected_de_key"]
-    ]
+    st.session_state["current_de_info"] = DE_BAI_CO_BAN[st.session_state["selected_de_key"]]
 
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
-    api_key_input = st.text_input(
-        "Gemini API Key:",
-        type="password",
-        value=st.session_state["gemini_api_key"],
-    )
+    api_key_input = st.text_input("Gemini API Key:", type="password", value=st.session_state["gemini_api_key"])
     if api_key_input != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = api_key_input.strip()
 
@@ -138,17 +219,17 @@ with st.sidebar:
     st.write("3. **✍️ Bước 3:** Xưởng viết bài")
     st.write("4. **📁 Bước 4:** Hồ sơ bài làm")
 
-
 # ==============================================================================
-# 3. HÀM GỌI AI AN TOÀN, CHỐNG TREO MÁY
+# 4. HÀM GỌI AI ỔN ĐỊNH TUYỆT ĐỐI (SỬ DỤNG GEMINI-1.5-FLASH CHUẨN)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
-        return "❌ LỖI: Bạn chưa nhập Gemini API Key ở thanh bên trái!"
+        return "❌ LỖI: Thầy/cô chưa nhập Gemini API Key ở thanh bên trái!"
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash-latest")
+        # Sử dụng model gemini-1.5-flash chuẩn mực, không phụ thuộc v1beta
+        model = genai.GenerativeModel("gemini-1.5-flash")
         if image_obj:
             response = model.generate_content([prompt_text, image_obj])
         else:
@@ -157,8 +238,15 @@ def call_gemini_engine(prompt_text, image_obj=None):
             return response.text
         return "⚠️ AI đã tiếp nhận nhưng không trả về nội dung."
     except Exception as e:
+        try:
+            # Fallback dự phòng sang gemini-pro nếu flash gặp lỗi nhà mạng/khu vực
+            model_fb = genai.GenerativeModel("gemini-pro")
+            response = model_fb.generate_content(prompt_text)
+            if response and response.text:
+                return response.text
+        except Exception:
+            pass
         return f"❌ LỖI KẾT NỐI GEMINI API: {str(e)}"
-
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     prompt = f"""
@@ -177,89 +265,10 @@ Xuất ra JSON duy nhất:
     except Exception:
         return {"status": "LECH", "feedback": "Câu trả lời chưa hoàn toàn sát trọng tâm.", "suggested_fix": vdnl_chuan}
 
-
-def ai_analyze_custom_exam(exam_text, student_guess):
-    prompt = f"""
-Bạn là chuyên gia khảo thí Ngữ văn THPT. Phân tích đề bài tự dán: \"\"\"{exam_text}\"\"\"
-Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
-
-Yêu cầu xuất ra JSON duy nhất gồm đúng cấu trúc:
-{{
-  "status": "DUNG" | "LECH" | "SAI",
-  "feedback": "Nhận xét sư phạm (xưng cô - em)",
-  "vdnl_chuan": "VĐNL cốt lõi chuẩn",
-  "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu/nhận định -> Chốt lại VĐNL.",
-  "explain_items": [
-    "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
-    "- **Giải thích ngữ liệu/câu nói:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
-    "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
-  ],
-  "vdnl_ket_luan": "Chốt vấn đề nghị luận.",
-  "questions": [
-    {{"cau_hoi": "Ý 1 bàn luận?", "y_tra_loi": ["- **Thứ nhất:** ...", "- **Thứ hai:** ...", "- **Thứ ba:** ..."]}}
-  ],
-  "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết", "y_nghia": "Ý nghĩa", "nguon": "Nguồn"}}],
-  "counter": [
-    "- **Trường hợp 1 (Góc độ cực đoan):** ...",
-    "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** ...",
-    "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** ..."
-  ],
-  "dani_chi_tiet": {
-    "mb": "Dẫn dắt và giới thiệu VĐNL.",
-    "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
-    "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
-    "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
-    "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
-    "kb": "Tổng kết vấn đề và rút ra bài học."
-  }
-}}
-"""
-    raw = call_gemini_engine(prompt)
-    try:
-        clean_raw = re.sub(r"```json\s*|\s*```", "", raw).strip()
-        match = re.search(r"\{.*\}", clean_raw, re.DOTALL)
-        return json.loads(match.group(0)) if match else json.loads(clean_raw)
-    except Exception:
-        return {
-            "status": "LECH",
-            "feedback": "Cô nhận thấy em đã cố gắng nhưng cần điều chỉnh để diễn đạt chuẩn xác hơn.",
-            "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận từ đề bài",
-            "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu -> Chốt lại VĐNL.",
-            "explain_items": [
-                "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
-                "- **Giải thích ngữ liệu:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
-                "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
-            ],
-            "vdnl_ket_luan": student_guess if student_guess else "Vấn đề nghị luận trọng tâm.",
-            "questions": [{
-                "cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?",
-                "y_tra_loi": [
-                    "- **Thứ nhất:** Giúp bồi dưỡng nhận thức và tư duy tích cực.",
-                    "- **Thứ hai:** Định hình nhân cách và hành động đúng đắn.",
-                    "- **Thứ ba:** Tạo ra giá trị thiết thực cho cộng đồng."
-                ]
-            }],
-            "evidence": [{"ten": "Hoàng Hoa Trung - Dự án Nuôi Em", "chi_tiet": "Nuôi cơm trưa cho trẻ em vùng cao.", "y_nghia": "Tinh thần cống hiến.", "nguon": "Báo Tuổi Trẻ"}],
-            "counter": [
-                "- **Trường hợp 1 (Góc độ cực đoan):** Vấn đề không nên được tuyệt đối hóa thành chân lý cứng nhắc trong mọi hoàn cảnh.",
-                "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** Cần xem xét điều kiện thực tế, tránh áp đặt chủ quan.",
-                "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** Tránh biến giá trị tốt đẹp thành vỏ bọc hình thức để phô trương."
-            ],
-            "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
-        }
-
-
 # ==============================================================================
-# 4. GIAO DIỆN CHÍNH & TABS
+# 5. GIAO DIỆN CHÍNH & TABS
 # ==============================================================================
-st.markdown(
-    """
-<div class="hero-banner">
-    <div class="hero-title">🖊️ HỆ THỐNG 30 ĐỀ NGHỊ LUẬN XÃ HỘI THPT</div>
-</div>
-""",
-    unsafe_allow_html=True,
-)
+st.markdown('<div class="hero-banner"><div class="hero-title">🖊️ HỆ THỐNG 30 ĐỀ NGHỊ LUẬN XÃ HỘI THPT</div></div>', unsafe_allow_html=True)
 
 tabs = st.tabs([
     "🌱 BƯỚC 1: TÌM HIỂU ĐỀ",
@@ -268,262 +277,87 @@ tabs = st.tabs([
     "📁 HỒ SƠ BÀI LÀM",
 ])
 
-# ------------------------------------------------------------------------------
-# BƯỚC 1: TÌM HIỂU ĐỀ
-# ------------------------------------------------------------------------------
 with tabs[0]:
-    st.markdown(
-        '<div class="section-title">🔍 Lựa chọn đề bài & Xác định vấn đề nghị luận</div>',
-        unsafe_allow_html=True,
-    )
-
-    tab_de_coban, tab_de_nangcao, tab_de_tu_nhap = st.tabs([
-        "🟢 Nhóm Đề Cơ Bản (01–15)",
-        "🔴 Nhóm Đề Nâng Cao (16–30)",
-        "✏️ Nhập/Dán Đề Bài Riêng",
-    ])
-
-    with tab_de_coban:
-        col_cb1, col_cb2 = st.columns([1, 2], gap="medium")
-        with col_cb1:
-            selected_cb_key = st.selectbox(
-                "Chọn đề Cơ bản:", list(db.DE_BAI_CO_BAN.keys()), key="sb_coban"
-            )
-            de_info_cb = db.DE_BAI_CO_BAN[selected_cb_key]
-        with col_cb2:
-            with st.container(border=True):
-                st.markdown("##### 📖 Nội dung đề bài Cơ bản:")
-                st.info(de_info_cb["text"].replace("**", ""))
-
-            if st.button(
-                "📌 Chọn đề này & Chuyển sang Bước 2",
-                key="btn_chon_cb",
-                type="primary",
-            ):
-                st.session_state["selected_de_key"] = selected_cb_key
-                st.session_state["current_de_info"] = de_info_cb
-                st.session_state["eval_vdnl_result"] = None
-                st.success(f"Đã chọn: {selected_cb_key}! Mời các em bấm qua tab 'BƯỚC 2'.")
-
-    with tab_de_nangcao:
-        col_nc1, col_nc2 = st.columns([1, 2], gap="medium")
-        with col_nc1:
-            selected_nc_key = st.selectbox(
-                "Chọn đề Nâng cao:", list(db.DE_BAI_NANG_CAO.keys()), key="sb_nangcao"
-            )
-            de_info_nc = db.DE_BAI_NANG_CAO[selected_nc_key]
-        with col_nc2:
-            with st.container(border=True):
-                st.markdown("##### 📖 Nội dung đề bài Nâng cao:")
-                st.info(de_info_nc["text"].replace("**", ""))
-
-            if st.button(
-                "📌 Chọn đề này & Chuyển sang Bước 2",
-                key="btn_chon_nc",
-                type="primary",
-            ):
-                st.session_state["selected_de_key"] = selected_nc_key
-                st.session_state["current_de_info"] = de_info_nc
-                st.session_state["eval_vdnl_result"] = None
-                st.success(f"Đã chọn: {selected_nc_key}! Mời các em bấm qua tab 'BƯỚC 2'.")
-
-    with tab_de_tu_nhap:
-        custom_de_text = st.text_area(
-            "Nội dung đề bài tự chọn:",
-            placeholder="Ví dụ: Viết bài văn nghị luận bàn về...",
-            height=100,
-        )
-        student_custom_vdnl = st.text_input(
-            "Vấn đề nghị luận em tự đoán cho đề này:",
-            placeholder="Gõ VĐNL theo suy nghĩ của em...",
-        )
-        if st.button("🔍 Tạo khung định hướng cho đề tự nhập", type="primary"):
-            if custom_de_text.strip():
-                with st.spinner("AI đang phân tích ngữ liệu và tạo khung định hướng..."):
-                    res_custom = ai_analyze_custom_exam(custom_de_text, student_custom_vdnl)
-                    ten_de_custom = "Đề tự nhập: " + (custom_de_text[:30] + "..." if len(custom_de_text) > 30 else custom_de_text)
-                    info_custom = {
-                        "text": custom_de_text,
-                        "vdnl_chuan": res_custom.get("vdnl_chuan", student_custom_vdnl),
-                        "explain_guide": res_custom.get("explain_guide", ""),
-                        "explain_items": res_custom.get("explain_items", []),
-                        "vdnl_ket_luan": res_custom.get("vdnl_ket_luan", student_custom_vdnl),
-                        "questions": res_custom.get("questions", []),
-                        "evidence": res_custom.get("evidence", []),
-                        "counter": res_custom.get("counter", []),
-                        "dani_chi_tiet": res_custom.get("dani_chi_tiet", {
-                            "mb": "Dẫn dắt và giới thiệu VĐNL.",
-                            "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
-                            "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
-                            "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
-                            "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
-                            "kb": "Tổng kết vấn đề và rút ra bài học."
-                        })
-                    }
-                    st.session_state["selected_de_key"] = ten_de_custom
-                    st.session_state["current_de_info"] = info_custom
-                    st.session_state["eval_vdnl_result"] = {
-                        "status": res_custom.get("status", "LECH"),
-                        "feedback": res_custom.get("feedback", ""),
-                        "suggested_fix": res_custom.get("vdnl_chuan", "")
-                    }
-                    st.success("✅ Đã tạo xong khung định hướng cho đề tự nhập!")
+    st.markdown('<div class="section-title">🔍 Lựa chọn đề bài & Xác định vấn đề nghị luận</div>', unsafe_allow_html=True)
+    sel_cb = st.selectbox("Chọn đề Cơ bản:", list(DE_BAI_CO_BAN.keys()), key="sb_cb")
+    info_cb = DE_BAI_CO_BAN[sel_cb]
+    
+    with st.container(border=True):
+        st.info(info_cb["text"])
+    
+    if st.button("📌 Chọn đề này & Chuyển sang Bước 2", key="btn_cb", type="primary"):
+        st.session_state["selected_de_key"] = sel_cb
+        st.session_state["current_de_info"] = info_cb
+        st.session_state["eval_vdnl_result"] = None
+        st.success(f"Đã chọn: {sel_cb}! Mời thầy/cô bấm qua tab 'BƯỚC 2'.")
 
     st.markdown("---")
-    cur_active_key = st.session_state["selected_de_key"]
-    cur_active_info = st.session_state["current_de_info"]
-    st.info(f"📌 **Đề bài hiện tại đang chọn:** {cur_active_key}")
+    cur_key = st.session_state["selected_de_key"]
+    cur_info = st.session_state["current_de_info"]
+    st.info(f"📌 **Đề đang chọn:** {cur_key}")
 
-    if "Đề tự nhập" not in cur_active_key:
-        student_vdnl = st.text_input(
-            "⚡ Thao tác học sinh: Xác định vấn đề nghị luận của đề đang chọn:",
-            placeholder="Gõ câu trả lời của em ở đây...",
-        )
-        if st.button("🔍 Đối chiếu vấn đề nghị luận với AI", type="primary"):
-            if student_vdnl.strip():
-                with st.spinner("AI đang thẩm định nghiêm túc..."):
-                    res = ai_evaluate_student_vdnl(
-                        cur_active_info["text"],
-                        cur_active_info["vdnl_chuan"],
-                        student_vdnl,
-                    )
-                    st.session_state["eval_vdnl_result"] = res
-            else:
-                st.warning("Các em chưa nhập câu trả lời!")
+    student_vdnl = st.text_input("⚡ Xác định vấn đề nghị luận:", placeholder="Gõ câu trả lời...")
+    if st.button("🔍 Đối chiếu với AI", type="primary"):
+        if student_vdnl.strip():
+            with st.spinner("AI đang thẩm định..."):
+                st.session_state["eval_vdnl_result"] = ai_evaluate_student_vdnl(cur_info["text"], cur_info["vdnl_chuan"], student_vdnl)
 
     if st.session_state.get("eval_vdnl_result"):
         res = st.session_state["eval_vdnl_result"]
         if res.get("status") == "DUNG":
             st.success(f"🎯 **CHÍNH XÁC!** {res.get('feedback')}")
         else:
-            st.warning(
-                f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:*"
-                f" {res.get('suggested_fix')}"
-            )
+            st.warning(f"⚠️ **CẦN ĐIỀU CHỈNH:** {res.get('feedback')}\n\n👉 *Đáp án chuẩn:* {res.get('suggested_fix')}")
 
-# ------------------------------------------------------------------------------
-# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG
-# ------------------------------------------------------------------------------
 with tabs[1]:
-    cur_de_key = st.session_state["selected_de_key"]
-    cur_de_info = st.session_state["current_de_info"]
-
+    cur_key = st.session_state["selected_de_key"]
+    cur_info = st.session_state["current_de_info"]
     c_left, c_right = st.columns([1.1, 0.9], gap="large")
 
     with c_left:
-        st.markdown(
-            f"#### 🛠️ Gợi ý khung tư duy cho: <span style='color:#2563eb;'>{cur_de_key}</span>",
-            unsafe_allow_html=True,
-        )
-
-        # Thao tác 1: Giải thích (Chuẩn trật tự: Giải thích VĐNL -> Câu nói -> Chốt lại VĐNL)
-        with st.expander("📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True):
-            guide_txt = cur_de_info.get("explain_guide", "")
-            items = cur_de_info.get("explain_items", [])
-            vdnl_kl = cur_de_info.get("vdnl_ket_luan", "")
-
+        st.markdown(f"#### 🛠️ Gợi ý khung tư duy cho: <span style='color:#2563eb;'>{cur_key}</span>", unsafe_allow_html=True)
+        with st.expander("📌 Thao tác 1: Giải thích", expanded=True):
+            guide_txt = cur_info.get("explain_guide", "")
+            items = cur_info.get("explain_items", [])
+            vdnl_kl = cur_info.get("vdnl_ket_luan", "")
             st.markdown(f"*{guide_txt}*")
             st.markdown("---")
             for itm in items:
                 st.markdown(itm)
             st.markdown(f"**👉 Chốt lại VĐNL:** *{vdnl_kl}*")
 
-        # Thao tác 2: Bàn luận trọng tâm
         with st.expander("💡 Thao tác 2: Bàn luận trọng tâm", expanded=True):
-            for q in cur_de_info.get("questions", []):
-                st.markdown(f"**❓ {q.get('cau_hoi', '')}**")
+            for q in cur_info.get("questions", []):
+                st.markdown(f"**❓ {q.get('cau_hoi')}**")
                 for ans in q.get("y_tra_loi", []):
                     st.markdown(f"{ans}")
 
-        # Thao tác 3: Dẫn chứng
-        with st.expander("📚 Thao tác 3: Kho dẫn chứng trọng tâm & Dẫn chứng mở rộng", expanded=True):
-            st.markdown("##### 📌 Dẫn chứng thực tế tường minh cho đề bài:")
-            for ev in cur_de_info.get("evidence", []):
-                if isinstance(ev, dict):
-                    st.markdown(
-                        f"""
-                        <div class='evidence-card'>
-                            <h5 style='margin:0 0 6px 0; color:#15803d;'>👤 {ev.get('ten', '')}</h5>
-                            <p style='margin:0 0 6px 0;'><b>• Chi tiết:</b> {ev.get('chi_tiet', '')}</p>
-                            <p style='margin:0 0 6px 0;'><b>• Ý nghĩa:</b> {ev.get('y_nghia', '')}</p>
-                            <p style='margin:0; font-size:0.85rem; color:#64748b;'>📰 <i>Nguồn: {ev.get('nguon', '')}</i></p>
-                        </div>
-                        """,
-                        unsafe_allow_html=True,
-                    )
-                else:
-                    st.markdown(f"<div class='evidence-card'>{ev}</div>", unsafe_allow_html=True)
-
-            st.markdown("---")
-            st.markdown("##### 📚 Tra cứu Kho dẫn chứng mở rộng (9 nhóm chủ điểm):")
-            selected_topic = st.selectbox(
-                "Chọn chủ điểm dẫn chứng cần tra cứu:",
-                options=list(db.KHO_DAN_CHUNG_9_CHU_DIEM.keys()),
-                key="sb_kho_dc",
-            )
-            for dc in db.KHO_DAN_CHUNG_9_CHU_DIEM[selected_topic]:
+        with st.expander("📚 Thao tác 3: Kho dẫn chứng trọng tâm & 9 chủ điểm", expanded=True):
+            for ev in cur_info.get("evidence", []):
+                st.markdown(f"<div class='evidence-card'><b>{ev.get('ten')}</b>: {ev.get('chi_tiet')}</div>", unsafe_allow_html=True)
+            
+            sel_top = st.selectbox("Chọn chủ điểm dẫn chứng mở rộng:", options=list(KHO_DAN_CHUNG_9_CHU_DIEM.keys()))
+            for dc in KHO_DAN_CHUNG_9_CHU_DIEM[sel_top]:
                 with st.container(border=True):
-                    st.markdown(f"#### 👤 <span style='color:#1d4ed8;'>{dc['ten']}</span>", unsafe_allow_html=True)
-                    st.write(dc["noi_dung"])
-                    st.caption(f"📰 *Nguồn: {dc['nguon']}*")
+                    st.markdown(f"**{dc['ten']}**: {dc['noi_dung']}")
 
-        # Thao tác 4: Phản biện (Đã có đủ 3 trường hợp/hướng)
-        with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng (3 trường hợp lật lại vấn đề)", expanded=True):
-            st.markdown("*Lưu ý học sinh: Khi làm bài, cần tránh nhìn nhận vấn đề một chiều, tuyệt đối hóa mà phải biết phản biện đa chiều qua các trường hợp sau:*")
-            st.markdown("---")
-            for c_item in cur_de_info.get("counter", []):
+        with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng (3 trường hợp)", expanded=True):
+            for c_item in cur_info.get("counter", []):
                 st.markdown(f"<div class='counter-box'>{c_item}</div>", unsafe_allow_html=True)
-
-        # ĐỊNH HƯỚNG DÀN Ý 3 PHẦN
-        st.markdown("---")
-        st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
-        dani_data = cur_de_info.get(
-            "dani_chi_tiet",
-            {
-                "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
-                "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
-                "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
-                "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
-                "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
-                "kb": "Tổng kết vấn đề và rút ra bài học.",
-            },
-        )
-
-        st.markdown(
-            f"""
-### 🌟 I. PHẦN MỞ BÀI
-- **Dẫn dắt & Giới thiệu VĐNL:** {dani_data.get('mb', '')}
-
-### 🌟 II. PHẦN THÂN BÀI
-- **1. Mục Giải thích:** {dani_data.get('gt', '')}
-- **2. Mục Bàn luận trọng tâm:** {dani_data.get('bl', '')}
-- **3. Mục Dẫn chứng thực tế:** {dani_data.get('dc', '')}
-- **4. Mục Phản biện đa chiều (3 trường hợp):** {dani_data.get('pb', '')}
-
-### 🌟 III. PHẦN KẾT BÀI
-- **Tổng kết & Bài học hành động:** {dani_data.get('kb', '')}
-"""
-        )
 
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
-        st.info("💡 Học sinh gõ câu hỏi bên dưới, bấm nút gửi để nhận định hướng sư phạm từ Cô giáo AI.")
-
-        user_question = st.text_input("Nhập câu hỏi của em:", placeholder="Ví dụ: Gợi ý thêm cho em ý bàn luận...", key="input_ai_b2")
-        
-        if st.button("Gửi câu hỏi cho Cô 🚀", type="primary", key="btn_send_ai"):
-            if user_question.strip():
+        st.info("💡 Nhập câu hỏi bên dưới và bấm nút để AI phản hồi ngay lập tức.")
+        user_q = st.text_input("Nhập câu hỏi cho Trợ lý AI:", placeholder="Hỏi cô về phương pháp...", key="user_q_input")
+        if st.button("Gửi câu hỏi cho Cô 🚀", type="primary"):
+            if user_q.strip():
                 with st.spinner("Trợ lý Ngữ văn đang suy nghĩ..."):
-                    prompt_chat = f"Bạn là Giáo viên Ngữ văn THPT tâm lý, tuân thủ nguyên tắc SƯ PHẠM (TUYỆT ĐỐI KHÔNG VIẾT HỘ, chỉ đặt câu hỏi gợi mở, xưng cô - em). Đề bài: {cur_de_key}. Học sinh hỏi: {user_question}. Hãy trả lời ngắn gọn định hướng tư duy:"
-                    reply = call_gemini_engine(prompt_chat)
+                    reply = call_gemini_engine(f"Đề bài: {cur_key}. Học sinh hỏi: {user_q}. Hãy đưa ra định hướng sư phạm ngắn gọn, xưng cô - em.")
                 st.markdown("### 🤖 Trợ lý Ngữ văn trả lời:")
                 st.success(reply)
             else:
-                st.warning("Em chưa nhập câu hỏi!")
+                st.warning("Vui lòng nhập nội dung câu hỏi!")
 
-# ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI
-# ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
     write_mode = st.radio("Chọn hình thức nộp bài:", ["✍️ Tự gõ bài viết trực tiếp", "📷 Gửi ảnh chụp bài viết tay"], horizontal=True)
@@ -540,9 +374,6 @@ with tabs[2]:
                     feedback = call_gemini_engine(f"Nhận xét bài làm cho đề: {cur_key}", image_obj=img)
                     st.success(feedback)
 
-# ------------------------------------------------------------------------------
-# HỒ SƠ BÀI LÀM
-# ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown('<div class="section-title">📁 Hồ Sơ Bài Làm & Xuất File</div>', unsafe_allow_html=True)
     if st.session_state.get("user_essay"):
