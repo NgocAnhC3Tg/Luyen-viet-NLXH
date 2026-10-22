@@ -4,7 +4,6 @@ import json
 import re
 import urllib.error
 import urllib.request
-import google.generativeai as genai
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
@@ -110,16 +109,36 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE
+# 2. HÀM LÀM SẠCH API KEY & QUẢN LÝ SESSION STATE
 # ==============================================================================
+def sanitize_api_key(raw_key):
+    """
+    Tự động trích xuất đúng mã Gemini API Key (bắt đầu bằng AIza...)
+    hoặc loại bỏ toàn bộ các ký tự tiếng Việt có dấu / khoảng trắng gây lỗi latin-1.
+    """
+    if not raw_key:
+        return ""
+    s = str(raw_key).strip()
+    # Nếu trong chuỗi có chứa mã chuẩn của Google (bắt đầu bằng AIza), tự động tách lấy đúng mã đó
+    match = re.search(r"(AIza[0-9A-Za-z\-_]{25,50})", s)
+    if match:
+        return match.group(1)
+    # Loại bỏ mọi ký tự ngoài bảng mã ASCII chuẩn (như chữ tiếng Việt có dấu) và khoảng trắng
+    clean_ascii = "".join(ch for ch in s if 33 <= ord(ch) <= 126)
+    return clean_ascii
+
+
 def get_default_api_key():
     try:
         for k in ["gemini_api_key", "GEMINI_API_KEY", "GOOGLE_API_KEY"]:
             if k in st.secrets and st.secrets[k]:
-                return str(st.secrets[k]).strip()
+                cleaned = sanitize_api_key(st.secrets[k])
+                if cleaned:
+                    return cleaned
     except Exception:
         pass
     return ""
+
 
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = get_default_api_key()
@@ -146,30 +165,30 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI QUA GIAO THỨC HTTPS REST (CHỐNG TREO 100% TRÊN STREAMLIT CLOUD)
+# 3. ĐỘNG CƠ GỌI AI QUA GIAO THỨC HTTPS REST (CHỐNG LỖI LATIN-1 & CHỐNG TREO 100%)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
-    """
-    Gọi trực tiếp Gemini REST API qua HTTPS chuẩn với timeout=25s.
-    Giải quyết triệt để lỗi treo gRPC (vòng quay vô tận) trên Streamlit Cloud.
-    """
-    api_key = st.session_state.get("gemini_api_key", "").strip()
+    raw_key = st.session_state.get("gemini_api_key", "")
+    api_key = sanitize_api_key(raw_key)
+
     if not api_key:
         api_key = get_default_api_key()
         if api_key:
             st.session_state["gemini_api_key"] = api_key
 
     if not api_key:
-        return "❌ LỖI: Chưa có Gemini API Key. Vui lòng nhập API Key ở thanh cấu hình bên trái!"
+        return "❌ LỖI: Chưa có Gemini API Key hợp lệ. Vui lòng nhập mã API Key (bắt đầu bằng chữ AIza...) ở thanh bên trái!"
 
-    # Chuẩn bị nội dung gửi đi (Text hoặc Text + Ảnh bài làm)
-    parts = [{"text": prompt_text}]
+    if not api_key.startswith("AIza"):
+        return f"⚠️ CẢNH BÁO: Mã API Key hiện tại đang nhập chưa đúng định dạng của Google (mã chuẩn phải bắt đầu bằng chữ `AIza...`, không chứa dấu tiếng Việt). Vui lòng bấm vào biểu tượng con mắt 👁️ ở ô API Key bên trái để kiểm tra và dán lại mã Key!"
+
+    parts = [{"text": str(prompt_text)}]
     if image_obj is not None:
         try:
             buffered = io.BytesIO()
             img_rgb = image_obj.convert("RGB")
             img_rgb.save(buffered, format="JPEG", quality=85)
-            img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+            img_b64 = base64.b64encode(buffered.getvalue()).decode("ascii")
             parts.append({
                 "inline_data": {
                     "mime_type": "image/jpeg",
@@ -192,9 +211,9 @@ def call_gemini_engine(prompt_text, image_obj=None):
             "maxOutputTokens": 2048,
         }
     }
-    data_bytes = json.dumps(payload).encode("utf-8")
+    # ensure_ascii=True biến toàn bộ chữ tiếng Việt thành chuỗi escape ASCII an toàn tuyệt đối
+    data_bytes = json.dumps(payload, ensure_ascii=True).encode("ascii")
 
-    # Danh sách các model Gemini qua cổng HTTPS REST (tự động chuyển đổi nếu model đầu bận)
     rest_models = [
         "gemini-2.5-flash",
         "gemini-2.0-flash",
@@ -209,12 +228,12 @@ def call_gemini_engine(prompt_text, image_obj=None):
         req = urllib.request.Request(
             url,
             data=data_bytes,
-            headers={"Content-Type": "application/json"},
+            headers={"Content-Type": "application/json; charset=utf-8"},
             method="POST",
         )
         try:
             with urllib.request.urlopen(req, timeout=25) as resp:
-                resp_body = resp.read().decode("utf-8")
+                resp_body = resp.read().decode("utf-8", errors="replace")
                 result_json = json.loads(resp_body)
                 candidates = result_json.get("candidates", [])
                 if candidates:
@@ -225,30 +244,18 @@ def call_gemini_engine(prompt_text, image_obj=None):
                         return final_text
         except urllib.error.HTTPError as http_err:
             try:
-                err_detail = http_err.read().decode("utf-8")
+                err_detail = http_err.read().decode("utf-8", errors="replace")
                 err_json = json.loads(err_detail)
                 err_msg = err_json.get("error", {}).get("message", str(http_err))
             except Exception:
                 err_msg = str(http_err)
             last_error = f"HTTP {http_err.code} ({model_name}): {err_msg}"
-            # Nếu lỗi do API Key sai hoàn toàn thì dừng ngay để báo cho người dùng
             if "API_KEY_INVALID" in err_msg or "API key not valid" in err_msg:
-                return "❌ LỖI: Gemini API Key không hợp lệ hoặc bị sai ký tự. Thầy/cô vui lòng kiểm tra lại mã Key ở thanh bên trái!"
+                return "❌ LỖI: Mã Gemini API Key không hợp lệ hoặc đã bị khóa. Thầy/cô vui lòng tạo mã API Key mới trên Google AI Studio và dán lại vào thanh bên trái!"
             continue
         except Exception as e:
             last_error = f"{model_name}: {str(e)}"
             continue
-
-    # Phương án dự phòng cuối cùng qua SDK với transport="rest" (tắt hẳn gRPC)
-    try:
-        genai.configure(api_key=api_key, transport="rest")
-        model = genai.GenerativeModel("gemini-1.5-flash")
-        content = [prompt_text, image_obj] if image_obj is not None else prompt_text
-        resp = model.generate_content(content)
-        if resp and hasattr(resp, "text") and resp.text:
-            return resp.text.strip()
-    except Exception as e:
-        last_error = str(e)
 
     return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại Gemini API Key ở thanh bên trái!"
 
@@ -328,7 +335,7 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
 [/DAN_Y]
 """
     raw = call_gemini_engine(prompt)
-    if raw.startswith("❌"):
+    if raw.startswith("❌") or raw.startswith("⚠️"):
         return None, raw
 
     vdnl_chuan = extract_section(raw, "VDNL_CHUAN") or (student_guess if student_guess else "Vấn đề nghị luận trọng tâm của đề bài.")
@@ -452,25 +459,29 @@ Hãy kẻ bảng Markdown gồm 4 cột: **Tiêu chí đánh giá | Mức độ 
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     api_key_input = st.text_input(
-        "Nhập Gemini API Key:",
+        "Nhập Gemini API Key (AIza...):",
         type="password",
         value=st.session_state["gemini_api_key"],
-        help="Nhập khóa API từ Google AI Studio để kích hoạt toàn bộ tính năng AI.",
+        help="Mã Key bắt đầu bằng chữ AIza..., không chứa dấu tiếng Việt hay khoảng trắng.",
     )
-    if api_key_input.strip() != st.session_state["gemini_api_key"]:
-        st.session_state["gemini_api_key"] = api_key_input.strip()
+    cleaned_input = sanitize_api_key(api_key_input)
+    if cleaned_input != st.session_state["gemini_api_key"]:
+        st.session_state["gemini_api_key"] = cleaned_input
 
-    if st.session_state["gemini_api_key"]:
-        st.success("✅ Trợ lý Ngữ văn AI đã sẵn sàng!")
+    cur_k = st.session_state["gemini_api_key"]
+    if cur_k and cur_k.startswith("AIza"):
+        st.success(f"✅ API Key hợp lệ ({cur_k[:6]}...{cur_k[-4:]})")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
-            with st.spinner("Đang kiểm tra kết nối qua cổng HTTPS REST..."):
+            with st.spinner("Đang kiểm tra kết nối..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
-                if test_res.startswith("❌"):
+                if test_res.startswith("❌") or test_res.startswith("⚠️"):
                     st.error(test_res)
                 else:
                     st.info(f"🎯 Phản hồi từ AI: {test_res}")
+    elif cur_k:
+        st.error("⚠️ Mã API Key đang nhập KHÔNG đúng định dạng (không bắt đầu bằng chữ `AIza`). Hãy xóa đi và dán lại mã Key chuẩn!")
     else:
-        st.warning("⚠️ Vui lòng nhập Gemini API Key để kích hoạt AI.")
+        st.warning("⚠️ Vui lòng nhập Gemini API Key (bắt đầu bằng `AIza...`) để kích hoạt AI.")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
@@ -567,7 +578,7 @@ with tabs[0]:
         st.markdown("##### ✏️ Nhập đề bài bất kỳ của thầy/cô hoặc học sinh để AI thiết lập khung định hướng:")
         custom_de_text = st.text_area(
             "Nội dung đề bài tự nhập:",
-            placeholder="Ví dụ: Cuộc sống tốt đẹp hay tồi tệ chính là do cách bạn nhìn nhận về nó. Viết bài văn nghị luận (khoảng 600 chữ) bày tỏ suy nghĩ của anh/chị...",
+            placeholder="Ví dụ: Viết bài nghị luận trình bày suy nghĩ của em về sự cần thiết của tinh thần sáng tạo trong cuộc sống...",
             height=110,
             key="txt_custom_de",
         )
@@ -705,7 +716,7 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (HIỂN THỊ TRỰC TIẾP KHÔNG DÙNG RERUN GÂY KẸT)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI luôn sẵn sàng giải đáp thắc mắc, gợi mở ý tưởng và hướng dẫn cách lập luận cho em.")
