@@ -3,6 +3,7 @@ import re
 import google.generativeai as genai
 import streamlit as st
 import data_de_bai as db
+from PIL import Image
 
 # ==============================================================================
 # 1. CẤU HÌNH GIAO DIỆN CAO CẤP
@@ -154,12 +155,12 @@ with st.sidebar:
     st.markdown("### 📌 4 BƯỚC SƯ PHẠM")
     st.write("1. **🌱 Bước 1:** Phân tích đề & VĐNL")
     st.write("2. **🧵 Bước 2:** Lập dàn ý & Kho dẫn chứng")
-    st.write("3. **✍️ Bước 3:** Xưởng viết độc lập")
+    st.write("3. **✍️ Bước 3:** Xưởng viết bài")
     st.write("4. **📁 Bước 4:** Hồ sơ bài làm")
 
 
 # Hàm gọi AI đồng bộ, siêu tốc, chống treo
-def call_gemini_engine(prompt_text):
+def call_gemini_engine(prompt_text, image_obj=None):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
         return (
@@ -169,7 +170,10 @@ def call_gemini_engine(prompt_text):
     try:
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel("gemini-1.5-flash")
-        response = model.generate_content(prompt_text)
+        if image_obj:
+            response = model.generate_content([prompt_text, image_obj])
+        else:
+            response = model.generate_content(prompt_text)
         if response and response.text:
             return response.text
         return "Cô đang suy nghĩ, các em hãy bấm gửi lại câu hỏi lần nữa nhé!"
@@ -224,7 +228,7 @@ Yêu cầu xuất ra JSON duy nhất:
 
 def ai_analyze_custom_exam(exam_text, student_guess):
     prompt = f"""
-Bạn là chuyên gia khảo thí Ngữ văn THPT.
+<div>Bạn là chuyên gia khảo thí Ngữ văn THPT.</div>
 Đề bài tự dán: \"\"\"{exam_text}\"\"\"
 Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
 
@@ -659,7 +663,7 @@ Hãy trả lời định hướng ngắn gọn (3–5 câu), bám sát đúng đ
             st.rerun()
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI
+# BƯỚC 3: XƯỞNG VIẾT BÀI (2 LỰA CHỌN: TỰ GÕ HOẶC GỬI ẢNH BÀI LÀM)
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown(
@@ -667,16 +671,55 @@ with tabs[2]:
         unsafe_allow_html=True,
     )
     st.info(
-        "💡 *Dựa vào hệ thống gợi ý ở Bước 2, các em hãy tự tay viết bài văn hoàn"
-        " chỉnh của mình vào đây nhé!*"
+        "💡 *Dựa vào hệ thống gợi ý ở Bước 2, các em có thể tự gõ bài làm trực"
+        " tiếp hoặc chụp ảnh bài viết tay gửi lên để AI hỗ trợ nhận xét!*"
     )
-    essay_in = st.text_area(
-        "Nhập bài viết của em:",
-        value=st.session_state.get("user_essay", ""),
-        height=380,
-        placeholder="Viết bài văn nghị luận hoàn chỉnh...",
+
+    write_mode = st.radio(
+        "Chọn hình thức nộp bài:",
+        ["✍️ Tự gõ bài viết trực tiếp", "📷 Gửi ảnh chụp bài viết tay"],
+        horizontal=True,
     )
-    st.session_state["user_essay"] = essay_in
+
+    if write_mode == "✍️ Tự gõ bài viết trực tiếp":
+        essay_in = st.text_area(
+            "Nhập bài viết của em:",
+            value=st.session_state.get("user_essay", ""),
+            height=380,
+            placeholder="Viết bài văn nghị luận hoàn chỉnh...",
+        )
+        st.session_state["user_essay"] = essay_in
+        st.session_state["essay_image"] = None
+
+    else:
+        uploaded_img = st.file_uploader(
+            "Tải lên ảnh chụp bài viết tay của em (PNG, JPG, JPEG):",
+            type=["png", "jpg", "jpeg"],
+        )
+        if uploaded_img is not None:
+            img = Image.open(uploaded_img)
+            st.image(
+                img,
+                caption="Ảnh bài làm viết tay của học sinh",
+                use_column_width=True,
+            )
+            st.session_state["essay_image"] = img
+            st.session_state["user_essay"] = "[Bài làm dạng ảnh viết tay]"
+
+            if st.button("🔍 Nhờ AI đọc và nhận xét bài viết tay", type="primary"):
+                with st.spinner(
+                    "AI đang phân tích chữ viết và nhận xét bài làm..."
+                ):
+                    eval_prompt = f"""
+Bạn là Giám khảo Ngữ văn THPT. Hãy đọc bức ảnh bài làm viết tay của học sinh cho đề bài: "{cur_de_key}" (Nội dung đề: "{cur_de_info.get('text', '')}").
+Hãy đưa ra nhận xét sư phạm chi tiết (xưng cô - em):
+1. Ưu điểm của bài làm.
+2. Những điểm cần chỉnh sửa, bổ sung (lập luận, dẫn chứng, bố cục).
+3. Gợi ý hướng hoàn thiện.
+"""
+                    ai_feedback = call_gemini_engine(eval_prompt, image_obj=img)
+                    st.markdown("### 📋 Nhận xét của Trợ lý Ngữ văn:")
+                    st.success(ai_feedback)
 
 # ------------------------------------------------------------------------------
 # HỒ SƠ BÀI LÀM
