@@ -212,104 +212,88 @@ def call_gemini_rest_api(prompt, pil_image=None):
     return None
 
 # ==============================================================================
-# 5. HỆ THỐNG XỬ LÝ SƯ PHẠM (PHÂN LOẠI DẠNG ĐỀ CHUẨN XÁC)
+# 5. HỆ THỐNG XỬ LÝ SƯ PHẠM THÔNG MINH (GIẢI THÍCH LINH HOẠT THEO DẠNG ĐỀ)
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
         "term": "Tinh thần sáng tạo",
         "def": "**Tinh thần sáng tạo** là khả năng tư duy độc lập, dám bứt phá khỏi những khuôn mẫu, lối mòn sẵn có để tìm tòi, khám phá ra những ý tưởng mới, cách làm mới mang lại giá trị và hiệu quả cao hơn.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của tinh thần sáng tạo:** Chủ động đặt câu hỏi phản biện, tìm tòi phương pháp mới trong học tập, nghiên cứu và công việc; không rập khuôn máy móc.",
-            "- **2. Ý nghĩa đối với cá nhân:** Giúp con người khai phóng tiềm năng, tạo ra năng suất vượt trội, không bị tụt hậu trong kỷ nguyên số và khẳng định được dấu ấn riêng.",
-            "- **3. Ý nghĩa đối với xã hội:** Thúc đẩy sự phát triển của khoa học công nghệ, kinh tế và văn hóa; tạo ra những bước đột phá đưa cộng đồng tiến lên.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Sáng tạo chân chính phải dựa trên nền tảng tri thức và đạo đức, tránh sự kỳ dị, tùy tiện hay phá vỡ các chuẩn mực văn hóa lành mạnh.",
-            "- **5. Bài học nhận thức và hành động:** Thế hệ trẻ cần rèn luyện tư duy phản biện, dám nghĩ dám làm, không sợ sai lầm để kiến tạo tương lai."
-        ]
+        "why": "Thế giới hiện đại biến đổi từng giây cùng kỷ nguyên số; nếu chỉ sao chép và đi theo lối mòn, con người sẽ bị tụt hậu. Sáng tạo chính là động lực cốt lõi giúp cá nhân khẳng định bản sắc và thúc đẩy xã hội tiến bộ.",
+        "manifest": "Chủ động đặt câu hỏi phản biện trong học tập, tìm kiếm phương pháp giải quyết vấn đề mới mẻ, dám thử nghiệm công nghệ và ý tưởng đột phá trong lao động, nghiên cứu.",
+        "counter": "Lối sống thụ động, học vẹt máy móc, rập khuôn sáo rỗng, ngại thay đổi; hoặc nhầm lẫn sáng tạo với sự lập dị, tùy tiện, bất chấp các quy chuẩn đạo đức và khoa học.",
+        "ev_ten": "Kỹ sư trẻ Nguyễn Tử Quảng và các nhóm nghiên cứu công nghệ lõi Việt Nam",
+        "ev_chitiet": "Dám dấn thân nghiên cứu các lĩnh vực công nghệ cao từ an ninh mạng đến trí tuệ nhân tạo ngay từ khi điều kiện trong nước còn thiếu thốn, góp phần khẳng định trí tuệ Việt trên bản đồ công nghệ.",
+        "ev_ynghia": "Minh chứng rõ nét cho sức mạnh của tinh thần dám nghĩ dám làm và khát vọng sáng tạo không ngừng."
     },
     "đoàn kết": {
         "term": "Tinh thần đoàn kết",
         "def": "**Tinh thần đoàn kết** là sự gắn kết, đồng lòng, tập hợp sức mạnh của nhiều cá nhân thành một khối thống nhất để cùng hướng tới mục tiêu chung.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của tinh thần đoàn kết:** Sự tương thân tương ái khi đồng bào gặp hoạn nạn; tinh thần phối hợp ăn ý trong học tập, tập thể và lòng yêu nước trong thử thách lịch sử.",
-            "- **2. Ý nghĩa đối với cá nhân:** Bồi dưỡng tình yêu thương, sự gắn bó, giúp con người cảm thấy ấm áp, tự tin và có thêm chỗ dựa vững chắc trước khó khăn.",
-            "- **3. Ý nghĩa đối với cộng đồng, quốc gia:** Nhân lên gấp bội sức mạnh trí tuệ và vật chất, là 'vũ khí' tối thượng giúp dân tộc vượt qua mọi thiên tai, giặc ngoại xâm.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Đoàn kết không đồng nghĩa với sự bao che, xuôi chiều hay dĩ hòa vi quý; đoàn kết chân chính phải dựa trên nguyên tắc tôn trọng sự thật và sự phát triển chung.",
-            "- **5. Bài học nhận thức và hành động:** Mỗi học sinh cần biết đặt lợi ích tập thể lên trên sự ích kỷ cá nhân, sống chan hòa và có trách nhiệm với cộng đồng."
-        ]
+        "why": "Một cá nhân dù xuất sắc đến đâu cũng có giới hạn; khi biết hợp lực, sức mạnh trí tuệ và tinh thần sẽ được nhân lên gấp bội để vượt qua nghịch cảnh.",
+        "manifest": "Sự tương thân tương ái khi đồng bào gặp thiên tai bão lũ; tinh thần phối hợp ăn ý trong học tập, làm việc nhóm; sự đồng lòng của cả dân tộc trước những thử thách lịch sử.",
+        "counter": "Lối sống ích kỷ, cục bộ, chia rẽ tập thể; hoặc biến 'đoàn kết' thành sự bao che, dĩ hòa vi quý làm triệt tiêu sự đấu tranh phản biện tích cực.",
+        "ev_ten": "Chiến dịch chung tay hỗ trợ đồng bào miền Bắc trong siêu bão Yagi & Dự án 'Nuôi Em'",
+        "ev_chitiet": "Hàng triệu người dân Việt Nam từ khắp mọi miền đã chung tay quyên góp, những đoàn xe cứu trợ xuyên đêm và hàng nghìn chiến sĩ, thanh niên tình nguyện dầm mình trong lũ dữ để cứu giúp đồng bào.",
+        "ev_ynghia": "Minh chứng sống động cho sức mạnh đại đoàn kết: khi những trái tim cùng chung một nhịp đập, không thử thách nào có thể khuất phục."
     },
     "biết ơn": {
         "term": "Lòng biết ơn",
         "def": "**Lòng biết ơn** là thái độ trân trọng, khắc ghi công lao, sự giúp đỡ của người khác hoặc những giá trị tốt đẹp mà gia đình, thế hệ đi trước và cuộc đời đã dành cho mình.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của lòng biết ơn:** Hiếu thảo với cha mẹ, kính trọng thầy cô; tri ân các anh hùng liệt sĩ; trân trọng thành quả lao động và bảo vệ môi trường sống.",
-            "- **2. Ý nghĩa đối với tâm hồn cá nhân:** Giúp con người sống có cội nguồn, nuôi dưỡng tâm hồn nhân hậu, thanh cao và giàu cảm xúc tử tế.",
-            "- **3. Ý nghĩa đối với xã hội:** Tạo nên đạo lý 'Uống nước nhớ nguồn' tốt đẹp, gắn kết các thế hệ và bồi đắp nền tảng văn hóa nhân văn bền vững cho đất nước.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Phê phán lối sống vô ơn, 'qua cầu rút ván', coi sự hy sinh của người khác là hiển nhiên; đồng thời lòng biết ơn phải đi đôi với hành động thiết thực chứ không phải lời nói suông.",
-            "- **5. Bài học nhận thức và hành động:** Cần biết trân trọng từng bữa cơm, từng tri thức nhận được mỗi ngày và nỗ lực sống có ích để đền đáp tiếp nối."
-        ]
+        "why": "Không thành quả nào tự nhiên mà có; lòng biết ơn giúp con người sống có cội nguồn, nuôi dưỡng tâm hồn nhân hậu và tạo ra sợi dây gắn kết bền chặt giữa người với người.",
+        "manifest": "Hiếu thảo với cha mẹ, kính trọng thầy cô; tri ân các anh hùng liệt sĩ; trân trọng thành quả lao động, bảo vệ thiên nhiên và nỗ lực sống có ích để đáp đền tiếp nối.",
+        "counter": "Thái độ vô ơn, bạc bẽo, 'qua cầu rút ván', coi sự hy sinh của người khác là điều hiển nhiên, hoặc chỉ thể hiện lòng biết ơn bằng lời nói hình thức.",
+        "ev_ten": "Đôi bạn Nguyễn Tất Minh và Ngô Minh Hiếu (10 năm cõng bạn đến trường)",
+        "ev_chitiet": "Nguyễn Tất Minh luôn khắc ghi sự hy sinh của gia đình và người bạn tri kỷ Ngô Minh Hiếu, nỗ lực vượt qua khuyết tật bẩm sinh để tốt nghiệp đại học loại Giỏi và tự lập giúp đỡ lại cộng đồng.",
+        "ev_ynghia": "Biểu tượng đẹp đẽ của lòng biết ơn được chuyển hóa thành hành động vươn lên mạnh mẽ."
     },
     "bản lĩnh": {
         "term": "Bản lĩnh sống",
         "def": "**Bản lĩnh** là sức mạnh ý chí, sự kiên định, vững vàng của con người trước những khó khăn, nghịch cảnh, áp lực hoặc cám dỗ mà không hề nao núng hay đánh mất giá trị bản thân.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của bản lĩnh:** Dám đối diện với thất bại để đứng lên làm lại; dám bảo vệ lẽ phải trước đám đông; giữ vững đạo đức trước cám dỗ vật chất.",
-            "- **2. Ý nghĩa đối với cá nhân:** Giúp con người làm chủ cuộc đời mình, không bị dao động bởi hiệu ứng đám đông và giữ được phẩm giá trước thử thách.",
-            "- **3. Ý nghĩa đối với xã hội:** Xây dựng một xã hội thượng tôn pháp luật và công lý, vì có những con người bản lĩnh dám nói lên sự thật và bảo vệ cái đúng.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Cần phân biệt rõ bản lĩnh chân chính với sự bảo thủ, cố chấp hoặc liều lĩnh bất chấp chuẩn mực xã hội.",
-            "- **5. Bài học nhận thức và hành động:** Tuổi trẻ cần rèn luyện ý chí kiên cường qua từng vấp ngã nhỏ, không đầu hàng trước áp lực đồng trang lứa."
-        ]
+        "why": "Cuộc sống luôn ẩn chứa những biến cố bất ngờ; bản lĩnh chính là chiếc mỏ neo giữ cho con người không gục ngã, biến nghịch cảnh thành bàn đạp để trưởng thành.",
+        "manifest": "Dám đối diện với thất bại để đứng lên làm lại; dám bảo vệ lẽ phải trước đám đông; giữ vững đạo đức trước những cám dỗ vật chất.",
+        "counter": "Sự yếu đuối, dễ dàng buông xuôi khi gặp khó khăn, sống ba phải theo hiệu ứng đám đông; hoặc nhầm lẫn bản lĩnh với sự bảo thủ, liều lĩnh bất chấp.",
+        "ev_ten": "Kình ngư Nguyễn Thị Ánh Viên và hành trình vượt ngưỡng bản thân",
+        "ev_chitiet": "Trải qua hàng vạn giờ tập luyện khắc nghiệt, vượt qua chấn thương và áp lực tâm lý nặng nề để mang về hàng loạt kỷ lục lịch sử cho thể thao Việt Nam, rồi tiếp tục truyền cảm hứng dạy bơi chống đuối nước cho trẻ em.",
+        "ev_ynghia": "Bản lĩnh được tôi luyện qua sự kiên cường bền bỉ trước mọi áp lực."
     },
     "trách nhiệm": {
         "term": "Tinh thần trách nhiệm",
         "def": "**Tinh thần trách nhiệm** là ý thức thực hiện trọn vẹn bổn phận, nghĩa vụ của bản thân đối với chính mình, gia đình và xã hội, đồng thời dám làm dám chịu trước mọi hành động của mình.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của trách nhiệm:** Hoàn thành tốt nhiệm vụ học tập, lao động; không đổ lỗi cho hoàn cảnh; chủ động tham gia các hoạt động chung của cộng đồng.",
-            "- **2. Ý nghĩa đối với cá nhân:** Tạo lập uy tín, sự tín nhiệm của mọi người, giúp cá nhân ngày càng trưởng thành và vững vàng hơn.",
-            "- **3. Ý nghĩa đối với xã hội:** Thúc đẩy xã hội vận hành trật tự, kỷ cương và văn minh; giải quyết hiệu quả các vấn đề chung của cộng đồng.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Phê phán lối sống vô trách nhiệm, đùn đẩy công việc ('cha chung không ai khóc'), chỉ đòi quyền lợi mà trốn tránh nghĩa vụ.",
-            "- **5. Bài học nhận thức và hành động:** Bắt đầu từ việc làm tròn trách nhiệm với bản thân (học tập, sức khỏe) rồi mở rộng ra trách nhiệm với gia đình và xã hội."
-        ]
+        "why": "Mỗi cá nhân là một mắt xích trong cộng đồng; sống có trách nhiệm tạo nên sự tin cậy, thúc đẩy xã hội vận hành văn minh và khẳng định phẩm giá của người trưởng thành.",
+        "manifest": "Hoàn thành tốt việc học tập, lao động; không đổ lỗi cho hoàn cảnh; chủ động tham gia giải quyết các vấn đề chung như bảo vệ môi trường, thượng tôn pháp luật.",
+        "counter": "Lối sống thờ ơ, vô cảm ('cha chung không ai khóc'), đùn đẩy lỗi lầm cho người khác, chỉ biết đòi hỏi quyền lợi mà trốn tránh nghĩa vụ.",
+        "ev_ten": "Biệt đội Sài Gòn Xanh và các nhóm bạn trẻ giải cứu dòng kênh ô nhiễm",
+        "ev_chitiet": "Những người trẻ tuổi tự nguyện lội xuống những dòng kênh đen đặc rác thải để dọn sạch hàng trăm tấn rác, trả lại dòng nước trong xanh và lan tỏa ý thức bảo vệ môi trường.",
+        "ev_ynghia": "Hành động xuất phát từ ý thức trách nhiệm công dân tự giác vì cộng đồng."
     },
     "thất bại": {
         "term": "Cách đối diện với thất bại",
         "def": "**Thất bại** là những lần vấp ngã, chưa đạt được mục tiêu đề ra trên đường đời, nhưng đồng thời là phép thử bản lĩnh và bài học kinh nghiệm quý giá giúp con người hoàn thiện mình.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của thái độ đúng trước thất bại:** Bình tĩnh phân tích nguyên nhân sau mỗi lần vấp ngã; không nản lòng mà kiên trì điều chỉnh phương pháp để thử sức lại.",
-            "- **2. Ý nghĩa đối với sự trưởng thành:** Thất bại giúp con người nhận diện rõ những điểm mù trong năng lực, tôi luyện chỉ số vượt khó (AQ) và tích lũy trí tuệ thực tiễn.",
-            "- **3. Giá trị đằng sau thất bại:** Là bài học xương máu quý giá hơn mọi lý thuyết suông, tạo tiền đề vững chắc cho thành công mai sau.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Phê phán tâm lý sợ sai nên không dám dấn thân ('chẳng dám làm gì vì sợ thất bại'), hoặc thái độ bi quan, buông xuôi sau một lần vấp ngã.",
-            "- **5. Bài học nhận thức và hành động:** Cần nhìn nhận thất bại như một người thầy khắt khe nhưng công bằng, từ đó đứng dậy mạnh mẽ hơn."
-        ]
+        "why": "Không ai thành công mà chưa từng vấp ngã; thất bại giúp con người nhận diện rõ thiếu sót, rèn luyện nghị lực và tích lũy trí tuệ thực tiễn.",
+        "manifest": "Bình tĩnh nhìn nhận nguyên nhân sau mỗi lần vấp ngã; kiên trì điều chỉnh phương pháp để thử sức lại thay vì tự ti, mặc cảm.",
+        "counter": "Tâm lý sợ sai nên không dám dấn thân thử thách; hoặc thái độ bi quan, tuyệt vọng, buông xuôi sau một lần vấp ngã đầu đời.",
+        "ev_ten": "Nhà bác học Thomas Edison và hàng nghìn lần thử nghiệm dây tóc bóng đèn",
+        "ev_chitiet": "Trước khi phát minh ra bóng đèn điện làm thay đổi nhân loại, ông đã trải qua hàng ngàn cuộc thí nghiệm thất bại nhưng luôn coi đó là bước đệm cần thiết để tìm ra chân lý.",
+        "ev_ynghia": "Thất bại chỉ thực sự là dấu chấm hết khi con người ngừng cố gắng."
     },
     "ước mơ": {
         "term": "Ước mơ và khát vọng",
         "def": "**Ước mơ / Khát vọng** là những mục tiêu, lý tưởng tốt đẹp mà con người khao khát hướng tới và nỗ lực phấn đấu để hiện thực hóa trong tương lai.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của người có ước mơ:** Xây dựng mục tiêu rõ ràng, bền bỉ trau dồi tri thức, kỹ năng mỗi ngày và không ngừng hành động để hiện thực hóa khát vọng.",
-            "- **2. Ý nghĩa đối với cá nhân:** Ước mơ giống như ngọn hải đăng soi đường, giúp tuổi trẻ sống có mục đích, đánh thức tiềm năng phi thường bên trong.",
-            "- **3. Ý nghĩa đối với xã hội:** Những khát vọng lớn lao của cá nhân khi hòa chung với dòng chảy của đất nước sẽ tạo nên sức mạnh đổi mới và phát triển phồn vinh.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Phê phán lối sống hoài phí tuổi trẻ, không mục tiêu, buông thả; hoặc những ảo tưởng viển vông, chỉ mơ mộng suông mà không chịu hành động.",
-            "- **5. Bài học nhận thức và hành động:** Nuôi dưỡng hoài bão lớn nhưng phải bắt đầu từ những bước đi nhỏ bé, thiết thực ngay hôm nay."
-        ]
+        "why": "Ước mơ giống như ngọn hải đăng soi đường, giúp tuổi trẻ sống có mục đích, đánh thức tiềm năng và tạo động lực vượt qua mọi rào cản.",
+        "manifest": "Xây dựng mục tiêu học tập rõ ràng, bền bỉ trau dồi tri thức và kỹ năng mỗi ngày, gắn ước mơ cá nhân với sự phát triển của cộng đồng.",
+        "counter": "Lối sống hoài phí tuổi trẻ, không mục tiêu, buông thả; hoặc những ảo tưởng viển vông, chỉ mơ mộng suông mà không bắt tay vào hành động.",
+        "ev_ten": "Cô gái dân tộc Mông Lầu Minh Vư chinh phục học bổng đại học quốc tế",
+        "ev_chitiet": "Sinh ra ở vùng cao nghèo khó nơi nhiều bạn bè nghỉ học sớm, Vư đã nuôi dưỡng khát vọng bước ra thế giới bằng con đường tri thức, tự học ngoại ngữ và giành học bổng toàn phần.",
+        "ev_ynghia": "Khát vọng lớn chính là đôi cánh đưa con người vượt thoát khỏi mọi giới hạn xuất phát điểm."
     },
     "thấu cảm": {
         "term": "Sự thấu cảm và sẻ chia",
         "def": "**Sự thấu cảm** là khả năng đặt mình vào vị trí của người khác để thấu hiểu, sẻ chia những nỗi niềm, khó khăn của họ và hành động bằng một trái tim nhân ái.",
-        "type": "tu_tuong",
-        "questions": [
-            "- **1. Biểu hiện của sự thấu cảm:** Biết lắng nghe không phán xét; sẵn sàng nâng đỡ những mảnh đời yếu thế; tôn trọng sự khác biệt của người xung quanh.",
-            "- **2. Ý nghĩa đối với tâm hồn cá nhân:** Làm giàu có đời sống nội tâm, nuôi dưỡng lòng trắc ẩn và mang lại niềm hạnh phúc khi biết đem lại nụ cười cho người khác.",
-            "- **3. Ý nghĩa đối với xã hội:** Là chất keo hàn gắn những tổn thương trong xã hội hiện đại, xóa bỏ sự cô đơn và xây dựng một cộng đồng nhân ái, bao dung.",
-            "- **4. Vấn đề đặt ra / Mở rộng:** Phê phán căn bệnh vô cảm lạnh lùng, thói phán xét độc hại trên mạng xã hội; đồng thời thấu cảm không có nghĩa là bao che cho cái ác.",
-            "- **5. Bài học nhận thức và hành động:** Rèn luyện thói quen đặt mình vào vị trí người khác trước khi đưa ra lời phán xét hay hành động."
-        ]
+        "why": "Trong xã hội hiện đại nhiều áp lực, sự thấu cảm là chất keo hàn gắn những tổn thương, xóa bỏ sự cô đơn và làm cho cuộc sống trở nên ấm áp, nhân văn hơn.",
+        "manifest": "Biết lắng nghe không phán xét; sẵn sàng nâng đỡ những mảnh đời yếu thế; tôn trọng sự khác biệt của người xung quanh.",
+        "counter": "Căn bệnh vô cảm, dửng dưng trước nỗi đau đồng loại; thói phán xét độc hại trên mạng xã hội hoặc lòng tốt giả tạo nhằm đánh bóng tên tuổi.",
+        "ev_ten": "Chàng trai trẻ Lê Văn Phúc và dự án thiện nguyện 'Fly To Sky'",
+        "ev_chitiet": "Từ khi còn là học sinh phổ thông, Phúc đã khởi xướng hàng chục dự án hỗ trợ sách vở, thư viện và nước sạch cho hàng vạn trẻ em vùng cao biên giới.",
+        "ev_ynghia": "Khi sự thấu cảm đi liền với hành động tử tế, tuổi trẻ có thể tạo ra những thay đổi kỳ diệu."
     }
 }
 
@@ -331,18 +315,18 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl):
     is_quote = is_metaphorical_quote_topic(raw_topic_text)
 
     # 1. Thử gọi Gemini REST API nếu có khóa hợp lệ
-    explain_inst = (
+    explain_instruction = (
         "Vì đề bài nêu trực tiếp vấn đề, phần Giải thích cần cắt nghĩa tường minh khái niệm cốt lõi là gì, làm rõ bản chất vấn đề."
         if not is_quote else
         "Vì đề bài chứa ý kiến/câu nói ẩn dụ, ở phần Giải thích bắt buộc phải giải thích rõ nghĩa đen, nghĩa bóng của các từ ngữ/hình ảnh trong câu nói rồi rút ra thông điệp ý nghĩa."
     )
-    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy chuẩn xác cho đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):
+    prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy chuẩn mực cho đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):
 Đề bài: "{formatted_topic}"
 Vấn đề nghị luận: "{direct_problem}"
 
 YÊU CẦU SƯ PHẠM QUAN TRỌNG:
-- {explain_inst}
-- Hệ thống 5 luận điểm bàn luận phải bám sát đặc thù vấn đề (tư tưởng đạo lý phân tích ý nghĩa và biểu hiện; không rập khuôn máy móc nguyên nhân hệ lụy nếu không phải dạng hiện tượng đời sống).
+- {explain_instruction}
+- Hệ thống 5 luận điểm bàn luận sâu sắc, bám sát vấn đề.
 - Dẫn chứng thực tế xác thực.
 
 Cấu trúc JSON BẮT BUỘC:
@@ -360,7 +344,7 @@ Cấu trúc JSON BẮT BUỘC:
         "- **1. Biểu hiện thực tế:** ...",
         "- **2. Ý nghĩa đối với cá nhân:** ...",
         "- **3. Ý nghĩa đối với cộng đồng, xã hội:** ...",
-        "- **4. Góc nhìn mở rộng / Vấn đề đặt ra:** ...",
+        "- **4. Lý giải nguyên nhân / Hệ lụy nếu thiếu vắng:** ...",
         "- **5. Bài học nhận thức và hành động của tuổi trẻ:** ..."
       ]
     }}
@@ -398,7 +382,7 @@ Cấu trúc JSON BẮT BUỘC:
         except Exception:
             pass
 
-    # 2. Xử lý bằng Bộ máy NLP Sư phạm Nội bộ
+    # 2. Xử lý bằng Bộ máy NLP Sư phạm Nội bộ (Giải thích sâu sắc, đúng dạng đề)
     combined_low = (raw_topic_text + " " + student_vdnl).lower()
     matched_concept = None
     for kw, data in CONCEPT_DICTIONARY.items():
@@ -428,7 +412,13 @@ Cấu trúc JSON BẮT BUỘC:
             "questions": [
                 {
                     "cau_hoi": f"Hệ thống 5 luận điểm bàn luận trọng tâm về: {vdnl_final}",
-                    "y_tra_loi": c_data["questions"]
+                    "y_tra_loi": [
+                        f"- **Luận điểm 1 (Biểu hiện sinh động):** {c_data['manifest']}",
+                        f"- **Luận điểm 2 (Lý giải nguyên nhân & Ý nghĩa):** {c_data['why']}",
+                        f"- **Luận điểm 3 (Sức mạnh đối với cá nhân):** Giúp mỗi người rèn luyện nội lực vững vàng, khơi dậy tiềm năng sáng tạo và sống một cuộc đời có ý nghĩa thực chất.",
+                        f"- **Luận điểm 4 (Giá trị lan tỏa đối với xã hội):** Gắn kết tình cảm cộng đồng, tạo động lực thúc đẩy xã hội phát triển văn minh, nhân ái.",
+                        f"- **Luận điểm 5 (Hệ lụy nếu thiếu vắng):** Khi con người đánh mất **{kw_name}**, cuộc sống dễ trở nên ích kỷ, lạnh lùng và trì trệ."
+                    ]
                 }
             ],
             "evidence": [
@@ -441,12 +431,12 @@ Cấu trúc JSON BẮT BUỘC:
             ],
             "counter": [
                 f"- **Phê phán biểu hiện lệch lạc:** {c_data['counter']}",
-                f"- **Mở rộng & Biện chứng:** Cần nhận thức đúng đắn về **{kw_name}**, tránh biến phẩm chất cao đẹp thành sự giáo điều hình thức hoặc cực đoan."
+                f"- **Mở rộng & Biện chứng:** Cần nhận thức đúng đắn về **{kw_name}**, tránh biến phẩm chất cao đẹp thành sự giáo điều hình thức hoặc cực đoan cực đoan."
             ],
             "dani_chi_tiet": {
                 "mb": f"Dẫn dắt tự nhiên từ thực tiễn đời sống -> Trích dẫn đề bài -> Nêu vấn đề nghị luận: {vdnl_final}.",
                 "gt": f"Giải thích rõ ràng khái niệm hoặc thông điệp từ câu nói của đề bài.",
-                "bl": f"Phân tích 5 luận điểm: Biểu hiện -> Ý nghĩa cá nhân -> Ý nghĩa xã hội -> Vấn đề đặt ra -> Bài học hành động.",
+                "bl": f"Phân tích 5 luận điểm: Biểu hiện -> Lý giải nguyên nhân -> Tác động cá nhân -> Ý nghĩa xã hội -> Hệ lụy.",
                 "dc": f"Đưa dẫn chứng thực tế ({c_data['ev_ten']}) và phân tích gắn kết chặt chẽ.",
                 "pb": f"Phê phán lối sống trái ngược và mở rộng góc nhìn biện chứng.",
                 "kb": f"Khẳng định lại giá trị trường tồn của {vdnl_final} và liên hệ bài học tuổi trẻ."
@@ -474,11 +464,11 @@ Cấu trúc JSON BẮT BUỘC:
                 {
                     "cau_hoi": f"Hệ thống 5 luận điểm bàn luận trọng tâm về: {vdnl_final}",
                     "y_tra_loi": [
-                        f"- **1. Biểu hiện thực tế:** **{vdnl_final}** hiện hữu qua thái độ sống, cách ứng xử và sự nỗ lực không ngừng nghỉ trong công việc, học tập hàng ngày.",
-                        f"- **2. Ý nghĩa đối với cá nhân:** Giúp con người tôi luyện bản lĩnh, khai phóng trí tuệ và vượt qua mọi nghịch cảnh.",
-                        f"- **3. Ý nghĩa đối với xã hội:** Góp phần xây dựng lối sống văn minh, nhân ái, kết nối những tấm lòng và tạo sức mạnh chung.",
-                        f"- **4. Vấn đề đặt ra / Mở rộng:** Nhìn nhận vấn đề một cách biện chứng, tránh cái nhìn phiến diện một chiều hoặc biến giá trị tốt đẹp thành hình thức sáo rỗng.",
-                        f"- **5. Bài học hành động cho tuổi trẻ:** Chủ động tu dưỡng tri thức, rèn luyện đạo đức và hành động từ những việc nhỏ nhất."
+                        f"- **Luận điểm 1 (Biểu hiện thực tế):** **{vdnl_final}** hiện hữu qua thái độ sống, cách ứng xử và sự nỗ lực không ngừng nghỉ trong công việc, học tập hàng ngày.",
+                        f"- **Luận điểm 2 (Tác động tới cá nhân):** Giúp con người tôi luyện bản lĩnh, khai phóng trí tuệ và vượt qua mọi nghịch cảnh.",
+                        f"- **Luận điểm 3 (Ý nghĩa đối với cộng đồng):** Góp phần xây dựng lối sống văn minh, nhân ái, kết nối những tấm lòng và tạo sức mạnh chung.",
+                        f"- **Luận điểm 4 (Hệ lụy khi lãng quên):** Nếu thiếu vắng điều này, con người dễ rơi vào sự hời hợt, vô cảm, đánh mất phương hướng sống.",
+                        f"- **Luận điểm 5 (Bài học hành động cho tuổi trẻ):** Chủ động tu dưỡng tri thức, rèn luyện đạo đức và hành động từ những việc nhỏ nhất."
                     ]
                 }
             ],
@@ -568,7 +558,7 @@ Em triển khai trong 1 đoạn văn khoảng 4-5 câu:
     for q in questions_list:
         for ans in q.get("y_tra_loi", []):
             bl_items.append(ans)
-    bl_text = "\n".join(bl_items[:5]) if bl_items else f"- Phân tích biểu hiện và ý nghĩa của **{vdnl}**."
+    bl_text = "\n".join(bl_items[:5]) if bl_items else f"- Phân tích biểu hiện, nguyên nhân và ý nghĩa của **{vdnl}**."
     
     return f"""👩‍🏫 **Định hướng triển khai hệ thống luận điểm Thân bài cho \"{vdnl}\":**
 Để bài văn đạt dung lượng khoảng **600 chữ** và có chiều sâu thuyết phục, phần Bàn luận em nên triển khai qua các ý chính sau:
@@ -677,7 +667,7 @@ QUY TẮC CHẤM NGHIÊM NGẶT & CHI TIẾT:
         c4_note = f"Bài làm mới đạt **{word_count} chữ**. Mới nêu được vài ý bề nổi, thiếu phân tích sâu. Minh chứng câu đơn giản: *\"{shortest_sent}\"*."
     elif word_count < 500:
         s4 = 2.0 if arg_count >= 5 else 1.5
-        c4_note = f"Dung lượng đạt **{word_count} chữ** (vẫn thiếu hụt so với chuẩn bài văn khoảng 600 chữ). Đã có lập luận (*\"{longest_sent[:110]}...\"*) nhưng chưa triển khai đủ các luận điểm sâu sắc."
+        c4_note = f"Dung lượng đạt **{word_count} chữ** (vẫn thiếu hụt so với chuẩn bài văn khoảng 600 chữ). Đã có lập luận (*\"{longest_sent[:110]}...\"*) nhưng chưa triển khai đủ 5 luận điểm sâu sắc."
     elif word_count < 600:
         s4 = 2.5 if arg_count >= 6 else 2.25
         c4_note = f"Dung lượng tiệm cận mức yêu cầu (**{word_count} chữ**). Có các ý bàn luận cơ bản (*\"{longest_sent[:110]}...\"*) nhưng cần đào sâu hơn ý nghĩa xã hội."
@@ -751,7 +741,7 @@ QUY TẮC CHẤM NGHIÊM NGẶT & CHI TIẾT:
 #### 📝 ĐÁNH GIÁ SÂU SẮC & HƯỚNG DẪN CHỈNH SỬA CHI TIẾT TỪ HỆ THỐNG:
 1. **Đánh giá tổng quát về dung lượng & tư duy triển khai:** 
    * Bài viết hiện tại đạt **{word_count} chữ** ({'đáp ứng tốt ngưỡng dung lượng khoảng 600 chữ của đề bài' if word_count >= 550 else 'còn thiếu hụt đáng kể so với yêu cầu bài văn khoảng 600 chữ, khiến các luận điểm bị triển khai dở dang, chưa tới tầm'}).
-   * Tư duy lập luận trong bài {'đã có sự kết hợp khá tốt giữa lý lẽ và thực tiễn' if arg_count >= 4 else 'còn đơn điệu, thiên về kể sự việc hoặc nêu cảm nhận chủ quan mà thiếu các tầng lập luận bản chất'}.
+   * Tư duy lập luận trong bài {'đã có sự kết hợp khá tốt giữa lý lẽ và thực tiễn' if arg_count >= 4 else 'còn đơn điệu, thiên về kể sự việc hoặc nêu cảm nhận chủ quan mà thiếu các tầng lập luận nguyên nhân - kết quả'}.
 
 2. **Chỉ ra các "lỗ hổng" cụ thể cần khắc phục ngay:**
    * *Về câu chữ:* Cần gọt giũa hoặc viết lại câu văn còn đơn điệu/ngắn cụt trong bài: *\"{shortest_sent}\"*.
@@ -783,7 +773,7 @@ with st.sidebar:
 st.markdown("""
 <div class="hero-banner">
     <div class="hero-title">🖊️ HỆ THỐNG LUYỆN VIẾT NLXH</div>
-    <p class="hero-subtitle">Ứng dụng công nghệ thông tin trong dạy học viết nghị luận xã hội THPT theo định hướng phát triển năng lực</p>
+    <p class="hero-subtitle">Ứng dụng trí tuệ nhân tạo trong dạy học viết nghị luận xã hội THPT theo định hướng phát triển năng lực</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -823,7 +813,7 @@ with tabs[0]:
     with tab_de_nangcao:
         col_nc1, col_nc2 = st.columns([1, 2], gap="medium")
         with col_nc1:
-            selected_nc_key = st.selectbox("Chọn đề trong nhóm Nâng cao:", list(db.DE_BAI_NANG_CAO.keys()), key="sb_nc")
+            selected_nc_key = st.selectbox("Chọn đề trong nhóm Nâng cao:", list(db.DE_BAI_NANG_CAO.keys()), key="sb_nangcao")
             de_info_nc = db.DE_BAI_NANG_CAO[selected_nc_key]
         with col_nc2:
             with st.container(border=True):
@@ -843,7 +833,7 @@ with tabs[0]:
             if not custom_de_text.strip():
                 st.warning("⚠️ Vui lòng nhập nội dung đề bài trước khi bấm phân tích!")
             else:
-                with st.spinner("Đang phân tích đề bài theo đúng đặc thù dạng đề và thiết lập Khung định hướng Bước 2..."):
+                with st.spinner("Đang phân tích đề bài và thiết lập Khung định hướng Bước 2..."):
                     outline = build_dynamic_outline_for_custom_topic(custom_de_text.strip(), student_custom_vdnl.strip())
                     short_title = custom_de_text.strip()[:55] + ("..." if len(custom_de_text.strip()) > 55 else "")
                     st.session_state["selected_de_key"] = f"Đề tự nhập: {short_title}"
@@ -874,7 +864,7 @@ with tabs[1]:
                 st.markdown("---")
                 st.markdown(f"**👉 Chốt lại VĐNL:** {cur_de_info.get('vdnl_ket_luan', '')}")
 
-        with st.expander("💡 Thao tác 2: Bàn luận trọng tâm (Bám sát đặc thù vấn đề)", expanded=True):
+        with st.expander("💡 Thao tác 2: Bàn luận trọng tâm (Từ 5 ý)", expanded=True):
             with st.container(border=True):
                 for q in cur_de_info.get("questions", []):
                     st.markdown(f"**❓ {q.get('cau_hoi', '')}**")
@@ -972,7 +962,7 @@ with tabs[2]:
         col_w1, col_w2 = st.columns([1, 1])
         with col_w1:
             if st.button("💡 Nhắc lại tiêu chuẩn bài văn 600 chữ", use_container_width=True):
-                st.info("💡 **Lưu ý:** Bài văn cần đạt dung lượng khoảng 600 chữ, bố cục 3 phần rõ ràng, giải thích trúng trọng tâm, thân bài đủ các luận điểm, có dẫn chứng thực tế và phản đề sắc bén!")
+                st.info("💡 **Lưu ý:** Bài văn cần đạt dung lượng khoảng 600 chữ, bố cục 3 phần rõ ràng, giải thích trúng trọng tâm, thân bài đủ 5 luận điểm, có dẫn chứng thực tế và phản đề sắc bén!")
         with col_w2:
             if st.button("📊 Nộp bài & Chấm Rubric 7 Tiêu Chí", type="primary", use_container_width=True):
                 if not essay_input.strip():
@@ -1020,7 +1010,7 @@ with tabs[3]:
             1. <b>Bố cục (0.5đ):</b> Đủ 3 phần Mở - Thân - Kết, tách đoạn hợp lý.<br>
             2. <b>Xác định VĐNL (0.5đ):</b> Nêu đúng trọng tâm vấn đề nghị luận.<br>
             3. <b>Giải thích (1.0đ):</b> Cắt nghĩa tường minh khái niệm hoặc ý nghĩa câu nói nhận định.<br>
-            4. <b>Hệ thống luận điểm (3.5đ):</b> Triển khai sâu sắc, bám sát đặc thù dạng đề, đáp ứng dung lượng khoảng 600 chữ.<br>
+            4. <b>Hệ thống luận điểm (3.5đ):</b> Triển khai tối thiểu 5 ý sâu sắc, đáp ứng dung lượng bài văn khoảng 600 chữ.<br>
             5. <b>Dẫn chứng (2.5đ):</b> Người thật việc thật xác thực, phân tích gắn với luận điểm.<br>
             6. <b>Phản đề & Bài học (1.0đ):</b> Có góc nhìn lật lại vấn đề hai chiều và bài học thực chất.<br>
             7. <b>Diễn đạt & Chính tả (1.0đ):</b> Trong sáng, lập luận chặt chẽ, không lặp từ hay viết câu cụt.
