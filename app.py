@@ -178,6 +178,77 @@ Xuất ra JSON duy nhất:
         return {"status": "LECH", "feedback": "Câu trả lời chưa hoàn toàn sát trọng tâm.", "suggested_fix": vdnl_chuan}
 
 
+def ai_analyze_custom_exam(exam_text, student_guess):
+    prompt = f"""
+Bạn là chuyên gia khảo thí Ngữ văn THPT. Phân tích đề bài tự dán: \"\"\"{exam_text}\"\"\"
+Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
+
+Yêu cầu xuất ra JSON duy nhất gồm đúng cấu trúc:
+{{
+  "status": "DUNG" | "LECH" | "SAI",
+  "feedback": "Nhận xét sư phạm (xưng cô - em)",
+  "vdnl_chuan": "VĐNL cốt lõi chuẩn",
+  "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu/nhận định -> Chốt lại VĐNL.",
+  "explain_items": [
+    "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
+    "- **Giải thích ngữ liệu/câu nói:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
+    "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
+  ],
+  "vdnl_ket_luan": "Chốt vấn đề nghị luận.",
+  "questions": [
+    {{"cau_hoi": "Ý 1 bàn luận?", "y_tra_loi": ["- **Thứ nhất:** ...", "- **Thứ hai:** ...", "- **Thứ ba:** ..."]}}
+  ],
+  "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết", "y_nghia": "Ý nghĩa", "nguon": "Nguồn"}}],
+  "counter": [
+    "- **Trường hợp 1 (Góc độ cực đoan):** ...",
+    "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** ...",
+    "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** ..."
+  ],
+  "dani_chi_tiet": {
+    "mb": "Dẫn dắt và giới thiệu VĐNL.",
+    "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
+    "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
+    "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
+    "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
+    "kb": "Tổng kết vấn đề và rút ra bài học."
+  }
+}}
+"""
+    raw = call_gemini_engine(prompt)
+    try:
+        clean_raw = re.sub(r"```json\s*|\s*```", "", raw).strip()
+        match = re.search(r"\{.*\}", clean_raw, re.DOTALL)
+        return json.loads(match.group(0)) if match else json.loads(clean_raw)
+    except Exception:
+        return {
+            "status": "LECH",
+            "feedback": "Cô nhận thấy em đã cố gắng nhưng cần điều chỉnh để diễn đạt chuẩn xác hơn.",
+            "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận từ đề bài",
+            "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu -> Chốt lại VĐNL.",
+            "explain_items": [
+                "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
+                "- **Giải thích ngữ liệu:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
+                "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
+            ],
+            "vdnl_ket_luan": student_guess if student_guess else "Vấn đề nghị luận trọng tâm.",
+            "questions": [{
+                "cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?",
+                "y_tra_loi": [
+                    "- **Thứ nhất:** Giúp bồi dưỡng nhận thức và tư duy tích cực.",
+                    "- **Thứ hai:** Định hình nhân cách và hành động đúng đắn.",
+                    "- **Thứ ba:** Tạo ra giá trị thiết thực cho cộng đồng."
+                ]
+            }],
+            "evidence": [{"ten": "Hoàng Hoa Trung - Dự án Nuôi Em", "chi_tiet": "Nuôi cơm trưa cho trẻ em vùng cao.", "y_nghia": "Tinh thần cống hiến.", "nguon": "Báo Tuổi Trẻ"}],
+            "counter": [
+                "- **Trường hợp 1 (Góc độ cực đoan):** Vấn đề không nên được tuyệt đối hóa thành chân lý cứng nhắc trong mọi hoàn cảnh.",
+                "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** Cần xem xét điều kiện thực tế, tránh áp đặt chủ quan.",
+                "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** Tránh biến giá trị tốt đẹp thành vỏ bọc hình thức để phô trương."
+            ],
+            "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
+        }
+
+
 # ==============================================================================
 # 4. GIAO DIỆN CHÍNH & TABS
 # ==============================================================================
@@ -262,53 +333,63 @@ with tabs[0]:
             placeholder="Ví dụ: Viết bài văn nghị luận bàn về...",
             height=100,
         )
-        if st.button("🔍 Tạo giàn giáo cơ bản cho đề tự nhập", type="primary"):
+        student_custom_vdnl = st.text_input(
+            "Vấn đề nghị luận em tự đoán cho đề này:",
+            placeholder="Gõ VĐNL theo suy nghĩ của em...",
+        )
+        if st.button("🔍 Tạo khung định hướng cho đề tự nhập", type="primary"):
             if custom_de_text.strip():
-                st.session_state["selected_de_key"] = "Đề tự nhập"
-                st.session_state["current_de_info"] = {
-                    "text": custom_de_text,
-                    "vdnl_chuan": "Vấn đề nghị luận trọng tâm từ đề bài",
-                    "explain_guide": "Giải thích theo đúng trật tự sư phạm.",
-                    "explain_items": [
-                        "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
-                        "- **Giải thích câu nói/ngữ liệu:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
-                        "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
-                    ],
-                    "vdnl_ket_luan": "Chốt vấn đề nghị luận.",
-                    "questions": [{
-                        "cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?",
-                        "y_tra_loi": [
-                            "- **Thứ nhất:** Giúp bồi dưỡng nhận thức và tư duy tích cực.",
-                            "- **Thứ hai:** Định hình nhân cách và hành động đúng đắn.",
-                            "- **Thứ ba:** Tạo ra giá trị thiết thực cho cộng đồng."
-                        ]
-                    }],
-                    "evidence": [{"ten": "Dẫn chứng thực tế", "chi_tiet": "Sự kiện tiêu biểu", "y_nghia": "Ý nghĩa", "nguon": "Báo chí"}],
-                    "counter": ["- **Phản biện:** Tránh cực đoan hóa vấn đề."],
-                    "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
-                }
-                st.success("Đã tạo xong giàn giáo!")
+                with st.spinner("AI đang phân tích ngữ liệu và tạo khung định hướng..."):
+                    res_custom = ai_analyze_custom_exam(custom_de_text, student_custom_vdnl)
+                    ten_de_custom = "Đề tự nhập: " + (custom_de_text[:30] + "..." if len(custom_de_text) > 30 else custom_de_text)
+                    info_custom = {
+                        "text": custom_de_text,
+                        "vdnl_chuan": res_custom.get("vdnl_chuan", student_custom_vdnl),
+                        "explain_guide": res_custom.get("explain_guide", ""),
+                        "explain_items": res_custom.get("explain_items", []),
+                        "vdnl_ket_luan": res_custom.get("vdnl_ket_luan", student_custom_vdnl),
+                        "questions": res_custom.get("questions", []),
+                        "evidence": res_custom.get("evidence", []),
+                        "counter": res_custom.get("counter", []),
+                        "dani_chi_tiet": res_custom.get("dani_chi_tiet", {
+                            "mb": "Dẫn dắt và giới thiệu VĐNL.",
+                            "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
+                            "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
+                            "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
+                            "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
+                            "kb": "Tổng kết vấn đề và rút ra bài học."
+                        })
+                    }
+                    st.session_state["selected_de_key"] = ten_de_custom
+                    st.session_state["current_de_info"] = info_custom
+                    st.session_state["eval_vdnl_result"] = {
+                        "status": res_custom.get("status", "LECH"),
+                        "feedback": res_custom.get("feedback", ""),
+                        "suggested_fix": res_custom.get("vdnl_chuan", "")
+                    }
+                    st.success("✅ Đã tạo xong khung định hướng cho đề tự nhập!")
 
     st.markdown("---")
     cur_active_key = st.session_state["selected_de_key"]
     cur_active_info = st.session_state["current_de_info"]
     st.info(f"📌 **Đề bài hiện tại đang chọn:** {cur_active_key}")
 
-    student_vdnl = st.text_input(
-        "⚡ Thao tác học sinh: Xác định vấn đề nghị luận của đề đang chọn:",
-        placeholder="Gõ câu trả lời của em ở đây...",
-    )
-    if st.button("🔍 Đối chiếu vấn đề nghị luận với AI", type="primary"):
-        if student_vdnl.strip():
-            with st.spinner("AI đang thẩm định nghiêm túc..."):
-                res = ai_evaluate_student_vdnl(
-                    cur_active_info["text"],
-                    cur_active_info["vdnl_chuan"],
-                    student_vdnl,
-                )
-                st.session_state["eval_vdnl_result"] = res
-        else:
-            st.warning("Các em chưa nhập câu trả lời!")
+    if "Đề tự nhập" not in cur_active_key:
+        student_vdnl = st.text_input(
+            "⚡ Thao tác học sinh: Xác định vấn đề nghị luận của đề đang chọn:",
+            placeholder="Gõ câu trả lời của em ở đây...",
+        )
+        if st.button("🔍 Đối chiếu vấn đề nghị luận với AI", type="primary"):
+            if student_vdnl.strip():
+                with st.spinner("AI đang thẩm định nghiêm túc..."):
+                    res = ai_evaluate_student_vdnl(
+                        cur_active_info["text"],
+                        cur_active_info["vdnl_chuan"],
+                        student_vdnl,
+                    )
+                    st.session_state["eval_vdnl_result"] = res
+            else:
+                st.warning("Các em chưa nhập câu trả lời!")
 
     if st.session_state.get("eval_vdnl_result"):
         res = st.session_state["eval_vdnl_result"]
@@ -354,7 +435,7 @@ with tabs[1]:
                 for ans in q.get("y_tra_loi", []):
                     st.markdown(f"{ans}")
 
-        # Thao tác 3: Dẫn chứng (Đã khôi phục đầy đủ kho dẫn chứng 9 chủ điểm)
+        # Thao tác 3: Dẫn chứng
         with st.expander("📚 Thao tác 3: Kho dẫn chứng trọng tâm & Dẫn chứng mở rộng", expanded=True):
             st.markdown("##### 📌 Dẫn chứng thực tế tường minh cho đề bài:")
             for ev in cur_de_info.get("evidence", []):
@@ -386,22 +467,24 @@ with tabs[1]:
                     st.write(dc["noi_dung"])
                     st.caption(f"📰 *Nguồn: {dc['nguon']}*")
 
-        # Thao tác 4: Phản biện
-        with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng (Lật lại vấn đề)", expanded=True):
+        # Thao tác 4: Phản biện (Đã có đủ 3 trường hợp/hướng)
+        with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng (3 trường hợp lật lại vấn đề)", expanded=True):
+            st.markdown("*Lưu ý học sinh: Khi làm bài, cần tránh nhìn nhận vấn đề một chiều, tuyệt đối hóa mà phải biết phản biện đa chiều qua các trường hợp sau:*")
+            st.markdown("---")
             for c_item in cur_de_info.get("counter", []):
                 st.markdown(f"<div class='counter-box'>{c_item}</div>", unsafe_allow_html=True)
 
-        # ĐỊNH HƯỚNG DÀN Ý 3 PHẦN (ĐÃ ĐƯỢC KHÔI PHỤC ĐẦY ĐỦ)
+        # ĐỊNH HƯỚNG DÀN Ý 3 PHẦN
         st.markdown("---")
         st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
         dani_data = cur_de_info.get(
             "dani_chi_tiet",
             {
                 "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
-                "gt": "Giải thích rõ từ khóa và ý nghĩa câu nói trong VĐNL.",
-                "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc.",
+                "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
+                "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
                 "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
-                "pb": "Phản biện, lật lại vấn đề.",
+                "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
                 "kb": "Tổng kết vấn đề và rút ra bài học.",
             },
         )
@@ -415,7 +498,7 @@ with tabs[1]:
 - **1. Mục Giải thích:** {dani_data.get('gt', '')}
 - **2. Mục Bàn luận trọng tâm:** {dani_data.get('bl', '')}
 - **3. Mục Dẫn chứng thực tế:** {dani_data.get('dc', '')}
-- **4. Mục Phản biện & Mở rộng:** {dani_data.get('pb', '')}
+- **4. Mục Phản biện đa chiều (3 trường hợp):** {dani_data.get('pb', '')}
 
 ### 🌟 III. PHẦN KẾT BÀI
 - **Tổng kết & Bài học hành động:** {dani_data.get('kb', '')}
