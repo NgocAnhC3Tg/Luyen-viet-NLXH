@@ -5,7 +5,7 @@ import streamlit as st
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN VÀ KHO DỮ LIỆU TÍCH HỢP TRỰC TIẾP
+# 1. CẤU HÌNH GIAO DIỆN VÀ KHO DỮ LIỆU TÍCH HỢP ĐẦY ĐỦ 30 ĐỀ & PHÂN LUỒNG
 # ==============================================================================
 st.set_page_config(
     page_title="Hệ Thống Luyện Viết NLXH - 30 Đề Chuẩn Mực",
@@ -102,7 +102,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. KHO DỮ LIỆU TÍCH HỢP TRỰC TIẾP (30 ĐỀ VÀ 9 CHỦ ĐIỂM DẪN CHỨNG)
+# 2. PHÂN LUỒNG KHO ĐỀ (15 CƠ BẢN & 15 NÂNG CAO)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Sự cần thiết phải biết sống cống hiến": {
@@ -154,6 +154,35 @@ DE_BAI_CO_BAN = {
             "- **Trường hợp 1 (Góc độ bảo thủ):** Tiếp bước truyền thống không phải là sự sao chép giáo điều, ôm giữ cái cũ lỗi thời bỏ qua tư duy đổi mới.",
             "- **Trường hợp 2 (Góc độ ỷ lại hào quang):** Cần phê phán lối sống ỷ lại vào công lao của thế hệ trước mà tự mãn, lười biếng trong hiện tại.",
             "- **Trường hợp 3 (Góc độ hội nhập cực đoan):** Tiếp bước không có nghĩa là khép kín cực đoan; cần biết dung hòa giữa bản sắc truyền thống và tinh hoa nhân loại."
+        ],
+        "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
+    }
+}
+
+DE_BAI_NANG_CAO = {
+    "Đề 16: Hành trình trở về với chính mình": {
+        "text": "Trong cuốn Khai vấn trong từng hơi thở, Ruby Nguyen viết: Kì quan lớn nhất nằm ngay bên trong chính mình. Viết bài văn nghị luận bàn về chủ đề: Trở về với chính mình.",
+        "vdnl_chuan": "Ý nghĩa của hành trình quay về thấu hiểu và trân trọng giá trị nội tại.",
+        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích nhận định -> Chốt lại VĐNL.",
+        "explain_items": [
+            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Trở về với chính mình' là hành trình quay kính chiếu hậu vào nội tâm, buông bỏ những áp đặt ngoại biên để đối thoại chân thành với bản ngã.",
+            "- **Giải thích nhận định:** 'Kì quan lớn nhất nằm ngay bên trong chính mình' khẳng định vẻ đẹp tâm hồn và kho tàng tiềm năng vô tận bên trong mỗi con người.",
+            "- **Chốt vấn đề:** Khẳng định ý nghĩa của hành trình trở về với chính mình."
+        ],
+        "vdnl_ket_luan": "Sự cần thiết trở về với chính mình tìm bình yên.",
+        "questions": [{
+            "cau_hoi": "Hành trình trở về với chính mình mang lại những giá trị chuyển hóa sâu sắc nào trong thời đại số?", 
+            "y_tra_loi": [
+                "- **Thứ nhất:** Giúp con người thoát khỏi sự thao túng của thế giới ảo, không bị cuốn theo lối sống xô bồ, lai căng.",
+                "- **Thứ hai:** Chữa lành những tổn thương tâm lý, sạc lại năng lượng tự thân sau những giông bão cuộc đời.",
+                "- **Thứ ba:** Khám phá sức mạnh độc bản, giúp ta sống một cuộc đời chân thật, ý nghĩa và không hối tiếc."
+            ]
+        }],
+        "evidence": [{"ten": "Thiền sư Thích Nhất Hạnh", "chi_tiet": "Thực hành chánh niệm, lắng nghe nội tâm.", "y_nghia": "Sức mạnh tĩnh thức nội tâm.", "nguon": "Sách"}],
+        "counter": [
+            "- **Trường hợp 1 (Góc độ trốn tránh thực tại):** Trở về nội tâm không có nghĩa là trốn tránh trách nhiệm xã hội hay tự cô lập mình khỏi cộng đồng.",
+            "- **Trường hợp 2 (Góc độ vị kỷ ái kỉ):** Cần tránh biến việc khám phá bản thân thành sự tự mãn, ích kỷ chỉ biết đến cái tôi cá nhân.",
+            "- **Trường hợp 3 (Góc độ hình thức tĩnh tâm):** Tránh ngụy biện việc lười biếng lao động dưới vỏ bọc 'thiền định tìm bình yên nội tâm'."
         ],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
     }
@@ -220,7 +249,7 @@ with st.sidebar:
     st.write("4. **📁 Bước 4:** Hồ sơ bài làm")
 
 # ==============================================================================
-# 4. HÀM GỌI AI ỔN ĐỊNH TUYỆT ĐỐI (SỬ DỤNG GEMINI-1.5-FLASH CHUẨN)
+# 4. HÀM GỌI AI ỔN ĐỊNH TUYỆT ĐỐI (SỬ DỤNG GEMINI-1.5-FLASH)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     api_key = st.session_state.get("gemini_api_key", "").strip()
@@ -228,7 +257,6 @@ def call_gemini_engine(prompt_text, image_obj=None):
         return "❌ LỖI: Thầy/cô chưa nhập Gemini API Key ở thanh bên trái!"
     try:
         genai.configure(api_key=api_key)
-        # Sử dụng model gemini-1.5-flash chuẩn mực, không phụ thuộc v1beta
         model = genai.GenerativeModel("gemini-1.5-flash")
         if image_obj:
             response = model.generate_content([prompt_text, image_obj])
@@ -239,7 +267,6 @@ def call_gemini_engine(prompt_text, image_obj=None):
         return "⚠️ AI đã tiếp nhận nhưng không trả về nội dung."
     except Exception as e:
         try:
-            # Fallback dự phòng sang gemini-pro nếu flash gặp lỗi nhà mạng/khu vực
             model_fb = genai.GenerativeModel("gemini-pro")
             response = model_fb.generate_content(prompt_text)
             if response and response.text:
@@ -266,7 +293,7 @@ Xuất ra JSON duy nhất:
         return {"status": "LECH", "feedback": "Câu trả lời chưa hoàn toàn sát trọng tâm.", "suggested_fix": vdnl_chuan}
 
 # ==============================================================================
-# 5. GIAO DIỆN CHÍNH & TABS
+# 5. GIAO DIỆN CHÍNH & TABS (CÓ PHÂN LUỒNG ĐỀ CƠ BẢN VÀ NÂNG CAO)
 # ==============================================================================
 st.markdown('<div class="hero-banner"><div class="hero-title">🖊️ HỆ THỐNG 30 ĐỀ NGHỊ LUẬN XÃ HỘI THPT</div></div>', unsafe_allow_html=True)
 
@@ -279,17 +306,37 @@ tabs = st.tabs([
 
 with tabs[0]:
     st.markdown('<div class="section-title">🔍 Lựa chọn đề bài & Xác định vấn đề nghị luận</div>', unsafe_allow_html=True)
-    sel_cb = st.selectbox("Chọn đề Cơ bản:", list(DE_BAI_CO_BAN.keys()), key="sb_cb")
-    info_cb = DE_BAI_CO_BAN[sel_cb]
     
-    with st.container(border=True):
-        st.info(info_cb["text"])
+    # Phân luồng đề rõ ràng
+    sub_tab_cb, sub_tab_nc = st.tabs(["🟢 Nhóm Đề Cơ Bản (01–15)", "🔴 Nhóm Đề Nâng Cao (16–30)"])
     
-    if st.button("📌 Chọn đề này & Chuyển sang Bước 2", key="btn_cb", type="primary"):
-        st.session_state["selected_de_key"] = sel_cb
-        st.session_state["current_de_info"] = info_cb
-        st.session_state["eval_vdnl_result"] = None
-        st.success(f"Đã chọn: {sel_cb}! Mời thầy/cô bấm qua tab 'BƯỚC 2'.")
+    with sub_tab_cb:
+        c1, c2 = st.columns([1, 2], gap="medium")
+        with c1:
+            sel_cb = st.selectbox("Chọn đề Cơ bản:", list(DE_BAI_CO_BAN.keys()), key="sb_cb")
+            info_cb = DE_BAI_CO_BAN[sel_cb]
+        with c2:
+            with st.container(border=True):
+                st.info(info_cb["text"])
+            if st.button("📌 Chọn đề này & Chuyển sang Bước 2", key="btn_cb", type="primary"):
+                st.session_state["selected_de_key"] = sel_cb
+                st.session_state["current_de_info"] = info_cb
+                st.session_state["eval_vdnl_result"] = None
+                st.success(f"Đã chọn: {sel_cb}! Mời thầy/cô bấm qua tab 'BƯỚC 2'.")
+
+    with sub_tab_nc:
+        c3, c4 = st.columns([1, 2], gap="medium")
+        with c3:
+            sel_nc = st.selectbox("Chọn đề Nâng cao:", list(DE_BAI_NANG_CAO.keys()), key="sb_nc")
+            info_nc = DE_BAI_NANG_CAO[sel_nc]
+        with c4:
+            with st.container(border=True):
+                st.info(info_nc["text"])
+            if st.button("📌 Chọn đề này & Chuyển sang Bước 2", key="btn_nc", type="primary"):
+                st.session_state["selected_de_key"] = sel_nc
+                st.session_state["current_de_info"] = info_nc
+                st.session_state["eval_vdnl_result"] = None
+                st.success(f"Đã chọn: {sel_nc}! Mời thầy/cô bấm qua tab 'BƯỚC 2'.")
 
     st.markdown("---")
     cur_key = st.session_state["selected_de_key"]
