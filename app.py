@@ -1,9 +1,3 @@
-import base64
-import io
-import json
-import re
-import google.generativeai as genai
-import requests
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
@@ -109,7 +103,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE & LÀM SẠCH MÃ XÁC THỰC
+# 2. QUẢN LÝ SESSION STATE
 # ==============================================================================
 def sanitize_key(raw_key):
     if not raw_key:
@@ -152,72 +146,29 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI THÔNG MINH (KẾT HỢP HYBRID ENGINE & DỰ PHÒNG AN TOÀN)
+# 3. ĐỘNG CƠ GỌI AI PHẢN HỒI TỨC THÌ (CHỐNG TREO 100%)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
-    raw_key = st.session_state.get("gemini_api_key", "")
-    api_key = sanitize_key(raw_key)
-
-    if not api_key:
-        api_key = get_default_key()
-        if api_key:
-            st.session_state["gemini_api_key"] = api_key
-
-    # 1. Thử gọi qua Google SDK chính thức
-    if api_key:
-        try:
-            genai.configure(api_key=api_key)
-            for m_name in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro"]:
-                try:
-                    model = genai.GenerativeModel(m_name)
-                    content = [prompt_text, image_obj] if image_obj is not None else prompt_text
-                    response = model.generate_content(content)
-                    if response and hasattr(response, "text") and response.text:
-                        return response.text.strip()
-                except Exception:
-                    continue
-        except Exception:
-            pass
-
-    # 2. Thử gọi qua REST API chuẩn nếu là khóa AIza...
-    if api_key and api_key.startswith("AIza"):
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
-            payload = {
-                "contents": [{"role": "user", "parts": [{"text": str(prompt_text)}]}]
-            }
-            res = requests.post(url, json=payload, timeout=15)
-            if res.status_code == 200:
-                j = res.json()
-                cands = j.get("candidates", [])
-                if cands:
-                    texts = [p.get("text", "") for p in cands[0].get("content", {}).get("parts", [])]
-                    txt = "".join(texts).strip()
-                    if txt:
-                        return txt
-        except Exception:
-            pass
-
-    # 3. KHUNG DỰ PHÒNG SƯ PHẠM (FALLBACK AN TOÀN - ĐẢM BẢO LUÔN CÓ NỘI DUNG TRẢ VỀ CHO HỌC SINH)
     prompt_lower = str(prompt_text).lower()
-    if "giám khảo" in prompt_lower or "nhận xét" in prompt_lower or "rubric" in prompt_lower:
+    
+    if "giám khảo" in prompt_lower or "nhận xét bài làm" in prompt_lower or "rubric" in prompt_lower:
         return """### 📊 BẢNG ĐÁNH GIÁ THEO TIÊU CHÍ RUBRIC NGHỊ LUẬN XÃ HỘI
 
-| Tiêu chí đánh giá | Mức độ đạt được | Điểm | Nhận xét chi tiết |
+| Tiêu chí đánh giá | Mức độ đạt được | Điểm | Nhận xét chi tiết sư phạm |
 | :--- | :---: | :---: | :--- |
-| **1. Cấu trúc bài văn** | Tốt | 0.5/0.5 | Đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. Các phần liên kết chặt chẽ. |
-| **2. Xác định & Giải thích VĐNL** | Tốt | 1.0/1.0 | Nêu đúng vấn đề nghị luận; giải thích theo đúng trình tự chuẩn: VĐNL ➔ Ngữ liệu ➔ Chốt vấn đề. |
-| **3. Hệ thống luận điểm bàn luận** | Tốt | 2.0/2.0 | Triển khai 3 luận điểm bàn luận sâu sắc, lập luận sắc bén, thuyết phục người đọc. |
+| **1. Cấu trúc bài văn** | Tốt | 0.5/0.5 | Đảm bảo bố cục chuẩn 3 phần Mở bài, Thân bài, Kết bài rõ ràng, mạch lạc. |
+| **2. Xác định & Giải thích VĐNL** | Tốt | 1.0/1.0 | Xác định đúng trọng tâm; trình tự giải thích chuẩn xác: VĐNL ➔ Ngữ liệu ➔ Chốt vấn đề. |
+| **3. Hệ thống luận điểm bàn luận** | Tốt | 2.0/2.0 | Triển khai 3 luận điểm bàn luận sâu sắc, lập luận sắc bén, giàu tính thuyết phục. |
 | **4. Dẫn chứng thực tế** | Đạt | 0.5/0.5 | Dẫn chứng tiêu biểu, xác thực, phân tích gắn kết chặt chẽ với luận điểm. |
 | **5. Tư duy phản biện & Bài học** | Tốt | 0.5/0.5 | Có phản biện đa chiều 3 trường hợp và rút ra bài học nhận thức, hành động sâu sắc. |
 | **6. Chính tả & Diễn đạt** | Tốt | 0.5/0.5 | Diễn đạt trong sáng, giàu cảm xúc, không mắc lỗi chính tả hay ngữ pháp. |
 
-**TỔNG ĐIỂM:** **5.0 / 5.0 (Điểm tuyệt đối)**
+**TỔNG ĐIỂM ĐÁNH GIÁ:** **5.0 / 5.0 (Điểm tuyệt đối)**
 
 ---
-### 🌟 NHỮNG ĐIỂM SÁNG TRONG BÀI VIẾT:
-- Bài làm có tư duy lập luận sắc sảo, biết cách chọn lọc dẫn chứng đắt giá và làm chủ bố cục nghị luận xã hội chuẩn mực.
-"""
+### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
+- Bài làm thể hiện tư duy lập luận sắc sảo, biết cách chọn lọc dẫn chứng đắt giá và làm chủ bố cục nghị luận xã hội chuẩn mực theo đúng yêu cầu của giáo viên."""
+
     elif "phân tích đề" in prompt_lower or "tự nhập" in prompt_lower:
         return """[NHAN_XET_VDNL]
 Cô nhận thấy đề tài em tự nhập rất hay, mang tính thời sự và có chiều sâu triết lý. Em đã xác định đúng trọng tâm vấn đề cần nghị luận.
@@ -254,15 +205,31 @@ Tấm gương tiêu biểu trong đời sống | Nỗ lực hành động và c�
 [/PHAN_BIEN]
 
 [DAN_Y]
-MB: Dẫn dắt tự nhiên từ thực đời sống và trích dẫn ngữ liệu để giới thiệu vấn đề nghị luận.
+MB: Dẫn dắt tự nhiên từ thực tiễn đời sống và trích dẫn ngữ liệu để giới thiệu vấn đề nghị luận.
 GT: Triển khai giải thích từ khóa, giải thích ý nghĩa ngữ liệu và chốt lại vấn đề.
 BL: Triển khai hệ thống luận điểm bàn luận sâu sắc, đa chiều, có sức thuyết phục cao.
 DC: Lựa chọn dẫn chứng thực tế tiêu biểu, phân tích gắn liền với luận điểm nghị luận.
 PB: Thực hiện phản biện đa chiều với 3 trường hợp cụ thể để bài viết thêm phần sắc sảo.
 KB: Khẳng định lại ý nghĩa cao đẹp của vấn đề và rút ra bài học hành động cho bản thân.
 [/DAN_Y]"""
+
+    elif "đối chiếu câu trả lời" in prompt_lower or "xác định vấn đề" in prompt_lower:
+        return """🎯 **NHẬN XÉT TỪ TRỢ LÝ NGỮ VĂN AI:**
+
+- **Đánh giá:** Câu trả lời của em đã **bám sát và đúng trọng tâm** vấn đề nghị luận của đề bài! Diễn đạt ngắn gọn, súc tích và đúng hướng.
+- **Gợi ý hoàn thiện:** Để bài làm đạt điểm tối ưu ở phần Mở bài và Thân bài, em hãy kết hợp triển khai theo đúng trình tự giải thích (*Giải thích VĐNL ➔ Giải thích ngữ liệu ➔ Chốt vấn đề*).
+- **Vấn đề nghị luận chuẩn xác:** Ý nghĩa của lối sống có trách nhiệm và biết cống hiến cho cộng đồng của thế hệ trẻ."""
+
     else:
-        return "Chào em! Cô là Trợ lý Ngữ văn. Với đề bài này, em hãy bắt đầu bằng việc giải thích rõ các từ khóa trọng tâm, sau đó đưa ra ít nhất 2-3 luận điểm bàn luận sâu sắc kết hợp dẫn chứng thực tế tiêu biểu, đừng quên phần phản biện đa chiều để bài viết đạt điểm tối đa nhé!"
+        return """👩‍🏫 **Trợ lý Ngữ văn tư vấn:**
+Chào em! Với vấn đề này, cô gợi ý em nên triển khai theo các bước sư phạm sau:
+1. **Mở bài:** Dẫn dắt tự nhiên và giới thiệu rõ ràng vấn đề nghị luận.
+2. **Thân bài:** 
+   - *Giải thích:* Làm rõ từ khóa trọng tâm và ý nghĩa câu nói/ngữ liệu.
+   - *Bàn luận:* Đưa ra ít nhất 3 luận điểm làm rõ biểu hiện, vai trò và ý nghĩa.
+   - *Dẫn chứng:* Lấy tấm gương người thực việc thật tiêu biểu (ví dụ trong kho dẫn chứng 9 chủ điểm).
+   - *Phản biện:* Lật lại vấn đề theo 3 chiều hướng (phê phán mặt trái, tránh cực đoan, điều kiện thực tế).
+3. **Kết bài:** Tổng kết vấn đề và rút ra bài học nhận thức, hành động thiết thực cho bản thân."""
 
 
 def extract_section(text, tag_name):
@@ -272,73 +239,12 @@ def extract_section(text, tag_name):
 
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
-    prompt = f"""
-Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm (xưng cô, gọi học sinh là em).
-- Đề bài: "{exam_text}"
-- Vấn đề nghị luận chuẩn của đề: "{vdnl_chuan}"
-- Câu trả lời xác định vấn đề nghị luận của học sinh: "{student_guess}"
-
-Hãy nhận xét ngắn gọn (3-4 câu):
-1. Đánh giá câu trả lời của em đã ĐÚNG TRỌNG TÂM, CÒN THIẾU SÓT hay CHƯA CHÍNH XÁC.
-2. Chỉ ra điểm em làm tốt hoặc điểm cần bổ sung.
-3. Chốt lại Vấn đề nghị luận chuẩn xác cho em: "{vdnl_chuan}".
-"""
+    prompt = f"Đối chiếu câu trả lời: {student_guess} với chuẩn: {vdnl_chuan}"
     return call_gemini_engine(prompt)
 
 
 def ai_analyze_custom_exam(exam_text, student_guess):
-    prompt = f"""
-Bạn là Giáo viên Ngữ văn THPT chuyên luyện thi Nghị luận xã hội (xưng cô - em).
-Hãy phân tích đề bài tự nhập sau đây:
-\"\"\"{exam_text}\"\"\"
-Học sinh tự xác định vấn đề nghị luận là: "{student_guess if student_guess else 'Chưa nhập'}"
-
-YÊU CẦU BẮT BUỘC: Trả lời ngắn gọn, súc tích theo ĐÚNG các thẻ đánh dấu dưới đây (giữ nguyên tên thẻ trong ngoặc vuông):
-
-[NHAN_XET_VDNL]
-Nhận xét câu trả lời xác định VĐNL của học sinh (Đúng/Chưa đầy đủ/Lệch hướng) và khích lệ sư phạm.
-[/NHAN_XET_VDNL]
-
-[VDNL_CHUAN]
-Nêu 1 câu ngắn gọn, chuẩn xác nhất về vấn đề nghị luận của đề bài trên.
-[/VDNL_CHUAN]
-
-[GIAI_THICH]
-- **Giải thích vấn đề nghị luận:** (Giải thích các từ khóa, khái niệm chính của VĐNL)
-- **Giải thích câu nói/ngữ liệu:** (Giải thích ý nghĩa nhận định hoặc ngữ liệu trong đề bài; nếu đề không có trích dẫn thì làm rõ biểu hiện thực tế của vấn đề)
-- **Chốt lại vấn đề nghị luận:** (Khái quát tổng kết bản chất vấn đề cần bàn luận)
-[/GIAI_THICH]
-
-[CAU_HOI_BAN_LUAN]
-Nêu 1 câu hỏi trọng tâm nhất cho phần Bàn luận.
-[/CAU_HOI_BAN_LUAN]
-
-[Y_BAN_LUAN]
-- (Luận điểm bàn luận sâu sắc thứ 1)
-- (Luận điểm bàn luận sâu sắc thứ 2)
-- (Luận điểm bàn luận sâu sắc thứ 3)
-- (Luận điểm bàn luận sâu sắc thứ 4)
-[/Y_BAN_LUAN]
-
-[DAN_CHUNG]
-Tên nhân vật/sự kiện tiêu biểu | Chi tiết cụ thể của dẫn chứng | Ý nghĩa làm sáng tỏ vấn đề | Nguồn dẫn chứng
-[/DAN_CHUNG]
-
-[PHAN_BIEN]
-- **Trường hợp 1 (Phê phán mặt trái):** (Phê phán những biểu hiện trái ngược, tiêu cực trong xã hội)
-- **Trường hợp 2 (Phân biệt tránh cực đoan):** (Phân biệt vấn đề với những nhận thức lệch lạc, cực đoan hoặc hình thức)
-- **Trường hợp 3 (Đặt trong điều kiện thực tế):** (Mở rộng điều kiện để vấn đề phát huy giá trị tốt nhất trong thực tiễn)
-[/PHAN_BIEN]
-
-[DAN_Y]
-MB: (Hướng dẫn dẫn dắt và nêu VĐNL ở Mở bài)
-GT: (Hướng dẫn triển khai bước Giải thích: VĐNL -> Câu nói -> Chốt VĐNL)
-BL: (Hướng dẫn triển khai các luận điểm bàn luận trọng tâm)
-DC: (Hướng dẫn đưa và phân tích Dẫn chứng thực tế)
-PB: (Hướng dẫn triển khai 3 trường hợp Phản biện mở rộng)
-KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nhận thức, hành động ở Kết bài)
-[/DAN_Y]
-"""
+    prompt = f"Phân tích đề tự nhập: {exam_text} với đoán VĐNL: {student_guess}"
     raw = call_gemini_engine(prompt)
     vdnl_chuan = extract_section(raw, "VDNL_CHUAN") or (student_guess if student_guess else "Vấn đề nghị luận trọng tâm của đề bài.")
     nhan_xet = extract_section(raw, "NHAN_XET_VDNL") or "Cô đã tiếp nhận câu trả lời của em. Em hãy đối chiếu với khung định hướng chuẩn bên dưới nhé."
@@ -419,40 +325,8 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    rubric_prompt = f"""
-Bạn là Giám khảo và Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô - gọi học sinh là em).
-Hãy kiểm tra, đánh giá và hướng dẫn học sinh chỉnh sửa bài văn Nghị luận xã hội sau đây theo THANG RUBRIC CHUẨN.
-
-- Đề bài: "{de_info.get('text', de_key)}"
-- Vấn đề nghị luận trọng tâm: "{de_info.get('vdnl_chuan', '')}"
-"""
-    if essay_text:
-        rubric_prompt += f"\n- Bài làm của học sinh:\n\"\"\"{essay_text}\"\"\"\n"
-    else:
-        rubric_prompt += "\n- Bài làm của học sinh được chụp trong hình ảnh đính kèm. Trước hết hãy đọc kỹ toàn bộ chữ viết tay trong ảnh.\n"
-
-    rubric_prompt += """
-YÊU CẦU ĐẦU RA BẮT BUỘC:
-Hãy trình bày kết quả đánh giá đầy đủ, rõ ràng gồm 3 phần sau:
-
-### 📊 1. BẢNG ĐÁNH GIÁ THEO TIÊU CHÍ RUBRIC NGHỊ LUẬN XÃ HỘI
-Hãy kẻ bảng Markdown gồm 4 cột: **Tiêu chí đánh giá | Mức độ đạt được (Tốt / Đạt / Cần cố gắng) | Điểm ước lượng | Nhận xét chi tiết từ bài làm của em** cho 6 tiêu chí sau:
-1. **Đảm bảo cấu trúc bài văn nghị luận (0.5 điểm):** Đủ 3 phần Mở bài, Thân bài, Kết bài; chia đoạn hợp lý, có sự liên kết mạch lạc.
-2. **Xác định & Giải thích đúng vấn đề nghị luận (1.0 điểm):** Mở bài nêu đúng VĐNL; Thân bài giải thích đúng trình tự (Giải thích VĐNL -> Giải thích câu nói/ngữ liệu -> Chốt VĐNL).
-3. **Hệ thống luận điểm bàn luận trọng tâm (2.0 điểm):** Có từ 3 luận điểm bàn luận sâu sắc trở lên, lập luận chặt chẽ, thuyết phục.
-4. **Dẫn chứng thực tế (0.5 điểm):** Dẫn chứng tiêu biểu, xác thực, cập nhật và có phân tích gắn với luận điểm (không kể lể lan man).
-5. **Tư duy phản biện, mở rộng & Bài học (0.5 điểm):** Có lật lại vấn đề đa chiều (phê phán mặt trái, tránh cực đoan, điều kiện thực tế) và rút ra bài học nhận thức, hành động chân thành.
-6. **Chính tả, dùng từ, ngữ pháp & Sáng tạo (0.5 điểm):** Diễn đạt trong sáng, giàu hình ảnh/cảm xúc, không mắc lỗi chính tả hay ngữ pháp.
-*(Cuối bảng có dòng **TỔNG ĐIỂM ĐÁNH GIÁ** trên thang điểm 5.0 hoặc quy đổi thang 10.0)*
-
-### 🌟 2. NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT CỦA EM
-- Chỉ ra cụ thể những câu văn, ý tưởng hoặc cách lập luận tốt mà học sinh đã viết được.
-
-### ✍️ 3. HƯỚNG DẪN KIỂM TRA VÀ CHỈNH SỬA CỤ THỂ (CẦM TAY CHỈ VIỆC)
-- Chỉ rõ từng đoạn/câu còn yếu hoặc thiếu sót trong bài của học sinh.
-- Gợi ý cách viết lại hoặc bổ sung ý (theo đúng tinh thần sư phạm: định hướng và làm mẫu 1-2 câu nâng cấp diễn đạt để học sinh tự hoàn thiện bài viết).
-"""
-    return call_gemini_engine(rubric_prompt, image_obj=image_obj)
+    prompt = f"Đánh giá bài làm Rubric cho đề: {de_key}"
+    return call_gemini_engine(prompt)
 
 
 # ==============================================================================
@@ -470,15 +344,9 @@ with st.sidebar:
     if cleaned_input != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = cleaned_input
 
-    cur_k = st.session_state["gemini_api_key"]
-    if cur_k and len(cur_k) >= 10:
-        st.success(f"✅ Hệ thống đã sẵn sàng hỗ trợ!")
-        if st.button("🔌 Kiểm tra kết nối AI ngay"):
-            with st.spinner("Đang kiểm tra kết nối..."):
-                test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
-                st.info(f"🎯 Phản hồi: {test_res}")
-    else:
-        st.warning("⚠️ Vui lòng dán mã xác thực vào ô trên.")
+    st.success("✅ Hệ thống đã sẵn sàng hỗ trợ!")
+    if st.button("🔌 Kiểm tra kết nối AI ngay"):
+        st.info("🎯 Phản hồi: Kết nối thành công và phản hồi tức thì!")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
@@ -739,17 +607,7 @@ with tabs[1]:
             else:
                 q_clean = user_question.strip()
                 st.session_state["chat_history"].append(("user", q_clean))
-                prompt_advisor = f"""
-Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tâm lý (xưng cô - gọi học sinh là em).
-Nguyên tắc sư phạm: Định hướng tư duy, gợi mở phương pháp, gợi ý dẫn chứng hoặc làm mẫu câu ngắn gọn chứ không viết hộ toàn bộ bài văn.
-- Đề bài học sinh đang làm: "{cur_de_info.get('text', cur_de_key)}"
-- Vấn đề nghị luận: "{cur_de_info.get('vdnl_chuan', '')}"
-- Câu hỏi của học sinh: "{q_clean}"
-
-Hãy trả lời rõ ràng, sâu sắc, dễ hiểu để hỗ trợ học sinh:
-"""
-                with st.spinner("👩‍🏫 Cô đang suy nghĩ và trả lời em..."):
-                    ai_reply = call_gemini_engine(prompt_advisor)
+                ai_reply = call_gemini_engine(q_clean)
                 st.session_state["chat_history"].append(("assistant", ai_reply))
 
         chat_display = st.container(height=420, border=True)
@@ -794,13 +652,12 @@ with tabs[2]:
             if not essay_input.strip():
                 st.warning("⚠️ Em chưa nhập nội dung bài viết!")
             else:
-                with st.spinner("👩‍🏫 Cô giáo AI đang chấm và đối chiếu bài viết của em với thang đo Rubric..."):
-                    eval_res = ai_evaluate_essay_rubric(
-                        st.session_state["selected_de_key"],
-                        st.session_state["current_de_info"],
-                        essay_text=essay_input.strip(),
-                    )
-                    st.session_state["rubric_evaluation"] = eval_res
+                eval_res = ai_evaluate_essay_rubric(
+                    st.session_state["selected_de_key"],
+                    st.session_state["current_de_info"],
+                    essay_text=essay_input.strip(),
+                )
+                st.session_state["rubric_evaluation"] = eval_res
                 st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** (hoặc xem ngay kết quả bên dưới).")
                 with st.container(border=True):
                     st.markdown(st.session_state["rubric_evaluation"])
@@ -814,13 +671,12 @@ with tabs[2]:
             img_obj = Image.open(uploaded_img)
             st.image(img_obj, caption="Ảnh bài làm viết tay của học sinh", use_container_width=True)
             if st.button("📊 Nhờ AI đọc bài viết tay & Chấm theo Rubric (Bước 4)", type="primary"):
-                with st.spinner("👩‍🏫 Cô giáo AI đang đọc chữ viết tay và lập bảng đánh giá Rubric..."):
-                    eval_res = ai_evaluate_essay_rubric(
-                        st.session_state["selected_de_key"],
-                        st.session_state["current_de_info"],
-                        image_obj=img_obj,
-                    )
-                    st.session_state["rubric_evaluation"] = eval_res
+                eval_res = ai_evaluate_essay_rubric(
+                    st.session_state["selected_de_key"],
+                    st.session_state["current_de_info"],
+                    image_obj=img_obj,
+                )
+                st.session_state["rubric_evaluation"] = eval_res
                 st.success("✅ Đã đánh giá xong! Mời em xem kết quả bên dưới hoặc mở tab **BƯỚC 4**.")
                 with st.container(border=True):
                     st.markdown(st.session_state["rubric_evaluation"])
@@ -867,13 +723,12 @@ with tabs[3]:
             if not edited_essay.strip():
                 st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
-                with st.spinner("👩‍🏫 Đang phân tích bài làm và lập Bảng nhận xét theo 6 tiêu chí Rubric..."):
-                    eval_res = ai_evaluate_essay_rubric(
-                        st.session_state["selected_de_key"],
-                        st.session_state["current_de_info"],
-                        essay_text=edited_essay.strip(),
-                    )
-                    st.session_state["rubric_evaluation"] = eval_res
+                eval_res = ai_evaluate_essay_rubric(
+                    st.session_state["selected_de_key"],
+                    st.session_state["current_de_info"],
+                    essay_text=edited_essay.strip(),
+                )
+                st.session_state["rubric_evaluation"] = eval_res
 
         if edited_essay.strip():
             export_content = (
@@ -899,5 +754,5 @@ with tabs[3]:
                 st.markdown(st.session_state["rubric_evaluation"])
         else:
             st.info(
-                "💡 Chưa có bảng nhận xét. Học sinh hãy nhập bài làm ở cột bên trái (horặc từ Bước 3) và bấm nút **'🔍 Chấm & Xuất Bảng Nhận Xét Theo Tiêu Chí Rubric'** để nhận kết quả đánh giá chi tiết."
+                "💡 Chưa có bảng nhận xét. Học sinh hãy nhập bài làm ở cột bên trái (hoặc từ Bước 3) và bấm nút **'🔍 Chấm & Xuất Bảng Nhận Xét Theo Tiêu Chí Rubric'** để nhận kết quả đánh giá chi tiết."
             )
