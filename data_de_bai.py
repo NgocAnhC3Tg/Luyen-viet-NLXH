@@ -46,7 +46,7 @@ DE_BAI_CO_BAN = {
         "explain_items": ["<b>1. Giải thích:</b> Nghịch cảnh là khó khăn, ý chí là sức mạnh tinh thần."],
         "vdnl_ket_luan": "Giá trị to lớn của ý chí kiên cường.",
         "questions": [{"cau_hoi": "Nghịch cảnh mang lại cơ hội gì?", "y_tra_loi": ["Là lò tôi luyện để người kiên cường trở nên vĩ đại."]}],
-        "evidence": [{"ten": "Thầy giáo Nguyễn Ngọc Ký", "chi_tiet": "Bị liệt cả hai tay, kiên trì dùng chân tập viết.", "y_nghia": "Ý chí chiến thắng giới hạn thể xác.", "nguon": "Báo Giáo Dục"}],
+        "evidence": [{"ten": "Thầy giáo Nguyễn Ngọc Ký", "chi_tiet": "Bị liệt hai tay, kiên trì dùng chân tập viết.", "y_nghia": "Ý chí chiến thắng giới hạn thể xác.", "nguon": "Báo Giáo Dục"}],
         "counter": ["<b>Phản biện:</b> Ý chí phải đi kèm trí tuệ."],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
     },
@@ -145,7 +145,7 @@ DE_BAI_CO_BAN = {
         "explain_items": ["<b>1. Giải thích:</b> Thái độ tích cực là góc nhìn hướng sáng."],
         "vdnl_ket_luan": "Lạc quan là chìa khóa vàng mở lối thoát.",
         "questions": [{"cau_hoi": "Lạc quan giúp ích gì?", "y_tra_loi": ["Sản sinh năng lượng chữa lành, giảm căng thẳng."]}],
-        "evidence": [{"ten": "Nguyễn Hồng Sơn", "chi_tiet": "Mất chân sau tai nạn vẫn giữ nụ cười, trở thành VĐV.", "y_nghia": "Thái độ tích cực chiến thắng nghịch cảnh.", "nguon": "VTV1"}],
+        "evidence": [{"ten": "Nguyễn Hồng Sơn", "chi_tiet": "Mất chân sau tai nạn vẫn giữ nụ cười, trở thành VĐV.", "y_nghia": "Th Thái độ tích cực chiến thắng nghịch cảnh.", "nguon": "VTV1"}],
         "counter": ["<b>Phản biện:</b> Lạc quan khác sự tự huyễn hoặc trốn tránh."],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
     },
@@ -559,7 +559,7 @@ DE_BAI_NANG_CAO = {
         "counter": ["<b>Phản biện:</b> Mạo hiểm đòi hỏi nền tảng tri thức vững chắc, không phải nổi loạn bồng bột."],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
     }
-})
+}
 
 KHO_DAN_CHUNG_9_CHU_DIEM = {
     "1. Lòng nhân ái – vị tha – trách nhiệm cộng đồng": [
@@ -609,7 +609,7 @@ KHO_DAN_CHUNG_9_CHU_DIEM = {
     ],
     "7. Bản sắc – nguồn cội – hòa nhập": [
         {"ten": "Yo-Yo Ma", "noi_dung": "Nghệ sĩ cello thành lập 'Dự án Con đường Tơ lụa' kết nối âm nhạc thế giới nhưng vẫn giữ gìn bản sắc độc đáo từng di sản.", "nguon": "TS. Nguyễn Thế Hưng"},
-        {"ten": "Trần Đăng Đăng Khoa", "noi_dung": "Đi vòng quanh thế giới bằng xe máy, luôn mang theo tà áo dài và cờ Tổ quốc để quảng bá văn hóa Việt Nam.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Trần Đặng Đăng Khoa", "noi_dung": "Đi vòng quanh thế giới bằng xe máy, luôn mang theo tà áo dài và cờ Tổ quốc để quảng bá văn hóa Việt Nam.", "nguon": "TS. Nguyễn Thế Hưng"},
         {"ten": "Nguyễn Thị Hậu", "noi_dung": "Nghệ nhân làng chiếu Cẩm Nê kiên trì hơn 50 năm bảo tồn và sáng tạo làng nghề truyền thống.", "nguon": "TS. Nguyễn Thế Hưng"}
     ],
     "8. Những lối sống và quan niệm tích cực": [
