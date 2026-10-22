@@ -159,7 +159,7 @@ with st.sidebar:
     st.write("4. **📁 Bước 4:** Hồ sơ bài làm")
 
 
-# Hàm gọi AI đồng bộ, siêu tốc, chống treo
+# Hàm gọi AI an toàn, chống treo, tối ưu tốc độ
 def call_gemini_engine(prompt_text, image_obj=None):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
@@ -228,7 +228,7 @@ Yêu cầu xuất ra JSON duy nhất:
 
 def ai_analyze_custom_exam(exam_text, student_guess):
     prompt = f"""
-<div>Bạn là chuyên gia khảo thí Ngữ văn THPT.</div>
+Bạn là chuyên gia khảo thí Ngữ văn THPT.
 Đề bài tự dán: \"\"\"{exam_text}\"\"\"
 Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
 
@@ -639,104 +639,3 @@ with tabs[1]:
 
         u_msg = st.chat_input(
             "Hỏi cô về cách giải thích, chọn dẫn chứng...", key="chat_input_b2"
-        )
-        if u_msg:
-            st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
-
-            prompt_chat = f"""
-Bạn là Giáo viên Ngữ văn THPT tâm lý, tuân thủ nghiêm ngặt nguyên tắc SƯ PHẠM:
-- TUYỆT ĐỐI KHÔNG VIẾT HỘ, KHÔNG LÀM HỘ BÀI VĂN HOẶC ĐOẠN VĂN MẪU.
-- Chỉ đặt câu hỏi gợi mở, hướng dẫn phương pháp để học sinh tự làm.
-- Xưng hô: Cô - em.
-
-Đề bài học sinh đang chọn làm: "{cur_de_key}"
-Nội dung đề bài: "{cur_de_info.get('text', '')}"
-Học sinh hỏi: "{u_msg}"
-
-Hãy trả lời định hướng ngắn gọn (3–5 câu), bám sát đúng đề bài này và đặt câu hỏi gợi mở tư duy cho học sinh:
-"""
-            with st.spinner("Trợ lý Ngữ văn đang định hướng..."):
-                reply = call_gemini_engine(prompt_chat)
-                st.session_state["chat_messages"].append(
-                    {"role": "assistant", "content": reply}
-                )
-            st.rerun()
-
-# ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (2 LỰA CHỌN: TỰ GÕ HOẶC GỬI ẢNH BÀI LÀM)
-# ------------------------------------------------------------------------------
-with tabs[2]:
-    st.markdown(
-        '<div class="section-title">✍️ Xưởng Viết Bài Độc Lập</div>',
-        unsafe_allow_html=True,
-    )
-    st.info(
-        "💡 *Dựa vào hệ thống gợi ý ở Bước 2, các em có thể tự gõ bài làm trực"
-        " tiếp hoặc chụp ảnh bài viết tay gửi lên để AI hỗ trợ nhận xét!*"
-    )
-
-    write_mode = st.radio(
-        "Chọn hình thức nộp bài:",
-        ["✍️ Tự gõ bài viết trực tiếp", "📷 Gửi ảnh chụp bài viết tay"],
-        horizontal=True,
-    )
-
-    if write_mode == "✍️ Tự gõ bài viết trực tiếp":
-        essay_in = st.text_area(
-            "Nhập bài viết của em:",
-            value=st.session_state.get("user_essay", ""),
-            height=380,
-            placeholder="Viết bài văn nghị luận hoàn chỉnh...",
-        )
-        st.session_state["user_essay"] = essay_in
-        st.session_state["essay_image"] = None
-
-    else:
-        uploaded_img = st.file_uploader(
-            "Tải lên ảnh chụp bài viết tay của em (PNG, JPG, JPEG):",
-            type=["png", "jpg", "jpeg"],
-        )
-        if uploaded_img is not None:
-            img = Image.open(uploaded_img)
-            st.image(
-                img,
-                caption="Ảnh bài làm viết tay của học sinh",
-                use_column_width=True,
-            )
-            st.session_state["essay_image"] = img
-            st.session_state["user_essay"] = "[Bài làm dạng ảnh viết tay]"
-
-            if st.button("🔍 Nhờ AI đọc và nhận xét bài viết tay", type="primary"):
-                with st.spinner(
-                    "AI đang phân tích chữ viết và nhận xét bài làm..."
-                ):
-                    eval_prompt = f"""
-Bạn là Giám khảo Ngữ văn THPT. Hãy đọc bức ảnh bài làm viết tay của học sinh cho đề bài: "{cur_de_key}" (Nội dung đề: "{cur_de_info.get('text', '')}").
-Hãy đưa ra nhận xét sư phạm chi tiết (xưng cô - em):
-1. Ưu điểm của bài làm.
-2. Những điểm cần chỉnh sửa, bổ sung (lập luận, dẫn chứng, bố cục).
-3. Gợi ý hướng hoàn thiện.
-"""
-                    ai_feedback = call_gemini_engine(eval_prompt, image_obj=img)
-                    st.markdown("### 📋 Nhận xét của Trợ lý Ngữ văn:")
-                    st.success(ai_feedback)
-
-# ------------------------------------------------------------------------------
-# HỒ SƠ BÀI LÀM
-# ------------------------------------------------------------------------------
-with tabs[3]:
-    st.markdown(
-        '<div class="section-title">📁 Hồ Sơ Bài Làm & Xuất File</div>',
-        unsafe_allow_html=True,
-    )
-    st.info(
-        "Các em có thể xem lại nội dung bài làm và chuẩn bị các bước hoàn thiện"
-        " bài viết tại đây."
-    )
-    if st.session_state.get("user_essay"):
-        st.text_area(
-            "Nội dung bài viết đã lưu:",
-            value=st.session_state["user_essay"],
-            height=250,
-            disabled=True,
-        )
