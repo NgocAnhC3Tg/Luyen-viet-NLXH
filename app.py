@@ -1,9 +1,4 @@
-import base64
-import io
-import json
-import re
-import urllib.error
-import urllib.request
+import google.generativeai as genai
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
@@ -109,23 +104,18 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE & LÀM SẠCH MÃ TOKEN (HỖ TRỢ CẢ AQ. VÀ AIza)
+# 2. QUẢN LÝ SESSION STATE & LÀM SẠCH MÃ XÁC THỰC
 # ==============================================================================
-def sanitize_api_key(raw_key):
+def sanitize_key(raw_key):
     if not raw_key:
         return ""
-    s = str(raw_key).strip()
-    match = re.search(r"([A-Za-z0-9\-_\.]{20,200})", s)
-    if match:
-        return match.group(1)
-    clean_token = "".join(ch for ch in s if 33 <= ord(ch) <= 126)
-    return clean_token
+    return str(raw_key).strip().strip('"').strip("'")
 
-def get_default_api_key():
+def get_default_key():
     try:
         for k in ["gemini_api_key", "GEMINI_API_KEY", "GOOGLE_API_KEY"]:
             if k in st.secrets and st.secrets[k]:
-                cleaned = sanitize_api_key(st.secrets[k])
+                cleaned = sanitize_key(st.secrets[k])
                 if cleaned:
                     return cleaned
     except Exception:
@@ -133,7 +123,7 @@ def get_default_api_key():
     return ""
 
 if "gemini_api_key" not in st.session_state:
-    st.session_state["gemini_api_key"] = get_default_api_key()
+    st.session_state["gemini_api_key"] = get_default_key()
 
 if "selected_de_key" not in st.session_state:
     st.session_state["selected_de_key"] = list(db.DE_BAI_CO_BAN.keys())[0]
@@ -157,98 +147,42 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI THÔNG MINH (HỖ TRỢ BEARER TOKEN CHO MÃ AQ. & QUERY KEY CHO AIza)
+# 3. ĐỘNG CƠ GỌI AI DÙNG SDK CHÍNH THỨC CỦA GOOGLE (HỖ TRỢ MỌI LOẠI MÃ)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     raw_key = st.session_state.get("gemini_api_key", "")
-    api_key = sanitize_api_key(raw_key)
+    api_key = sanitize_key(raw_key)
 
     if not api_key:
-        api_key = get_default_api_key()
+        api_key = get_default_key()
         if api_key:
             st.session_state["gemini_api_key"] = api_key
 
-    if not api_key or len(api_key) < 15:
+    if not api_key or len(api_key) < 10:
         return "❌ LỖI: Chưa có mã xác thực. Vui lòng dán mã của cô vào ô ở thanh bên trái!"
 
-    parts = [{"text": str(prompt_text)}]
-    if image_obj is not None:
-        try:
-            buffered = io.BytesIO()
-            img_rgb = image_obj.convert("RGB")
-            img_rgb.save(buffered, format="JPEG", quality=85)
-            img_b64 = base64.b64encode(buffered.getvalue()).decode("ascii")
-            parts.append({
-                "inline_data": {
-                    "mime_type": "image/jpeg",
-                    "data": img_b64
-                }
-            })
-        except Exception as e:
-            return f"❌ Lỗi xử lý ảnh tải lên: {str(e)}"
-
-    payload_gemini = {
-        "contents": [{"role": "user", "parts": parts}],
-        "safetySettings": [
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-        ],
-        "generationConfig": {
-            "temperature": 0.4,
-            "maxOutputTokens": 2048,
-        }
-    }
-    data_bytes = json.dumps(payload_gemini, ensure_ascii=True).encode("ascii")
-
-    # Xác định endpoint và header tùy theo loại mã (AQ. dùng Bearer Token qua Vertex AI, AIza dùng Query Param)
-    is_oauth_token = api_key.startswith("AQ.")
-    
-    urls_to_try = []
-    if is_oauth_token:
-        # Dự án Google Cloud của cô có Project ID là 414700525197 (lấy từ log lỗi trước đó)
-        project_id = "414700525197"
-        for m in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
-            urls_to_try.append((
-                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/{m}:generateContent",
-                {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-            ))
-    else:
-        for m in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
-            urls_to_try.append((
-                f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}",
-                {"Content-Type": "application/json"}
-            ))
-
-    last_error = ""
-    for url, headers in urls_to_try:
-        req = urllib.request.Request(url, data=data_bytes, headers=headers, method="POST")
-        try:
-            with urllib.request.urlopen(req, timeout=25) as resp:
-                resp_body = resp.read().decode("utf-8", errors="replace")
-                result_json = json.loads(resp_body)
-                candidates = result_json.get("candidates", [])
-                if candidates:
-                    content_parts = candidates[0].get("content", {}).get("parts", [])
-                    texts = [p.get("text", "") for p in content_parts if "text" in p]
-                    final_text = "".join(texts).strip()
-                    if final_text:
-                        return final_text
-        except urllib.error.HTTPError as http_err:
+    try:
+        # Sử dụng SDK chính thức của Google
+        genai.configure(api_key=api_key)
+        
+        # Danh sách các model để quét thử tự động
+        model_names = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro"]
+        
+        last_err = ""
+        for m_name in model_names:
             try:
-                err_detail = http_err.read().decode("utf-8", errors="replace")
-                err_json = json.loads(err_detail)
-                err_msg = err_json.get("error", {}).get("message", str(http_err))
-            except Exception:
-                err_msg = str(http_err)
-            last_error = f"HTTP {http_err.code}: {err_msg}"
-            continue
-        except Exception as e:
-            last_error = str(e)
-            continue
-
-    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại mã xác thực!"
+                model = genai.GenerativeModel(m_name)
+                content = [prompt_text, image_obj] if image_obj is not None else prompt_text
+                response = model.generate_content(content)
+                if response and hasattr(response, "text") and response.text:
+                    return response.text.strip()
+            except Exception as sub_e:
+                last_err = str(sub_e)
+                continue
+        
+        return f"❌ Không thể tạo nội dung với các model hiện hành. Chi tiết: {last_err}"
+    except Exception as e:
+        return f"❌ Lỗi kết nối Google SDK: {str(e)}"
 
 
 def extract_section(text, tag_name):
@@ -326,7 +260,7 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
 [/DAN_Y]
 """
     raw = call_gemini_engine(prompt)
-    if raw.startswith("❌") or raw.startswith("⚠️"):
+    if raw.startswith("❌"):
         return None, raw
 
     vdnl_chuan = extract_section(raw, "VDNL_CHUAN") or (student_guess if student_guess else "Vấn đề nghị luận trọng tâm của đề bài.")
@@ -453,19 +387,19 @@ with st.sidebar:
         "Nhập mã xác thực của cô:",
         type="password",
         value=st.session_state["gemini_api_key"],
-        help="Hỗ trợ cả mã AQ... hoặc bất kỳ mã khóa nào của cô.",
+        help="Hỗ trợ mọi định dạng mã của cô.",
     )
-    cleaned_input = sanitize_api_key(api_key_input)
+    cleaned_input = sanitize_key(api_key_input)
     if cleaned_input != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = cleaned_input
 
     cur_k = st.session_state["gemini_api_key"]
-    if cur_k and len(cur_k) >= 15:
+    if cur_k and len(cur_k) >= 10:
         st.success(f"✅ Đã nhận mã xác thực ({cur_k[:6]}...{cur_k[-4:]})")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
-            with st.spinner("Đang kiểm tra kết nối..."):
+            with st.spinner("Đang kiểm tra kết nối qua Google SDK..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
-                if test_res.startswith("❌") or test_res.startswith("⚠️"):
+                if test_res.startswith("❌"):
                     st.error(test_res)
                 else:
                     st.info(f"🎯 Phản hồi từ AI: {test_res}")
