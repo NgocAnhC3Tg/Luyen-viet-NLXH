@@ -100,7 +100,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐẦY ĐỦ 100% NỘI DUNG GỐC, KHÔNG LƯỢC BỚT)
+# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐẦY ĐỦ CHI TIẾT 100%, KHÔNG RÚT GỌN)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
@@ -182,36 +182,6 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
             "Phê phán lối sống ích kỷ, thực dụng, 'chỉ biết mình', thờ ơ"
             " trước những vấn đề chung của xã hội."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ ý thơ 'Tiếng hát con tàu' của Chế Lan Viên; giới thiệu"
-                " vấn đề nghị luận: Ý nghĩa của lối sống có trách nhiệm và biết"
-                " gắn bó với cộng đồng."
-            ),
-            "gt": (
-                "Giải thích từ khóa 'lối sống có trách nhiệm', 'gắn bó cộng đồng';"
-                " làm rõ ý nghĩa 'đất hóa tâm hồn'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Con người là thực thể xã hội, sự phát triển cá"
-                " nhân luôn cần bệ phóng từ tập thể.\n• Luận điểm 2: Sống trách"
-                " nhiệm giúp đẩy lùi căn bệnh vô cảm, lan tỏa sự tử tế.\n• Luận"
-                " điểm 3: Cống hiến là con đường khẳng định giá trị thanh xuân rực"
-                " rỡ."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Hoàng Hoa Trung và dự án 'Nuôi Em'.\n• Dẫn chứng"
-                " 2: Đội cứu trợ thiện nguyện 'SOS Vũng Tàu'."
-            ),
-            "pb": (
-                "Phê phán lối sống ích kỷ, vô cảm; đồng thời phân định rạch ròi"
-                " giữa trách nhiệm chân chính với sự bao đồng, hình thức."
-            ),
-            "kb": (
-                "Khẳng định lại giá trị của lối sống trách nhiệm; rút ra bài học"
-                " nhận thức và hành động thiết thực cho bản thân."
-            ),
-        },
     },
     "Đề 02: Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
         "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
@@ -293,36 +263,6 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
             "Phê phán thói vô cảm, tâm lý phán xét vội vàng, bạo lực ngôn từ"
             " trên không gian mạng."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ quan điểm của Haruki Murakami; giới thiệu vấn đề"
-                " nghị luận: Sức mạnh của sự thấu cảm và lắng nghe chân thành"
-                " trong xã hội hiện đại."
-            ),
-            "gt": (
-                "Cắt nghĩa 'thấu cảm', 'lắng nghe chân thành'; giải mã 'cơn bão"
-                " lòng'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Trong thời đại số, con người dễ cô đơn ngay giữa"
-                " đám đông, khao khát sự sẻ chia.\n• Luận điểm 2: Thấu cảm giúp"
-                " xóa bỏ định kiến, xoa dịu nỗi đau tinh thần.\n• Luận điểm 3:"
-                " Lắng nghe chân thành là cầu nối gắn kết tình người."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: TS. Đặng Hoàng Giang với Dự án 'Tổng đài Ngày"
-                " Mai'.\n• Dẫn chứng 2: Các tài xế ô tô chắn gió trên cầu Bãi"
-                " Cháy."
-            ),
-            "pb": (
-                "Phê phán thói vô cảm, tâm lý phán xét hùa theo đám đông và bạo"
-                " lực ngôn từ trực tuyến."
-            ),
-            "kb": (
-                "Khẳng định vai trò của sự thấu hiểu; rút ra bài học tu dưỡng"
-                " bản thân trong giao tiếp."
-            ),
-        },
     },
     "Đề 03: Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
         "text": """Có ý kiến cho rằng: "Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."
@@ -398,34 +338,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
             "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt và"
             " các giá trị truyền thống."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ xu thế toàn cầu hóa; giới thiệu vấn đề nghị luận:"
-                " Trách nhiệm giữ gìn và phát huy bản sắc văn hóa dân tộc của"
-                " thế hệ trẻ."
-            ),
-            "gt": (
-                "Giải thích 'bản sắc văn hóa', 'trách nhiệm giữ gìn'; làm rõ hình"
-                " ảnh 'mỏ neo'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Văn hóa là căn cước định danh dân tộc, mất văn"
-                " hóa là mất tất cả.\n• Luận điểm 2: Hội nhập không có nghĩa là"
-                " hòa tan; bản sắc là nội lực giúp vươn xa."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Rapper Đen Vâu và Hoàng Thùy Linh.\n• Dẫn chứng"
-                " 2: Dự án phục dựng cổ phục."
-            ),
-            "pb": (
-                "Phê phán thái độ sính ngoại mù quáng, lai căng văn hóa hoặc"
-                " bảo thủ đóng khung."
-            ),
-            "kb": (
-                "Khẳng định sứ mệnh của tuổi trẻ với di sản dân tộc; rút ra bài"
-                " học hành động thiết thực."
-            ),
-        },
     },
     "Đề 04: Ý nghĩa của lòng biết ơn trong đời sống con người": {
         "text": """Danh ngôn dân gian có câu:
@@ -504,32 +416,6 @@ Từ cội nguồn đạo lý ấy, hãy viết bài văn nghị luận (khoản
             "Phê phán thói vô ơn, ăn cháo đá bát, vong ân bội nghĩa, xem công"
             " sức người khác là điều hiển nhiên."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu tục ngữ dân gian; giới thiệu vấn đề nghị luận:"
-                " Ý nghĩa của lòng biết ơn trong đời sống con người."
-            ),
-            "gt": (
-                "Giải thích 'lòng biết ơn'; làm rõ ý nghĩa hình ảnh 'uống nước"
-                " nhớ nguồn', 'ăn quả nhớ kẻ trồng cây'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Biết ơn là đạo lý truyền thống làm nên phẩm giá"
-                " con người.\n• Luận điểm 2: Lòng biết ơn giúp gắn kết xã hội bằng"
-                " tình nghĩa, nuôi dưỡng lòng trắc ẩn."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Hoạt động tri ân 27/7.\n• Dẫn chứng 2: Lễ giỗ Tổ"
-                " Hùng Vương."
-            ),
-            "pb": (
-                "Phê phán thói vô ơn, ăn cháo đá bát, vong ân bội nghĩa."
-            ),
-            "kb": (
-                "Khẳng định tầm quan trọng của lòng biết ơn; rút ra bài học hành"
-                " động cho thế hệ trẻ."
-            ),
-        },
     },
     "Đề 05: Sức mạnh và giá trị của niềm tin vào bản thân": {
         "text": """Có câu nói nổi tiếng: *"Tin rằng bạn có thể làm được là bạn đã đi được nửa đường."* (Theodore Roosevelt)
@@ -605,33 +491,6 @@ Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh 
             "Phê phán căn bệnh tự ti, nhút nhát, rụt rè hoặc ngược lại là sự"
             " ảo tưởng sức mạnh, tự phụ mù quáng."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu nói của Theodore Roosevelt; giới thiệu vấn đề"
-                " nghị luận: Sức mạnh và giá trị của niềm tin vào bản thân."
-            ),
-            "gt": (
-                "Giải thích 'niềm tin vào bản thân'; làm rõ ý nghĩa thông điệp"
-                " 'đã đi được nửa đường'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Niềm tin là bệ phóng giúp con người vượt qua nỗi"
-                " sợ hãi, dám nghĩ dám làm.\n• Luận điểm 2: Thất bại lớn nhất"
-                " là đánh mất niềm tin vào chính mình."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Diễn giả Nick Vujicic.\n• Dẫn chứng 2: Thầy giáo"
-                " Nguyễn Ngọc Ký."
-            ),
-            "pb": (
-                "Phê phán căn bệnh tự ti, nhút nhát hoặc ảo tưởng sức mạnh tự"
-                " phụ."
-            ),
-            "kb": (
-                "Khẳng định vai trò của niềm tin; rút ra bài học hành động cho"
-                " tuổi trẻ."
-            ),
-        },
     },
     "Đề 06: Giá trị của sự kiên trì và bền bỉ trong cuộc sống": {
         "text": """Ngạn ngữ dân gian có câu: *"Nước chảy đá mòn."*
@@ -706,32 +565,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị của s
             "Phê phán lối sống cả thèm chóng chán, dễ nản lòng, gặp khó khăn là"
             " buông xuôi bỏ cuộc."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu ngạn ngữ 'Nước chảy đá mòn'; giới thiệu vấn đề"
-                " nghị luận: Giá trị của sự kiên trì và bền bỉ."
-            ),
-            "gt": (
-                "Giải thích 'kiên trì, bền bỉ'; phân tích ý nghĩa hình ảnh tự"
-                " nhiên 'nước chảy đá mòn'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Mọi thành công lớn đều đòi hỏi quá trình tôi"
-                " luyện lâu dài.\n• Luận điểm 2: Kiên trì giúp rèn luyện bản"
-                " lĩnh, biến trở ngại thành bước đệm."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: VĐV Nguyễn Thị Ánh Viên.\n• Dẫn chứng 2: Nhà"
-                " phát minh Thomas Edison."
-            ),
-            "pb": (
-                "Phê phán thói cả thèm chóng chán, dễ nản lòng trước thử thách."
-            ),
-            "kb": (
-                "Khẳng định giá trị của sự bền bỉ; rút ra bài học hành động cho"
-                " bản thân."
-            ),
-        },
     },
     "Đề 07: Ý nghĩa của việc trân trọng những giá trị bình dị quanh ta": {
         "text": """Có ý kiến cho rằng: *"Hạnh phúc đôi khi không phải là những điều lớn lao, mà ẩn giấu trong những điều bình dị nhất của đời thường."*
@@ -809,32 +642,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của vi
             "Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng, xem"
             " thường những hạnh phúc mộc mạc xung quanh."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ nhịp sống hiện đại; giới thiệu vấn đề nghị luận: Ý"
-                " nghĩa của việc trân trọng những giá trị bình dị."
-            ),
-            "gt": (
-                "Giải thích 'trân trọng giá trị bình dị'; làm rõ quan niệm về"
-                " hạnh phúc đích thực."
-            ),
-            "bl": (
-                "• Luận điểm 1: Hạnh phúc không ở đâu xa mà nằm trong những điều"
-                " mộc mạc nhất.\n• Luận điểm 2: Trân trọng bình dị giúp tâm hồn"
-                " thanh thản, tránh xa cạm bẫy hư vinh."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Trào lưu sống tối giản, chữa lành.\n• Dẫn chứng"
-                " 2: Giá trị bữa cơm gia đình trong đại dịch."
-            ),
-            "pb": (
-                "Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng."
-            ),
-            "kb": (
-                "Khẳng định ý nghĩa của sự trân trọng; rút ra bài học sống chậm"
-                " lại và yêu thương."
-            ),
-        },
     },
     "Đề 08: Vai trò của sách và văn hóa đọc trong thời đại số": {
         "text": """Maxim Gorky từng khẳng định: *"Sách mở ra trước mắt tôi những chân trời mới."*
@@ -909,34 +716,6 @@ Trong thời đại bùng nổ công nghệ số, em hãy viết bài văn ngh�
             "Phê phán tình trạng lười đọc sách, nghiện mạng xã hội, chỉ chuộng"
             " thông tin 'mì ăn liền' nông cạn."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu nói của Maxim Gorky; giới thiệu vấn đề nghị"
-                " luận: Vai trò của sách và văn hóa đọc trong thời đại số."
-            ),
-            "gt": (
-                "Giải thích 'sách', 'văn hóa đọc'; làm rõ hình ảnh 'chân trời mới'"
-                " tượng trưng cho tri thức."
-            ),
-            "bl": (
-                "• Luận điểm 1: Sách cung cấp tri thức có hệ thống, bồi dưỡng"
-                " tâm hồn và nhân cách.\n• Luận điểm 2: Trong thời đại số, sách"
-                " là khoảng lặng quý giá để rèn luyện tư duy sâu (deep"
-                " thinking)."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Đường sách TP.HCM và Hà Nội.\n• Dẫn chứng 2:"
-                " Cuộc thi Đại sứ Văn hóa đọc."
-            ),
-            "pb": (
-                "Phê phán tình trạng lười đọc sách, chìm đắm vào mạng xã hội"
-                " nông cạn."
-            ),
-            "kb": (
-                "Khẳng định giá trị của sách; rút ra bài học xây dựng thói quen"
-                " đọc sách mỗi ngày."
-            ),
-        },
     },
     "Đề 09: Lòng dũng cảm bảo vệ cái đúng, cái thiện": {
         "text": """Có ý kiến cho rằng: *"Lòng dũng cảm không phải là không sợ hãi, mà là sự chiến thắng nỗi sợ hãi."*
@@ -1010,33 +789,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của lò
             "Phê phán thái độ hèn nhát, vô cảm, 'thấy việc nghĩa không làm', sợ"
             " chuốc họa vào thân."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu nói về lòng dũng cảm; giới thiệu vấn đề nghị"
-                " luận: Vai trò của lòng dũng cảm trong việc bảo vệ lẽ phải và"
-                " công lý."
-            ),
-            "gt": (
-                "Giải thích 'lòng dũng cảm'; làm rõ ý kiến: dũng cảm là chiến"
-                " thắng nỗi sợ hãi."
-            ),
-            "bl": (
-                "• Luận điểm 1: Lòng dũng cảm là tấm lá chắn bảo vệ công lý và"
-                " những yếu thế.\n• Luận điểm 2: Sự im lặng trước cái xấu chính"
-                " là sự tiếp tay cho cái ác lộng hành."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Người dân cứu người trong lũ dữ.\n• Dẫn chứng 2:"
-                " Nhà báo đấu tranh tiêu cực."
-            ),
-            "pb": (
-                "Phê phán thái độ hèn nhát, vô cảm, thấy việc nghĩa không làm."
-            ),
-            "kb": (
-                "Khẳng định ý nghĩa của lòng dũng cảm; rút ra bài học hành động"
-                " cho thế hệ trẻ."
-            ),
-        },
     },
     "Đề 10: Ứng xử văn minh trên không gian mạng": {
         "text": """Mạng xã hội giống như con dao hai lưỡi vừa kết nối toàn cầu vừa tiềm ẩn nhiều hệ lụy văn hóa.
@@ -1111,35 +863,6 @@ Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về cách ứng x
             "Phê phán hiện tượng miệt thị ngoại hình, lăng mạ, tung tin giả"
             " câu view trên mạng xã hội."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ sự bùng nổ mạng xã hội; giới thiệu vấn đề nghị luận:"
-                " Cách ứng xử thông minh và văn minh của người trẻ trên không"
-                " gian mạng."
-            ),
-            "gt": (
-                "Giải thích 'ứng xử văn minh'; làm rõ hình ảnh 'con dao hai"
-                " lưỡi' của mạng xã hội."
-            ),
-            "bl": (
-                "• Luận điểm 1: Mạng xã hội mở ra thế giới kết nối nhưng cũng"
-                " tiềm ẩn rác văn hóa.\n• Luận điểm 2: Người trẻ cần trang bị"
-                " bản lĩnh, tư duy phản biện để làm chủ công nghệ thay vì để"
-                " công nghệ giật dây."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Bộ Quy tắc ứng xử trên mạng xã hội.\n• Dẫn chứng"
-                " 2: Chiến dịch phản đối bạo lực mạng."
-            ),
-            "pb": (
-                "Phê phán hiện tượng 'anh hùng bàn phím', tung tin giả, miệt thị"
-                " ngoại hình."
-            ),
-            "kb": (
-                "Khẳng định trách nhiệm khi tham gia mạng xã hội; rút ra bài"
-                " học ứng xử cho bản thân."
-            ),
-        },
     },
     "Đề 11: Giá trị của sự trung thực trong học tập và đời sống": {
         "text": """Có ý kiến cho rằng: *"Sự thật có thể gây tổn thương trong chốc lát, nhưng dối trá để lại vết sẹo vĩnh viễn."*
@@ -1214,35 +937,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị và ý 
             "Phê phán thói gian lận thi cử, đạo văn (plagiarism) và bệnh"
             " thành tích dối trá."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu nói về sự thật và dối trá; giới thiệu vấn đề"
-                " nghị luận: Giá trị của sự trung thực trong học tập và đời"
-                " sống."
-            ),
-            "gt": (
-                "Giải thích 'trung thực'; làm rõ ý nghĩa: sự thật dẫu đau đớn còn"
-                " hơn dối trá vĩnh viễn."
-            ),
-            "bl": (
-                "• Luận điểm 1: Trung thực là gốc rễ của nhân cách, là nền tảng"
-                " tạo dựng lòng tin giữa người với người.\n• Luận điểm 2: Gian"
-                " lận, dối trá trong học tập và đời sống làm thui chột năng lực"
-                " thực chất."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Cuộc vận động nói không với tiêu cực thi cử của"
-                " Bộ GD&ĐT.\n• Dẫn chứng 2: Học sinh nhặt được của rơi trả lại"
-                " người mất."
-            ),
-            "pb": (
-                "Phê phán bệnh thành tích, gian lận thi cử và đạo văn."
-            ),
-            "kb": (
-                "Khẳng định giá trị của lòng trung thực; rút ra bài học rèn luyện"
-                " cho học sinh."
-            ),
-        },
     },
     "Đề 12: Tầm quan trọng của tinh thần tự học đối với học sinh": {
         "text": """Chủ tịch Hồ Chí Minh từng căn dặn: *"Học ở trường, học ở sách vở, học lẫn nhau và học nhân dân."*
@@ -1318,35 +1012,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng
             "Phê phán thói quen ỷ lại, học vẹt, lười suy nghĩ, chờ 'dọn sẵn"
             " mâm' kiến thức từ thầy cô."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ lời căn dặn của Chủ tịch Hồ Chí Minh; giới thiệu vấn"
-                " đề nghị luận: Tầm quan trọng của tinh thần tự học đối với học"
-                " sinh."
-            ),
-            "gt": (
-                "Giải thích 'tinh thần tự học'; phân tích quan điểm học toàn diện"
-                " của Bác Hồ."
-            ),
-            "bl": (
-                "• Luận điểm 1: Tri thức nhân loại vô tận trong khi ghế nhà"
-                " trường có hạn, tự học là chìa khóa học suốt đời.\n• Luận"
-                " điểm 2: Tự học giúp rèn luyện tư duy độc lập, khả năng thích"
-                " ứng linh hoạt."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Tấm gương tự học của Bác Hồ.\n• Dẫn chứng 2: Tỷ"
-                " phú Bill Gates."
-            ),
-            "pb": (
-                "Phê phán thói ỷ lại, học vẹt, lười suy nghĩ, chờ dọn sẵn mâm"
-                " kiến thức."
-            ),
-            "kb": (
-                "Khẳng định vai trò của tự học; rút ra bài học hành động cho"
-                " học sinh."
-            ),
-        },
     },
     "Đề 13: Sức mạnh của lời nói tử tế trong giao tiếp": {
         "text": """Ca dao dân gian có câu:
@@ -1422,33 +1087,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của
             "Phê phán thói chửi tục, miệt thị, dùng ngôn từ thô lỗ sát thương"
             " tâm lý người khác."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu ca dao dân gian; giới thiệu vấn đề nghị luận:"
-                " Sức mạnh của lời nói tử tế và văn hóa ứng xử."
-            ),
-            "gt": (
-                "Giải thích 'lời nói tử tế'; làm rõ triết lý 'lựa lời mà nói"
-                " cho vừa lòng nhau'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Lời nói không mất tiền mua nhưng có sức mạnh"
-                " sát thương hoặc chữa lành tâm hồn.\n• Luận điểm 2: Văn hóa ứng"
-                " xử lịch sự tạo nên sự gắn kết văn minh trong cộng đồng."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Mô hình Quán ăn 0 đồng.\n• Dẫn chứng 2: Dự án"
-                " Tiếng nói tử tế trên VTV."
-            ),
-            "pb": (
-                "Phê phán thói chửi tục, dùng ngôn từ thô lỗ sát thương người"
-                " khác."
-            ),
-            "kb": (
-                "Khẳng định giá trị của lời nói tử tế; rút ra bài học giao tiếp"
-                " cho bản thân."
-            ),
-        },
     },
     "Đề 14: Vai trò của tính tự lập trong hành trình trưởng thành": {
         "text": """Có ý kiến cho rằng: *"Chim non muốn bay cao phải tự vẫy đôi cánh của chính mình."*
@@ -1522,33 +1160,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của tí
             "Phê phán thói quen 'công tử bột', 'bám váy mẹ', lười biếng, ỷ lại"
             " mọi thứ vào cha mẹ."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ hình ảnh chim non tập bay; giới thiệu vấn đề nghị"
-                " luận: Vai trò của tính tự lập trong hành trình trưởng thành."
-            ),
-            "gt": (
-                "Giải thích 'tính tự lập'; làm rõ ý nghĩa hình ảnh 'vẫy đôi cánh"
-                " của chính mình'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Tự lập giúp người trẻ rèn luyện bản lĩnh, khả"
-                " năng thích ứng trước mọi hoàn cảnh.\n• Luận điểm 2: Sự bao"
-                " bọc thái quá của gia đình tước đi cơ hội trưởng thành của con"
-                " cái."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Lối sống tự lập của thanh niên quốc tế.\n• Dẫn"
-                " chứng 2: Tấm gương lập nghiệp tự thân."
-            ),
-            "pb": (
-                "Phê phán thói quen 'công tử bột', ỷ lại vào cha mẹ."
-            ),
-            "kb": (
-                "Khẳng định giá trị của tính tự lập; rút ra bài học hành động"
-                " cho học sinh."
-            ),
-        },
     },
     "Đề 15: Sức mạnh to lớn của tinh thần đoàn kết": {
         "text": """Chủ tịch Hồ Chí Minh từng đúc kết chân lý lịch sử:
@@ -1625,32 +1236,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của
             "Phê phán tư tưởng cục bộ, ích kỷ, chia rẽ bè phái làm suy yếu sức"
             " mạnh tập thể."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ câu nói lịch sử của Bác Hồ; giới thiệu vấn đề nghị"
-                " luận: Sức mạnh to lớn của tinh thần đoàn kết."
-            ),
-            "gt": (
-                "Giải thích 'đoàn kết'; phân tích ý nghĩa chân lý 'đại đoàn kết"
-                " - đại thành công'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Đoàn kết nhân đôi sức mạnh, giúp vượt qua mọi"
-                " nghịch cảnh thiên tai, giặc giã.\n• Luận điểm 2: Đoàn kết tạo"
-                " nên sức mạnh vô địch của một tập thể, một quốc gia."
-            ),
-            "dc": (
-                "• Dẫn chứng 1: Tinh thần chống dịch Covid-19.\n• Dẫn chứng 2:"
-                " Công tác cứu trợ đồng bào lũ lụt."
-            ),
-            "pb": (
-                "Phê phán tư tưởng cục bộ, ích kỷ, chia rẽ bè phái."
-            ),
-            "kb": (
-                "Khẳng định giá trị của tinh thần đoàn kết; rút ra bài học hành"
-                " động cho thế hệ trẻ."
-            ),
-        },
     },
 }
 
@@ -1710,34 +1295,6 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             "Phê phán thói hùa theo phong trào vô thức hoặc biến khác biệt"
             " thành ngông cuồng."
         )],
-        "dani_chi_tiet": {
-            "mb": (
-                "Dẫn dắt từ hình ảnh dòng sông chảy ra biển lớn; giới thiệu vấn"
-                " đề nghị luận: Bản lĩnh giữ gìn bản sắc riêng và chính kiến"
-                " trước áp lực số đông."
-            ),
-            "gt": (
-                "Cắt nghĩa 'bản sắc riêng', 'chính kiến'; giải mã hình ảnh 'con"
-                " sông', 'ghềnh thác'."
-            ),
-            "bl": (
-                "• Luận điểm 1: Giữ bản sắc giúp khẳng định giá trị cá nhân độc"
-                " lập.\n• Luận điểm 2: Áp lực đám đông và tâm lý bầy đàn dễ bóp"
-                " nghẹt tư duy phản biện."
-            ),
-            "dc": (
-                "Dẫn chứng về vận động viên Nguyễn Thị Oanh kiên định chiến"
-                " thuật riêng giành HCV."
-            ),
-            "pb": (
-                "Phê phán thói hùa theo phong trào vô thức hoặc biến sự khác"
-                " biệt thành ngông cuồng cực đoan."
-            ),
-            "kb": (
-                "Khẳng định tầm quan trọng của bản lĩnh cá nhân; rút ra bài học"
-                " tu dưỡng trong thời đại số."
-            ),
-        },
     }
 }
 
@@ -2181,6 +1738,15 @@ with tabs[0]:
           }
           st.session_state["selected_de_key"] = ten_de_custom
           st.session_state["current_de_info"] = info_custom
+          st.session_state["chat_messages"] = [{
+              "role": "assistant",
+              "content": (
+                  "Chào em! Cô là Trợ lý Ngữ văn. Đề bài các em đang chọn là:"
+                  f" '{ten_de_custom}'."
+              ),
+          }]
+          st.session_state["user_outline"] = ""
+          st.session_state["user_essay"] = ""
           st.session_state["eval_vdnl_result"] = {
               "status": res_custom.get("status", "LECH"),
               "feedback": res_custom.get("feedback", ""),
