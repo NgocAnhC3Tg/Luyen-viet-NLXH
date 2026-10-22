@@ -193,7 +193,7 @@ Một mở bài đạt chuẩn không cần quá gò bó độ dài nhưng phả
 1. **Lật lại mặt trái:** Phê phán những kẻ có thái độ sống hời hợt, ích kỷ hoặc đi ngược lại giá trị tốt đẹp này.
 2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức.
 3. **Bài học thực tiễn:** Rút ra hành động cụ thể cho bản thân.
-👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?""""
+👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?"""
 
     elif "luận điểm" in q_lower or "ý 1" in q_lower or "ý 2" in q_lower or "thân bài" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng hệ thống Ý Thân bài:**
@@ -544,7 +544,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (KHÔNG GIỚI HẠN / GÒ BÒ DUNG LƯỢNG)
+# BƯỚC 3: XƯỞNG VIẾT BÀI
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
