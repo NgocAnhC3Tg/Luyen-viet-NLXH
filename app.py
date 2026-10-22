@@ -5,7 +5,7 @@ import streamlit as st
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN VÀ KHO DỮ LIỆU TÍCH HỢP ĐẦY ĐỦ 30 ĐỀ & PHÂN LUỒNG
+# 1. CẤU HÌNH GIAO DIỆN VÀ KHO DỮ LIỆU ĐẦY ĐỦ 3 CHẾ ĐỘ CHỌN ĐỀ
 # ==============================================================================
 st.set_page_config(
     page_title="Hệ Thống Luyện Viết NLXH - 30 Đề Chuẩn Mực",
@@ -102,7 +102,7 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. PHÂN LUỒNG KHO ĐỀ (15 CƠ BẢN & 15 NÂNG CAO)
+# 2. KHO DỮ LIỆU ĐẦY ĐỦ
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Sự cần thiết phải biết sống cống hiến": {
@@ -130,32 +130,6 @@ DE_BAI_CO_BAN = {
             "- **Trường hợp 3 (Góc độ năng lực thực tế):** Cống hiến phải tùy sức, tùy tài, tránh ảo tưởng sức mạnh làm quá sức dẫn đến kiệt sức hoặc gây gánh nặng cho người khác."
         ],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
-    },
-    "Đề 02: Trách nhiệm tiếp bước các thế hệ đi trước": {
-        "text": "Viết bài văn nghị luận bàn về trách nhiệm của thế hệ trẻ trong việc tiếp bước các thế hệ đi trước để xây dựng và bảo vệ đất nước.",
-        "vdnl_chuan": "Trách nhiệm, sứ mệnh lịch sử của thế hệ trẻ trong việc kế thừa truyền thống cha ông.",
-        "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích bản chất -> Chốt lại VĐNL.",
-        "explain_items": [
-            "- **Giải thích vấn đề nghị luận (VĐNL):** 'Tiếp bước' là hành động kế thừa, phát huy những thành quả, truyền thống tốt đẹp mà các thế hệ cha ông đã đổ xương máu gây dựng để xây dựng và bảo vệ đất nước.",
-            "- **Giải thích nội dung/bản chất:** Tiếp bước không phải là sự sao chép máy móc quá khứ mà là sự tiếp nối mạch nguồn lòng yêu nước, tinh thần tự tôn dân tộc bằng tư duy và hành động phù hợp với thời đại mới.",
-            "- **Chốt lại VĐNL:** Qua đó, làm nổi bật sứ mệnh lịch sử của thế hệ trẻ trong công cuộc xây dựng và bảo vệ Tổ quốc."
-        ],
-        "vdnl_ket_luan": "Sứ mệnh kế thừa và phát huy truyền thống cha ông.",
-        "questions": [{
-            "cau_hoi": "Trong thời bình, trách nhiệm tiếp bước cha ông được thể hiện qua những khía cạnh cụ thể nào?", 
-            "y_tra_loi": [
-                "- **Thứ nhất:** Không ngừng tu dưỡng đạo đức, giữ gìn và phát huy bản sắc văn hóa dân tộc trước sự giao thoa toàn cầu hóa.",
-                "- **Thứ hai:** Nỗ lực học tập, sáng tạo, làm chủ khoa học công nghệ để đưa đất nước thoát khỏi đói nghèo, vươn tầm quốc tế.",
-                "- **Thứ ba:** Sẵn sàng dấn thân, bảo vệ chủ quyền biên giới, hải đảo và giữ vững ổn định an ninh quốc gia khi Tổ quốc cần."
-            ]
-        }],
-        "evidence": [{"ten": "Thế hệ trẻ tình nguyện chống dịch và bão lũ", "chi_tiet": "Lao vào tâm dịch và vùng lũ cứu trợ đồng bào.", "y_nghia": "Tiếp nối truyền thống thương người như thể thương thân.", "nguon": "Báo Nhân Dân"}],
-        "counter": [
-            "- **Trường hợp 1 (Góc độ bảo thủ):** Tiếp bước truyền thống không phải là sự sao chép giáo điều, ôm giữ cái cũ lỗi thời bỏ qua tư duy đổi mới.",
-            "- **Trường hợp 2 (Góc độ ỷ lại hào quang):** Cần phê phán lối sống ỷ lại vào công lao của thế hệ trước mà tự mãn, lười biếng trong hiện tại.",
-            "- **Trường hợp 3 (Góc độ hội nhập cực đoan):** Tiếp bước không có nghĩa là khép kín cực đoan; cần biết dung hòa giữa bản sắc truyền thống và tinh hoa nhân loại."
-        ],
-        "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
     }
 }
 
@@ -180,7 +154,7 @@ DE_BAI_NANG_CAO = {
         }],
         "evidence": [{"ten": "Thiền sư Thích Nhất Hạnh", "chi_tiet": "Thực hành chánh niệm, lắng nghe nội tâm.", "y_nghia": "Sức mạnh tĩnh thức nội tâm.", "nguon": "Sách"}],
         "counter": [
-            "- **Trường hợp 1 (Góc độ trốn tránh thực tại):** Trở về nội tâm không có nghĩa là trốn tránh trách nhiệm xã hội hay tự cô lập mình khỏi cộng đồng.",
+            "- **Trường hợp 1 (Góc độ trốn tránh thực tai):** Trở về nội tâm không có nghĩa là trốn tránh trách nhiệm xã hội hay tự cô lập mình khỏi cộng đồng.",
             "- **Trường hợp 2 (Góc độ vị kỷ ái kỉ):** Cần tránh biến việc khám phá bản thân thành sự tự mãn, ích kỷ chỉ biết đến cái tôi cá nhân.",
             "- **Trường hợp 3 (Góc độ hình thức tĩnh tâm):** Tránh ngụy biện việc lười biếng lao động dưới vỏ bọc 'thiền định tìm bình yên nội tâm'."
         ],
@@ -292,8 +266,78 @@ Xuất ra JSON duy nhất:
     except Exception:
         return {"status": "LECH", "feedback": "Câu trả lời chưa hoàn toàn sát trọng tâm.", "suggested_fix": vdnl_chuan}
 
+def ai_analyze_custom_exam(exam_text, student_guess):
+    prompt = f"""
+Bạn là chuyên gia khảo thí Ngữ văn THPT. Phân tích đề bài tự dán: \"\"\"{exam_text}\"\"\"
+Học sinh đoán VĐNL: \"\"\"{student_guess}\"\"\"
+
+Yêu cầu xuất ra JSON duy nhất gồm đúng cấu trúc:
+{{
+  "status": "DUNG" | "LECH" | "SAI",
+  "feedback": "Nhận xét sư phạm (xưng cô - em)",
+  "vdnl_chuan": "VĐNL cốt lõi chuẩn",
+  "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu/nhận định -> Chốt lại VĐNL.",
+  "explain_items": [
+    "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
+    "- **Giải thích ngữ liệu/câu nói:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
+    "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
+  ],
+  "vdnl_ket_luan": "Chốt vấn đề nghị luận.",
+  "questions": [
+    {{"cau_hoi": "Ý 1 bàn luận?", "y_tra_loi": ["- **Thứ nhất:** ...", "- **Thứ hai:** ...", "- **Thứ ba:** ..."]}}
+  ],
+  "evidence": [{{"ten": "Tên dẫn chứng", "chi_tiet": "Chi tiết", "y_nghia": "Ý nghĩa", "nguon": "Nguồn"}}],
+  "counter": [
+    "- **Trường hợp 1 (Góc độ cực đoan):** ...",
+    "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** ...",
+    "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** ..."
+  ],
+  "dani_chi_tiet": {{
+    "mb": "Dẫn dắt và giới thiệu VĐNL.",
+    "gt": "Giải thích VĐNL trước, sau đó giải thích ngữ liệu và chốt VĐNL.",
+    "bl": "Triển khai hệ thống ý bàn luận sâu sắc.",
+    "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
+    "pb": "Phản biện đa chiều với 3 trường hợp cụ thể.",
+    "kb": "Tổng kết vấn đề và rút ra bài học."
+  }}
+}}
+"""
+    raw = call_gemini_engine(prompt)
+    try:
+        clean_raw = re.sub(r"```json\s*|\s*```", "", raw).strip()
+        match = re.search(r"\{.*\}", clean_raw, re.DOTALL)
+        return json.loads(match.group(0)) if match else json.loads(clean_raw)
+    except Exception:
+        return {
+            "status": "LECH",
+            "feedback": "Cô nhận thấy em đã cố gắng nhưng cần điều chỉnh để diễn đạt chuẩn xác hơn.",
+            "vdnl_chuan": student_guess if student_guess else "Vấn đề nghị luận từ đề bài",
+            "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích ngữ liệu -> Chốt lại VĐNL.",
+            "explain_items": [
+                "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
+                "- **Giải thích ngữ liệu:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
+                "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
+            ],
+            "vdnl_ket_luan": student_guess if student_guess else "Vấn đề nghị luận trọng tâm.",
+            "questions": [{
+                "cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?",
+                "y_tra_loi": [
+                    "- **Thứ nhất:** Giúp bồi dưỡng nhận thức và tư duy tích cực.",
+                    "- **Thứ hai:** Định hình nhân cách và hành động đúng đắn.",
+                    "- **Thứ ba:** Tạo ra giá trị thiết thực cho cộng đồng."
+                ]
+            }],
+            "evidence": [{"ten": "Hoàng Hoa Trung - Dự án Nuôi Em", "chi_tiet": "Nuôi cơm trưa cho trẻ em vùng cao.", "y_nghia": "Tinh thần cống hiến.", "nguon": "Báo Tuổi Trẻ"}],
+            "counter": [
+                "- **Trường hợp 1 (Góc độ cực đoan):** Vấn đề không nên được tuyệt đối hóa thành chân lý cứng nhắc trong mọi hoàn cảnh.",
+                "- **Trường hợp 2 (Góc độ hoàn cảnh khách quan):** Cần xem xét điều kiện thực tế, tránh áp đặt chủ quan.",
+                "- **Trường hợp 3 (Góc độ lạm dụng hình thức):** Tránh biến giá trị tốt đẹp thành vỏ bọc hình thức để phô trương."
+            ],
+            "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"}
+        }
+
 # ==============================================================================
-# 5. GIAO DIỆN CHÍNH & TABS (CÓ PHÂN LUỒNG ĐỀ CƠ BẢN VÀ NÂNG CAO)
+# 5. GIAO DIỆN CHÍNH & TABS (CÓ ĐỦ 3 TAB LỰA CHỌN ĐỀ)
 # ==============================================================================
 st.markdown('<div class="hero-banner"><div class="hero-title">🖊️ HỆ THỐNG 30 ĐỀ NGHỊ LUẬN XÃ HỘI THPT</div></div>', unsafe_allow_html=True)
 
@@ -307,8 +351,12 @@ tabs = st.tabs([
 with tabs[0]:
     st.markdown('<div class="section-title">🔍 Lựa chọn đề bài & Xác định vấn đề nghị luận</div>', unsafe_allow_html=True)
     
-    # Phân luồng đề rõ ràng
-    sub_tab_cb, sub_tab_nc = st.tabs(["🟢 Nhóm Đề Cơ Bản (01–15)", "🔴 Nhóm Đề Nâng Cao (16–30)"])
+    # Đầy đủ 3 tab lựa chọn đề
+    sub_tab_cb, sub_tab_nc, sub_tab_tn = st.tabs([
+        "🟢 Nhóm Đề Cơ Bản (01–15)", 
+        "🔴 Nhóm Đề Nâng Cao (16–30)", 
+        "✏️ Nhập/Dán Đề Bài Riêng"
+    ])
     
     with sub_tab_cb:
         c1, c2 = st.columns([1, 2], gap="medium")
@@ -338,16 +386,45 @@ with tabs[0]:
                 st.session_state["eval_vdnl_result"] = None
                 st.success(f"Đã chọn: {sel_nc}! Mời thầy/cô bấm qua tab 'BƯỚC 2'.")
 
+    with sub_tab_tn:
+        custom_txt = st.text_area("Nội dung đề bài tự chọn:", placeholder="Ví dụ: Viết bài văn nghị luận bàn về...", height=100)
+        student_custom_vdnl = st.text_input("Vấn đề nghị luận em tự đoán cho đề này:", placeholder="Gõ VĐNL theo suy nghĩ của em...")
+        if st.button("🔍 Phân tích đề tự nhập & Tạo khung định hướng", type="primary"):
+            if custom_txt.strip():
+                with st.spinner("AI đang phân tích ngữ liệu và tạo khung định hướng..."):
+                    res_custom = ai_analyze_custom_exam(custom_txt, student_custom_vdnl)
+                    ten_de_custom = "Đề tự nhập: " + (custom_txt[:30] + "..." if len(custom_txt) > 30 else custom_txt)
+                    info_custom = {
+                        "text": custom_txt,
+                        "vdnl_chuan": res_custom.get("vdnl_chuan", student_custom_vdnl),
+                        "explain_guide": res_custom.get("explain_guide", ""),
+                        "explain_items": res_custom.get("explain_items", []),
+                        "vdnl_ket_luan": res_custom.get("vdnl_ket_luan", student_custom_vdnl),
+                        "questions": res_custom.get("questions", []),
+                        "evidence": res_custom.get("evidence", []),
+                        "counter": res_custom.get("counter", []),
+                        "dani_chi_tiet": res_custom.get("dani_chi_tiet", {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện đa chiều 3 trường hợp", "kb": "Kết bài"})
+                    }
+                    st.session_state["selected_de_key"] = ten_de_custom
+                    st.session_state["current_de_info"] = info_custom
+                    st.session_state["eval_vdnl_result"] = {
+                        "status": res_custom.get("status", "LECH"),
+                        "feedback": res_custom.get("feedback", ""),
+                        "suggested_fix": res_custom.get("vdnl_chuan", "")
+                    }
+                    st.success("✅ Đã tạo xong khung định hướng cho đề tự nhập!")
+
     st.markdown("---")
     cur_key = st.session_state["selected_de_key"]
     cur_info = st.session_state["current_de_info"]
     st.info(f"📌 **Đề đang chọn:** {cur_key}")
 
-    student_vdnl = st.text_input("⚡ Xác định vấn đề nghị luận:", placeholder="Gõ câu trả lời...")
-    if st.button("🔍 Đối chiếu với AI", type="primary"):
-        if student_vdnl.strip():
-            with st.spinner("AI đang thẩm định..."):
-                st.session_state["eval_vdnl_result"] = ai_evaluate_student_vdnl(cur_info["text"], cur_info["vdnl_chuan"], student_vdnl)
+    if "Đề tự nhập" not in cur_key:
+        student_vdnl = st.text_input("⚡ Xác định vấn đề nghị luận:", placeholder="Gõ câu trả lời...")
+        if st.button("🔍 Đối chiếu với AI", type="primary"):
+            if student_vdnl.strip():
+                with st.spinner("AI đang thẩm định..."):
+                    st.session_state["eval_vdnl_result"] = ai_evaluate_student_vdnl(cur_info["text"], cur_info["vdnl_chuan"], student_vdnl)
 
     if st.session_state.get("eval_vdnl_result"):
         res = st.session_state["eval_vdnl_result"]
