@@ -144,9 +144,6 @@ if "rubric_evaluation" not in st.session_state:
 if "eval_vdnl_text" not in st.session_state:
     st.session_state["eval_vdnl_text"] = ""
 
-if "chat_input_val" not in st.session_state:
-    st.session_state["chat_input_val"] = ""
-
 
 # ==============================================================================
 # 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (ĐÁNH TRÚNG TRỌNG TÂM - KHÔNG LÀM THAY)
@@ -195,7 +192,7 @@ Một mở bài đạt chuẩn không cần quá dài (khoảng 5-7 dòng) nhưn
         return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng tư duy Phản biện:**
 Để mở rộng chiều sâu cho đề tài *"{vdnl_chuan}"*, phần phản biện của em cần giải quyết 3 góc độ:
 1. **Lật lại mặt trái:** Phê phán những kẻ có thái độ sống hời hợt, ích kỷ hoặc đi ngược lại giá trị tốt đẹp này.
-2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức hay cực đoan cực đoan hóa.
+2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức hay cực đoan hóa.
 3. **Bài học thực tiễn:** Rút ra hành động cụ thể cho bản thân.
 👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?"""
 
@@ -476,7 +473,7 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (CÓ XÓA TỰ ĐỘNG KHUNG NHẬP & BÁM SÁT CÂU HỎI)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (KHÔNG GÂY LỖI WIDGET)
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI đồng hành định hướng phương pháp, gợi mở tư duy và rèn luyện kỹ năng viết cho học sinh.")
@@ -512,7 +509,6 @@ with tabs[1]:
                     q_clean
                 )
                 st.session_state["chat_history"].append(("assistant", ai_reply))
-                st.session_state["txt_chat_input"] = ""  # Tự động làm sạch ô nhập sau khi gửi
                 st.rerun()
 
         chat_display = st.container(height=420, border=True)
@@ -526,7 +522,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (CÓ HỘP CÔNG CỤ TƯ DUY & KIỂM TRA CHÍNH TẢ/LUẬN ĐIỂM)
+# BƯỚC 3: XƯỞNG VIẾT BÀI
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
@@ -565,24 +561,19 @@ with tabs[2]:
         word_count = len(essay_input.strip().split()) if essay_input.strip() else 0
         st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Dung lượng chuẩn khuyến nghị: khoảng 500 – 700 từ).")
 
-        col_w1, col_w2 = st.columns([1, 1])
-        with col_w1:
-            if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
-                st.info("💡 **Gợi ý từ Cô:** Để bài viết có chiều sâu, sau mỗi luận điểm, em nhớ bổ sung thêm câu đánh giá mở rộng về trách nhiệm của thế hệ trẻ trong bối cảnh hiện nay nhé!")
-        with col_w2:
-            if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm theo Rubric", type="primary", use_container_width=True):
-                if not essay_input.strip():
-                    st.warning("⚠️ Em chưa nhập nội dung bài viết!")
-                else:
-                    eval_res = ai_evaluate_essay_rubric(
-                        st.session_state["selected_de_key"],
-                        st.session_state["current_de_info"],
-                        essay_text=essay_input.strip(),
-                    )
-                    st.session_state["rubric_evaluation"] = eval_res
-                    st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
-                    with st.container(border=True):
-                        st.markdown(st.session_state["rubric_evaluation"])
+        if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm & Nhận xét theo Rubric", type="primary", use_container_width=True):
+            if not essay_input.strip():
+                st.warning("⚠️ Em chưa nhập nội dung bài viết!")
+            else:
+                eval_res = ai_evaluate_essay_rubric(
+                    st.session_state["selected_de_key"],
+                    st.session_state["current_de_info"],
+                    essay_text=essay_input.strip(),
+                )
+                st.session_state["rubric_evaluation"] = eval_res
+                st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
+                with st.container(border=True):
+                    st.markdown(st.session_state["rubric_evaluation"])
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
