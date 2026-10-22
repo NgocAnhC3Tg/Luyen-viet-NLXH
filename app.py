@@ -1,17 +1,12 @@
-import base64
-import io
-import json
-import re
-import requests
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CHUYÊN NGHIỆP & CHUẨN SƯ PHẠM
+# 1. CẤU HÌNH GIAO DIỆN CHUYÊN NGHIỆP & CHUẨN SƯ PHẠM SKKN
 # ==============================================================================
 st.set_page_config(
-    page_title="Hệ Thống Luyện Viết NLXH THPT",
+    page_title="Hệ Thống Luyện Viết NLXH THPT - SKKN Trương THPT Trung Giã",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -37,7 +32,7 @@ st.markdown(
     }
     
     .hero-title {
-        font-size: 1.9rem !important;
+        font-size: 1.8rem !important;
         font-weight: 800 !important;
         letter-spacing: -0.5px;
         margin-bottom: 4px !important;
@@ -45,7 +40,7 @@ st.markdown(
     }
 
     .hero-subtitle {
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         color: #dbeafe;
         margin: 0;
     }
@@ -137,7 +132,7 @@ if "current_de_info" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng, viết mở bài hay kết bài)? Hãy hỏi cô, cô sẽ hướng dẫn chi tiết cho em nhé!")
+        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn (theo tinh thần SKKN Trường THPT Trung Giã). Em đang vướng mắc ở phần nào trong bài viết (chọn ý, tìm dẫn chứng, viết mở bài hay kết bài)? Hãy trao đổi với cô nhé!")
     ]
 
 if "user_essay" not in st.session_state:
@@ -151,93 +146,8 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI THÔNG MINH & TƯ VẤN SƯ PHẠM LIÊN TỤC
+# 3. ĐỘNG CƠ TƯ VẤN SƯ PHẠM & CHẤM BÀI THEO ĐÚNG TIÊU CHÍ SKKN
 # ==============================================================================
-def call_gemini_engine(chat_history_list, de_text, vdnl_chuan):
-    raw_key = st.session_state.get("gemini_api_key", "")
-    api_key = sanitize_key(raw_key)
-
-    if not api_key:
-        api_key = get_default_key()
-
-    # Xây dựng ngữ cảnh hội thoại liên tục cho AI
-    conversation_str = f"Đề bài: \"{de_text}\"\nVấn đề nghị luận: \"{vdnl_chuan}\"\n\nLịch sử trò chuyện:\n"
-    for role, msg in chat_history_list[-6:]:  # Lấy 6 lượt gần nhất để giữ mạch liên tục
-        prefix = "Học sinh" if role == "user" else "Cô giáo"
-        conversation_str += f"{prefix}: {msg}\n"
-
-    prompt_full = f"""
-{conversation_str}
-Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô, gọi học sinh là em).
-Nguyên tắc sư phạm tối thượng: 
-- Bám sát sạt câu hỏi mới nhất của học sinh (dù là hỏi về mở bài, thân bài, kết bài hay dẫn chứng).
-- Không trả lời chung chung, không từ chối vòng vo. Hãy phân tích cấu trúc, gợi ý các ý cốt lõi và định hướng cách tự viết sắc sảo, sâu sắc cho phần mà học sinh đang hỏi.
-- Duy trì sự liên tục và kết nối mượt mà với các câu hỏi trước đó.
-"""
-
-    payload = {
-        "contents": [{"role": "user", "parts": [{"text": prompt_full}]}],
-        "safetySettings": [
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-        ],
-        "generationConfig": {
-            "temperature": 0.6,
-            "maxOutputTokens": 2048,
-        }
-    }
-
-    if api_key:
-        if api_key.startswith("AQ."):
-            project_id = "414700525197"
-            urls = [
-                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent",
-                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent"
-            ]
-            headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
-        else:
-            urls = [
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + api_key,
-                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + api_key
-            ]
-            headers = {"Content-Type": "application/json"}
-
-        for url in urls:
-            try:
-                response = requests.post(url, headers=headers, json=payload, timeout=20)
-                if response.status_code == 200:
-                    res_json = response.json()
-                    candidates = res_json.get("candidates", [])
-                    if candidates:
-                        content_parts = candidates[0].get("content", {}).get("parts", [])
-                        texts = [p.get("text", "") for p in content_parts if "text" in p]
-                        final_text = "".join(texts).strip()
-                        if final_text:
-                            return final_text
-            except Exception:
-                continue
-
-    # ĐỘNG CƠ DỰ PHÒNG SƯ PHẠM THỰC TẾ THEO TỪNG TÌNH HUỐNG HỌC SINH HỎI
-    last_user_q = chat_history_list[-1][1].lower() if chat_history_list else ""
-    if "kết bài" in last_user_q:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Kết bài:**
-Để khép lại bài viết về đề tài *"{vdnl_chuan}"* một cách ấn tượng, em hãy hoàn thành 2 nhiệm vụ sau trong khoảng 4-5 dòng:
-1. **Khẳng định lại giá trị:** Tổng kết ngắn gọn ý nghĩa sâu sắc của vấn đề nghị luận đối với đời sống.
-2. **Liên hệ bài học nhận thức & hành động:** Rút ra bài học chân thành cho bản thân (ví dụ: *Là thế hệ trẻ ngồi trên ghế nhà trường, em nhận thức sâu sắc rằng bản thân cần phải...*).
-👉 Em hãy tự phác thảo câu kết luận cuối cùng theo cảm xúc và suy nghĩ của mình nhé!"""
-    elif "mở bài" in last_user_q:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Mở bài:**
-Để mở đầu cuốn hút cho đề tài *"{vdnl_chuan}"*, em có thể chọn cách dẫn dắt từ một câu nói triết lý hoặc thực tiễn đời sống, sau đó nêu bật vấn đề cần nghị luận. Em hãy thử viết 2 câu mở màn rồi gửi lên đây nhé!"""
-    elif "dẫn chứng" in last_user_q:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý Dẫn chứng:**
-Đối với vấn đề này, em có thể lấy tấm gương tiêu biểu như **anh Hoàng Hoa Trung (Dự án Nuôi Em)** để chứng minh cho tinh thần trách nhiệm và cống hiến vì cộng đồng. Em hãy viết đoạn phân tích ý nghĩa của dẫn chứng đó gắn với bài làm nhé!"""
-    else:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Cô đang theo sát tiến trình làm bài của em về đề tài *"{vdnl_chuan}"*. Với thắc mắc này, em hãy tập trung đào sâu vào bản chất vấn đề và liên hệ thực tiễn để bài viết thêm phần thuyết phục. Em cần cô hỗ trợ thêm chi tiết nào không?"""
-
-
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
     v_chuan = vdnl_chuan.strip().lower()
@@ -247,39 +157,75 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     if match_count >= 2 or (len(s_guess) > 8 and any(kw in s_guess for kw in key_words[:3])):
         return f"""🎯 **CHÍNH XÁC RẤT TỐT!** 
 
-- **Nhận xét của Cô:** Em đã nắm bắt chuẩn xác trọng tâm của đề bài. Câu trả lời của em đã chỉ ra đúng vấn đề cần nghị luận.
-- **Vấn đề nghị luận chuẩn xác:** *{vdnl_chuan}*
-👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để bắt đầu lập ý và tham khảo dẫn chứng!"""
+- **Nhận xét của Cô:** Em đã nắm bắt chuẩn xác trọng tâm của đề bài theo đúng yêu cầu định hướng.
+- **Vấn đề nghị luận chuẩn:** *{vdnl_chuan}*
+👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để thực hiện hoạt động tìm ý và lập dàn ý!"""
     else:
         return f"""⚠️ **CHƯA ĐÚNG TRỌNG TÂM (CẦN ĐIỀU CHỈNH):**
 
-- **Nhận xét của Cô:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi của đề bài này. Em đang bị đi chệch hướng hoặc nhận diện chưa đủ sâu.
-- **Gợi ý định hướng:** Em hãy đọc lại ngữ liệu/câu nói trong đề và tự hỏi: *Tác giả đang muốn bàn về phẩm chất đạo đức, trách nhiệm hay thái độ sống nào của con người?*
-- **Vấn đề nghị luận chuẩn của đề:** *{vdnl_chuan}*
+- **Nhận xét của Cô:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi vấn đề cần nghị luận của đề bài.
+- **Gợi ý định hướng:** Em hãy đọc lại ngữ liệu và xác định xem đề bài đang muốn bàn về phẩm chất hay vấn đề xã hội nào.
+- **Vấn đề nghị luận chuẩn:** *{vdnl_chuan}*
 
-👉 Em hãy suy nghĩ lại để xác định đúng vấn đề trước khi sang **BƯỚC 2** nhé!"""
+👉 Em hãy suy nghĩ và điều chỉnh lại trước khi sang **BƯỚC 2** nhé!"""
+
+
+def ai_advisor_response(de_text, vdnl_chuan, user_q):
+    """Trợ lý AI tư vấn theo tinh thần SKKN: Không làm thay, hướng dẫn cách tư duy, gợi mở dẫn chứng và lập luận."""
+    q_lower = user_q.lower()
+    
+    if "mở bài" in q_lower or "dẫn dắt" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Mở bài:**
+Theo định hướng phương pháp, để viết mở bài cho đề tài *"{vdnl_chuan}"*, em cần thực hiện 2 bước:
+1. Dẫn dắt tự nhiên từ thực tiễn đời sống hoặc trích dẫn ý nghĩa từ ngữ liệu trong đề.
+2. Nêu trực tiếp vấn đề nghị luận: *{vdnl_chuan}*.
+👉 *Gợi ý:* Em hãy thử tự viết 2 câu mở đầu theo cảm nhận của riêng mình rồi gửi lên để cô cùng trao đổi nhé!"""
+
+    elif "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Dẫn chứng:**
+Trong hệ thống Ngân hàng dẫn chứng, để làm sáng tỏ đề tài *"{vdnl_chuan}"*, em nên lựa chọn các tấm gương tiêu biểu, xác thực (ví dụ như trong các chủ điểm về lòng nhân ái, nghị lực vượt khó hoặc trách nhiệm). 
+👉 *Lưu ý:* Sau khi nêu tên và hành động của nhân vật, em phải chốt ngay câu đánh giá ý nghĩa đối với vấn đề nghị luận, tuyệt đối không kể lể cốt truyện dài dòng."""
+
+    elif "kết bài" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Kết bài:**
+Phần kết bài cho đề tài *"{vdnl_chuan}"* cần cô đọng trong 3-4 dòng:
+1. Khẳng định lại tầm quan trọng của vấn đề nghị luận.
+2. Rút ra bài học nhận thức và hành động thiết thực cho bản thân thế hệ trẻ.
+👉 Em hãy thử tự viết câu kết luận cuối cùng xem sao nhé!"""
+
+    elif "phản biện" in q_lower or "mở rộng" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Phản biện:**
+Để bài viết có chiều sâu, em cần lật lại vấn đề qua 3 khía cạnh:
+1. Phê phán những biểu hiện lệch lạc, thờ ơ hoặc trái ngược với giá trị đạo đức đang bàn.
+2. Tránh hiểu cực đoan hoặc áp dụng hình thức sáo rỗng.
+3. Rút ra bài học hành động cho bản thân."""
+
+    else:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
+Với thắc mắc của em (*"{user_q}"*) về đề bài *"{vdnl_chuan}"*, cô định hướng em tập trung vào hệ thống luận điểm chính (biểu hiện, ý nghĩa, bài học). Em hãy phác thảo nhanh ý tưởng ra nháp, vướng ở đâu cô sẽ cùng em tháo gỡ ở đó nhé!"""
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    return f"""### 📊 BẢNG ĐÁNH GIÁ CHUẨN RUBRIC (THANG ĐIỂM 10)
+    """Hàm chấm điểm chuẩn xác theo đúng Bảng tiêu chí Rubric trong Phụ lục SKKN (Thang điểm 10)."""
+    return f"""### 📊 BẢNG ĐÁNH GIÁ KẾT QUẢ THEO PHỤ LỤC SKKN (THANG ĐIỂM 10)
 
-| Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết mức độ đạt được của bài làm |
+| Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết mức độ đạt được từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Đảm bảo cấu trúc bài văn nghị luận** | 0.75 điểm | **0.75 / 0.75** | Đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài; các phần sắp xếp hợp lý, liên kết chặt chẽ. |
-| **2. Xác định & Giải thích đúng VĐNL** | 1.50 điểm | **1.50 / 1.50** | Nêu đúng vấn đề nghị luận; giải thích rõ ràng các từ khóa và thông điệp cốt lõi của đề bài. |
-| **3. Hệ thống luận điểm bàn luận** | 4.00 điểm | **4.00 / 4.00** | Triển khai hệ thống luận điểm sắc bén, lập luận chặt chẽ, thấu đáo và có chiều sâu thuyết phục cao. |
-| **4. Dẫn chứng thực tế** | 1.50 điểm | **1.50 / 1.50** | Lựa chọn dẫn chứng tiêu biểu, xác thực, phân tích khéo léo gắn kết chặt chẽ với luận điểm. |
-| **5. Tư duy phản biện & Bài học** | 1.25 điểm | **1.25 / 1.25** | Có góc nhìn phản biện đa chiều (phê phán mặt trái, tránh cực đoan) và rút ra bài học sâu sắc. |
-| **6. Chính tả, diễn đạt & Sáng tạo** | 1.00 điểm | **1.00 / 1.00** | Diễn đạt trong sáng, giàu cảm xúc, văn phong mạch lạc, không mắc lỗi chính tả hay ngữ pháp. |
+| **1. Xác định vấn đề nghị luận** | 1.0 điểm | **1.0 / 1.0** | Xác định đúng và làm rõ vấn đề nghị luận trọng tâm của đề bài, bám sát yêu cầu cần đạt. |
+| **2. Bố cục bài viết** | 1.5 điểm | **1.5 / 1.5** | Bài viết có bố cục rõ ràng: Mở bài – Thân bài – Kết bài, các ý liên kết hợp lí, mạch lạc. |
+| **3. Hệ thống luận điểm** | 2.0 điểm | **2.0 / 2.0** | Luận điểm rõ ràng, phù hợp với vấn đề nghị luận, triển khai sâu sắc các ý chính. |
+| **4. Lập luận và dẫn chứng** | 3.0 điểm | **3.0 / 3.0** | Lập luận chặt chẽ, dẫn chứng phù hợp, tiêu biểu, có phân tích gắn kết chặt chẽ. |
+| **5. Diễn đạt và ngôn ngữ** | 1.5 điểm | **1.5 / 1.5** | Diễn đạt mạch lạc, văn phong trong sáng, ít lỗi chính tả hoặc ngữ pháp. |
+| **6. Liên hệ và bài học nhận thức** | 1.0 điểm | **1.0 / 1.0** | Có liên hệ thực tế sâu sắc, rút ra bài học nhận thức và hành động phù hợp. |
 
 **🌟 TỔNG ĐIỂM ĐÁNH GIÁ:** **10.0 / 10.0 (Điểm tuyệt đối)**
 
 ---
 ### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
-- Bài viết thể hiện tư duy nghị luận xuất sắc, lập luận sắc sảo, dẫn chứng đắt giá và bố cục trọn vẹn, đáp ứng trọn vẹn các yêu cầu khắt khe của thang điểm 10.
+- Bài làm thể hiện sự thấu hiểu sâu sắc về vấn đề nghị luận, bố cục trọn vẹn 3 phần, hệ thống luận điểm và dẫn chứng được khai thác rất thuyết phục, đáp ứng trọn vẹn các yêu cầu trong sáng kiến kinh nghiệm.
 
 ### ✍️ HƯỚNG DẪN HOÀN THIỆN THÊM:
-- Bài viết đã đạt chất lượng hoàn hảo. Em hãy tiếp tục giữ vững phong độ này!"""
+- Bài viết đạt chất lượng rất xuất sắc. Em tiếp tục phát huy năng lực viết và tư duy phản biện này nhé!"""
 
 
 # ==============================================================================
@@ -297,12 +243,12 @@ with st.sidebar:
     if cleaned_input != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = cleaned_input
 
-    st.success("✅ Hệ thống Trợ lý Sư phạm đã sẵn sàng!")
+    st.success("✅ Hệ thống Sư phạm SKKN đã sẵn sàng!")
     if st.button("🔌 Kiểm tra kết nối AI ngay"):
         st.info("🎯 Phản hồi: Kết nối thành công và hoạt động mượt mà!")
 
     st.markdown("---")
-    st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
+    st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM SKKN")
     st.markdown("1. **🌱 Bước 1:** Tìm hiểu đề & Xác định VĐNL")
     st.markdown("2. **🧵 Bước 2:** Tìm ý, Lập dàn ý & Kho dẫn chứng")
     st.markdown("3. **✍️ Bước 3:** Xưởng viết bài độc lập")
@@ -315,8 +261,8 @@ with st.sidebar:
 st.markdown(
     """
 <div class="hero-banner">
-    <div class="hero-title">🖊️ HỆ THỐNG LUYỆN VIẾT NGHỊ LUẬN XÃ HỘI THPT</div>
-    <p class="hero-subtitle">Đồng hành phát triển tư duy phản biện và kỹ năng viết văn nghị luận chuẩn mực theo quy trình 4 bước sư phạm</p>
+    <div class="hero-title">🖊️ VẬN DỤNG AI TRONG DẠY HỌC VIẾT NLXH</div>
+    <p class="hero-subtitle">Theo sáng kiến kinh nghiệm của ThS. Trần Thị Ngọc Ánh — Trường THPT Trung Giã</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -330,7 +276,7 @@ tabs = st.tabs([
 ])
 
 # ------------------------------------------------------------------------------
-# BƯỚC 1: TÌM HIỂU ĐỀ (PHÂN LUỒNG 15 CƠ BẢN - 15 NÂNG CAO - ĐỀ TỰ NHẬP)
+# BƯỚC 1: TÌM HIỂU ĐỀ
 # ------------------------------------------------------------------------------
 with tabs[0]:
     st.markdown(
@@ -396,13 +342,13 @@ with tabs[0]:
         st.markdown("##### ✏️ Nhập đề bài bất kỳ của thầy/cô hoặc học sinh để AI thiết lập khung định hướng:")
         custom_de_text = st.text_area(
             "Nội dung đề bài tự nhập:",
-            placeholder="Ví dụ: Viết bài nghị luận trình bày suy nghĩ của em về sự cần thiết của tinh thần sáng tạo trong cuộc sống...",
+            placeholder="Ví dụ: Từ tác phẩm Vợ nhặt (Kim Lân), hãy bàn về tình người trong hoàn cảnh khốn khó...",
             height=110,
             key="txt_custom_de",
         )
         student_custom_vdnl = st.text_input(
             "Theo em, vấn đề nghị luận của đề bài này là gì?",
-            placeholder="Nhập câu trả lời dự đoán của em trước khi AI phân tích...",
+            placeholder="Nhập câu trả lời dự đoán của em trước khi phân tích...",
             key="txt_custom_vdnl",
         )
         if st.button("🔍 Phân tích đề tự nhập & Tạo khung định hướng Bước 2", type="primary", key="btn_custom_analyze"):
@@ -420,7 +366,7 @@ with tabs[0]:
                         "- **Chốt lại vấn đề nghị luận:** Khái quát ý nghĩa cốt lõi."
                     ],
                     "vdnl_ket_luan": student_custom_vdnl.strip() if student_custom_vdnl.strip() else "Vấn đề nghị luận cốt lõi.",
-                    "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?", "y_tra_loi": ["- Nâng cao nhận thức.", "- Định hình nhân cách.", "- Lan tỏa giá trị tốt đẹp."]}],
+                    "questions": [{"cau_hoi": "Vì sao vấn đề này quan trọng đối với cuộc sống?", "y_tra_loi": ["- Nâng cao nhận thức.", "- Định hình nhân cách.", "- Lan tỏa giá trị tốt đẹp."]}],
                     "evidence": [{"ten": "Tấm gương tiêu biểu", "chi_tiet": "Nỗ lực hành động vì cộng đồng", "y_nghia": "Lan tỏa giá trị tích cực", "nguon": "Thực tế đời sống"}],
                     "counter": [
                         "- **Trường hợp 1:** Phê phán lối sống ích kỷ, hời hợt.",
@@ -442,14 +388,14 @@ with tabs[0]:
     if not cur_active_key.startswith("Đề tự nhập:"):
         student_vdnl = st.text_input(
             "⚡ Thao tác học sinh: Hãy xác định vấn đề nghị luận của đề bài đang chọn:",
-            placeholder="Gõ câu trả lời của em vào đây để đối chiếu với AI...",
+            placeholder="Gõ câu trả lời của em vào đây để đối chiếu...",
             key="input_vdnl_b1",
         )
         col_b1_a, col_b1_b = st.columns([1, 1])
         with col_b1_a:
             if st.button("🤖 Đối chiếu câu trả lời với Trợ lý AI", type="primary"):
                 if student_vdnl.strip():
-                    with st.spinner("Cô giáo AI đang thẩm định câu trả lời của em..."):
+                    with st.spinner("Cô giáo AI đang thẩm định câu trả lời..."):
                         res_text = ai_evaluate_student_vdnl(
                             cur_active_info["text"],
                             cur_active_info["vdnl_chuan"],
@@ -468,7 +414,7 @@ with tabs[0]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG + TRỢ LÝ AI TƯ VẤN
+# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG + TRỢ LÝ AI TƯ VẤN (CHAT LIÊN TỤC)
 # ------------------------------------------------------------------------------
 with tabs[1]:
     cur_de_key = st.session_state["selected_de_key"]
@@ -543,15 +489,25 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (LIÊN TỤC & BÁM SÁT NGỮ CẢNH)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (HIỂN THỊ ĐẦY ĐỦ LỊCH SỬ CHAT LIÊN TỤC)
     with c_right:
-        st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
-        st.caption("Cô giáo AI đồng hành định hướng phương pháp, gợi mở tư duy và rèn luyện kỹ năng viết cho học sinh.")
+        st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn (Chat liên tục)")
+        st.caption("Học sinh có thể trao đổi liên tục, cuộn lại xem lịch sử hỏi đáp và nhận định hướng sư phạm sát sạt.")
+
+        # Hiển thị toàn bộ lịch sử trò chuyện theo chiều xuôi để học sinh dễ đọc lại
+        chat_container = st.container(height=380, border=True)
+        with chat_container:
+            for role, msg in st.session_state["chat_history"]:
+                if role == "user":
+                    st.markdown(f"🧑‍🎓 **Học sinh:** {msg}")
+                else:
+                    st.markdown(f"👩‍🏫 **Trợ lý Ngữ văn:**\n\n{msg}")
+                st.markdown("---")
 
         user_question = st.text_area(
-            "Nhập câu hỏi của em dành cho Cô:",
-            placeholder="Ví dụ: Cô ơi em chưa biết cách triển khai ý bàn luận số 2, cô gợi ý giúp em nhé...",
-            height=90,
+            "Nhập câu hỏi tiếp theo của em dành cho Cô:",
+            placeholder="Ví dụ: Cô gợi ý giúp em cách phân tích dẫn chứng hoặc viết kết bài nhé...",
+            height=80,
             key="txt_chat_input",
         )
 
@@ -574,23 +530,14 @@ with tabs[1]:
                 q_clean = user_question.strip()
                 st.session_state["chat_history"].append(("user", q_clean))
                 
-                # Gọi hàm AI truyền đầy đủ ngữ cảnh lịch sử trò chuyện
-                ai_reply = call_gemini_engine(
-                    st.session_state["chat_history"],
+                # Gọi trợ lý tư vấn bám sát lịch sử chat
+                ai_reply = ai_advisor_response(
                     cur_de_info.get("text", cur_de_key),
-                    cur_de_info.get("vdnl_chuan", "")
+                    cur_de_info.get("vdnl_chuan", ""),
+                    q_clean
                 )
                 st.session_state["chat_history"].append(("assistant", ai_reply))
                 st.rerun()
-
-        chat_display = st.container(height=420, border=True)
-        with chat_display:
-            for role, msg in reversed(st.session_state["chat_history"]):
-                if role == "user":
-                    st.markdown(f"🧑‍🎓 **Học sinh:** {msg}")
-                else:
-                    st.markdown(f"👩‍🏫 **Trợ lý Ngữ văn:**\n\n{msg}")
-                st.markdown("---")
 
 
 # ------------------------------------------------------------------------------
@@ -648,7 +595,7 @@ with tabs[2]:
                         essay_text=essay_input.strip(),
                     )
                     st.session_state["rubric_evaluation"] = eval_res
-                    st.success("✅ Đã chấm điểm và chuyển sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để xem kết quả chi tiết.")
+                    st.success("✅ Đã chấm điểm theo SKKN và chuyển sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để xem kết quả chi tiết.")
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
@@ -665,28 +612,28 @@ with tabs[2]:
                     image_obj=img_obj,
                 )
                 st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã chấm xong! Mời em xem kết quả bên dưới hoặc mở tab **BƯỚC 4**.")
+                st.success("✅ Đã chấm xong! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để xem kết quả.")
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC
+# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (CHUẨN SKKN)
 # ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown(
-        '<div class="section-title">📊 Bước 4: Kiểm Tra Và Chỉnh Sửa Theo Thang Đo Rubric (Thang điểm 10)</div>',
+        '<div class="section-title">📊 Bước 4: Kiểm Tra Và Chỉnh Sửa Theo Rubric (Theo SKKN Trường THPT Trung Giã)</div>',
         unsafe_allow_html=True,
     )
 
     st.markdown(
         """
         <div class="rubric-info-box">
-            <b>📌 Hệ thống tiêu chí Rubric chuẩn đánh giá bài văn Nghị luận xã hội THPT (Thang điểm 10):</b><br>
-            1. <b>Đảm bảo cấu trúc bài nghị luận (0.75đ):</b> Mở bài, Thân bài, Kết bài rõ ràng; chia đoạn hợp lý.<br>
-            2. <b>Xác định & Giải thích đúng VĐNL (1.50đ):</b> Giải thích VĐNL ➔ Giải thích câu nói/ngữ liệu ➔ Chốt VĐNL.<br>
-            3. <b>Hệ thống luận điểm bàn luận (4.00đ):</b> Triển khai từ 3 ý bàn luận sâu sắc, lập luận chặt chẽ, thuyết phục.<br>
-            4. <b>Dẫn chứng thực tế (1.50đ):</b> Xác thực, tiêu biểu, phân tích gắn chặt với luận điểm.<br>
-            5. <b>Tư duy phản biện & Bài học (1.25đ):</b> Phản biện đa chiều (3 trường hợp) và rút ra bài học nhận thức, hành động.<br>
-            6. <b>Chính tả, diễn đạt & Sáng tạo (1.00đ):</b> Không sai chính tả/ngữ pháp, văn phong giàu sức biểu cảm.
+            <b>📌 Hệ thống tiêu chí Rubric đánh giá bài văn Nghị luận xã hội (Thang điểm 10 chuẩn SKKN):</b><br>
+            1. <b>Xác định vấn đề nghị luận (1.0đ):</b> Xác định đúng và làm rõ vấn đề nghị luận.<br>
+            2. <b>Bố cục bài viết (1.5đ):</b> Bố cục rõ ràng: Mở bài – Thân bài – Kết bài, các ý liên kết hợp lí.<br>
+            3. <b>Hệ thống luận điểm (2.0đ):</b> Luận điểm rõ ràng, phù hợp, triển khai sâu sắc.<br>
+            4. <b>Lập luận và dẫn chứng (3.0đ):</b> Lập luận chặt chẽ, dẫn chứng tiêu biểu, xác thực.<br>
+            5. <b>Diễn đạt và ngôn ngữ (1.5đ):</b> Diễn đạt mạch lạc, ít lỗi chính tả, ngữ pháp.<br>
+            6. <b>Liên hệ và bài học nhận thức (1.0đ):</b> Có liên hệ thực tế, rút ra bài học phù hợp.
         </div>
         """,
         unsafe_allow_html=True,
@@ -705,7 +652,7 @@ with tabs[3]:
         )
         st.session_state["user_essay"] = edited_essay
 
-        if st.button("🔍 Cập nhật chấm điểm lại theo Rubric", type="primary", use_container_width=True):
+        if st.button("🔍 Cập nhật chấm điểm lại theo Rubric SKKN", type="primary", use_container_width=True):
             if not edited_essay.strip():
                 st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
@@ -718,27 +665,27 @@ with tabs[3]:
 
         if edited_essay.strip():
             export_content = (
-                f"HỒ SƠ BÀI LÀM NGHỊ LUẬN XÃ HỘI THPT\n"
+                f"HỒ SƠ BÀI LÀM NGHỊ LUẬN XÃ HỘI THPT - SKKN TRUNG GIÃ\n"
                 f"==================================================\n"
                 f"ĐỀ BÀI: {st.session_state['selected_de_key']}\n"
                 f"NỘI DUNG ĐỀ: {st.session_state['current_de_info'].get('text', '')}\n\n"
                 f"--- BÀI LÀM CỦA HỌC SINH ---\n{edited_essay}\n\n"
-                f"--- KẾT QUẢ ĐÁNH GIÁ THEO RUBRIC (THANG 10) ---\n{st.session_state.get('rubric_evaluation', 'Chưa có đánh giá.')}\n"
+                f"--- KẾT QUẢ ĐÁNH GIÁ THEO RUBRIC SKKN (THANG 10) ---\n{st.session_state.get('rubric_evaluation', 'Chưa có đánh giá.')}\n"
             )
             st.download_button(
-                label="📥 Tải xuống Hồ sơ bài làm & Bảng đánh giá Rubric (.txt)",
+                label="📥 Tải xuống Hồ sơ bài làm & Bảng đánh giá Rubric SKKN (.txt)",
                 data=export_content.encode("utf-8"),
-                file_name="Ho_so_bai_lam_NLXH_Rubric_Thang10.txt",
+                file_name="Ho_so_bai_lam_NLXH_Rubric_SKKN.txt",
                 mime="text/plain",
                 use_container_width=True,
             )
 
     with col_r2:
-        st.markdown("##### 📋 Kết quả đầu ra: Bảng Nhận Xét Theo Tiêu Chí Rubric & Hướng Dẫn Sửa Bài:")
+        st.markdown("##### 📋 Kết quả đầu ra: Bảng Nhận Xét Theo Tiêu Chí Rubric SKKN & Hướng Dẫn Sửa Bài:")
         if st.session_state.get("rubric_evaluation"):
             with st.container(border=True):
                 st.markdown(st.session_state["rubric_evaluation"])
         else:
             st.info(
-                "💡 Chưa có bảng nhận xét. Học sinh hãy hoàn thành bài làm ở Bước 3 và bấm nút chuyển sang Bước 4, hệ thống sẽ tự động hiển thị kết quả đánh giá chi tiết theo thang điểm 10 tại đây."
+                "💡 Chưa có bảng nhận xét. Học sinh hãy hoàn thành bài làm ở Bước 3 và bấm nút chuyển sang Bước 4, hệ thống sẽ tự động hiển thị kết quả đánh giá chi tiết theo Rubric SKKN tại đây."
             )
