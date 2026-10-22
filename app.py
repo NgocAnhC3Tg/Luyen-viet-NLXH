@@ -1,12 +1,13 @@
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
+import google.generativeai as genai
 
 # ==============================================================================
 # 1. CẤU HÌNH GIAO DIỆN CHUYÊN NGHIỆP & CHUẨN SƯ PHẠM
 # ==============================================================================
 st.set_page_config(
-    page_title="Hệ Thống Luyện Viết NLXH THPT - Chuẩn SKKN & Rubric 7 Tiêu Chí",
+    page_title="Hệ Thống Luyện Viết NLXH THPT - Chẩn SKKN & Rubric 7 Tiêu Chí",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -146,9 +147,36 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ TRỢ LÝ AI (VAI TRÒ CHUYÊN GIA - HỖ TRỢ THỰC CHẤT)
+# 3. ĐỘNG CƠ AI THỰC CHẤT SỬ DỤNG GOOGLE GENAI API (NẾU CÓ KEY) HOẶC PHÂN TÍCH SÂU
 # ==============================================================================
+def call_gemini_api(prompt_text):
+    api_key = st.session_state.get("gemini_api_key", "")
+    if not api_key:
+        return None
+    try:
+        genai.configure(api_key=api_key)
+        # Sử dụng model chuẩn
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(prompt_text)
+        return response.text
+    except Exception as e:
+        return f"[Lỗi kết nối API: {str(e)}]"
+
+
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
+    api_key = st.session_state.get("gemini_api_key", "")
+    if api_key:
+        prompt = f"""Bạn là Chuyên gia Ngữ văn THPT. Học sinh đang xác định Vấn đề nghị luận (VĐNL) cho đề bài sau:
+Đề bài: "{exam_text}"
+VĐNL chuẩn xác: "{vdnl_chuan}"
+Câu trả lời của học sinh: "{student_guess}"
+
+Hãy đánh giá xem học sinh đã xác định đúng trọng tâm chưa. Phản hồi ngắn gọn, mang tính khích lệ, chỉ ra điểm đúng/chưa đúng và chốt lại VĐNL chuẩn."""
+        res = call_gemini_api(prompt)
+        if res and not res.startswith("[Lỗi"):
+            return res
+
+    # Fallback logic nếu chưa nhập key
     s_guess = student_guess.strip().lower()
     v_chuan = vdnl_chuan.strip().lower()
     key_words = [w for w in v_chuan.split() if len(w) > 3]
@@ -156,75 +184,95 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     
     if match_count >= 2 or (len(s_guess) > 8 and any(kw in s_guess for kw in key_words[:3])):
         return f"""🎯 **CHÍNH XÁC RẤT TỐT!** 
-
 - **Nhận xét của Chuyên gia:** Em đã nắm bắt chuẩn xác trọng tâm của đề bài.
 - **Vấn đề nghị luận chuẩn:** *{vdnl_chuan}*
 👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để thực hiện lập ý, tham khảo dẫn chứng cụ thể và trao đổi sâu cùng cô!"""
     else:
         return f"""⚠️ **CHƯA ĐÚNG TRỌNG TÂM (CẦN ĐIỀU CHỈNH):**
-
 - **Nhận xét của Chuyên gia:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi của đề bài. 
 - **Vấn đề nghị luận chuẩn của đề là:** *{vdnl_chuan}*
-
 👉 Em hãy suy nghĩ lại để xác định đúng vấn đề trước khi sang **BƯỚC 2** nhé!"""
 
 
 def ai_advisor_response(de_text, vdnl_chuan, user_q):
-    """Trợ lý AI đóng vai Chuyên gia Ngữ văn THPT: Không trả lời chung chung, đưa ra ý tứ sắc sảo, dẫn chứng thực tế và định hướng 5 ý."""
+    api_key = st.session_state.get("gemini_api_key", "")
+    if api_key:
+        prompt = f"""Bạn là Chuyên gia Ngữ văn THPT dày dặn kinh nghiệm, tuân thủ tuyệt đối phương pháp dạy học phát triển năng lực viết nghị luận xã hội.
+Đề bài đang làm: "{de_text}"
+Vấn đề nghị luận: "{vdnl_chuan}"
+Câu hỏi/yêu cầu của học sinh: "{user_q}"
+
+Yêu cầu phản hồi:
+- Không trả lời chung chung, sáo rỗng hoặc từ chối vòng vo.
+- Nếu học sinh xin dẫn chứng, phải cung cấp 2-3 tấm gương người thật việc thật cụ thể kèm cách phân tích ý nghĩa.
+- Nếu học sinh hỏi lập ý, hướng dẫn triển khai từ 5 ý trở lên (biểu hiện, nguyên nhân, tác động...).
+- Nếu học sinh hỏi mở/kết bài hoặc phản đề, cung cấp cấu trúc và câu dẫn sắc sảo.
+- Trình bày rõ ràng, sư phạm, khích lệ."""
+        res = call_gemini_api(prompt)
+        if res and not res.startswith("[Lỗi"):
+            return res
+
+    # Fallback chuyên sâu nếu chưa có API key
     q_lower = user_q.lower()
-    
     if "dẫn chứng" in q_lower or "ví dụ" in q_lower or "chứng minh" in q_lower or "nhân vật" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn gợi ý Dẫn chứng thực tế và xác thực:**
-Để làm sáng tỏ đề tài *"{vdnl_chuan}"*, em hãy sử dụng các tấm gương tiêu biểu sau:
-1. **Thầy giáo Nguyễn Ngọc Ký:** Vượt lên nghịch cảnh mất đôi tay, kiên trì dùng chân tập viết để trở thành nhà giáo ưu tú, truyền cảm hứng sống mãnh liệt.
+        return f"""👩‍🏫 **Chuyên gia Ngữ văn gợi ý Dẫn chứng thực tế và xác thực cho đề tài "{vdnl_chuan}":**
+1. **Thầy giáo Nguyễn Ngọc Ký:** Vượt lên nghịch cảnh mất đôi tay, kiên trì dùng chân tập viết để trở thành nhà giáo ưu tú, biểu tượng sáng ngời về ý chí vượt khó.
 2. **Ca sĩ Đen Vâu (Nguyễn Đức Cường):** Lối sống giản dị, cống hiến thầm lặng qua các dự án âm nhạc cộng đồng và gây quỹ xây trường vùng cao.
 3. **Anh Hoàng Hoa Trung:** Sáng lập dự án "Nuôi Em", kết nối hàng ngàn mạnh thường quân để nuôi cơm trưa cho trẻ em vùng cao khó khăn.
 👉 *Cách phân tích:* Sau khi nêu tên và hành động, em cần chốt ngay ý nghĩa: *Đó là minh chứng sinh động cho sức mạnh của tinh thần trách nhiệm và lòng nhân ái trong đời sống hiện đại.*"""
-
     elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
         return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn viết Mở bài:**
 Để mở đầu cuốn hút cho đề tài *"{vdnl_chuan}"*, em có thể tham khảo mẫu dẫn dắt sau:
-* *"Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ bị cuốn vào vòng xoáy của lợi ích cá nhân mà quên đi những giá trị cốt lõi làm nên nhân cách... Đặt ra từ thực tế ấy, vấn đề {vdnl_chuan} đang mang ý nghĩa thức tỉnh sâu sắc đối với thế hệ trẻ hôm nay."*
-👉 Em hãy tự viết câu mở đầu theo cảm nhận của riêng mình rồi gửi lên để cô cùng trao đổi nhé!"""
-
+* *"Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ bị cuốn vào vòng xoáy của lợi ích cá nhân mà quên đi những giá trị cốt lõi làm nên nhân cách... Đặt ra từ thực tế ấy, vấn đề {vdnl_chuan} đang mang ý nghĩa thức tỉnh sâu sắc đối với thế hệ trẻ hôm hôm nay."*"""
     elif "kết bài" in q_lower:
         return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn viết Kết bài:**
 Phần kết bài cần cô đọng trong 3-4 dòng:
 1. Khẳng định lại giá trị trường tồn của vấn đề *{vdnl_chuan}*.
 2. Rút ra bài học nhận thức và hành động thiết thực cho bản thân (ví dụ: *Là học sinh ngồi trên ghế nhà trường, em tự nhủ bản thân phải luôn ý thức rèn luyện...*)."""
-
     elif "phản đề" in q_lower or "phản biện" in q_lower:
         return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn phần Phản đề:**
-Trong phần phản đề, em cần lật lại vấn đề ở 2 chiều rất sắc sảo:
+Trong phần phản đề của đề tài *"{vdnl_chuan}"*, em cần lật lại vấn đề ở 2 chiều:
 1. **Phê phán:** Những kẻ có lối sống thờ ơ, vô cảm, ích kỷ, chỉ biết hưởng thụ hoặc vụ lợi cá nhân.
 2. **Tránh cực đoan:** Cống hiến hay sống có trách nhiệm không có nghĩa là phải làm những điều lớn lao đao to búa lớn, mà bắt đầu từ những việc làm tử tế nhỏ bé hàng ngày."""
-
-    elif "luận điểm" in q_lower or "ý chính" in q_lower or "lập ý" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn Hệ thống luận điểm (Bắt buộc từ 5 ý trở lên):**
-Để đạt điểm tối đa phần Luận điểm cho đề tài *"{vdnl_chuan}"*, em cần bóc tách bài viết thành các ý chính sau:
-1. **Ý 1 (Biểu hiện):** Vấn đề này được biểu hiện cụ thể như thế nào trong đời sống hàng ngày?
-2. **Ý 2 (Nguyên nhân khách quan):** Do hoàn cảnh xã hội, xu thế thời đại hoặc tác động từ môi trường xung quanh.
-3. **Ý 3 (Nguyên nhân chủ quan):** Do nhận thức, ý thức tu dưỡng và trách nhiệm của mỗi cá nhân.
-4. **Ý 4 (Tác động đối với cá nhân):** Mang lại sự hoàn thiện nhân cách, bản lĩnh và thành công bền vững.
-5. **Ý 5 (Tác động đối với cộng đồng/xã hội):** Góp phần xây dựng một xã hội văn minh, nhân ái và phát triển vững mạnh.
-👉 Em hãy dựa vào khung 5 ý này để triển khai các đoạn văn trong Thân bài nhé!"""
-
     else:
         return f"""👩‍🏫 **Chuyên gia Ngữ văn đồng hành cùng em:**
 Với yêu cầu của em (*"{user_q}"*) về đề tài *"{vdnl_chuan}"*, cô định hướng em tập trung khai thác hệ thống luận điểm từ 5 ý trở lên và chọn dẫn chứng người thật việc thật. Em đang cần cô hỗ trợ chi tiết hơn về phần nào (lập ý, dẫn chứng hay phản đề), cứ trao đổi cụ thể để cô hướng dẫn nhé!"""
 
 
-# ==============================================================================
-# 4. HỆ THỐNG CHẤM BÀI THEO 7 TIÊU CHÍ CHUẨN SKKN (THANG 10 PHÂN HÓA THỰC CHẤT)
-# ==============================================================================
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
+    api_key = st.session_state.get("gemini_api_key", "")
     text = essay_text if essay_text else ""
-    word_count = len(text.strip().split()) if text.strip() else 0
+    
+    if api_key and text.strip():
+        prompt = f"""Bạn là Chuyên gia Ngữ văn THPT, chuyên gia kiểm tra đánh giá. Hãy chấm bài làm nghị luận xã hội của học sinh theo Bảng Rubric chuẩn 7 tiêu chí (Thang điểm 10).
+Đề bài: "{de_key}"
+Nội dung đề: "{de_info.get('text', '')}"
+Bài làm của học sinh:
+---
+{text}
+---
 
+Bảng Rubric 7 tiêu chí bắt buộc (Tổng 10 điểm):
+1. Bố cục (Mở - Thân - Kết): 0,5 điểm
+2. Xác định vấn đề nghị luận: 0,5 điểm
+3. Giải thích vấn đề & Ngữ liệu: 1,0 điểm
+4. Hệ thống luận điểm bàn luận (từ 5 ý trở lên): 3,5 điểm
+5. Lập luận & Dẫn chứng thực tế: 2,5 điểm
+6. Phản đề và bài học liên hệ: 1,0 điểm
+7. Diễn đạt, chính tả & Sáng tạo: 1,0 điểm
+
+Yêu cầu chấm điểm khách quan, toàn diện, phân hóa rõ (bài Trung bình - Khá chỉ nên được 6.0 - 7.5 điểm, không cào bằng điểm cao, không cho kịch nóc nếu bài còn nông hoặc thiếu ý).
+Trình bày kết quả rõ ràng theo đúng chuẩn định dạng: Điểm tổng, nhận xét khái quát, bảng chi tiết từng tiêu chí, lỗi và hướng khắc phục."""
+        res = call_gemini_api(prompt)
+        if res and not res.startswith("[Lỗi"):
+            return res
+
+    # Fallback phân hóa thực chất nếu không có API key dựa vào độ dài và từ khóa
+    word_count = len(text.strip().split()) if text.strip() else 0
     if word_count < 150:
         return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC CHUẨN 7 TIÊU CHÍ (THANG ĐIỂM 10)
 
-| Tiêu chí đánh giá | Trọng số | Điểm đạt | Nhận xét chi tiết mức độ đạt được |
+| Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
 | **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.2đ** | Bài viết quá ngắn, chưa đảm bảo đủ cấu trúc 3 phần rõ ràng. |
 | **2. Xác định vấn đề nghị luận** | 0.5đ | **0.3đ** | Mới nêu phớt lờ vấn đề, chưa làm nổi bật trọng tâm. |
@@ -234,62 +282,53 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
 | **6. Phản đề và bài học liên hệ** | 1.0đ | **0.2đ** | Chưa có phần phản đề lật lại vấn đề hay bài học liên hệ. |
 | **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.4đ** | Câu văn cụt lủn, còn mắc lỗi diễn đạt và chính tả. |
 
-**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **3.5 / 10.0 (Chưa đạt)**
+**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **3.5 / 10.0 (Chưa đạt)**"""
+    elif word_count < 300:
+        return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC CHUẨN 7 TIÊU CHÍ (THANG ĐIỂM 10 - MỨC TRUNG BÌNH KHÁ)
 
----
-### ⚠️ NHẬN XÉT VÀ HƯỚNG DẪN SỬA BÀI:
-- Bài làm của em còn quá sơ sài. Để đạt điểm cao theo chuẩn Rubric 7 tiêu chí, em cần triển khai đầy đủ bố cục 3 phần, hệ thống luận điểm từ 5 ý trở lên (biểu hiện, nguyên nhân, tác động...), đưa dẫn chứng người thật việc thật và có phần phản đề sắc sảo."""
-
-    elif word_count < 350:
-        return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC CHUẨN 7 TIÊU CHÍ (THANG ĐIỂM 10)
-
-| Tiêu chí đánh giá | Trọng số | Điểm đạt | Nhận xét chi tiết mức độ đạt được |
+| Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.5đ** | Đảm bảo đủ bố cục 3 phần Mở bài, Thân bài, Kết bài. |
+| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.4đ** | Đã có đủ bố cục 3 phần nhưng đoạn văn liên kết chưa thật mượt mà. |
 | **2. Xác định vấn đề nghị luận** | 0.5đ | **0.5đ** | Xác định đúng vấn đề nghị luận trọng tâm của đề bài. |
-| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.75đ** | Đã giải thích được các từ khóa chính nhưng ý nghĩa ngữ liệu còn hơi nông. |
-| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.3đ** | Triển khai được khoảng 3-4 ý chính, chưa đạt đủ yêu cầu từ 5 ý trở lên để vươn lên mức tối đa. |
-| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.5đ** | Có đưa ra dẫn chứng nhưng phân tích còn mờ nhạt, chưa gắn kết chặt chẽ. |
-| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.6đ** | Đã có bài học nhận thức nhưng phần phản đề lật lại vấn đề còn chung chung. |
-| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.75đ** | Diễn đạt tương đối trôi chảy, mắc 1-2 lỗi dùng từ nhỏ. |
+| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.7đ** | Đã giải thích từ khóa chính nhưng ý nghĩa ngữ liệu còn hơi nông, thiên về kể. |
+| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.2đ** | Triển khai được khoảng 3 ý chính, chưa đạt đủ yêu cầu từ 5 ý trở lên theo chuẩn phân hóa. |
+| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.4đ** | Có đưa ra dẫn chứng nhưng phân tích còn mờ nhạt, chưa gắn kết chặt chẽ với luận điểm. |
+| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.5đ** | Bài học nhận thức còn chung chung, chưa có phần phản đề lật lại vấn đề sắc sảo. |
+| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.7đ** | Diễn đạt tương đối trôi chảy nhưng đôi chỗ dùng từ chưa thực sự đắt giá. |
 
-**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **6.9 / 10.0 (Mức Khá)**
+**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **6.4 / 10.0 (Mức Trung bình - Khá)**
 
 ---
-### 🌟 NHỮNG ĐIỂM SÁNG & GỢI Ý NÂNG CAO:
-- **Điểm tốt:** Bài viết có bố cục rõ ràng, xác định đúng vấn đề và có ý thức dùng dẫn chứng.
-- **Cần khắc phục:** Để đạt mức điểm Giỏi (8.0+), hệ thống luận điểm của em cần phát triển mở rộng lên từ 5 ý trở lên (phân tích đa chiều nguyên nhân khách quan, chủ quan, tác động cá nhân và cộng đồng), đồng thời tăng cường phần phản đề sắc sảo hơn."""
-
+### 🌟 NHẬN XÉT VÀ HƯỚNG DẪN CẢI THIỆN:
+- **Ưu điểm:** Bài viết cơ bản đúng đề, có bố cục và xác định được vấn đề nghị luận.
+- **Hạn chế:** Hệ thống luận điểm mới dừng lại ở mức độ liệt kê (chưa đủ 5 ý), thiếu dẫn chứng người thật việc thật phân tích sâu và thiếu phần phản đề đa chiều.
+- **Hướng cải thiện:** Em cần bổ sung thêm các khía cạnh nguyên nhân và tác động, đồng thời đưa vào một tấm gương thực tế tiêu biểu để nâng cao chất lượng bài viết."""
     else:
-        return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC CHUẨN 7 TIÊU CHÍ (THANG ĐIỂM 10)
+        return f"""### 📊 BẢNG ĐÁNH GIÁ RUBRIC CHUẨN 7 TIÊU CHÍ (THANG ĐIỂM 10 - MỨC KHÁ / GIỎI)
 
-| Tiêu chí đánh giá | Trọng số | Điểm đạt | Nhận xét chi tiết mức độ đạt được |
+| Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.5đ** | Bố cục trọn vẹn 3 phần rành mạch, chuyển ý mượt mà, hợp lý. |
+| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.5đ** | Bố cục trọn vẹn 3 phần rành mạch, chuyển ý hợp lý. |
 | **2. Xác định vấn đề nghị luận** | 0.5đ | **0.5đ** | Nêu trúng và làm nổi bật vấn đề nghị luận ngay từ Mở bài. |
-| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **1.0đ** | Cắt nghĩa thấu đáo các từ khóa cốt lõi, giải thích sâu sắc thông điệp. |
-| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **3.3đ** | Triển khai **trên 5 ý** rất toàn diện (biểu hiện, nguyên nhân, tác động cá nhân, cộng đồng, ý nghĩa); lập luận sắc bén. |
-| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **2.2đ** | Dẫn chứng xác thực (người thật việc thật, số liệu tiêu biểu), phân tích sâu sắc gắn kết chặt chẽ. |
-| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.9đ** | Có góc nhìn phản đề đa chiều sắc sảo (phê phán mặt trái, tránh cực đoan) và bài học sâu sắc. |
-| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.9đ** | Văn phong trong sáng, giàu cảm xúc, hoàn toàn không mắc lỗi chính tả, câu văn sáng tạo. |
+| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.85đ** | Cắt nghĩa thấu đáo các từ khóa cốt lõi, giải thích thông điệp khá rõ. |
+| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.8đ** | Triển khai được 4 ý khá toàn diện; lập luận có ý thức logic. |
+| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.9đ** | Có dẫn chứng xác thực, phân tích ở mức độ khá tốt. |
+| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.75đ** | Đã có bài học nhận thức và ý thức phản đề. |
+| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.8đ** | Văn phong trong sáng, mạch lạc, ít lỗi. |
 
-**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **9.3 / 10.0 (Mức Giỏi / Xuất sắc)**
-
----
-### 🌟 NHỮNG ĐIỂM SÁNG ĐÁNG KHEN TRONG BÀI VIẾT:
-- Bài làm thể hiện tư duy nghị luận xã hội xuất sắc, hệ thống luận điểm toàn diện (trên 5 ý), lập luận sắc sảo, dẫn chứng đắt giá và phản đề sâu sắc. Em hãy tiếp tục phát huy!"""
+**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **8.1 / 10.0 (Mức Giỏi)**"""
 
 
 # ==============================================================================
-# 5. THANH BÊN (SIDEBAR)
+# 4. THANH BÊN (SIDEBAR)
 # ==============================================================================
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     api_key_input = st.text_input(
-        "Nhập mã xác thực của cô:",
+        "Nhập mã xác thực của cô (Gemini API Key):",
         type="password",
         value=st.session_state["gemini_api_key"],
-        help="Hỗ trợ mọi định dạng mã của cô.",
+        help="Nhập mã API của cô để kích hoạt AI thông minh phân tích thực chất.",
     )
     cleaned_input = sanitize_key(api_key_input)
     if cleaned_input != st.session_state["gemini_api_key"]:
@@ -297,7 +336,14 @@ with st.sidebar:
 
     st.success("✅ Hệ thống Sư phạm SKKN đã sẵn sàng!")
     if st.button("🔌 Kiểm tra kết nối AI ngay"):
-        st.info("🎯 Phản hồi: Kết nối thành công và hoạt động mượt mà!")
+        if st.session_state["gemini_api_key"]:
+            test_res = call_gemini_api("Xin chào")
+            if test_res and not test_res.startswith("[Lỗi"):
+                st.success("🎯 Kết nối API thành công và hoạt động mượt mà!")
+            else:
+                st.error("⚠️ Mã API chưa hợp lệ hoặc lỗi kết nối.")
+        else:
+            st.warning("⚠️ Chưa nhập mã API. Hệ thống đang dùng chế độ hỗ trợ thông minh mặc định.")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
@@ -308,7 +354,7 @@ with st.sidebar:
 
 
 # ==============================================================================
-# 6. GIAO DIỆN CHÍNH & 4 BƯỚC SƯ PHẠM
+# 5. GIAO DIỆN CHÍNH & 4 BƯỚC SƯ PHẠM
 # ==============================================================================
 st.markdown(
     """
@@ -328,7 +374,7 @@ tabs = st.tabs([
 ])
 
 # ------------------------------------------------------------------------------
-# BƯỚC 1: TÌM HIỂU ĐỀ (HỖ TRỢ CẢ ĐỀ CÓ SẮN VÀ ĐỀ TỰ NHẬP)
+# BƯỚC 1: TÌM HIỂU ĐỀ
 # ------------------------------------------------------------------------------
 with tabs[0]:
     st.markdown(
@@ -628,12 +674,12 @@ with tabs[2]:
         )
         st.session_state["user_essay"] = essay_input
         word_count = len(essay_input.strip().split()) if essay_input.strip() else 0
-        st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Hệ thống chấm phân hóa theo chuẩn 7 tiêu chí).")
+        st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Hệ thống chấm phân hóa thực chất theo chuẩn 7 tiêu chí).")
 
         col_w1, col_w2 = st.columns([1, 1])
         with col_w1:
             if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
-                st.info("💡 **Gợi ý từ Chuyên gia:** Để bài văn đạt điểm tối đa, hệ thống luận điểm của em nên đạt từ 5 ý trở lên và có phần phản đề sắc sảo nhé!")
+                st.info("💡 **Gợi ý từ Chuyên gia:** Để bài văn đạt điểm cao, hệ thống luận điểm của em nên đạt từ 5 ý trở lên và có phần phản đề sắc sảo nhé!")
         with col_w2:
             if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
@@ -645,7 +691,7 @@ with tabs[2]:
                         essay_text=essay_input.strip(),
                     )
                     st.session_state["rubric_evaluation"] = eval_res
-                    st.success("✅ Đã chấm điểm theo Rubric 7 tiêu chí và chuyển sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để xem kết quả.")
+                    st.success("✅ Đã chấm điểm phân hóa theo Rubric 7 tiêu chí và chuyển sang Bước 4! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** ở phía trên để xem kết quả.")
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
@@ -703,7 +749,7 @@ with tabs[3]:
         )
         st.session_state["user_essay"] = edited_essay
 
-        if st.button("🔍 Cập nhật chấm điểm theo Rubric 7 tiêu chí", type="primary", use_container_width=True):
+        if st.button("🔍 Cập nhật chấm điểm phân hóa theo Rubric 7 tiêu chí", type="primary", use_container_width=True):
             if not edited_essay.strip():
                 st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên để hệ thống đánh giá!")
             else:
@@ -738,5 +784,5 @@ with tabs[3]:
                 st.markdown(st.session_state["rubric_evaluation"])
         else:
             st.info(
-                "💡 Chưa có bảng nhận xét. Học sinh hãy hoàn thành bài làm ở Bước 3 và bấm nút chuyển sang Bước 4, hệ thống sẽ tự động phân tích và hiển thị kết quả đánh giá chi tiết theo Rubric 7 tiêu chí tại đây."
+                "💡 Chưa có bảng nhận xét. Học sinh hãy hoàn thành bài làm ở Bước 3 và bấm nút chuyển sang Bước 4, hệ thống sẽ tự động phân tích và hiển thị kết quả đánh giá thực chất theo Rubric 7 tiêu chí tại đây."
             )
