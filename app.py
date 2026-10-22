@@ -6,7 +6,7 @@ from PIL import Image
 # 1. CẤU HÌNH GIAO DIỆN CHUYÊN NGHIỆP & CHUẨN SƯ PHẠM SKKN
 # ==============================================================================
 st.set_page_config(
-    page_title="Hệ Thống Luyện Viết NLXH THPT - SKKN Trương THPT Trung Giã",
+    page_title="Hệ Thống Luyện Viết NLXH THPT - SKKN Trường THPT Trung Giã",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -146,7 +146,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ TƯ VẤN SƯ PHẠM & CHẤM BÀI THEO ĐÚNG TIÊU CHÍ SKKN
+# 3. ĐỘNG CƠ TƯ VẤN SƯ PHẠM CHI TIẾT & BÁM SÁT CÂU HỎI THỰC TẾ
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -171,38 +171,39 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
 
 
 def ai_advisor_response(de_text, vdnl_chuan, user_q):
-    """Trợ lý AI tư vấn theo tinh thần SKKN: Không làm thay, hướng dẫn cách tư duy, gợi mở dẫn chứng và lập luận."""
+    """Trợ lý AI tư vấn chuyên sâu, cung cấp dẫn chứng cụ thể hoặc hướng dẫn chi tiết theo yêu cầu thực tế của học sinh."""
     q_lower = user_q.lower()
     
-    if "mở bài" in q_lower or "dẫn dắt" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Mở bài:**
-Theo định hướng phương pháp, để viết mở bài cho đề tài *"{vdnl_chuan}"*, em cần thực hiện 2 bước:
-1. Dẫn dắt tự nhiên từ thực tiễn đời sống hoặc trích dẫn ý nghĩa từ ngữ liệu trong đề.
-2. Nêu trực tiếp vấn đề nghị luận: *{vdnl_chuan}*.
-👉 *Gợi ý:* Em hãy thử tự viết 2 câu mở đầu theo cảm nhận của riêng mình rồi gửi lên để cô cùng trao đổi nhé!"""
+    if "dẫn chứng khác" in q_lower or "thêm dẫn chứng" in q_lower or "cho em dẫn chứng" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý các Dẫn chứng bổ sung thực tế và tiêu biểu:**
+Để làm phong phú thêm bài viết về *"{vdnl_chuan}"*, em có thể chọn một trong các dẫn chứng xác thực sau đây:
+1. **Tấm gương Thầy giáo Nguyễn Ngọc Ký:** Dù bị liệt cả hai tay từ nhỏ, ông đã kiên trì dùng chân tập viết, vượt qua nghịch cảnh để trở thành nhà giáo ưu tú và truyền cảm hứng sống mãnh liệt cho hàng triệu thế hệ học sinh.
+2. **Tấm gương Đen Vâu (Rapper Nguyễn Đức Cường):** Lối sống giản dị, những dự án âm nhạc hướng về cộng đồng (như dự án "Nuôi em", xây trường vùng cao, ủng hộ trẻ em nghèo) minh chứng cho tinh thần cống hiến thầm lặng của tuổi trẻ hiện đại.
+3. **Sự kiện Tri ân nhân Ngày Thương binh Liệt sĩ / Quỹ Đền ơn đáp nghĩa:** Thể hiện đạo lý "Uống nước nhớ nguồn" của dân tộc ta qua các hoạt động thiết thực của tuổi trẻ cả nước.
+👉 Em hãy chọn 1 trong 3 dẫn chứng trên, nêu rõ hành động của nhân vật và phân tích ngắn gọn ý nghĩa của họ gắn với bài làm nhé!"""
 
-    elif "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Dẫn chứng:**
-Trong hệ thống Ngân hàng dẫn chứng, để làm sáng tỏ đề tài *"{vdnl_chuan}"*, em nên lựa chọn các tấm gương tiêu biểu, xác thực (ví dụ như trong các chủ điểm về lòng nhân ái, nghị lực vượt khó hoặc trách nhiệm). 
-👉 *Lưu ý:* Sau khi nêu tên và hành động của nhân vật, em phải chốt ngay câu đánh giá ý nghĩa đối với vấn đề nghị luận, tuyệt đối không kể lể cốt truyện dài dòng."""
+    elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý cách viết Mở bài:**
+Để mở bài cho đề tài *"{vdnl_chuan}"*, em có thể đi theo hướng mở bài gián tiếp từ thực tiễn đời sống:
+* *"Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ bị cuốn vào vòng xoáy của lợi ích cá nhân mà quên đi những giá trị cốt lõi làm nên nhân cách... Chính vì thế, vấn đề bàn về {vdnl_chuan} lại càng trở nên cấp thiết hơn bao giờ hết đối với thế hệ trẻ hôm nay."*
+👉 Em hãy dựa vào định hướng này để tự viết câu mở đầu cho bài làm của mình nhé!"""
 
     elif "kết bài" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Kết bài:**
-Phần kết bài cho đề tài *"{vdnl_chuan}"* cần cô đọng trong 3-4 dòng:
-1. Khẳng định lại tầm quan trọng của vấn đề nghị luận.
-2. Rút ra bài học nhận thức và hành động thiết thực cho bản thân thế hệ trẻ.
-👉 Em hãy thử tự viết câu kết luận cuối cùng xem sao nhé!"""
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Kết bài:**
+Để khép lại bài viết một cách trọn vẹn và sâu sắc, phần Kết bài của em cần đảm bảo:
+1. Tổng kết lại tầm quan trọng của vấn đề *{vdnl_chuan}*.
+2. Rút ra lời hứa hoặc bài học hành động cụ thể cho bản thân (ví dụ: *Là học sinh ngồi trên ghế nhà trường, em tự nhủ bản thân phải luôn ý thức rèn luyện...*).
+👉 Em hãy tự viết câu kết luận cuối cùng theo suy nghĩ của mình nhé!"""
 
     elif "phản biện" in q_lower or "mở rộng" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Phản biện:**
-Để bài viết có chiều sâu, em cần lật lại vấn đề qua 3 khía cạnh:
-1. Phê phán những biểu hiện lệch lạc, thờ ơ hoặc trái ngược với giá trị đạo đức đang bàn.
-2. Tránh hiểu cực đoan hoặc áp dụng hình thức sáo rỗng.
-3. Rút ra bài học hành động cho bản thân."""
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Phản biện mở rộng:**
+Trong phần phản biện, em cần lưu ý lật lại vấn đề ở 2 chiều:
+1. **Phê phán:** Những kẻ có lối sống thờ ơ, vô cảm, ích kỷ hoặc chỉ biết hưởng thụ.
+2. **Tránh cực đoan:** Cống hiến không có nghĩa là phải làm những điều lớn lao đao to búa lớn, mà bắt đầu từ những việc làm tử tế nhỏ bé hàng ngày."""
 
     else:
         return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Với thắc mắc của em (*"{user_q}"*) về đề bài *"{vdnl_chuan}"*, cô định hướng em tập trung vào hệ thống luận điểm chính (biểu hiện, ý nghĩa, bài học). Em hãy phác thảo nhanh ý tưởng ra nháp, vướng ở đâu cô sẽ cùng em tháo gỡ ở đó nhé!"""
+Với yêu cầu của em (*"{user_q}"*) về đề tài *"{vdnl_chuan}"*, cô gợi ý em tập trung làm rõ luận điểm về biểu hiện và ý nghĩa thực tiễn. Em đang cần cô hỗ trợ chi tiết hơn về phần nào (lập ý, dẫn chứng hay diễn đạt), cứ trao đổi tiếp với cô nhé!"""
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
@@ -506,7 +507,7 @@ with tabs[1]:
 
         user_question = st.text_area(
             "Nhập câu hỏi tiếp theo của em dành cho Cô:",
-            placeholder="Ví dụ: Cô gợi ý giúp em cách phân tích dẫn chứng hoặc viết kết bài nhé...",
+            placeholder="Ví dụ: Em muốn dẫn chứng khác hoặc gợi ý viết kết bài...",
             height=80,
             key="txt_chat_input",
         )
@@ -612,7 +613,7 @@ with tabs[2]:
                     image_obj=img_obj,
                 )
                 st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã chấm xong! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để xem kết quả.")
+                st.success("✅ Đã chấm xong! Mời em xem kết quả bên dưới hoặc mở tab **BƯỚC 4**.")
 
 
 # ------------------------------------------------------------------------------
