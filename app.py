@@ -109,24 +109,17 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. HÀM LÀM SẠCH API KEY (HỖ TRỢ CẢ MÃ "AQ." VÀ "AIza") & SESSION STATE
+# 2. QUẢN LÝ SESSION STATE VÀ LÀM SẠCH API KEY (CHỈ CHẤP NHẬN AIza...)
 # ==============================================================================
 def sanitize_api_key(raw_key):
-    """
-    Trích xuất chính xác mã API Key (hỗ trợ cả chuẩn 'AQ...' và 'AIza...'),
-    loại bỏ hoàn toàn mọi ký tự tiếng Việt vô tình dính vào gây lỗi latin-1.
-    """
     if not raw_key:
         return ""
     s = str(raw_key).strip()
-    # Ưu tiên bắt chính xác chuỗi Key bắt đầu bằng AQ. hoặc AIza
-    match = re.search(r"((?:AQ\.|AIza)[0-9A-Za-z\-_.]{20,120})", s)
+    match = re.search(r"(AIza[0-9A-Za-z\-_]{25,50})", s)
     if match:
         return match.group(1)
-    # Chỉ giữ lại các ký tự hợp lệ trong API Key (chữ không dấu, số, chấm, gạch ngang, gạch dưới)
-    clean_token = re.sub(r"[^0-9A-Za-z\-_.]", "", s)
+    clean_token = "".join(ch for ch in s if 33 <= ord(ch) <= 126)
     return clean_token
-
 
 def get_default_api_key():
     try:
@@ -138,7 +131,6 @@ def get_default_api_key():
     except Exception:
         pass
     return ""
-
 
 if "gemini_api_key" not in st.session_state:
     st.session_state["gemini_api_key"] = get_default_api_key()
@@ -165,7 +157,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI ĐA CỔNG (TƯƠNG THÍCH CẢ KEY "AQ." VÀ "AIza")
+# 3. ĐỘNG CƠ GỌI AI CHUẨN GOOGLE AI STUDIO (BẮT ĐẦU BẰNG AIza...)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     raw_key = st.session_state.get("gemini_api_key", "")
@@ -176,8 +168,8 @@ def call_gemini_engine(prompt_text, image_obj=None):
         if api_key:
             st.session_state["gemini_api_key"] = api_key
 
-    if not api_key or len(api_key) < 15:
-        return "❌ LỖI: Chưa có Gemini API Key hợp lệ. Vui lòng dán mã API Key vào ô ở thanh bên trái!"
+    if not api_key or not api_key.startswith("AIza"):
+        return "❌ LỖI: Cần sử dụng mã Gemini API Key chuẩn của Google (bắt đầu bằng chữ AIza...). Vui lòng tạo mã mới tại https://aistudio.google.com/app/apikey và dán vào thanh bên trái!"
 
     parts = [{"text": str(prompt_text)}]
     if image_obj is not None:
@@ -210,28 +202,23 @@ def call_gemini_engine(prompt_text, image_obj=None):
     }
     data_bytes = json.dumps(payload_gemini, ensure_ascii=True).encode("ascii")
 
-    # Danh sách các cổng kết nối (Hỗ trợ cả Google AI Studio lẫn Google Cloud / Vertex AI Express cho mã AQ.)
-    endpoints = []
-    for m in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]:
-        # 1. Cổng Gemini API tiêu chuẩn
-        endpoints.append((
-            f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}",
-            {"Content-Type": "application/json"}
-        ))
-        # 2. Cổng Vertex AI Express Mode (dành riêng cho các mã bắt đầu bằng AQ.)
-        if api_key.startswith("AQ."):
-            endpoints.append((
-                f"https://aiplatform.googleapis.com/v1/publishers/google/models/{m}:generateContent?key={api_key}",
-                {"Content-Type": "application/json"}
-            ))
-            endpoints.append((
-                f"https://aiplatform.googleapis.com/v1beta1/publishers/google/models/{m}:generateContent?key={api_key}",
-                {"Content-Type": "application/json"}
-            ))
+    rest_models = [
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+        "gemini-1.5-flash",
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-pro",
+    ]
 
     last_error = ""
-    for url, headers in endpoints:
-        req = urllib.request.Request(url, data=data_bytes, headers=headers, method="POST")
+    for model_name in rest_models:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+        req = urllib.request.Request(
+            url,
+            data=data_bytes,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
         try:
             with urllib.request.urlopen(req, timeout=25) as resp:
                 resp_body = resp.read().decode("utf-8", errors="replace")
@@ -250,13 +237,15 @@ def call_gemini_engine(prompt_text, image_obj=None):
                 err_msg = err_json.get("error", {}).get("message", str(http_err))
             except Exception:
                 err_msg = str(http_err)
-            last_error = f"HTTP {http_err.code}: {err_msg}"
+            last_error = f"HTTP {http_err.code} ({model_name}): {err_msg}"
+            if "API_KEY_INVALID" in err_msg or "API key not valid" in err_msg:
+                return "❌ LỖI: API Key không hợp lệ. Vui lòng lấy mã AIza... mới từ https://aistudio.google.com/app/apikey"
             continue
         except Exception as e:
-            last_error = str(e)
+            last_error = f"{model_name}: {str(e)}"
             continue
 
-    return f"❌ Máy chủ Google trả về thông báo: {last_error}"
+    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại API Key!"
 
 
 def extract_section(text, tag_name):
@@ -458,18 +447,18 @@ Hãy kẻ bảng Markdown gồm 4 cột: **Tiêu chí đánh giá | Mức độ 
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     api_key_input = st.text_input(
-        "Nhập Gemini API Key:",
+        "Nhập Gemini API Key (AIza...):",
         type="password",
         value=st.session_state["gemini_api_key"],
-        help="Hỗ trợ cả mã bắt đầu bằng AQ... hoặc AIza...",
+        help="Khóa API chuẩn từ Google AI Studio (bắt đầu bằng AIza...).",
     )
     cleaned_input = sanitize_api_key(api_key_input)
     if cleaned_input != st.session_state["gemini_api_key"]:
         st.session_state["gemini_api_key"] = cleaned_input
 
     cur_k = st.session_state["gemini_api_key"]
-    if cur_k and len(cur_k) >= 15:
-        st.success(f"✅ Đã nhận khóa API ({cur_k[:6]}...{cur_k[-4:]})")
+    if cur_k and cur_k.startswith("AIza"):
+        st.success(f"✅ API Key hợp lệ ({cur_k[:6]}...{cur_k[-4:]})")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
             with st.spinner("Đang kiểm tra kết nối..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
@@ -477,8 +466,10 @@ with st.sidebar:
                     st.error(test_res)
                 else:
                     st.info(f"🎯 Phản hồi từ AI: {test_res}")
+    elif cur_k:
+        st.error("⚠️ Khóa API đang nhập chưa chuẩn. Vui lòng lấy mã bắt đầu bằng `AIza...` tại https://aistudio.google.com/app/apikey")
     else:
-        st.warning("⚠️ Vui lòng dán mã API Key vào ô trên để kích hoạt AI.")
+        st.warning("⚠️ Vui lòng nhập Gemini API Key (AIza...) để kích hoạt AI.")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
