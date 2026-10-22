@@ -132,7 +132,7 @@ if "current_de_info" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về cách giải thích, tìm ý bàn luận, hướng dẫn viết mở bài hay phân tích dẫn chứng cho đề bài này thì cứ trao đổi với cô nhé!")
+        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng, hay tư duy phản biện)? Hãy hỏi cô, cô sẽ hướng dẫn chi tiết cho em nhé!")
     ]
 
 if "user_essay" not in st.session_state:
@@ -144,9 +144,12 @@ if "rubric_evaluation" not in st.session_state:
 if "eval_vdnl_text" not in st.session_state:
     st.session_state["eval_vdnl_text"] = ""
 
+if "chat_input_val" not in st.session_state:
+    st.session_state["chat_input_val"] = ""
+
 
 # ==============================================================================
-# 3. ĐỘNG CƠ SƯ PHẠM CHUẨN MỰC (ĐỊNH HƯỚNG ĐÚNG TRỌNG TÂM CÂU HỎI)
+# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU (ĐÁNH TRÚNG TRỌNG TÂM - KHÔNG LÀM THAY)
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -161,48 +164,55 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
 - **Vấn đề nghị luận chuẩn xác:** *{vdnl_chuan}*
 👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để bắt đầu lập ý và tham khảo dẫn chứng!"""
     else:
-        return f"""⚠️ **CHƯA HOÀN TOÀN CHÍNH XÁC:**
+        return f"""⚠️ **CHƯA ĐÚNG TRỌNG TÂM (CẦN ĐIỀU CHỈNH):**
 
-- **Nhận xét của Cô:** Câu trả lời của em (*"{student_guess}"*) chưa đi đúng vào trọng tâm cốt lõi của đề. 
-- **Gợi ý định hướng:** Em hãy đọc lại ngữ liệu và tự hỏi tác giả đang hướng tới phẩm chất, đạo lý hay hành động nào của con người.
+- **Nhận xét của Cô:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi của đề bài này. Em đang bị đi chệch hướng hoặc nhận diện chưa đủ sâu.
+- **Gợi ý định hướng:** Em hãy đọc lại ngữ liệu/câu nói trong đề và tự hỏi: *Tác giả đang muốn bàn về phẩm chất đạo đức, trách nhiệm hay thái độ sống nào của con người?*
 - **Vấn đề nghị luận chuẩn của đề:** *{vdnl_chuan}*
 
-👉 Em hãy suy nghĩ và điều chỉnh lại câu trả lời để nắm vững định hướng trước khi sang **BƯỚC 2** nhé!"""
+👉 Em hãy suy nghĩ lại để xác định đúng vấn đề trước khi sang **BƯỚC 2** nhé!"""
 
 
 def ai_advisor_response(de_text, vdnl_chuan, user_q):
-    """Trợ lý AI tư vấn ở Bước 2: Trả lời bám sát đúng câu hỏi thực tế của học sinh (mở bài, dẫn chứng, lập luận), định hướng sâu sắc không làm thay."""
+    """Trợ lý AI tư vấn ở Bước 2: Bám sát sạt câu hỏi cụ thể của học sinh, định hướng sắc bén, không làm thay."""
     q_lower = user_q.lower()
     
-    if "mở bài" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng cách viết Mở bài cho em:**
-Để viết một mở bài hay và đúng chuẩn cho đề bài *"{vdnl_chuan}"*, em không nên đi thẳng vào vấn đề một cách khô khan mà cần tuân thủ cấu trúc:
-1. **Dẫn dắt:** Xuất phát từ một câu nói, một hình ảnh thơ, một hiện tượng đời sống hoặc quy luật tất yếu có liên quan đến chủ đề.
-2. **Giới thiệu:** Nêu trực tiếp vấn đề nghị luận: *{vdnl_chuan}*.
-👉 *Gợi ý mẫu tư duy:* Em có thể dùng cấu trúc: *"Cuộc sống luôn đặt ra cho con người những thử thách... và để vượt qua điều đó, một trong những phẩm chất vô cùng quan trọng chính là..."*. Em hãy tự viết câu mở đầu theo cách của mình nhé!"""
+    if "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng cách dùng Dẫn chứng:**
+Để làm sáng tỏ vấn đề *"{vdnl_chuan}"*, việc đưa dẫn chứng đòi hỏi phải sắc sảo và ăn khớp với luận điểm:
+1. **Gợi ý nhân vật thực tế:** Em có thể lấy tấm gương của *Hoàng Hoa Trung (Dự án Nuôi Em)* hoặc *Thầy giáo Nguyễn Ngọc Ký* tùy thuộc vào khía cạnh đạo đức hay nghị lực của đề.
+2. **Cách viết phân tích dẫn chứng (Cực kỳ quan trọng):** Sau khi nêu tên nhân vật và hành động, em **tuyệt đối không kể lể dài dòng**, mà phải chốt ngay câu đánh giá: *Hành động ấy là minh chứng sống động cho thấy...* hoặc *Chính sự dấn thân đó đã khẳng định giá trị của...*
+👉 Em hãy tự chọn 1 nhân vật trong Kho dẫn chứng 9 chủ điểm (bên trái) và viết 2 câu phân tích ý nghĩa của họ gắn với đề bài này nhé!"""
 
-    elif "dẫn chứng" in q_lower or "chứng minh" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn chọn & phân tích Dẫn chứng:**
-Đối với đề bài về *"{vdnl_chuan}"*, khi đưa dẫn chứng vào bài viết, em cần lưu ý 3 bước:
-1. **Chọn nhân vật/sự kiện:** Lấy một tấm gương tiêu biểu thực tế (ví dụ trong Kho dẫn chứng 9 chủ điểm ở mục bên trái).
-2. **Nêu hành động cốt lõi:** Họ đã làm gì, đối mặt với hoàn cảnh ra sao?
-3. **Phân tích ý nghĩa (Quan trọng nhất):** Hành động ấy chứng minh điều gì cho luận điểm của em? Tránh kể lể dài dòng cốt truyện mà quên mất việc kết nối dẫn chứng với vấn đề nghị luận.
-👉 Em hãy chọn 1 nhân vật mà em ấn tượng nhất và thử viết 3 câu phân tích ý nghĩa của họ xem nào!"""
+    elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn kỹ năng viết Mở bài:**
+Một mở bài đạt chuẩn không cần quá dài (khoảng 5-7 dòng) nhưng phải đủ 2 bước:
+1. **Dẫn dắt:** Đi từ một quy luật tự nhiên, một câu nói triết lý hoặc thực tiễn đời sống có liên quan.
+2. **Nêu vấn đề:** Dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài: *{vdnl_chuan}*.
+👉 *Gợi ý tư duy mở bài gián tiếp:* Em có thể mở đầu bằng câu hỏi tu từ hoặc một lát cắt thực tế xã hội. Em hãy tự phác thảo 2 câu đầu tiên theo ý mình rồi gửi lên đây, cô sẽ góp ý trực tiếp cho em!"""
 
-    elif "phản biện" in q_lower or "mở rộng" in q_lower:
+    elif "phản biện" in q_lower or "mở rộng" in q_lower or "trái chiều" in q_lower:
         return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng tư duy Phản biện:**
-Phản biện là phần giúp bài văn của em đạt điểm xuất sắc. Đối với đề bài này, em có thể triển khai qua 3 khía cạnh:
-1. **Phê phán mặt trái:** Những kẻ có thái độ sống ngược lại (ích kỷ, thờ ơ, lười biếng...).
-2. **Phân biệt rạch ròi:** Tránh hiểu cực đoan hoặc biến giá trị này thành hình thức phô trương.
-3. **Bài học nhận thức:** Rút ra ý nghĩa thực tiễn cho bản thân.
-👉 Em hãy thử suy nghĩ xem nếu một người hoàn toàn thiếu đi phẩm chất này thì cuộc sống của họ sẽ ra sao?"""
+Để mở rộng chiều sâu cho đề tài *"{vdnl_chuan}"*, phần phản biện của em cần giải quyết 3 góc độ:
+1. **Lật lại mặt trái:** Phê phán những kẻ có thái độ sống hời hợt, ích kỷ hoặc đi ngược lại giá trị tốt đẹp này.
+2. **Tránh cực đoan:** Lưu ý rằng việc thực hiện giá trị ấy cần đi đôi với sự tỉnh táo, không phô trương hình thức hay cực đoan cực đoan hóa.
+3. **Bài học thực tiễn:** Rút ra hành động cụ thể cho bản thân.
+👉 Em hãy thử suy nghĩ xem nếu một người trẻ hoàn toàn thờ ơ trước vấn đề này thì hậu quả sẽ ra sao?"""
+
+    elif "luận điểm" in q_lower or "ý 1" in q_lower or "ý 2" in q_lower or "thân bài" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn định hướng hệ thống Ý Thân bài:**
+Đối với đề tài *"{vdnl_chuan}"*, hệ thống luận điểm trong Thân bài cần triển khai chặt chẽ theo các ý cốt lõi:
+1. **Ý 1 (Bản chất/Biểu hiện):** Vấn đề này được thể hiện như thế nào trong đời sống hàng ngày?
+2. **Ý 2 (Vai trò/Ý nghĩa):** Vì sao nó lại có sức mạnh to lớn đối với sự trưởng thành của cá nhân và sự phát triển của xã hội?
+3. **Ý 3 (Giải pháp/Hành động):** Thế hệ trẻ cần rèn luyện như thế nào để bồi dưỡng phẩm chất ấy?
+👉 Em hãy chọn một trong ba ý trên và thử tự viết đoạn văn triển khai ý đó xem lập luận của em đã sắc bén chưa nhé!"""
 
     else:
         return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Với thắc mắc của em (*"{user_q}"*) về đề bài *"{vdnl_chuan}"*, cô hướng dẫn em tư duy như sau:
-- **Xác định luận điểm:** Chia vấn đề thành 2-3 ý nhỏ (Biểu hiện là gì? Vì sao cần có? Ý nghĩa đối với tuổi trẻ?).
-- **Phương pháp lập luận:** Sử dụng lý lẽ kết hợp bằng chứng thực tế để làm sáng tỏ vấn đề.
-Em hãy dựa trên khung định hướng ở bên trái để phác thảo các ý chính ra giấy nháp, nếu vướng chỗ nào cứ trao đổi tiếp với cô nhé!"""
+Với câu hỏi cụ thể của em (*"{user_q}"*) xoay quanh đề bài *"{vdnl_chuan}"*, cô gợi ý tư duy như sau:
+- **Trọng tâm cốt lõi:** Em cần bám sát bản chất của vấn đề nghị luận, không lan man sang các vấn đề phụ.
+- **Cách đặt câu hỏi tự vấn:** Hãy tự hỏi *Điều này có ý nghĩa gì với tôi?* và *Tôi phải làm gì để thực hiện điều đó?*.
+Em hãy phác thảo nhanh ý tưởng của mình ra giấy nháp rồi trao đổi tiếp với cô nhé!"""
 
 
 # ==============================================================================
@@ -466,14 +476,14 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (ĐỊNH HƯỚNG SƯ PHẠM - KHÔNG VIẾT HỘ)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (CÓ XÓA TỰ ĐỘNG KHUNG NHẬP & BÁM SÁT CÂU HỎI)
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI đồng hành định hướng phương pháp, gợi mở tư duy và rèn luyện kỹ năng viết cho học sinh.")
 
         user_question = st.text_area(
             "Nhập câu hỏi của em dành cho Cô:",
-            placeholder="Ví dụ: Cô ơi em chưa biết cách triển khai ý bàn luận số 2, cô gợi ý giúp em hướng tư duy nhé...",
+            placeholder="Ví dụ: Cô ơi em chưa biết cách triển khai ý bàn luận số 2, cô gợi ý giúp em nhé...",
             height=90,
             key="txt_chat_input",
         )
@@ -488,6 +498,7 @@ with tabs[1]:
             st.session_state["chat_history"] = [
                 ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em cần cô hỗ trợ định hướng phương pháp lập ý hay tư duy phản biện cứ trao đổi với cô nhé!")
             ]
+            st.rerun()
 
         if send_clicked:
             if not user_question.strip():
@@ -501,6 +512,8 @@ with tabs[1]:
                     q_clean
                 )
                 st.session_state["chat_history"].append(("assistant", ai_reply))
+                st.session_state["txt_chat_input"] = ""  # Tự động làm sạch ô nhập sau khi gửi
+                st.rerun()
 
         chat_display = st.container(height=420, border=True)
         with chat_display:
@@ -513,7 +526,7 @@ with tabs[1]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 3: XƯỞNG VIẾT BÀI (CÓ THÊM GỢI Ý MỞ RỘNG LUẬN ĐIỂM)
+# BƯỚC 3: XƯỞNG VIẾT BÀI (CÓ HỘP CÔNG CỤ TƯ DUY & KIỂM TRA CHÍNH TẢ/LUẬN ĐIỂM)
 # ------------------------------------------------------------------------------
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Bước 3: Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
@@ -522,18 +535,17 @@ with tabs[2]:
         f"📖 *{st.session_state['current_de_info'].get('text', '')}*"
     )
 
-    # Thêm hộp công cụ hỗ trợ tư duy tại xưởng viết
-    with st.expander("💡 Hộp công cụ tư duy nhanh (Gợi ý mở rộng luận điểm khi viết bài)", expanded=False):
+    with st.expander("💡 Hộp công cụ tư duy nhanh (Gợi ý định hướng khi hành văn)", expanded=False):
         col_tool1, col_tool2, col_tool3 = st.columns(3)
         with col_tool1:
-            st.markdown("**🌟 Gợi ý mở bài ấn tượng:**")
-            st.caption("Hãy đi từ nghịch lý cuộc sống, một câu nói triết lý hoặc một hình ảnh biểu tượng để khơi gợi sự tò mò.")
+            st.markdown("**🌟 Định hướng Mở bài:**")
+            st.caption("Dẫn dắt tự nhiên từ thực tiễn đời sống hoặc câu nói, sau đó nêu bật vấn đề nghị luận.")
         with col_tool2:
-            st.markdown("**🔍 Gợi ý liên kết dẫn chứng:**")
-            st.caption("Sau khi nêu tên nhân vật, hãy đặt câu hỏi: *Họ đã hành động ra sao và để lại bài học gì cho thế hệ trẻ?*")
+            st.markdown("**🔍 Định hướng Dẫn chứng:**")
+            st.caption("Chọn tấm gương tiêu biểu, nêu hành động cốt lõi và phân tích sâu sắc ý nghĩa đối với xã hội.")
         with col_tool3:
-            st.markdown("**🔄 Gợi ý hướng phản biện:**")
-            st.caption("Lật lại vấn đề: *Sự thờ ơ hay lối sống vị kỷ sẽ đẩy con người và xã hội tới bờ vực nào?*")
+            st.markdown("**🔄 Định hướng Phản biện:**")
+            st.caption("Lật lại vấn đề: Phê phán lối sống vị kỷ, hời hợt; tránh cực đoan và rút ra bài học nhận thức.")
 
     write_mode = st.radio(
         "Chọn hình thức làm bài của em:",
@@ -553,19 +565,24 @@ with tabs[2]:
         word_count = len(essay_input.strip().split()) if essay_input.strip() else 0
         st.caption(f"📊 Số từ hiện tại: **{word_count} từ** (Dung lượng chuẩn khuyến nghị: khoảng 500 – 700 từ).")
 
-        if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm & Nhận xét theo Rubric", type="primary"):
-            if not essay_input.strip():
-                st.warning("⚠️ Em chưa nhập nội dung bài viết!")
-            else:
-                eval_res = ai_evaluate_essay_rubric(
-                    st.session_state["selected_de_key"],
-                    st.session_state["current_de_info"],
-                    essay_text=essay_input.strip(),
-                )
-                st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4: KIỂM TRA & CHỈNH SỬA (RUBRIC)'** (hoặc xem ngay kết quả bên dưới).")
-                with st.container(border=True):
-                    st.markdown(st.session_state["rubric_evaluation"])
+        col_w1, col_w2 = st.columns([1, 1])
+        with col_w1:
+            if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
+                st.info("💡 **Gợi ý từ Cô:** Để bài viết có chiều sâu, sau mỗi luận điểm, em nhớ bổ sung thêm câu đánh giá mở rộng về trách nhiệm của thế hệ trẻ trong bối cảnh hiện nay nhé!")
+        with col_w2:
+            if st.button("📊 Chuyển bài viết sang Bước 4 để Chấm theo Rubric", type="primary", use_container_width=True):
+                if not essay_input.strip():
+                    st.warning("⚠️ Em chưa nhập nội dung bài viết!")
+                else:
+                    eval_res = ai_evaluate_essay_rubric(
+                        st.session_state["selected_de_key"],
+                        st.session_state["current_de_info"],
+                        essay_text=essay_input.strip(),
+                    )
+                    st.session_state["rubric_evaluation"] = eval_res
+                    st.success("✅ Đã đánh giá xong! Mời em bấm sang tab **'📊 BƯỚC 4'** để xem bảng nhận xét.")
+                    with st.container(border=True):
+                        st.markdown(st.session_state["rubric_evaluation"])
     else:
         uploaded_img = st.file_uploader(
             "Tải lên ảnh chụp rõ nét bài làm viết tay của em (PNG, JPG, JPEG):",
