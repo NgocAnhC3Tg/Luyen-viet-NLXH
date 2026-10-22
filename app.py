@@ -137,7 +137,7 @@ if "current_de_info" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng, hay tư duy phản biện)? Hãy hỏi cô, cô sẽ hướng dẫn chi tiết cho em nhé!")
+        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng, viết mở bài hay kết bài)? Hãy hỏi cô, cô sẽ hướng dẫn chi tiết cho em nhé!")
     ]
 
 if "user_essay" not in st.session_state:
@@ -151,17 +151,32 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI THÔNG MINH (KẾT HỢP API THẬT & PHẢN HỒI THỰC TẾ LINH HOẠT)
+# 3. ĐỘNG CƠ GỌI AI THÔNG MINH & TƯ VẤN SƯ PHẠM LIÊN TỤC
 # ==============================================================================
-def call_gemini_engine(prompt_text):
+def call_gemini_engine(chat_history_list, de_text, vdnl_chuan):
     raw_key = st.session_state.get("gemini_api_key", "")
     api_key = sanitize_key(raw_key)
 
     if not api_key:
         api_key = get_default_key()
 
+    # Xây dựng ngữ cảnh hội thoại liên tục cho AI
+    conversation_str = f"Đề bài: \"{de_text}\"\nVấn đề nghị luận: \"{vdnl_chuan}\"\n\nLịch sử trò chuyện:\n"
+    for role, msg in chat_history_list[-6:]:  # Lấy 6 lượt gần nhất để giữ mạch liên tục
+        prefix = "Học sinh" if role == "user" else "Cô giáo"
+        conversation_str += f"{prefix}: {msg}\n"
+
+    prompt_full = f"""
+{conversation_str}
+Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô, gọi học sinh là em).
+Nguyên tắc sư phạm tối thượng: 
+- Bám sát sạt câu hỏi mới nhất của học sinh (dù là hỏi về mở bài, thân bài, kết bài hay dẫn chứng).
+- Không trả lời chung chung, không từ chối vòng vo. Hãy phân tích cấu trúc, gợi ý các ý cốt lõi và định hướng cách tự viết sắc sảo, sâu sắc cho phần mà học sinh đang hỏi.
+- Duy trì sự liên tục và kết nối mượt mà với các câu hỏi trước đó.
+"""
+
     payload = {
-        "contents": [{"role": "user", "parts": [{"text": str(prompt_text)}]}],
+        "contents": [{"role": "user", "parts": [{"text": prompt_full}]}],
         "safetySettings": [
             {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
             {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
@@ -204,25 +219,23 @@ def call_gemini_engine(prompt_text):
             except Exception:
                 continue
 
-    # NỘI DUNG SƯ PHẠM THỰC TẾ CHI TIẾT THEO TỪNG CÂU HỎI THỰC TẾ CỦA HỌC SINH
-    q_lower = str(prompt_text).lower()
-    if "viết bài" in q_lower or "làm hộ" in q_lower or "viết giúp" in q_lower:
-        return """👩‍🏫 **Trợ lý Ngữ văn chia sẻ cùng em:**
-Cô rất hiểu là em muốn có ngay bài văn để tham khảo, nhưng nguyên tắc của người làm văn nghị luận là **tự tư duy bằng chính trải nghiệm và ngôn từ của mình**. Cô không viết hộ bài văn cho em, nhưng cô sẽ đồng hành "cầm tay chỉ việc" giúp em gỡ từng nút thắt:
-1. Em muốn bắt đầu từ phần nào trước? (Ví dụ: Tìm ý Mở bài, lập luận cho Thân bài hay chọn dẫn chứng thực tế?).
-2. Em hãy thử viết 2 câu đầu tiên của Mở bài theo ý hiểu của mình rồi gửi lên đây, cô sẽ chỉnh sửa và góp ý trực tiếp cho em nhé!"""
-    elif "dẫn chứng" in q_lower or "ví dụ" in q_lower:
-        return """👩‍🏫 **Trợ lý Ngữ văn gợi ý Dẫn chứng:**
-Đối với vấn đề này, thay vì tìm kiếm những cái tên quá xa vời, em có thể sử dụng tấm gương của **anh Hoàng Hoa Trung với dự án "Nuôi Em"** – một biểu hiện sống động của tinh thần trách nhiệm và cống hiến vì cộng đồng. 
-*Cách phân tích:* Khi đưa vào bài, em cần làm rõ hành động dấn thân của anh ấy và chốt lại ý nghĩa: *Đó chính là minh chứng cho thấy tuổi trẻ không chỉ tồn tại mà đang sống cống hiến hết mình cho xã hội.*"""
-    elif "mở bài" in q_lower:
-        return """👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Mở bài:**
-Để mở đầu một cách tự nhiên và ấn tượng, em có thể đi theo gợi ý sau:
-* "Trong hành trình trưởng thành của mỗi người, giá trị lớn nhất không nằm ở việc ta nhận lại được bao nhiêu, mà nằm ở những gì ta đã cống hiến cho đời..."* 
-Từ nhịp điệu suy ngẫm đó, em dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài. Em hãy thử viết tiếp theo cách của mình xem sao nhé!"""
+    # ĐỘNG CƠ DỰ PHÒNG SƯ PHẠM THỰC TẾ THEO TỪNG TÌNH HUỐNG HỌC SINH HỎI
+    last_user_q = chat_history_list[-1][1].lower() if chat_history_list else ""
+    if "kết bài" in last_user_q:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Kết bài:**
+Để khép lại bài viết về đề tài *"{vdnl_chuan}"* một cách ấn tượng, em hãy hoàn thành 2 nhiệm vụ sau trong khoảng 4-5 dòng:
+1. **Khẳng định lại giá trị:** Tổng kết ngắn gọn ý nghĩa sâu sắc của vấn đề nghị luận đối với đời sống.
+2. **Liên hệ bài học nhận thức & hành động:** Rút ra bài học chân thành cho bản thân (ví dụ: *Là thế hệ trẻ ngồi trên ghế nhà trường, em nhận thức sâu sắc rằng bản thân cần phải...*).
+👉 Em hãy tự phác thảo câu kết luận cuối cùng theo cảm xúc và suy nghĩ của mình nhé!"""
+    elif "mở bài" in last_user_q:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Mở bài:**
+Để mở đầu cuốn hút cho đề tài *"{vdnl_chuan}"*, em có thể chọn cách dẫn dắt từ một câu nói triết lý hoặc thực tiễn đời sống, sau đó nêu bật vấn đề cần nghị luận. Em hãy thử viết 2 câu mở màn rồi gửi lên đây nhé!"""
+    elif "dẫn chứng" in last_user_q:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý Dẫn chứng:**
+Đối với vấn đề này, em có thể lấy tấm gương tiêu biểu như **anh Hoàng Hoa Trung (Dự án Nuôi Em)** để chứng minh cho tinh thần trách nhiệm và cống hiến vì cộng đồng. Em hãy viết đoạn phân tích ý nghĩa của dẫn chứng đó gắn với bài làm nhé!"""
     else:
         return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Cô đã ghi nhận câu hỏi của em. Để bài làm đạt điểm tối ưu, em hãy tập trung phân tích rõ bản chất cốt lõi của vấn đề, kết hợp với một dẫn chứng xác thực và một góc nhìn phản biện sắc sảo. Em đang vướng ở ý nào, cứ trao đổi cụ thể để cô hướng dẫn em nhé!"""
+Cô đang theo sát tiến trình làm bài của em về đề tài *"{vdnl_chuan}"*. Với thắc mắc này, em hãy tập trung đào sâu vào bản chất vấn đề và liên hệ thực tiễn để bài viết thêm phần thuyết phục. Em cần cô hỗ trợ thêm chi tiết nào không?"""
 
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
@@ -530,7 +543,7 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN AI TƯ VẤN (LIÊN TỤC & BÁM SÁT NGỮ CẢNH)
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
         st.caption("Cô giáo AI đồng hành định hướng phương pháp, gợi mở tư duy và rèn luyện kỹ năng viết cho học sinh.")
@@ -561,19 +574,12 @@ with tabs[1]:
                 q_clean = user_question.strip()
                 st.session_state["chat_history"].append(("user", q_clean))
                 
-                # Gọi API thông minh để trả lời bám sát đúng câu hỏi thực tế
-                prompt_full = f"""
-Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô, gọi học sinh là em).
-Nguyên tắc: Định hướng phương pháp, gợi mở tư duy, hướng dẫn cách làm chứ không viết văn mẫu thay cho học sinh.
-- Đề bài: "{cur_de_info.get('text', cur_de_key)}"
-- Vấn đề nghị luận: "{cur_de_info.get('vdnl_chuan', '')}"
-- Câu hỏi của học sinh: "{q_clean}"
-
-Hãy trả lời trực diện, sâu sắc, ngắn gọn và trúng phóc vào thắc mắc của học sinh:
-"""
-                with st.spinner("👩‍🏫 Cô đang tư vấn cho em..."):
-                    ai_reply = call_gemini_engine(prompt_full)
-                
+                # Gọi hàm AI truyền đầy đủ ngữ cảnh lịch sử trò chuyện
+                ai_reply = call_gemini_engine(
+                    st.session_state["chat_history"],
+                    cur_de_info.get("text", cur_de_key),
+                    cur_de_info.get("vdnl_chuan", "")
+                )
                 st.session_state["chat_history"].append(("assistant", ai_reply))
                 st.rerun()
 
@@ -634,7 +640,7 @@ with tabs[2]:
         with col_w2:
             if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
-                    st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên上の!")
+                    st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên!")
                 else:
                     eval_res = ai_evaluate_essay_rubric(
                         st.session_state["selected_de_key"],
@@ -659,7 +665,7 @@ with tabs[2]:
                     image_obj=img_obj,
                 )
                 st.session_state["rubric_evaluation"] = eval_res
-                st.success("✅ Đã chấm xong! Mời em bấm sang tab **'📊 BƯỚC 4'** ở phía trên để xem kết quả.")
+                st.success("✅ Đã chấm xong! Mời em xem kết quả bên dưới hoặc mở tab **BƯỚC 4**.")
 
 
 # ------------------------------------------------------------------------------
