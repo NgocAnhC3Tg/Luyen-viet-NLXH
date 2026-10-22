@@ -33,9 +33,8 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE
+# 2. QUẢN LÝ SESSION STATE & TỰ ĐỘNG NHẬN DIỆN API KEY AN TOÀN
 # ==============================================================================
-if "gemini_api_key" not in st.session_state: st.session_state["gemini_api_key"] = ""
 if "selected_de_key" not in st.session_state: st.session_state["selected_de_key"] = list(db.DE_BAI_CO_BAN.keys())[0]
 if "current_de_info" not in st.session_state: st.session_state["current_de_info"] = db.DE_BAI_CO_BAN[st.session_state["selected_de_key"]]
 if "chat_history" not in st.session_state: st.session_state["chat_history"] = [("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong quá trình lập ý và tìm dẫn chứng? Hãy trao đổi cụ thể với cô nhé!")]
@@ -43,15 +42,22 @@ if "user_essay" not in st.session_state: st.session_state["user_essay"] = ""
 if "rubric_evaluation" not in st.session_state: st.session_state["rubric_evaluation"] = ""
 
 def get_api_key():
-    return st.session_state.get("gemini_api_key", "").strip()
+    # Tự động lấy từ st.secrets (dành cho học sinh mở link dùng luôn không cần nhập)
+    try:
+        for k in ["GEMINI_API_KEY", "GOOGLE_API_KEY", "gemini_api_key"]:
+            if k in st.secrets and st.secrets[k]:
+                return str(st.secrets[k]).strip()
+    except Exception:
+        pass
+    return ""
 
 # ==============================================================================
-# 3. ĐỘNG CƠ AI THÔNG MINH (BÁM SÁT NGỮ CẢNH & DÀN Ý ĐỘNG SÂU SẮC)
+# 3. ĐỘNG CƠ AI THÔNG MINH
 # ==============================================================================
 def call_ai(prompt, image=None):
     key = get_api_key()
     if not key:
-        return "⚠️ Thầy/cô vui lòng nhập mã Gemini API Key ở thanh bên trái (Sidebar) để kích hoạt toàn bộ năng lực phân tích sâu của Trợ lý Ngữ văn!"
+        return "⚠️ Hệ thống chưa cấu hình mã API Key ngầm trên mây. Thầy/cô vui lòng cấu hình trong phần Secrets của Streamlit Cloud."
     try:
         genai.configure(api_key=key)
         for m_name in ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']:
@@ -63,24 +69,16 @@ def call_ai(prompt, image=None):
                 if res and res.text: return res.text
             except Exception:
                 continue
-        return "⚠️ Không kết nối được với mô hình AI. Vui lòng kiểm tra lại API Key."
+        return "⚠️ Không kết nối được với mô hình AI."
     except Exception as e:
         return f"⚠️ Lỗi hệ thống AI: {str(e)}"
 
 def generate_custom_outline(topic_text, student_guess):
-    key = get_api_key()
-    if not key:
-        return {
-            "text": topic_text, "vdnl_chuan": student_guess or "Vấn đề nghị luận",
-            "explain_items": ["- ⚠️ Chưa nhập API Key nên AI chưa thể tạo dàn ý động chi tiết cho đề này."],
-            "vdnl_ket_luan": "Vui lòng nhập API Key ở sidebar.", "questions": [], "evidence": [], "counter": [], "dani_chi_tiet": {}
-        }
-    
     prompt = f"""Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy phân tích thật sâu sắc đề bài nghị luận xã hội sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block, chỉ xuất chuỗi json thuần túy):
 Đề bài: "{topic_text}"
-Dự đoán vấn đề của học sinh/giáo viên: "{student_guess}"
+Dự đoán vấn đề của học sinh: "{student_guess}"
 
-YÊU CẦU: Xây dựng một dàn ý định hướng tư duy ĐẦY ĐỦ, RÕ RÀNG, ĐÚNG TRỌNG TÂM, KHÔNG CHUNG CHUNG.
+YÊU CẦU: Xây dựng một dàn ý định hướng tư duy ĐẦY ĐỦ, RÕ RÀNG, ĐÚNG TRỌNG TÂM.
 
 Cấu trúc JSON BẮT BUỘC:
 {{
@@ -96,10 +94,10 @@ Cấu trúc JSON BẮT BUỘC:
       "cau_hoi": "Hệ thống luận điểm bàn luận trọng tâm (tối thiểu 4-5 ý sâu sắc)",
       "y_tra_loi": [
         "- Ý 1 (Biểu hiện cụ thể trong đời sống)...",
-        "- Ý 2 (Nguyên nhân sâu xa/chủ quan/khách quan)...",
+        "- Ý 2 (Nguyên nhân sâu xa)...",
         "- Ý 3 (Tác động tích cực đối với cá nhân)...",
         "- Ý 4 (Ý nghĩa lan tỏa đối với cộng đồng, xã hội)...",
-        "- Ý 5 (Hậu quả nếu lãng quên hoặc đi ngược lại vấn đề)..."
+        "- Ý 5 (Hậu quả nếu lãng quên vấn đề)..."
       ]
     }}
   ],
@@ -112,8 +110,8 @@ Cấu trúc JSON BẮT BUỘC:
     }}
   ],
   "counter": [
-    "- Phê phán những biểu hiện lệch lạc, thờ ơ, ích kỷ liên quan đến đề...",
-    "- Bài học lật lại vấn đề (phản đề) để nhận thức toàn diện, tránh cực đoan..."
+    "- Phê phán những biểu hiện lệch lạc, thờ ơ, ích kỷ...",
+    "- Bài học lật lại vấn đề (phản đề) để nhận thức toàn diện..."
   ],
   "dani_chi_tiet": {{
     "mb": "Dẫn dắt tự nhiên từ thực tiễn và nêu bật vấn đề nghị luận.",
@@ -145,13 +143,8 @@ Cấu trúc JSON BẮT BUỘC:
 # 4. GIAO DIỆN CHÍNH
 # ==============================================================================
 with st.sidebar:
-    st.title("⚙️ CẤU HÌNH HỆ THỐNG")
-    key_in = st.text_input("Nhập mã Gemini API Key:", type="password", value=st.session_state["gemini_api_key"])
-    if key_in != st.session_state["gemini_api_key"]:
-        st.session_state["gemini_api_key"] = key_in
-    if key_in: st.success("✅ Đã lưu API Key!")
-    else: st.warning("⚠️ Vui lòng nhập API Key để Trợ lý AI phân tích sâu sắc.")
-    
+    st.title("⚙️ HỆ THỐNG QUẢN TRỊ")
+    st.success("✅ Đã kết nối hệ thống AI tự động sẵn sàng cho học sinh!")
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM\n1. Chọn/Nhập đề & Xác định VĐNL\n2. Lập ý, Dẫn chứng & Hỏi Trợ lý Ngữ văn\n3. Viết bài độc lập (Gõ/Ảnh)\n4. Kiểm tra và chỉnh sửa theo Rubric")
 
@@ -193,7 +186,7 @@ with tabs[0]:
                     short_title = custom_t.strip()[:45] + "..."
                     st.session_state["selected_de_key"] = f"Đề tự nhập: {short_title}"
                     st.session_state["current_de_info"] = outline_data
-                    st.success("✅ Đã tạo xong khung định hướng tư duy đầy đủ, rõ ràng, đúng trọng tâm cho đề của thầy/cô! Mời sang Bước 2.")
+                    st.success("✅ Đã tạo xong khung định hướng tư duy đầy đủ, rõ ràng, đúng trọng tâm! Mời sang Bước 2.")
 
     st.markdown("---")
     st.info(f"📌 **Đề đang làm việc:** {st.session_state['selected_de_key']}\n\n*Nội dung:* {st.session_state['current_de_info'].get('text', '')}")
@@ -230,7 +223,7 @@ with tabs[1]:
             box.markdown(f"**{'🧑‍🎓 Học sinh' if role=='user' else '👩‍🏫 Trợ lý Ngữ văn'}:** {msg}")
             box.markdown("---")
         
-        q_text = st.text_area("Hỏi Trợ lý (Ví dụ: Gợi ý cách triển khai luận điểm 2 hoặc cho thêm dẫn chứng về lòng biết ơn):", height=80, key="q_chat")
+        q_text = st.text_area("Hỏi Trợ lý (Ví dụ: Gợi ý cách triển khai luận điểm 2):", height=80, key="q_chat")
         b_send, b_clear = st.columns(2)
         if b_send.button("🚀 Gửi câu hỏi", type="primary", use_container_width=True):
             if q_text.strip():
@@ -245,7 +238,7 @@ Câu hỏi/Yêu cầu cụ thể của học sinh: "{q_text}"
 
 NGUYÊN TẮC QUAN TRỌNG:
 1. TUYỆT ĐỐI KHÔNG VIẾT HỘ, KHÔNG CHO VĂN MẪU.
-2. Trả lời cực kỳ bám sát, thẳng vào câu hỏi của học sinh. Nếu học sinh hỏi về biểu hiện, hãy phân tích biểu hiện. Nếu hỏi dẫn chứng, cung cấp ngay nhân vật thực tế sắc bén. Nếu hỏi phản biện, hướng dẫn cách lật vấn đề. Trả lời chi tiết, chuyên sâu, không chung chung mập mờ."""
+2. Trả lời cực kỳ bám sát, thẳng vào câu hỏi của học sinh. Trả lời chi tiết, chuyên sâu, không chung chung mập mờ."""
                     reply = call_ai(prompt_chat)
                 
                 st.session_state["chat_history"].append(("user", q_text))
