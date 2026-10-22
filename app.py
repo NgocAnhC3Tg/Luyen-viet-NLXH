@@ -3,10 +3,10 @@ import data_de_bai as db
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN CHUYÊN NGHIỆP & CHUẨN SƯ PHẠM
+# 1. CẤU HÌNH GIAO DIỆN & TÊN HỆ THỐNG CHUẨN SKKN
 # ==============================================================================
 st.set_page_config(
-    page_title="Hệ Thống Luyện Viết NLXH THPT - Chuẩn SKKN & Rubric 7 Tiêu Chí",
+    page_title="VẬN DỤNG AI TRONG DẠY HỌC VIẾT NLXH",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -127,7 +127,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ CHUYÊN GIA AI & CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (ĐẢM BẢO LUÔN CÓ PHẢN HỒI)
+# 3. ĐỘNG CƠ CHUYÊN GIA AI VÀ CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (CHUẨN BƯỚC NHẬP 0.25đ / 0.5đ)
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -179,7 +179,7 @@ Trong phần phản đề của đề tài *"{vdnl_chuan}"*, em cần lật lạ
 5. **Ý 5 (Tác động đối với cộng đồng/xã hội):** Góp phần xây dựng một xã hội văn minh, nhân ái và phát triển vững mạnh."""
     else:
         return f"""👩‍🏫 **Chuyên gia Ngữ văn đồng hành cùng em:**
-Với yêu cầu của em (*"{user_q}"*) về đề tài *"{vdnl_chuan}"*, cô định hướng em tập trung khai thác hệ thống luận điểm từ 5 ý trở lên và chọn dẫn chứng người thật việc thật. Em đang cần cô hỗ trợ chi tiết hơn về phần nào (lập ý, dẫn chứng hay phản đề), cứ trao đổi để cô hướng dẫn ngay nhé!"""
+Với yêu cầu của em (*"{user_q}"*) về đề tài *"{vdnl_chuan}"*, cô định hướng em tập trung khai thác hệ thống luận điểm từ 5 ý trở lên và chọn dẫn chứng người thật việc thật. Em đang cần cô hỗ trợ chi tiết hơn về phần nào (lập ý, dẫn chứng cụ thể hay viết phản đề), cứ trao đổi để cô hướng dẫn ngay nhé!"""
 
 
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
@@ -191,13 +191,13 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
 
 | Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.2đ** | Bài viết quá ngắn, chưa đảm bảo đủ cấu trúc 3 phần rõ ràng. |
-| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.3đ** | Mới nêu phớt lờ vấn đề, chưa làm nổi bật trọng tâm. |
-| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.4đ** | Chưa cắt nghĩa thấu đáo các từ khóa cốt lõi của đề bài. |
-| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **1.2đ** | Mới chỉ nêu được 1-2 ý sơ sài, chưa đạt yêu cầu tối thiểu (5 ý). |
-| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **0.8đ** | Thiếu dẫn chứng thực tế xác thực; lập luận còn lỏng lẻo. |
-| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.2đ** | Chưa có phần phản đề lật lại vấn đề hay bài học liên hệ. |
-| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.4đ** | Câu văn cụt lủn, còn mắc lỗi diễn đạt và chính tả. |
+| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.25đ** | Bài viết quá ngắn, chưa đảm bảo đủ cấu trúc 3 phần rõ ràng. |
+| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.25đ** | Mới nêu phớt lờ vấn đề, chưa làm nổi bật trọng tâm. |
+| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.50đ** | Chưa cắt nghĩa thấu đáo các từ khóa cốt lõi của đề bài. |
+| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **1.00đ** | Mới chỉ nêu được 1-2 ý sơ sài, chưa đạt yêu cầu tối thiểu (5 ý). |
+| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **0.75đ** | Thiếu dẫn chứng thực tế xác thực; lập luận còn lỏng lẻo. |
+| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.25đ** | Chưa có phần phản đề lật lại vấn đề hay bài học liên hệ. |
+| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.50đ** | Câu văn cụt lủn, còn mắc lỗi diễn đạt và chính tả. |
 
 **📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **3.5 / 10.0 (Chưa đạt)**
 
@@ -210,15 +210,15 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
 
 | Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.4đ** | Đã có đủ bố cục 3 phần nhưng đoạn văn liên kết chưa thật mượt mà. |
-| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.5đ** | Xác định đúng vấn đề nghị luận trọng tâm của đề bài. |
-| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.7đ** | Đã giải thích từ khóa chính nhưng ý nghĩa ngữ liệu còn hơi nông, thiên về kể. |
-| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.2đ** | Triển khai được khoảng 3 ý chính, chưa đạt đủ yêu cầu từ 5 ý trở lên theo chuẩn phân hóa. |
-| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.4đ** | Có đưa ra dẫn chứng nhưng phân tích còn mờ nhạt, chưa gắn kết chặt chẽ với luận điểm. |
-| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.5đ** | Bài học nhận thức còn chung chung, chưa có phần phản đề lật lại vấn đề sắc sảo. |
-| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.7đ** | Diễn đạt tương đối trôi chảy nhưng đôi chỗ dùng từ chưa thực sự đắt giá. |
+| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.50đ** | Đã có đủ bố cục 3 phần nhưng đoạn văn liên kết chưa thật mượt mà. |
+| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.50đ** | Xác định đúng vấn đề nghị luận trọng tâm của đề bài. |
+| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.75đ** | Đã giải thích từ khóa chính nhưng ý nghĩa ngữ liệu còn hơi nông, thiên về kể. |
+| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.00đ** | Triển khai được khoảng 3 ý chính, chưa đạt đủ yêu cầu từ 5 ý trở lên theo chuẩn phân hóa. |
+| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.50đ** | Có đưa ra dẫn chứng nhưng phân tích còn mờ nhạt, chưa gắn kết chặt chẽ với luận điểm. |
+| **6. Phản đề và bài học liên hệ** | 1.0đ | **0.50đ** | Bài học nhận thức còn chung chung, chưa có phần phản đề lật lại vấn đề sắc sảo. |
+| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.75đ** | Diễn đạt tương đối trôi chảy nhưng đôi chỗ dùng từ chưa thực sự đắt giá. |
 
-**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **6.4 / 10.0 (Mức Trung bình - Khá)**
+**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **6.5 / 10.0 (Mức Trung bình - Khá)**
 
 ---
 ### 🌟 NHẬN XÉT VÀ HƯỚNG DẪN CẢI THIỆN:
@@ -231,15 +231,15 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
 
 | Tiêu chí đánh giá | Trọng số | Điểm đạt | Căn cứ chấm điểm thực tế từ bài làm |
 | :--- | :---: | :---: | :--- |
-| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.5đ** | Bố cục trọn vẹn 3 phần rành mạch, chuyển ý hợp lý. |
-| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.5đ** | Nêu trúng và làm nổi bật vấn đề nghị luận ngay từ Mở bài. |
-| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **0.85đ** | Cắt nghĩa thấu đáo các từ khóa cốt lõi, giải thích thông điệp khá rõ. |
-| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **2.8đ** | Triển khai được 4 ý khá toàn diện; lập luận có ý thức logic. |
-| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **1.9đ** | Có dẫn chứng xác thực, phân tích ở mức độ khá tốt. |
+| **1. Bố cục (Mở - Thân - Kết)** | 0.5đ | **0.50đ** | Bố cục trọn vẹn 3 phần rành mạch, chuyển ý hợp lý. |
+| **2. Xác định vấn đề nghị luận** | 0.5đ | **0.50đ** | Nêu trúng và làm nổi bật vấn đề nghị luận ngay từ Mở bài. |
+| **3. Giải thích vấn đề & Ngữ liệu** | 1.0đ | **1.00đ** | Cắt nghĩa thấu đáo các từ khóa cốt lõi, giải thích thông điệp khá rõ. |
+| **4. Hệ thống luận điểm (từ 5 ý)** | 3.5đ | **3.00đ** | Triển khai được 4-5 ý khá toàn diện; lập luận có ý thức logic. |
+| **5. Lập luận & Dẫn chứng thực tế** | 2.5đ | **2.00đ** | Có dẫn chứng xác thực, phân tích ở mức độ khá tốt. |
 | **6. Phản đề và bài học liên hệ** | 1.0đ | **0.75đ** | Đã có bài học nhận thức và ý thức phản đề. |
-| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.8đ** | Văn phong trong sáng, mạch lạc, ít lỗi. |
+| **7. Diễn đạt, chính tả & Sáng tạo** | 1.0đ | **0.75đ** | Văn phong trong sáng, mạch lạc, ít lỗi. |
 
-**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **8.1 / 10.0 (Mức Giỏi)**
+**📌 TỔNG ĐIỂM ĐÁNH GIÁ:** **8.5 / 10.0 (Mức Giỏi)**
 
 ---
 ### 🌟 NHẬN XÉT VÀ GỢI Ý NÂNG CAO:
@@ -252,7 +252,7 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     st.success("✅ Hệ thống Sư phạm SKKN đã sẵn sàng!")
-    st.info("🎯 Trợ lý AI và Hệ thống chấm Rubric 7 tiêu chí hoạt động ổn định, phân hóa thực chất.")
+    st.info("🎯 Trợ lý AI và Hệ thống chấm Rubric 7 tiêu chí hoạt động ổn định, phân hóa thực chất theo thang điểm chẵn (0.25 / 0.5).")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
