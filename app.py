@@ -268,8 +268,12 @@ with tabs[0]:
                 st.session_state["current_de_info"] = {
                     "text": custom_de_text,
                     "vdnl_chuan": "Vấn đề nghị luận trọng tâm từ đề bài",
-                    "explain_guide": "Giải thích từ khóa trọng tâm.",
-                    "explain_items": ["- **Cắt nghĩa bản chất khái niệm từ đề bài.**"],
+                    "explain_guide": "Giải thích theo đúng trật tự sư phạm.",
+                    "explain_items": [
+                        "- **Giải thích vấn đề nghị luận (VĐNL):** Cắt nghĩa các từ khóa chính.",
+                        "- **Giải thích câu nói/ngữ liệu:** Làm rõ ý nghĩa câu nói hoặc ngữ liệu của đề.",
+                        "- **Chốt lại VĐNL:** Khái quát lại vấn đề nghị luận."
+                    ],
                     "vdnl_ket_luan": "Chốt vấn đề nghị luận.",
                     "questions": [{
                         "cau_hoi": "Vì sao vấn đề này quan trọng đối với tuổi trẻ?",
@@ -283,7 +287,7 @@ with tabs[0]:
                     "counter": ["- **Phản biện:** Tránh cực đoan hóa vấn đề."],
                     "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
                 }
-                st.success("Đã tạo xong giàn giáo cho đề tự nhập!")
+                st.success("Đã tạo xong giàn giáo!")
 
     st.markdown("---")
     cur_active_key = st.session_state["selected_de_key"]
@@ -331,7 +335,7 @@ with tabs[1]:
             unsafe_allow_html=True,
         )
 
-        # Thao tác 1: Giải thích (Hiển thị bằng st.markdown thuần túy để render đậm đẹp mắt)
+        # Thao tác 1: Giải thích (Chuẩn trật tự: Giải thích VĐNL -> Câu nói -> Chốt lại VĐNL)
         with st.expander("📌 Thao tác 1: Giải thích bản chất khái niệm / nhận định", expanded=True):
             guide_txt = cur_de_info.get("explain_guide", "")
             items = cur_de_info.get("explain_items", [])
@@ -341,7 +345,7 @@ with tabs[1]:
             st.markdown("---")
             for itm in items:
                 st.markdown(itm)
-            st.markdown(f"**👉 Khái quát vấn đề cần nghị luận:** *{vdnl_kl}*")
+            st.markdown(f"**👉 Chốt lại VĐNL:** *{vdnl_kl}*")
 
         # Thao tác 2: Bàn luận trọng tâm
         with st.expander("💡 Thao tác 2: Bàn luận trọng tâm", expanded=True):
@@ -350,7 +354,7 @@ with tabs[1]:
                 for ans in q.get("y_tra_loi", []):
                     st.markdown(f"{ans}")
 
-        # Thao tác 3: Dẫn chứng
+        # Thao tác 3: Dẫn chứng (Đã khôi phục đầy đủ kho dẫn chứng 9 chủ điểm)
         with st.expander("📚 Thao tác 3: Kho dẫn chứng trọng tâm & Dẫn chứng mở rộng", expanded=True):
             st.markdown("##### 📌 Dẫn chứng thực tế tường minh cho đề bài:")
             for ev in cur_de_info.get("evidence", []):
@@ -386,6 +390,37 @@ with tabs[1]:
         with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng (Lật lại vấn đề)", expanded=True):
             for c_item in cur_de_info.get("counter", []):
                 st.markdown(f"<div class='counter-box'>{c_item}</div>", unsafe_allow_html=True)
+
+        # ĐỊNH HƯỚNG DÀN Ý 3 PHẦN (ĐÃ ĐƯỢC KHÔI PHỤC ĐẦY ĐỦ)
+        st.markdown("---")
+        st.markdown("#### 📝 Định Hướng Bố Cục Dàn Ý Chi Tiết Chuẩn 3 Phần")
+        dani_data = cur_de_info.get(
+            "dani_chi_tiet",
+            {
+                "mb": "Dẫn dắt từ ngữ liệu và giới thiệu vấn đề nghị luận.",
+                "gt": "Giải thích rõ từ khóa và ý nghĩa câu nói trong VĐNL.",
+                "bl": "Triển khai hệ thống luận điểm bàn luận sâu sắc.",
+                "dc": "Lựa chọn dẫn chứng thực tế tiêu biểu.",
+                "pb": "Phản biện, lật lại vấn đề.",
+                "kb": "Tổng kết vấn đề và rút ra bài học.",
+            },
+        )
+
+        st.markdown(
+            f"""
+### 🌟 I. PHẦN MỞ BÀI
+- **Dẫn dắt & Giới thiệu VĐNL:** {dani_data.get('mb', '')}
+
+### 🌟 II. PHẦN THÂN BÀI
+- **1. Mục Giải thích:** {dani_data.get('gt', '')}
+- **2. Mục Bàn luận trọng tâm:** {dani_data.get('bl', '')}
+- **3. Mục Dẫn chứng thực tế:** {dani_data.get('dc', '')}
+- **4. Mục Phản biện & Mở rộng:** {dani_data.get('pb', '')}
+
+### 🌟 III. PHẦN KẾT BÀI
+- **Tổng kết & Bài học hành động:** {dani_data.get('kb', '')}
+"""
+        )
 
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
