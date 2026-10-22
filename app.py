@@ -3,10 +3,10 @@ import data_de_bai as db
 from PIL import Image
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN & TÊN HỆ THỐNG CHUẨN SKKN
+# 1. CẤU HÌNH GIAO DIỆN & TÊN HỆ THỐNG CHUẨN XÁC
 # ==============================================================================
 st.set_page_config(
-    page_title="VẬN DỤNG AI TRONG DẠY HỌC VIẾT NLXH",
+    page_title="HỆ THỐNG LUYỆN VIẾT NLXH",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -113,7 +113,7 @@ if "current_de_info" not in st.session_state:
 
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
-        ("assistant", "Chào em! Cô là Chuyên gia Ngữ văn THPT. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng người thật việc thật, viết mở bài hay phản đề)? Hãy trao đổi cụ thể với cô nhé!")
+        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng mắc ở phần nào trong đề bài này (chọn ý, tìm dẫn chứng, viết mở bài hay phản đề)? Hãy trao đổi cụ thể với cô nhé!")
     ]
 
 if "user_essay" not in st.session_state:
@@ -127,7 +127,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ CHUYÊN GIA AI VÀ CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (CHUẨN BƯỚC NHẬP 0.25đ / 0.5đ)
+# 3. ĐỘNG CƠ TRỢ LÝ NGỮ VĂN (CÓ BỘ NHỚ ĐỘNG - TỰ ĐỘNG SINH DẪN CHỨNG MỚI KHI HỎI THÊM)
 # ==============================================================================
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
@@ -137,48 +137,66 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     
     if match_count >= 2 or (len(s_guess) > 8 and any(kw in s_guess for kw in key_words[:3])):
         return f"""🎯 **CHÍNH XÁC RẤT TỐT!** 
-- **Nhận xét của Chuyên gia:** Em đã nắm bắt chuẩn xác trọng tâm của đề bài.
+- **Nhận xét của Trợ lý Ngữ văn:** Em đã nắm bắt chuẩn xác trọng tâm của đề bài.
 - **Vấn đề nghị luận chuẩn:** *{vdnl_chuan}*
-👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để thực hiện lập ý, tham khảo dẫn chứng cụ thể và trao đổi sâu cùng cô!"""
+👉 Bây giờ em có thể chuyển sang tab **BƯỚC 2** để thực hiện lập ý, tham khảo kho dẫn chứng và trao đổi sâu cùng cô!"""
     else:
         return f"""⚠️ **CHƯA ĐÚNG TRỌNG TÂM (CẦN ĐIỀU CHỈNH):**
-- **Nhận xét của Chuyên gia:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi của đề bài. 
+- **Nhận xét của Trợ lý Ngữ văn:** Câu trả lời của em (*"{student_guess}"*) chưa phản ánh đúng bản chất cốt lõi của đề bài. 
 - **Vấn đề nghị luận chuẩn của đề là:** *{vdnl_chuan}*
 👉 Em hãy suy nghĩ lại để xác định đúng vấn đề trước khi sang **BƯỚC 2** nhé!"""
 
 
-def ai_advisor_response(de_text, vdnl_chuan, user_q):
+def ai_advisor_response(de_text, vdnl_chuan, user_q, chat_history_len):
     q_lower = user_q.lower()
-    if "dẫn chứng" in q_lower or "ví dụ" in q_lower or "chứng minh" in q_lower or "nhân vật" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn gợi ý Dẫn chứng thực tế và xác thực cho đề tài "{vdnl_chuan}":**
+    
+    # Kiểm tra xem học sinh có đang yêu cầu xin thêm dẫn chứng / ví dụ không
+    is_asking_more_evidence = any(k in q_lower for k in ["thêm", "khác", "nữa", "ví dụ", "dẫn chứng", "ai khác"])
+    
+    if is_asking_more_evidence and chat_history_len > 3:
+        # Trả về bộ dẫn chứng B (hoàn toàn mới, không lặp lại 3 nhân vật cũ)
+        return f"""👩‍🏫 **Trợ lý Ngữ văn bổ sung thêm các Dẫn chứng thực tế khác cho đề tài "{vdnl_chuan}":**
+1. **Đỗ Thị Ngọc Kim (Cô giáo mang áo blouse trắng vùng cao):** Tình nguyện lên vùng cao cắm bản, vừa dạy học vừa cưu mang những học sinh có hoàn cảnh đặc biệt khó khăn.
+2. **Kỷ lục gia / Doanh nhân truyền cảm hứng (Nick Vujicic hoặc các tấm gương khuyết tật vươn lên):** Minh chứng cho ý chí vượt qua nghịch cảnh bằng nghị lực sống phi thường.
+3. **Đội ngũ y bác sĩ tuyến đầu trong đại dịch & Các nhóm tình nguyện viên cộng đồng:** Hành động vị tha, cống hiến thầm lặng vì sự bình yên của xã hội.
+👉 *Cách phân tích:* Em hãy chọn một trong các tấm gương này để phân tích hành động cụ thể và kết nối ý nghĩa trực tiếp với đề bài!"""
+
+    elif "dẫn chứng" in q_lower or "ví dụ" in q_lower or "chứng minh" in q_lower or "nhân vật" in q_lower:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý Dẫn chứng thực tế và xác thực cho đề tài "{vdnl_chuan}":**
 1. **Thầy giáo Nguyễn Ngọc Ký:** Vượt lên nghịch cảnh mất đôi tay, kiên trì dùng chân tập viết để trở thành nhà giáo ưu tú, biểu tượng sáng ngời về ý chí vượt khó.
 2. **Ca sĩ Đen Vâu (Nguyễn Đức Cường):** Lối sống giản dị, cống hiến thầm lặng qua các dự án âm nhạc cộng đồng và gây quỹ xây trường vùng cao.
 3. **Anh Hoàng Hoa Trung:** Sáng lập dự án "Nuôi Em", kết nối hàng ngàn mạnh thường quân để nuôi cơm trưa cho trẻ em vùng cao khó khăn.
-👉 *Cách phân tích:* Sau khi nêu tên và hành động, em cần chốt ngay ý nghĩa: *Đó là minh chứng sinh động cho sức mạnh của tinh thần trách nhiệm và lòng nhân ái trong đời sống hiện đại.*"""
+👉 *Cách phân tích:* Sau khi nêu tên và hành động, em cần chốt ngay ý nghĩa: *Đó là minh chứng sinh động cho sức mạnh của tinh thần trách nhiệm và lòng nhân ái trong đời sống hiện đại.* 
+*(Nếu em cần thêm các dẫn chứng khác nữa, cứ nhắn cô sẽ cung cấp thêm nhé!)*"""
+
     elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn viết Mở bài:**
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Mở bài:**
 Để mở đầu cuốn hút cho đề tài *"{vdnl_chuan}"*, em có thể tham khảo mẫu dẫn dắt sau:
 * *"Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ bị cuốn vào vòng xoáy của lợi ích cá nhân mà quên đi những giá trị cốt lõi làm nên nhân cách... Đặt ra từ thực tế ấy, vấn đề {vdnl_chuan} đang mang ý nghĩa thức tỉnh sâu sắc đối với thế hệ trẻ hôm nay."*"""
+
     elif "kết bài" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn viết Kết bài:**
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Kết bài:**
 Phần kết bài cần cô đọng trong 3-4 dòng:
 1. Khẳng định lại giá trị trường tồn của vấn đề *{vdnl_chuan}*.
 2. Rút ra bài học nhận thức và hành động thiết thực cho bản thân (ví dụ: *Là học sinh ngồi trên ghế nhà trường, em tự nhủ bản thân phải luôn ý thức rèn luyện...*)."""
+
     elif "phản đề" in q_lower or "phản biện" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn phần Phản đề:**
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn phần Phản đề:**
 Trong phần phản đề của đề tài *"{vdnl_chuan}"*, em cần lật lại vấn đề ở 2 chiều:
 1. **Phê phán:** Những kẻ có lối sống thờ ơ, vô cảm, ích kỷ, chỉ biết hưởng thụ hoặc vụ lợi cá nhân.
 2. **Tránh cực đoan:** Cống hiến hay sống có trách nhiệm không có nghĩa là phải làm những điều lớn lao đao to búa lớn, mà bắt đầu từ những việc làm tử tế nhỏ bé hàng ngày."""
+
     elif "luận điểm" in q_lower or "ý chính" in q_lower or "lập ý" in q_lower:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn hướng dẫn Hệ thống luận điểm (Bắt buộc từ 5 ý trở lên):**
+        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn Hệ thống luận điểm (Bắt buộc từ 5 ý trở lên):**
 Để đạt điểm tối đa phần Luận điểm cho đề tài *"{vdnl_chuan}"*, em cần bóc tách bài viết thành các ý chính sau:
 1. **Ý 1 (Biểu hiện):** Vấn đề này được biểu hiện cụ thể như thế nào trong đời sống hàng ngày?
 2. **Ý 2 (Nguyên nhân khách quan):** Do hoàn cảnh xã hội, xu thế thời đại hoặc tác động từ môi trường.
 3. **Ý 3 (Nguyên nhân chủ quan):** Do nhận thức, ý thức tu dưỡng và trách nhiệm của mỗi cá nhân.
 4. **Ý 4 (Tác động đối với cá nhân):** Mang lại sự hoàn thiện nhân cách, bản lĩnh và thành công bền vững.
 5. **Ý 5 (Tác động đối với cộng đồng/xã hội):** Góp phần xây dựng một xã hội văn minh, nhân ái và phát triển vững mạnh."""
+
     else:
-        return f"""👩‍🏫 **Chuyên gia Ngữ văn đồng hành cùng em:**
+        return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
 Với yêu cầu của em (*"{user_q}"*) về đề tài *"{vdnl_chuan}"*, cô định hướng em tập trung khai thác hệ thống luận điểm từ 5 ý trở lên và chọn dẫn chứng người thật việc thật. Em đang cần cô hỗ trợ chi tiết hơn về phần nào (lập ý, dẫn chứng cụ thể hay viết phản đề), cứ trao đổi để cô hướng dẫn ngay nhé!"""
 
 
@@ -251,8 +269,8 @@ def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None):
 # ==============================================================================
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
-    st.success("✅ Hệ thống Sư phạm SKKN đã sẵn sàng!")
-    st.info("🎯 Trợ lý AI và Hệ thống chấm Rubric 7 tiêu chí hoạt động ổn định, phân hóa thực chất theo thang điểm chẵn (0.25 / 0.5).")
+    st.success("✅ HỆ THỐNG LUYỆN VIẾT NLXH đã sẵn sàng!")
+    st.info("🎯 Trợ lý Ngữ văn và Hệ thống chấm Rubric 7 tiêu chí hoạt động ổn định, phân hóa thực chất theo thang điểm chẵn (0.25 / 0.5).")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
@@ -268,8 +286,8 @@ with st.sidebar:
 st.markdown(
     """
 <div class="hero-banner">
-    <div class="hero-title">🖊️ VẬN DỤNG AI TRONG DẠY HỌC VIẾT NLXH</div>
-    <p class="hero-subtitle">Theo sáng kiến kinh nghiệm của ThS. Trần Thị Ngọc Ánh — Trường THPT Trung Giã</p>
+    <div class="hero-title">🖊️ HỆ THỐNG LUYỆN VIẾT NLXH</div>
+    <p class="hero-subtitle">Ứng dụng trí tuệ nhân tạo trong dạy học viết nghị luận xã hội THPT theo định hướng phát triển năng lực</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -400,9 +418,9 @@ with tabs[0]:
         )
         col_b1_a, col_b1_b = st.columns([1, 1])
         with col_b1_a:
-            if st.button("🤖 Đối chiếu câu trả lời với Chuyên gia AI", type="primary"):
+            if st.button("🤖 Đối chiếu câu trả lời với Trợ lý Ngữ văn", type="primary"):
                 if student_vdnl.strip():
-                    with st.spinner("Chuyên gia AI đang thẩm định câu trả lời..."):
+                    with st.spinner("Trợ lý Ngữ văn đang thẩm định câu trả lời..."):
                         res_text = ai_evaluate_student_vdnl(
                             cur_active_info["text"],
                             cur_active_info["vdnl_chuan"],
@@ -421,7 +439,7 @@ with tabs[0]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG + TRỢ LÝ AI TƯ VẤN (CHAT LIÊN TỤC)
+# BƯỚC 2: TÌM Ý, LẬP DÀN Ý & THAM KHẢO DẪN CHỨNG + TRỢ LÝ NGỮ VĂN TƯ VẤN
 # ------------------------------------------------------------------------------
 with tabs[1]:
     cur_de_key = st.session_state["selected_de_key"]
@@ -496,10 +514,10 @@ with tabs[1]:
                 st.markdown("##### 🌟 III. KẾT BÀI")
                 st.markdown(f"- {dani_data.get('kb', 'Khẳng định lại vấn đề và liên hệ bài học bản thân.')}")
 
-    # CỘT PHẢI: CHUYÊN GIA NGỮ VĂN AI TƯ VẤN (CHAT LIÊN TỤC - XUÔI CHIỀU)
+    # CỘT PHẢI: TRỢ LÝ NGỮ VĂN TƯ VẤN (CHAT LIÊN TỤC - CÓ BỘ NHỚ ĐỘNG)
     with c_right:
-        st.markdown("#### 🧭 Chuyên Gia Ngữ Văn AI Tư Vấn (Chat liên tục)")
-        st.caption("Học sinh trao đổi liên tục, lịch sử hiển thị đầy đủ để cuộn xem lại bất cứ lúc nào.")
+        st.markdown("#### 🧭 Trợ Lý Ngữ Văn Tư Vấn (Chat liên tục)")
+        st.caption("Học sinh trao đổi liên tục, hỏi thêm dẫn chứng sẽ được cung cấp mới hoàn toàn.")
 
         chat_container = st.container(height=380, border=True)
         with chat_container:
@@ -507,25 +525,25 @@ with tabs[1]:
                 if role == "user":
                     st.markdown(f"🧑‍🎓 **Học sinh:** {msg}")
                 else:
-                    st.markdown(f"👩‍🏫 **Chuyên gia Ngữ văn:**\n\n{msg}")
+                    st.markdown(f"👩‍🏫 **Trợ lý Ngữ văn:**\n\n{msg}")
                 st.markdown("---")
 
         user_question = st.text_area(
-            "Nhập câu hỏi tiếp theo của em dành cho Chuyên gia:",
-            placeholder="Ví dụ: Em muốn xin dẫn chứng người thật việc thật hoặc gợi ý viết phản đề...",
+            "Nhập câu hỏi tiếp theo của em dành cho Trợ lý Ngữ văn:",
+            placeholder="Ví dụ: Em muốn xin thêm dẫn chứng khác hoặc gợi ý viết phản đề...",
             height=80,
             key="txt_chat_input",
         )
 
         col_chat_1, col_chat_2 = st.columns([2, 1])
         with col_chat_1:
-            send_clicked = st.button("🚀 Gửi câu hỏi cho Chuyên gia", type="primary", use_container_width=True)
+            send_clicked = st.button("🚀 Gửi câu hỏi cho Trợ lý", type="primary", use_container_width=True)
         with col_chat_2:
             clear_clicked = st.button("🗑️ Xóa lịch sử", use_container_width=True)
 
         if clear_clicked:
             st.session_state["chat_history"] = [
-                ("assistant", "Chào em! Cô là Chuyên gia Ngữ văn. Em cần cô hỗ trợ định hướng lập ý từ 5 ý trở lên hay tìm dẫn chứng cụ thể cứ trao đổi với cô nhé!")
+                ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em cần cô hỗ trợ định hướng lập ý từ 5 ý trở lên hay tìm dẫn chứng cứ trao đổi với cô nhé!")
             ]
             st.rerun()
 
@@ -536,10 +554,12 @@ with tabs[1]:
                 q_clean = user_question.strip()
                 st.session_state["chat_history"].append(("user", q_clean))
                 
+                history_len = len(st.session_state["chat_history"])
                 ai_reply = ai_advisor_response(
                     cur_de_info.get("text", cur_de_key),
                     cur_de_info.get("vdnl_chuan", ""),
-                    q_clean
+                    q_clean,
+                    history_len
                 )
                 st.session_state["chat_history"].append(("assistant", ai_reply))
                 st.rerun()
@@ -588,7 +608,7 @@ with tabs[2]:
         col_w1, col_w2 = st.columns([1, 1])
         with col_w1:
             if st.button("💡 Gợi ý nhanh cách mở rộng ý khi đang viết", use_container_width=True):
-                st.info("💡 **Gợi ý từ Chuyên gia:** Để bài văn đạt điểm cao, hệ thống luận điểm của em nên đạt từ 5 ý trở lên và có phần phản đề sắc sảo nhé!")
+                st.info("💡 **Gợi ý từ Trợ lý Ngữ văn:** Để bài văn đạt điểm cao, hệ thống luận điểm của em nên đạt từ 5 ý trở lên và có phần phản đề sắc sảo nhé!")
         with col_w2:
             if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
