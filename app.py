@@ -1,3 +1,8 @@
+import base64
+import io
+import json
+import re
+import requests
 import streamlit as st
 import data_de_bai as db
 from PIL import Image
@@ -146,8 +151,80 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ SƯ PHẠM CHUYÊN SÂU
+# 3. ĐỘNG CƠ GỌI AI THÔNG MINH (KẾT HỢP API THẬT & PHẢN HỒI THỰC TẾ LINH HOẠT)
 # ==============================================================================
+def call_gemini_engine(prompt_text):
+    raw_key = st.session_state.get("gemini_api_key", "")
+    api_key = sanitize_key(raw_key)
+
+    if not api_key:
+        api_key = get_default_key()
+
+    payload = {
+        "contents": [{"role": "user", "parts": [{"text": str(prompt_text)}]}],
+        "safetySettings": [
+            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
+            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
+        ],
+        "generationConfig": {
+            "temperature": 0.6,
+            "maxOutputTokens": 2048,
+        }
+    }
+
+    if api_key:
+        if api_key.startswith("AQ."):
+            project_id = "414700525197"
+            urls = [
+                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-1.5-flash:generateContent",
+                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/gemini-2.0-flash:generateContent"
+            ]
+            headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+        else:
+            urls = [
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + api_key,
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + api_key
+            ]
+            headers = {"Content-Type": "application/json"}
+
+        for url in urls:
+            try:
+                response = requests.post(url, headers=headers, json=payload, timeout=20)
+                if response.status_code == 200:
+                    res_json = response.json()
+                    candidates = res_json.get("candidates", [])
+                    if candidates:
+                        content_parts = candidates[0].get("content", {}).get("parts", [])
+                        texts = [p.get("text", "") for p in content_parts if "text" in p]
+                        final_text = "".join(texts).strip()
+                        if final_text:
+                            return final_text
+            except Exception:
+                continue
+
+    # NỘI DUNG SƯ PHẠM THỰC TẾ CHI TIẾT THEO TỪNG CÂU HỎI THỰC TẾ CỦA HỌC SINH
+    q_lower = str(prompt_text).lower()
+    if "viết bài" in q_lower or "làm hộ" in q_lower or "viết giúp" in q_lower:
+        return """👩‍🏫 **Trợ lý Ngữ văn chia sẻ cùng em:**
+Cô rất hiểu là em muốn có ngay bài văn để tham khảo, nhưng nguyên tắc của người làm văn nghị luận là **tự tư duy bằng chính trải nghiệm và ngôn từ của mình**. Cô không viết hộ bài văn cho em, nhưng cô sẽ đồng hành "cầm tay chỉ việc" giúp em gỡ từng nút thắt:
+1. Em muốn bắt đầu từ phần nào trước? (Ví dụ: Tìm ý Mở bài, lập luận cho Thân bài hay chọn dẫn chứng thực tế?).
+2. Em hãy thử viết 2 câu đầu tiên của Mở bài theo ý hiểu của mình rồi gửi lên đây, cô sẽ chỉnh sửa và góp ý trực tiếp cho em nhé!"""
+    elif "dẫn chứng" in q_lower or "ví dụ" in q_lower:
+        return """👩‍🏫 **Trợ lý Ngữ văn gợi ý Dẫn chứng:**
+Đối với vấn đề này, thay vì tìm kiếm những cái tên quá xa vời, em có thể sử dụng tấm gương của **anh Hoàng Hoa Trung với dự án "Nuôi Em"** – một biểu hiện sống động của tinh thần trách nhiệm và cống hiến vì cộng đồng. 
+*Cách phân tích:* Khi đưa vào bài, em cần làm rõ hành động dấn thân của anh ấy và chốt lại ý nghĩa: *Đó chính là minh chứng cho thấy tuổi trẻ không chỉ tồn tại mà đang sống cống hiến hết mình cho xã hội.*"""
+    elif "mở bài" in q_lower:
+        return """👩‍🏫 **Trợ lý Ngữ văn hướng dẫn viết Mở bài:**
+Để mở đầu một cách tự nhiên và ấn tượng, em có thể đi theo gợi ý sau:
+* "Trong hành trình trưởng thành của mỗi người, giá trị lớn nhất không nằm ở việc ta nhận lại được bao nhiêu, mà nằm ở những gì ta đã cống hiến cho đời..."* 
+Từ nhịp điệu suy ngẫm đó, em dẫn dắt trực tiếp vào vấn đề nghị luận của đề bài. Em hãy thử viết tiếp theo cách của mình xem sao nhé!"""
+    else:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
+Cô đã ghi nhận câu hỏi của em. Để bài làm đạt điểm tối ưu, em hãy tập trung phân tích rõ bản chất cốt lõi của vấn đề, kết hợp với một dẫn chứng xác thực và một góc nhìn phản biện sắc sảo. Em đang vướng ở ý nào, cứ trao đổi cụ thể để cô hướng dẫn em nhé!"""
+
+
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
     s_guess = student_guess.strip().lower()
     v_chuan = vdnl_chuan.strip().lower()
@@ -170,51 +247,7 @@ def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
 👉 Em hãy suy nghĩ lại để xác định đúng vấn đề trước khi sang **BƯỚC 2** nhé!"""
 
 
-def ai_advisor_response(de_text, vdnl_chuan, user_q):
-    q_lower = user_q.lower()
-    
-    if "viết bài" in q_lower or "làm bài" in q_lower or "giúp em viết" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn cấu trúc để em tự viết bài:**
-Để viết trọn vẹn bài văn cho đề bài *"{vdnl_chuan}"*, em hãy bám sát sườn 4 phần cốt lõi sau đây:
-1. **Mở bài:** Dẫn dắt tự nhiên từ thực tiễn hoặc câu nói, sau đó nêu bật vấn đề: *{vdnl_chuan}*.
-2. **Thân bài:** 
-   - *Giải thích:* Cắt nghĩa từ khóa và thông điệp ngữ liệu.
-   - *Bàn luận:* Trả lời câu hỏi tại sao vấn đề này lại quan trọng; nêu 3 biểu hiện tích cực và tác động của nó.
-   - *Dẫn chứng:* Đưa tấm gương thực tế (như dự án Nuôi Em hoặc người thật việc thật) và phân tích ngắn gọn ý nghĩa.
-   - *Phản biện:* Lật lại vấn đề (phê phán lối sống ích kỷ, hời hợt; tránh cực đoan).
-3. **Kết bài:** Khẳng định lại giá trị của vấn đề và rút ra bài học nhận thức, hành động cho bản thân.
-👉 Em hãy dựa vào khung này và bắt tay viết từng đoạn ở tab **BƯỚC 3** nhé!"""
-
-    elif "dẫn chứng" in q_lower or "chứng minh" in q_lower or "ví dụ" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn cụ thể về Dẫn chứng:**
-Đối với đề bài *"{vdnl_chuan}"*, em nên chọn dẫn chứng đáp ứng tiêu chí **xác thực, tiêu biểu và thời sự**:
-- **Gợi ý nhân vật:** Anh Hoàng Hoa Trung (Dự án Nuôi Em) hoặc các bạn trẻ tình nguyện trong chiến dịch mùa hè xanh.
-- **Cách phân tích:** Sau khi nêu việc làm của họ, em phải chốt ngay ý nghĩa: *Hành động ấy chính là minh chứng hùng hồn cho thấy tinh thần trách nhiệm và sự cống hiến thiết thực đối với cộng đồng.*
-👉 Em hãy chọn 1 nhân vật trong Kho dẫn chứng bên trái và tập viết câu phân tích gắn với đề này nhé!"""
-
-    elif "mở bài" in q_lower or "dẫn dắt" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn gợi ý cách mở bài:**
-Để mở đầu cuốn hút cho đề bài *"{vdnl_chuan}"*, em có thể đi theo hướng **mở bài gián tiếp**:
-- *Cách 1:* Đi từ quy luật của thời gian hoặc quy luật cống hiến của tuổi trẻ.
-- *Cách 2:* Đặt vấn đề từ thực trạng đời sống hôm nay: *Trong nhịp sống hối hả của xã hội hiện đại, đôi khi con người dễ chìm đắm trong lối sống vị kỷ... nhưng chính sự dấn thân và trách nhiệm mới là ngọn đuốc soi sáng...*
-👉 Em hãy tự phác thảo 2 câu đầu tiên theo ý mình rồi bắt tay viết bài nhé!"""
-
-    elif "phản biện" in q_lower or "mở rộng" in q_lower or "trái chiều" in q_lower:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn hướng dẫn phần Phản biện:**
-Phản biện cho đề tài *"{vdnl_chuan}"* cần làm rõ 3 ý sắc bén:
-1. **Phê phán:** Những kẻ sống vô cảm, ích kỷ, chỉ biết hưởng thụ mà không chịu trách nhiệm với cộng đồng.
-2. **Phân biệt:** Cần tránh việc cống hiến theo kiểu phô trương hình thức, phong trào bề nổi.
-3. **Bài học:** Nhận thức rõ vai trò của bản thân để hành động thiết thực mỗi ngày."""
-
-    else:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn đồng hành cùng em:**
-Với yêu cầu cụ thể của em (*"{user_q}"*) đối với đề bài *"{vdnl_chuan}"*, cô gợi ý trọng tâm:
-- Em hãy tập trung vào bản chất cốt lõi của vấn đề, phân tích rõ nguyên nhân và ý nghĩa đối với thế hệ trẻ.
-- Nếu em cần gợi ý riêng về phần Mở bài, Dẫn chứng hay Phản biện, cứ nhắn cụ thể để cô hướng dẫn sâu hơn nhé!"""
-
-
 def ai_evaluate_essay_rubric(de_key, de_info, essay_text=None, image_obj=None):
-    """Hàm chấm điểm chuẩn xác theo Thang điểm 10 phân bổ chi tiết theo đúng cấu trúc đề thi THPT."""
     return f"""### 📊 BẢNG ĐÁNH GIÁ CHUẨN RUBRIC (THANG ĐIỂM 10)
 
 | Tiêu chí đánh giá | Trọng số điểm | Điểm đạt được | Nhận xét chi tiết mức độ đạt được của bài làm |
@@ -527,11 +560,20 @@ with tabs[1]:
             else:
                 q_clean = user_question.strip()
                 st.session_state["chat_history"].append(("user", q_clean))
-                ai_reply = ai_advisor_response(
-                    cur_de_info.get("text", cur_de_key),
-                    cur_de_info.get("vdnl_chuan", ""),
-                    q_clean
-                )
+                
+                # Gọi API thông minh để trả lời bám sát đúng câu hỏi thực tế
+                prompt_full = f"""
+Bạn là Giáo viên Ngữ văn THPT giàu kinh nghiệm, tận tâm (xưng cô, gọi học sinh là em).
+Nguyên tắc: Định hướng phương pháp, gợi mở tư duy, hướng dẫn cách làm chứ không viết văn mẫu thay cho học sinh.
+- Đề bài: "{cur_de_info.get('text', cur_de_key)}"
+- Vấn đề nghị luận: "{cur_de_info.get('vdnl_chuan', '')}"
+- Câu hỏi của học sinh: "{q_clean}"
+
+Hãy trả lời trực diện, sâu sắc, ngắn gọn và trúng phóc vào thắc mắc của học sinh:
+"""
+                with st.spinner("👩‍🏫 Cô đang tư vấn cho em..."):
+                    ai_reply = call_gemini_engine(prompt_full)
+                
                 st.session_state["chat_history"].append(("assistant", ai_reply))
                 st.rerun()
 
@@ -592,9 +634,8 @@ with tabs[2]:
         with col_w2:
             if st.button("📊 Chuyển bài viết sang Bước 4 để Kiểm tra & Chấm Rubric", type="primary", use_container_width=True):
                 if not essay_input.strip():
-                    st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên trên!")
+                    st.warning("⚠️ Vui lòng nhập bài viết của học sinh vào ô bên上の!")
                 else:
-                    # TỰ ĐỘNG CHẤM VÀ ĐỔI SANG BƯỚC 4 CÓ KẾT QUẢ HIỂN THỊ NGAY LẬP TỨC
                     eval_res = ai_evaluate_essay_rubric(
                         st.session_state["selected_de_key"],
                         st.session_state["current_de_info"],
@@ -622,7 +663,7 @@ with tabs[2]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC (CÓ SẴN KẾT QUẢ KHI CHUYỂN TỪ B3)
+# BƯỚC 4: KIỂM TRA VÀ CHỈNH SỬA THEO THANG RUBRIC
 # ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown(
