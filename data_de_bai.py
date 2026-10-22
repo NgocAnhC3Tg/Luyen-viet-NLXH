@@ -1,5 +1,5 @@
 # ==============================================================================
-# KHO DỮ LIỆU ĐỀ BÀI NGHỊ LUẬN XÃ HỘI (30 ĐỀ - CHUẨN TRẬT TỰ SƯ PHẠM)
+# KHO DỮ LIỆU ĐỀ BÀI NGHỊ LUẬN XÃ HỘI (30 ĐỀ - CHUẨN TRẬT TỰ SƯ PHẠM) & 9 CHỦ ĐIỂM
 # ==============================================================================
 
 DE_BAI_CO_BAN = {
@@ -342,7 +342,7 @@ DE_BAI_NANG_CAO = {
         "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích nhận định -> Chốt lại VĐNL.",
         "explain_items": [
             "- **Giải thích vấn đề nghị luận (VĐNL):** 'Trở về với chính mình' là hành trình quay kính chiếu hậu vào nội tâm, buông bỏ những áp đặt ngoại biên để đối thoại chân thành với bản ngã.",
-            "- **Giải thích ý nghĩa nhận định:** 'Kì quan lớn nhất nằm ngay bên trong chính mình' khẳng định vẻ đẹp tâm hồn và kho tàng tiềm năng vô tận bên trong mỗi con người.",
+            "- **Giải thích nhận định:** 'Kì quan lớn nhất nằm ngay bên trong chính mình' khẳng định vẻ đẹp tâm hồn và kho tàng tiềm năng vô tận bên trong mỗi con người.",
             "- **Chốt vấn đề:** Khẳng định ý nghĩa của hành trình trở về với chính mình."
         ],
         "vdnl_ket_luan": "Sự cần thiết trở về với chính mình tìm bình yên.",
@@ -562,7 +562,7 @@ DE_BAI_NANG_CAO = {
         "explain_guide": "Thao tác giải thích: Giải thích VĐNL trước -> Giải thích câu nói -> Chốt lại VĐNL.",
         "explain_items": [
             "- **Giải thích vấn đề nghị luận (VĐNL):** Giá trị của sự tĩnh tại, an nhiên trong tâm hồn giúp con người tự thấu hiểu và làm chủ sâu sắc bản ngã.",
-            "- **Giải thích câu nói:** 'Nước đục' là tâm trí hỗn loạn vì sân si; 'nước tĩnh lặng' là tâm hồn an nhiên, tĩnh thức giúp nhìn thấu bản ngã bên trong.",
+            "- **Giải thích câu nói:** 'Nước đục' là tâm trí hỗn loạn bởi vì sân si; 'nước tĩnh lặng' là tâm hồn an nhiên, tĩnh thức giúp nhìn thấu bản ngã bên trong.",
             "- **Chốt vấn đề:** Khẳng định giá trị của sự tĩnh tại tâm hồn để thấu hiểu bản thân."
         ],
         "vdnl_ket_luan": "Ý nghĩa giữ gìn sự tĩnh lặng tâm hồn.",
@@ -666,4 +666,72 @@ DE_BAI_NANG_CAO = {
         "counter": ["- **Phản biện:** Tư duy mạo hiểm ra đường biên đòi hỏi nền tảng tri thức vững chắc và tư duy logic, tuyệt đối không phải sự nổi loạn bồng bột, liều lĩnh vô thức."],
         "dani_chi_tiet": {"mb": "Mở bài", "gt": "Giải thích", "bl": "Bàn luận", "dc": "Dẫn chứng", "pb": "Phản biện", "kb": "Kết bài"}
     }
+}
+
+# ==============================================================================
+# KHO DẪN CHỨNG 9 CHỦ ĐIỂM CHUẨN TỪ TÀI LIỆU TS. NGUYỄN THẾ HƯNG
+# ==============================================================================
+KHO_DAN_CHUNG_9_CHU_DIEM = {
+    "1. Lòng nhân ái – vị tha – trách nhiệm cộng đồng": [
+        {"ten": "Albert Schweitzer", "noi_dung": "Từ bỏ sự nghiệp danh giá ở châu Âu để đến Gabon (châu Phi) xây dựng bệnh viện, tự tay chữa trị cho hàng ngàn người bệnh nhiệt đới, với triết lí 'tôn kính sự sống', nhận giải Nobel Hòa bình 1952.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "José Mujica", "noi_dung": "Cựu Tổng thống Uruguay (2010-2015), được mệnh danh là 'tổng thống nghèo nhất thế giới', quyên góp 90% lương cho từ thiện, ở trang trại đơn sơ để sẻ chia với người nghèo.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Mahatma Gandhi", "noi_dung": "Biểu tượng bất bạo động của Ấn Độ; hành động cuối cùng khi hấp hối là đưa tay lên trán thể hiện sự tha thứ tuyệt đối cho kẻ sát hại.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Anne Sullivan", "noi_dung": "Người giáo viên gần như mù lòa đã kiên trì dạy dỗ, đồng hành suốt 49 năm để biến Helen Keller thành nhà hoạt động xã hội vĩ đại.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Mẹ Teresa", "noi_dung": "Rời tu viện để sống giữa những người nghèo khổ nhất ở Kolkata (Ấn Độ), sáng lập Dòng Thừa Sai Bác Ái chăm sóc người vô gia cư toàn cầu.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Sir Nicholas Winton", "noi_dung": "Người hùng thầm lặng cứu 669 trẻ em Do Thái khỏi thảm họa Holocaust và giữ kín bí mật suốt 50 năm.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "James Joseph Kendall", "noi_dung": "Giáo viên Mỹ sáng lập nhóm 'Keep Hanoi Clean', lội xuống mương thối nhặt rác và lan tỏa ý thức bảo vệ môi trường tại Hà Nội.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Bé Nguyễn Hải An", "noi_dung": "Bé gái 7 tuổi mắc bệnh u não đã đồng ý hiến giác mạc trước khi qua đời, mang lại ánh sáng cho 2 người bệnh và khơi nguồn cho 2.000 người đăng ký hiến tạng.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "2. Ý chí – nghị lực – vượt lên nghịch cảnh": [
+        {"ten": "Derek Redmond", "noi_dung": "Vận động viên điền kinh Anh bị rách cơ đùi tại Olympic 1992, từ chối cáng cứu thương và được cha dìu về đích trong tiếng vỗ tay vang dội.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Ludwig van Beethoven", "noi_dung": "Thiên tài âm nhạc gần như điếc hoàn toàn nhưng vẫn sáng tác những kiệt tác vĩ đại nhất lịch sử nhân loại nhờ cảm nhận rung động.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Trương Hồng Siêu", "noi_dung": "Nhà sáng lập Mixue, khởi nghiệp thất bại liên tiếp nhưng không bao giờ từ bỏ, xây dựng đế chế hơn 46.000 cửa hàng toàn cầu.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Marie Curie", "noi_dung": "Nữ bác học vượt qua hoàn cảnh nghèo khó, định kiến giới để giành hai giải Nobel ở hai lĩnh vực khác nhau.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Stephen Hawking", "noi_dung": "Mắc bệnh xơ cứng teo cơ từ năm 21 tuổi, liệt toàn thân và mất giọng nói, nhưng vẫn vươn lên thành nhà vật lí lí thuyết lỗi lạc.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Jessica Cox", "noi_dung": "Sinh ra không có tay, khổ luyện dùng đôi chân để lái máy bay, đạt đai đen Taekwondo.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Christine Hà", "noi_dung": "Nữ đầu bếp người Mỹ gốc Việt mất thị lực nhưng đã xuất sắc trở thành quán quân MasterChef Mỹ mùa thứ 3.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "3. Đam mê – lí tưởng - can đảm": [
+        {"ten": "Raphael Coleman", "noi_dung": "Diễn viên nhí phim Nanny McPhee từ bỏ ánh hào quang showbiz để theo đuổi đam mê bảo vệ động vật hoang dã.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Steve Jobs", "noi_dung": "Nhà sáng lập Apple, trải qua cú sốc bị sa thải khỏi chính công ty mình lập ra nhưng vẫn kiên định với khát vọng đổi mới công nghệ.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Lỗ Tấn", "noi_dung": "Từ bỏ nghề y chuyển sang cầm bút để 'chữa bệnh tinh thần' cho quốc dân đồng bào.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Boyan Slat", "noi_dung": "Năm 16 tuổi thấy rác thải nhựa nhiều hơn cá khi lặn biển, quyết định sáng lập tổ chức The Ocean Cleanup làm sạch đại dương.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Socrates", "noi_dung": "Từ chối trốn thoát trước án tử hình, thản nhiên uống thuốc độc để bảo vệ chân lí và nguyên tắc pháp luật.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Lương Việt Nga", "noi_dung": "Cựu thí sinh Olympia, bỏ mức lương 1.000 USD/tháng để theo đuổi đam mê nghề xăm hình nghệ thuật.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "4. Sáng tạo - đổi mới – nghĩ khác": [
+        {"ten": "Gia Cát Lượng", "noi_dung": "Nổi tiếng với phương pháp đọc sách 'đại lược', nắm bắt tinh túy cốt yếu thay vì câu nệ từng chữ.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Alexander Fleming", "noi_dung": "Vô tình phát hiện nấm mốc tiêu diệt vi khuẩn, mở ra kỷ nguyên kháng sinh penicillin cứu sống vô số người.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Louis Braille", "noi_dung": "Cải tiến hệ thống quân sự phức tạp thành hệ thống chữ nổi 6 chấm giúp người khiếm thị trên toàn thế giới tiếp cận tri thức.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Anh em nhà Wright", "noi_dung": "Tập trung vào hệ thống điều khiển thay vì chỉ chú trọng động cơ, chế tạo thành công máy bay đầu tiên.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Pixar và sự cố Toy Story 2", "noi_dung": "Bị xóa 90% dữ liệu trước khi phát hành, nhờ có bản sao dự phòng cá nhân đã kiên cường phục hồi và tạo nên kiệt tác.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "5. Sự trung thực và giả dối": [
+        {"ten": "Edward Snowden & Daniel Ellsberg", "noi_dung": "Tiết lộ tài liệu mật của chính phủ Mỹ, đánh đổi sự an toàn cá nhân để phơi bày sự thật trước công chúng.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Lance Armstrong", "noi_dung": "Huyền thoại đua xe đạp bị tước 7 danh hiệu Tour de France vì sử dụng doping gian dối, là bài học đắt giá về đạo đức.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Thảm họa giàn khoan Deepwater Horizon", "noi_dung": "Hành vi cắt giảm chi phí, bỏ qua quy trình an toàn gây ra thảm họa tràn dầu lớn nhất lịch sử.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Vụ án oan Nguyễn Thanh Chấn", "noi_dung": "Quá trình điều tra thiếu sót, bỏ qua manh mối gây ra nỗi oan khuất 10 năm tù tội.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "6. Danh vọng, vật chất và những vấn đề thiếu lành mạnh": [
+        {"ten": "Macaulay Culkin", "noi_dung": "Ngôi sao nhí Home Alone chìm đắm trong hào quang sớm, sa lầy ma túy và khủng hoảng tinh thần.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Choi Sulli", "noi_dung": "Ngôi sao K-Pop chịu áp lực dư luận và bạo lực mạng khắc nghiệt, để lại hồi chuông cảnh báo về sức khỏe tâm thần.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Jordan Belfort", "noi_dung": "Sói già phố Wall thao túng thị trường chứng khoán, sa đọa vào vật chất để rồi cuối cùng phải trả giá bằng tù tội.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "7. Bản sắc – nguồn cội – hòa nhập": [
+        {"ten": "Yo-Yo Ma", "noi_dung": "Nghệ sĩ cello thành lập 'Dự án Con đường Tơ lụa' kết nối âm nhạc thế giới nhưng vẫn giữ gìn bản sắc độc đáo từng di sản.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Trần Đặng Đăng Khoa", "noi_dung": "Đi vòng quanh thế giới bằng xe máy, luôn mang theo tà áo dài và cờ Tổ quốc để quảng bá văn hóa Việt Nam.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Nguyễn Thị Hậu", "noi_dung": "Nghệ nhân làng chiếu Cẩm Nê kiên trì hơn 50 năm bảo tồn và sáng tạo làng nghề truyền thống.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "8. Những lối sống và quan niệm tích cực": [
+        {"ten": "Nghệ thuật Kintsugi (Nhật Bản)", "noi_dung": "Nghệ thuật hàn gắn đồ gốm vỡ bằng bột vàng, biến tổn thương thành vẻ đẹp độc bản, chấp nhận sự không hoàn hảo.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Triết lí Wabi-sabi", "noi_dung": "Tôn vinh vẻ đẹp mộc mạc, bất toàn, vô thường, tìm thấy sự thanh thản trong giản đơn.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Ikigai", "noi_dung": "Triết lí 'lí do để sống', giúp con người tìm mục đích qua sự giao thoa đam mê, sở trường và ích lợi xã hội.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Minimalism (Chủ nghĩa tối giản)", "noi_dung": "Lối sống chủ động giảm thiểu vật chất để tập trung vào giá trị cốt lõi và tự do tinh thần.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Lagom & Hygge", "noi_dung": "Triết lí sống vừa phải ('biết đủ') của Thụy Điển và nghệ thuật tạo sự ấm cúng, hạnh phúc từ điều giản dị của Đan Mạch.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ],
+    "9. Các hiện tượng tâm lí – xã hội đương đại": [
+        {"ten": "FOMO & JOMO", "noi_dung": "Nỗi sợ bị bỏ lỡ trên mạng xã hội vs Niềm vui chủ động ngắt kết nối để quay về chăm sóc nội tâm.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Hội chứng Impostor (Kẻ mạo danh)", "noi_dung": "Trạng thái tâm lí dù thành công nhưng luôn tự ti, cảm thấy mình không xứng đáng và sợ bị phát hiện là lừa đảo.", "nguon": "TS. Nguyễn Thế Hưng"},
+        {"ten": "Hiệu ứng Dunning-Kruger", "noi_dung": "Người thiếu năng lực thường tự tin thái quá, trong khi người có chuyên môn lại khiêm tốn.", "nguon": "TS. Nguyễn Thế Hưng"}
+    ]
 }
