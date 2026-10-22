@@ -109,14 +109,13 @@ st.markdown(
 )
 
 # ==============================================================================
-# 2. QUẢN LÝ SESSION STATE VÀ LÀM SẠCH API KEY (HỖ TRỢ TUYỆT ĐỐI MÃ AQ...)
+# 2. QUẢN LÝ SESSION STATE & LÀM SẠCH MÃ TOKEN (HỖ TRỢ CẢ AQ. VÀ AIza)
 # ==============================================================================
 def sanitize_api_key(raw_key):
     if not raw_key:
         return ""
     s = str(raw_key).strip()
-    # Chấp nhận mọi định dạng chuỗi key dài bắt đầu bằng AQ. hoặc AIza hoặc các định dạng tương tự
-    match = re.search(r"([A-Za-z0-9\-_\.]{20,150})", s)
+    match = re.search(r"([A-Za-z0-9\-_\.]{20,200})", s)
     if match:
         return match.group(1)
     clean_token = "".join(ch for ch in s if 33 <= ord(ch) <= 126)
@@ -158,7 +157,7 @@ if "eval_vdnl_text" not in st.session_state:
 
 
 # ==============================================================================
-# 3. ĐỘNG CƠ GỌI AI HOÀN TOÀN TƯƠNG THÍCH MÃ AQ... CỦA CÔ
+# 3. ĐỘNG CƠ GỌI AI THÔNG MINH (HỖ TRỢ BEARER TOKEN CHO MÃ AQ. & QUERY KEY CHO AIza)
 # ==============================================================================
 def call_gemini_engine(prompt_text, image_obj=None):
     raw_key = st.session_state.get("gemini_api_key", "")
@@ -170,7 +169,7 @@ def call_gemini_engine(prompt_text, image_obj=None):
             st.session_state["gemini_api_key"] = api_key
 
     if not api_key or len(api_key) < 15:
-        return "❌ LỖI: Chưa có mã API Key. Vui lòng dán mã của cô vào ô ở thanh bên trái!"
+        return "❌ LỖI: Chưa có mã xác thực. Vui lòng dán mã của cô vào ô ở thanh bên trái!"
 
     parts = [{"text": str(prompt_text)}]
     if image_obj is not None:
@@ -203,23 +202,28 @@ def call_gemini_engine(prompt_text, image_obj=None):
     }
     data_bytes = json.dumps(payload_gemini, ensure_ascii=True).encode("ascii")
 
-    rest_models = [
-        "gemini-2.5-flash",
-        "gemini-2.0-flash",
-        "gemini-1.5-flash",
-        "gemini-1.5-flash-latest",
-        "gemini-1.5-pro",
-    ]
+    # Xác định endpoint và header tùy theo loại mã (AQ. dùng Bearer Token qua Vertex AI, AIza dùng Query Param)
+    is_oauth_token = api_key.startswith("AQ.")
+    
+    urls_to_try = []
+    if is_oauth_token:
+        # Dự án Google Cloud của cô có Project ID là 414700525197 (lấy từ log lỗi trước đó)
+        project_id = "414700525197"
+        for m in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
+            urls_to_try.append((
+                f"https://us-central1-aiplatform.googleapis.com/v1/projects/{project_id}/locations/us-central1/publishers/google/models/{m}:generateContent",
+                {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
+            ))
+    else:
+        for m in ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"]:
+            urls_to_try.append((
+                f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={api_key}",
+                {"Content-Type": "application/json"}
+            ))
 
     last_error = ""
-    for model_name in rest_models:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
-        req = urllib.request.Request(
-            url,
-            data=data_bytes,
-            headers={"Content-Type": "application/json"},
-            method="POST",
-        )
+    for url, headers in urls_to_try:
+        req = urllib.request.Request(url, data=data_bytes, headers=headers, method="POST")
         try:
             with urllib.request.urlopen(req, timeout=25) as resp:
                 resp_body = resp.read().decode("utf-8", errors="replace")
@@ -238,13 +242,13 @@ def call_gemini_engine(prompt_text, image_obj=None):
                 err_msg = err_json.get("error", {}).get("message", str(http_err))
             except Exception:
                 err_msg = str(http_err)
-            last_error = f"HTTP {http_err.code} ({model_name}): {err_msg}"
+            last_error = f"HTTP {http_err.code}: {err_msg}"
             continue
         except Exception as e:
-            last_error = f"{model_name}: {str(e)}"
+            last_error = str(e)
             continue
 
-    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại mã Key!"
+    return f"❌ Không thể kết nối với AI ({last_error}). Vui lòng kiểm tra lại mã xác thực!"
 
 
 def extract_section(text, tag_name):
@@ -375,7 +379,7 @@ KB: (Hướng dẫn khẳng định lại vấn đề và rút ra bài học nh�
 
     dany_raw = extract_section(raw, "DAN_Y")
     dani_dict = {
-        "mb": "Dẫn dắt và giới thiệu chính xác vấn đề nghị luận.",
+        "mb": "Dẫn dắt và nêu chính xác vấn đề nghị luận.",
         "gt": "Giải thích vấn đề nghị luận trước, giải thích câu nói/ngữ liệu, sau đó chốt lại VĐNL.",
         "bl": "Triển khai hệ thống các luận điểm bàn luận sâu sắc, đa chiều.",
         "dc": "Đưa dẫn chứng thực tế xác thực và phân tích gắn liền với luận điểm.",
@@ -446,10 +450,10 @@ Hãy kẻ bảng Markdown gồm 4 cột: **Tiêu chí đánh giá | Mức độ 
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
     api_key_input = st.text_input(
-        "Nhập mã API Key của cô:",
+        "Nhập mã xác thực của cô:",
         type="password",
         value=st.session_state["gemini_api_key"],
-        help="Hỗ trợ cả mã bắt đầu bằng AQ... hay bất kỳ mã khóa nào của cô.",
+        help="Hỗ trợ cả mã AQ... hoặc bất kỳ mã khóa nào của cô.",
     )
     cleaned_input = sanitize_api_key(api_key_input)
     if cleaned_input != st.session_state["gemini_api_key"]:
@@ -457,7 +461,7 @@ with st.sidebar:
 
     cur_k = st.session_state["gemini_api_key"]
     if cur_k and len(cur_k) >= 15:
-        st.success(f"✅ Đã nhận khóa API ({cur_k[:6]}...{cur_k[-4:]})")
+        st.success(f"✅ Đã nhận mã xác thực ({cur_k[:6]}...{cur_k[-4:]})")
         if st.button("🔌 Kiểm tra kết nối AI ngay"):
             with st.spinner("Đang kiểm tra kết nối..."):
                 test_res = call_gemini_engine("Hãy trả lời ngắn gọn đúng 1 câu: Kết nối thành công!")
@@ -466,7 +470,7 @@ with st.sidebar:
                 else:
                     st.info(f"🎯 Phản hồi từ AI: {test_res}")
     else:
-        st.warning("⚠️ Vui lòng dán mã API Key vào ô trên.")
+        st.warning("⚠️ Vui lòng dán mã xác thực vào ô trên.")
 
     st.markdown("---")
     st.markdown("### 📌 QUY TRÌNH 4 BƯỚC SƯ PHẠM")
