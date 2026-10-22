@@ -29,11 +29,10 @@ if "selected_de_key" not in st.session_state:
 if "current_de_info" not in st.session_state:
     st.session_state["current_de_info"] = db.DE_BAI_CO_BAN[st.session_state["selected_de_key"]]
 
-if "chat_messages" not in st.session_state:
-    st.session_state["chat_messages"] = [{
-        "role": "assistant",
-        "content": "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về phương pháp lập dàn ý hay chọn dẫn chứng cứ hỏi cô nhé!"
-    }]
+if "chat_history" not in st.session_state:
+    st.session_state["chat_history"] = [
+        ("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Em có thắc mắc gì về phương pháp lập dàn ý hay chọn dẫn chứng cứ hỏi cô nhé!")
+    ]
 
 with st.sidebar:
     st.title("⚙️ CẤU HÌNH HỆ THỐNG")
@@ -53,14 +52,12 @@ with st.sidebar:
     st.write("3. **✍️ Bước 3:** Xưởng viết bài")
     st.write("4. **📁 Bước 4:** Hồ sơ bài làm")
 
-# HÀM GỌI AI SỬ DỤNG MODEL CHUẨN XÁC NHẤT HIỆN TẠI
 def call_gemini_engine(prompt_text, image_obj=None):
     api_key = st.session_state.get("gemini_api_key", "").strip()
     if not api_key:
         return "❌ Bạn chưa nhập Gemini API Key ở thanh bên trái!"
     try:
         genai.configure(api_key=api_key)
-        # Sử dụng model tương thích ngược tốt nhất hiện nay
         model = genai.GenerativeModel("gemini-1.5-flash-latest")
         if image_obj:
             response = model.generate_content([prompt_text, image_obj])
@@ -70,14 +67,6 @@ def call_gemini_engine(prompt_text, image_obj=None):
             return response.text
         return "⚠️ AI đã tiếp nhận nhưng không trả về nội dung."
     except Exception as e:
-        try:
-            # Fallback dự phòng sang model gemini-pro nếu flash lỗi
-            model_fb = genai.GenerativeModel("gemini-pro")
-            response = model_fb.generate_content(prompt_text)
-            if response and response.text:
-                return response.text
-        except Exception:
-            pass
         return f"❌ Lỗi kết nối AI: {str(e)}"
 
 def ai_evaluate_student_vdnl(exam_text, vdnl_chuan, student_guess):
@@ -198,17 +187,29 @@ with tabs[1]:
 
     with c_right:
         st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
-        for m in st.session_state["chat_messages"]:
-            with st.chat_message(m["role"]):
-                st.write(m["content"])
+        
+        # Khung hiển thị lịch sử trò chuyện ổn định tuyệt đối
+        chat_container = st.container(height=350)
+        with chat_container:
+            for role, text in st.session_state["chat_history"]:
+                if role == "user":
+                    st.markdown(f"**👤 Học sinh:** {text}")
+                else:
+                    st.markdown(f"🤖 **Trợ lý Ngữ văn:** {text}")
+                st.markdown("---")
 
-        u_msg = st.chat_input("Hỏi cô về cách giải thích, chọn dẫn chứng...")
-        if u_msg:
-            st.session_state["chat_messages"].append({"role": "user", "content": u_msg})
-            prompt_chat = f"Bạn là GV Ngữ văn THPT sư phạm (xưng cô-em), không làm hộ bài. Đề: {cur_key}. HS hỏi: {u_msg}. Hãy gợi mở."
-            reply = call_gemini_engine(prompt_chat)
-            st.session_state["chat_messages"].append({"role": "assistant", "content": reply})
-            st.rerun()
+        # Sử dụng text_input + button truyền thống thay cho chat_input để tránh bị treo
+        with st.form(key="chat_form", clear_on_submit=True):
+            user_question = st.text_input("Nhập câu hỏi cho Trợ lý Ngữ văn:", placeholder="Ví dụ: Gợi ý thêm cho em phần bàn luận...")
+            submit_btn = st.form_submit_button("Gửi câu hỏi 🚀", type="primary")
+            
+            if submit_btn and user_question.strip():
+                st.session_state["chat_history"].append(("user", user_question))
+                prompt_chat = f"Bạn là GV Ngữ văn THPT sư phạm (xưng cô-em), không làm hộ bài. Đề: {cur_key}. HS hỏi: {user_question}. Hãy gợi mở."
+                with st.spinner("Trợ lý Ngữ văn đang suy nghĩ..."):
+                    bot_reply = call_gemini_engine(prompt_chat)
+                st.session_state["chat_history"].append(("assistant", bot_reply))
+                st.rerun()
 
 with tabs[2]:
     st.markdown('<div class="section-title">✍️ Xưởng Viết Bài Độc Lập</div>', unsafe_allow_html=True)
