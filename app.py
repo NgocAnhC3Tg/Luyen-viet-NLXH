@@ -94,19 +94,31 @@ st.markdown(
         font-size: 0.96rem;
         color: #1e293b;
     }
+
+    .counter-box {
+        background-color: #fef2f2;
+        border: 1px solid #fecaca;
+        border-left: 5px solid #dc2626;
+        padding: 16px 20px;
+        border-radius: 10px;
+        line-height: 1.7;
+        color: #7f1d1d;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
 </style>
 """,
     unsafe_allow_html=True,
 )
 
 # ==============================================================================
-# 2. HỆ THỐNG TRỌN VẸN 15 ĐỀ CƠ BẢN (ĐẦY ĐỦ CHI TIẾT 100%, KHÔNG RÚT GỌN)
+# 2. HỆ THỐNG TRỌN VẸN TOÀN BỘ CÁC ĐỀ BÀI CHUẨN GỐC (ĐẦY ĐỦ 100%, KHÔNG RÚT GỌN)
 # ==============================================================================
 DE_BAI_CO_BAN = {
     "Đề 01: Ý nghĩa của lối sống có trách nhiệm với cộng đồng": {
         "text": """Trong bài thơ "Tiếng hát con tàu", nhà thơ Chế Lan Viên từng viết:
 > *"Khi ta ở, chỉ là nơi đất ở / Khi ta đi, đất đã hóa tâm hồn!"*
-Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nay.""",
+Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đời sống, em hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của lối sống có trách nhiệm và biết gắn bó với cộng đồng của thế hệ trẻ hôm nhau.""",
         "vdnl_chuan": (
             "Ý nghĩa của lối sống có trách nhiệm và biết gắn bó, cống hiến cho"
             " cộng đồng của thế hệ trẻ."
@@ -178,10 +190,20 @@ Từ ý nghĩa câu thơ trên kết hợp với trải nghiệm thực tế đ�
                 "nguon": "Báo Thanh Niên",
             },
         ],
-        "counter": [(
-            "Phê phán lối sống ích kỷ, thực dụng, 'chỉ biết mình', thờ ơ"
-            " trước những vấn đề chung của xã hội."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Sống có"
+                " trách nhiệm với cộng đồng không có nghĩa là bao đồm, lo chuyện"
+                " thiên hạ mà quên mất trách nhiệm với bản thân và gia đình"
+                " ruột thịt."
+            ),
+            (
+                "<b>Phân biệt khái niệm dễ nhầm lẫn:</b> Cần phân biệt rõ giữa"
+                " <i>lối sống có trách nhiệm thực chất</i> (xuất phát từ tâm"
+                " sáng) với bệnh hình thức, phô trương, làm từ thiện chỉ để"
+                " đánh bóng tên tuổi trên mạng xã hội."
+            ),
+        ],
     },
     "Đề 02: Sức mạnh của sự thấu cảm và lắng nghe trong thời đại số": {
         "text": """Nhà văn Haruki Murakami từng chia sẻ: *"Khi bạn trải qua một cơn bão, bạn sẽ không còn là người bước vào cơn bão đó nữa."* Nhưng để cùng nhau đi qua 'cơn bão lòng', con người rất cần sự thấu hiểu.
@@ -259,10 +281,19 @@ Hãy viết một bài văn nghị luận (khoảng 600 chữ) bàn về sức m
                 "nguon": "Đài Truyền hình Việt Nam (VTV1)",
             },
         ],
-        "counter": [(
-            "Phê phán thói vô cảm, tâm lý phán xét vội vàng, bạo lực ngôn từ"
-            " trên không gian mạng."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Thấu"
+                " cảm, lắng nghe không có nghĩa là ba hoa bao biện, dung túng"
+                " cho những hành vi sai trái, vi phạm pháp luật dưới danh nghĩa"
+                " 'nỗi khổ tâm'."
+            ),
+            (
+                "<b>Phân biệt khái niệm dễ nhầm lẫn:</b> Cần phân biệt"
+                " <i>thấu cảm chân thành</i> với sự thương hại bề ngoài hoặc thói"
+                " nhiều chuyện tò mò đời tư người khác."
+            ),
+        ],
     },
     "Đề 03: Trách nhiệm giữ gìn bản sắc văn hóa dân tộc": {
         "text": """Có ý kiến cho rằng: "Toàn cầu hóa mở ra cánh cửa nhìn ra thế giới, nhưng bản sắc văn hóa dân tộc mới là chiếc mỏ neo giữ con tàu không bị trôi dạt."
@@ -334,10 +365,18 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về trách nhiệm gi�
                 "nguon": "Báo VnExpress",
             },
         ],
-        "counter": [(
-            "Phê phán thái độ sính ngoại mù quáng, coi thường tiếng Việt và"
-            " các giá trị truyền thống."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Giữ gìn"
+                " bản sắc không đồng nghĩa với việc bài xích văn hóa ngoại lai,"
+                " bảo thủ cực đoan, khép kín cửa trước thế giới hiện đại."
+            ),
+            (
+                "<b>Phân biệt khái niệm dễ nhầm lẫn:</b> Cần phân biệt rõ giữa"
+                " <i>giữ gìn truyền thống sáng tạo</i> với thói hoài cổ cực đoan,"
+                " bài ngoại mù quáng."
+            ),
+        ],
     },
     "Đề 04: Ý nghĩa của lòng biết ơn trong đời sống con người": {
         "text": """Danh ngôn dân gian có câu:
@@ -412,10 +451,13 @@ Từ cội nguồn đạo lý ấy, hãy viết bài văn nghị luận (khoản
                 "nguon": "Báo Văn Hóa",
             },
         ],
-        "counter": [(
-            "Phê phán thói vô ơn, ăn cháo đá bát, vong ân bội nghĩa, xem công"
-            " sức người khác là điều hiển nhiên."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Lòng biết"
+                " ơn không có nghĩa là sự trả ơn mù quáng, bao che khuyết điểm"
+                " cho người từng giúp đỡ mình khi họ làm sai trái."
+            )
+        ],
     },
     "Đề 05: Sức mạnh và giá trị của niềm tin vào bản thân": {
         "text": """Có câu nói nổi tiếng: *"Tin rằng bạn có thể làm được là bạn đã đi được nửa đường."* (Theodore Roosevelt)
@@ -487,10 +529,13 @@ Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh 
                 "nguon": "Báo Giáo Dục & Thời Đại",
             },
         ],
-        "counter": [(
-            "Phê phán căn bệnh tự ti, nhút nhát, rụt rè hoặc ngược lại là sự"
-            " ảo tưởng sức mạnh, tự phụ mù quáng."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Niềm tin"
+                " vào bản thân nếu thái quá sẽ biến thành sự tự phụ, bảo thủ,"
+                " không chịu lắng nghe góp ý của người khác."
+            )
+        ],
     },
     "Đề 06: Giá trị của sự kiên trì và bền bỉ trong cuộc sống": {
         "text": """Ngạn ngữ dân gian có câu: *"Nước chảy đá mòn."*
@@ -561,10 +606,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị của s
                 "nguon": "Lịch sử Khoa học thế giới",
             },
         ],
-        "counter": [(
-            "Phê phán lối sống cả thèm chóng chán, dễ nản lòng, gặp khó khăn là"
-            " buông xuôi bỏ cuộc."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Kiên trì"
+                " không đúng chỗ, bám chấp vào một mục tiêu sai lầm hoặc phương"
+                " pháp lỗi thời sẽ biến thành sự bảo thủ cố chấp."
+            )
+        ],
     },
     "Đề 07: Ý nghĩa của việc trân trọng những giá trị bình dị quanh ta": {
         "text": """Có ý kiến cho rằng: *"Hạnh phúc đôi khi không phải là những điều lớn lao, mà ẩn giấu trong những điều bình dị nhất của đời thường."*
@@ -638,10 +686,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về ý nghĩa của vi
                 "nguon": "Báo Tuổi Trẻ",
             },
         ],
-        "counter": [(
-            "Phê phán lối sống thực dụng, chạy theo hư vinh ảo tưởng, xem"
-            " thường những hạnh phúc mộc mạc xung quanh."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Trân"
+                " trọng bình dị không có nghĩa là an phận thủ thường, lười biếng,"
+                " thiếu chí tiến thủ trong công việc và học tập."
+            )
+        ],
     },
     "Đề 08: Vai trò của sách và văn hóa đọc trong thời đại số": {
         "text": """Maxim Gorky từng khẳng định: *"Sách mở ra trước mắt tôi những chân trời mới."*
@@ -712,10 +763,13 @@ Trong thời đại bùng nổ công nghệ số, em hãy viết bài văn ngh�
                 "nguon": "Bộ Văn hóa, Thể thao và Du lịch",
             },
         ],
-        "counter": [(
-            "Phê phán tình trạng lười đọc sách, nghiện mạng xã hội, chỉ chuộng"
-            " thông tin 'mì ăn liền' nông cạn."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Đọc sách"
+                " là tốt nhưng nếu mọt sách, đọc bất chấp không chọn lọc, không"
+                " kết hợp thực tiễn thì sách cũng chỉ là 'thư viện chết'."
+            )
+        ],
     },
     "Đề 09: Lòng dũng cảm bảo vệ cái đúng, cái thiện": {
         "text": """Có ý kiến cho rằng: *"Lòng dũng cảm không phải là không sợ hãi, mà là sự chiến thắng nỗi sợ hãi."*
@@ -785,10 +839,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của lò
                 "nguon": "Báo Tuổi Trẻ",
             },
         ],
-        "counter": [(
-            "Phê phán thái độ hèn nhát, vô cảm, 'thấy việc nghĩa không làm', sợ"
-            " chuốc họa vào thân."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Dũng cảm"
+                " không có nghĩa là liều lĩnh, bất chấp hiểm nguy vô ích khi"
+                " chưa đủ điều kiện, cần kết hợp trí tuệ và sự khôn ngoan."
+            )
+        ],
     },
     "Đề 10: Ứng xử văn minh trên không gian mạng": {
         "text": """Mạng xã hội giống như con dao hai lưỡi vừa kết nối toàn cầu vừa tiềm ẩn nhiều hệ lụy văn hóa.
@@ -859,10 +916,14 @@ Hãy viết bài văn nghị luận (khoảng 600 chữ) bàn về cách ứng x
                 "nguon": "Báo Thanh Niên",
             },
         ],
-        "counter": [(
-            "Phê phán hiện tượng miệt thị ngoại hình, lăng mạ, tung tin giả"
-            " câu view trên mạng xã hội."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Tẩy chay"
+                " bạo lực mạng là đúng nhưng nếu quá khắt khe, áp đặt tiêu chuẩn"
+                " đạo đức độc đoán lên người khác cũng là một dạng bạo lực"
+                " mới."
+            )
+        ],
     },
     "Đề 11: Giá trị của sự trung thực trong học tập và đời sống": {
         "text": """Có ý kiến cho rằng: *"Sự thật có thể gây tổn thương trong chốc lát, nhưng dối trá để lại vết sẹo vĩnh viễn."*
@@ -933,10 +994,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về giá trị và ý 
                 "nguon": "Báo Tuổi Trẻ",
             },
         ],
-        "counter": [(
-            "Phê phán thói gian lận thi cử, đạo văn (plagiarism) và bệnh"
-            " thành tích dối trá."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Trung"
+                " thực thẳng thắn cực đoan, thiếu uyển chuyển trong giao tiếp"
+                " đôi khi gây tổn thương ác ý không cần thiết cho người khác."
+            )
+        ],
     },
     "Đề 12: Tầm quan trọng của tinh thần tự học đối với học sinh": {
         "text": """Chủ tịch Hồ Chí Minh từng căn dặn: *"Học ở trường, học ở sách vở, học lẫn nhau và học nhân dân."*
@@ -1008,10 +1072,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về tầm quan trọng
                 "nguon": "Báo VnExpress",
             },
         ],
-        "counter": [(
-            "Phê phán thói quen ỷ lại, học vẹt, lười suy nghĩ, chờ 'dọn sẵn"
-            " mâm' kiến thức từ thầy cô."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Tự học"
+                " không có nghĩa là tự mò mẫm cô lập, khước từ sự dẫn dắt, truyền"
+                " đạt kinh nghiệm quý báu từ thầy cô và người đi trước."
+            )
+        ],
     },
     "Đề 13: Sức mạnh của lời nói tử tế trong giao tiếp": {
         "text": """Ca dao dân gian có câu:
@@ -1083,10 +1150,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của
                 "nguon": "Đài Truyền hình Việt Nam (VTV)",
             },
         ],
-        "counter": [(
-            "Phê phán thói chửi tục, miệt thị, dùng ngôn từ thô lỗ sát thương"
-            " tâm lý người khác."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Lời nói"
+                " ngọt ngào, tử tế bề ngoài nhưng ẩn chứa sự giả dối, nịnh bợ"
+                " vụ lợi còn độc hại hơn cả những lời chê bai thẳng thắn."
+            )
+        ],
     },
     "Đề 14: Vai trò của tính tự lập trong hành trình trưởng thành": {
         "text": """Có ý kiến cho rằng: *"Chim non muốn bay cao phải tự vẫy đôi cánh của chính mình."*
@@ -1156,10 +1226,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về vai trò của tí
                 "nguon": "Báo Thanh Niên",
             },
         ],
-        "counter": [(
-            "Phê phán thói quen 'công tử bột', 'bám váy mẹ', lười biếng, ỷ lại"
-            " mọi thứ vào cha mẹ."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Tự lập"
+                " không có nghĩa là sự cô độc, từ chối mọi sự giúp đỡ, yêu"
+                " thương và hậu phương vững chắc từ gia đình."
+            )
+        ],
     },
     "Đề 15: Sức mạnh to lớn của tinh thần đoàn kết": {
         "text": """Chủ tịch Hồ Chí Minh từng đúc kết chân lý lịch sử:
@@ -1232,10 +1305,13 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về sức mạnh của
                 "nguon": "VTV Digital",
             },
         ],
-        "counter": [(
-            "Phê phán tư tưởng cục bộ, ích kỷ, chia rẽ bè phái làm suy yếu sức"
-            " mạnh tập thể."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Đoàn kết"
+                " mù quáng, bao che khuyết điểm cho nhau trong một tập thể"
+                " (đoàn kết tiêu cực) sẽ bóp méo kỷ cương và sự phát triển."
+            )
+        ],
     },
 }
 
@@ -1291,10 +1367,18 @@ Viết bài văn nghị luận (khoảng 600 chữ) bàn về bản lĩnh giữ 
             ),
             "nguon": "Báo Thể thao & Văn hóa",
         }],
-        "counter": [(
-            "Phê phán thói hùa theo phong trào vô thức hoặc biến khác biệt"
-            " thành ngông cuồng."
-        )],
+        "counter": [
+            (
+                "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Giữ bản"
+                " sắc không có nghĩa là bảo thủ ngoan cố, chối bỏ mọi lời góp ý"
+                " chân thành từ tập thể."
+            ),
+            (
+                "<b>Phân biệt khái niệm dễ nhầm lẫn:</b> Cần phân biệt"
+                " <i>chính kiến độc lập</i> với thói ngông cuồng, cố chấp, đi"
+                " ngược lại lợi ích chung."
+            ),
+        ],
     }
 }
 
@@ -1494,7 +1578,10 @@ with st.sidebar:
 def call_gemini_engine(prompt_text):
   api_key = st.session_state.get("gemini_api_key", "").strip()
   if not api_key:
-    return "Cô chưa nhận được API Key. Thầy/cô vui lòng cấu hình API Key nhé!"
+    return (
+        "Cô chưa nhận được API Key. Thầy/cô vui lòng nhập Key ở thanh bên trái"
+        " nhé!"
+    )
   try:
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel("gemini-1.5-flash")
@@ -1901,10 +1988,29 @@ with tabs[1]:
           st.write(dc["noi_dung"])
           st.caption(f"📰 *Nguồn kiểm chứng: {dc['nguon']}*")
 
-    # Thao tác 4: Phản biện
-    with st.expander("🔄 Thao tác 4: Phản biện & Mở rộng", expanded=False):
-      for c in cur_de_info.get("counter", []):
-        st.markdown(f"- {c}")
+    # Thao tác 4: Phản biện (Đầy đủ phương án lật lại vấn đề, mặt trái, so sánh phân biệt)
+    with st.expander(
+        "🔄 Thao tác 4: Phản biện & Mở rộng (Lật lại vấn đề)", expanded=True
+    ):
+      counter_list = cur_de_info.get("counter", [
+          (
+              "<b>Phản biện mặt trái / Cái gì quá cũng không tốt:</b> Vấn đề nghị"
+              " luận đúng trong phần lớn trường hợp nhưng không có nghĩa là tuyệt"
+              " đối hóa trong mọi hoàn cảnh."
+          ),
+          (
+              "<b>Phân biệt khái niệm dễ nhầm lẫn:</b> Cần tránh đánh đồng bản"
+              " chất chân chính với biểu hiện hình thức, cực đoan."
+          ),
+      ])
+      for c_item in counter_list:
+        if isinstance(c_item, str):
+          st.markdown(
+              f"<div class='counter-box'>{c_item}</div>",
+              unsafe_allow_html=True,
+          )
+        else:
+          st.markdown(f"<div class='counter-box'>• {c_item}</div>", unsafe_allow_html=True)
 
   with c_right:
     st.markdown("#### 🧭 Trợ Lý Ngữ Văn AI Tư Vấn")
