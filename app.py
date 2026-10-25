@@ -142,7 +142,7 @@ def ensure_600_words_prompt(raw_text):
 if "gemini_api_key" not in st.session_state: st.session_state["gemini_api_key"] = ""
 if "selected_de_key" not in st.session_state: st.session_state["selected_de_key"] = list(db.DE_BAI_CO_BAN.keys())[0]
 if "current_de_info" not in st.session_state: st.session_state["current_de_info"] = db.DE_BAI_CO_BAN[st.session_state["selected_de_key"]]
-if "chat_history" not in st.session_state: st.session_state["chat_history"] = [("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Cô sẵn sàng hỗ trợ em định hướng phương pháp lập ý, cung cấp dẫn chứng thực tế và gợi ý cách hành văn, nhưng em phải tự viết bài nhé. Em đang vướng ở phần nào?")]
+if "chat_history" not in st.session_state: st.session_state["chat_history"] = [("assistant", "Chào em! Cô là Trợ lý Ngữ văn. Cô sẵn sàng hỗ trợ em định hướng tư duy, gợi mở cách tìm ý, khai thác dẫn chứng thực tế và tháo gỡ từng khó khăn trong quá trình viết bài. Em đang muốn cô hỗ trợ phần nào?")]
 if "user_essay" not in st.session_state: st.session_state["user_essay"] = ""
 if "rubric_evaluation" not in st.session_state: st.session_state["rubric_evaluation"] = ""
 if "eval_vdnl_text" not in st.session_state: st.session_state["eval_vdnl_text"] = ""
@@ -159,9 +159,9 @@ def get_api_key():
     return ""
 
 # ==============================================================================
-# 4. ĐỘNG CƠ KẾT NỐI AI TRỰC TIẾP QUA REST API
+# 4. ĐỘNG CƠ KẾT NỐI AI ĐA PHIÊN (HỖ TRỢ LỊCH SỬ CHAT & REST API)
 # ==============================================================================
-def call_gemini_rest_api(prompt, pil_image=None):
+def call_gemini_rest_api(prompt, pil_image=None, contents_list=None):
     key = get_api_key()
     if not key or not key.startswith("AIza"):
         return None
@@ -174,25 +174,29 @@ def call_gemini_rest_api(prompt, pil_image=None):
         "gemini-1.5-pro-latest"
     ]
     
-    parts = [{"text": prompt}]
-    if pil_image is not None:
-        try:
-            buffered = io.BytesIO()
-            img_rgb = pil_image.convert("RGB")
-            img_rgb.save(buffered, format="JPEG", quality=85)
-            img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
-            parts.append({
-                "inline_data": {
-                    "mime_type": "image/jpeg",
-                    "data": img_b64
-                }
-            })
-        except Exception:
-            pass
+    if contents_list is not None:
+        contents_payload = contents_list
+    else:
+        parts = [{"text": prompt}]
+        if pil_image is not None:
+            try:
+                buffered = io.BytesIO()
+                img_rgb = pil_image.convert("RGB")
+                img_rgb.save(buffered, format="JPEG", quality=85)
+                img_b64 = base64.b64encode(buffered.getvalue()).decode("utf-8")
+                parts.append({
+                    "inline_data": {
+                        "mime_type": "image/jpeg",
+                        "data": img_b64
+                    }
+                })
+            except Exception:
+                pass
+        contents_payload = [{"parts": parts}]
 
     payload = {
-        "contents": [{"parts": parts}],
-        "generationConfig": {"temperature": 0.35, "maxOutputTokens": 3500}
+        "contents": contents_payload,
+        "generationConfig": {"temperature": 0.45, "maxOutputTokens": 3500}
     }
     data = json.dumps(payload).encode("utf-8")
 
@@ -200,7 +204,7 @@ def call_gemini_rest_api(prompt, pil_image=None):
         url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={key}"
         req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
         try:
-            with urllib.request.urlopen(req, timeout=20) as response:
+            with urllib.request.urlopen(req, timeout=22) as response:
                 res_json = json.loads(response.read().decode("utf-8"))
                 candidates = res_json.get("candidates", [])
                 if candidates:
@@ -212,7 +216,7 @@ def call_gemini_rest_api(prompt, pil_image=None):
     return None
 
 # ==============================================================================
-# 5. HỆ THỐNG XỬ LÝ SƯ PHẠM THÔNG MINH (GIẢI THÍCH LINH HOẠT THEO DẠNG ĐỀ)
+# 5. HỆ THỐNG XỬ LÝ SƯ PHẠM NỘI BỘ (TỪ ĐIỂN ĐA CHIỀU & BỘ TỰ ĐỘNG SINH Ý)
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
@@ -314,7 +318,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl):
     direct_problem = student_vdnl.strip() if student_vdnl.strip() else extract_clean_topic_noun(raw_topic_text)
     is_quote = is_metaphorical_quote_topic(raw_topic_text)
 
-    # 1. Thử gọi Gemini REST API nếu có khóa hợp lệ
     explain_instruction = (
         "Vì đề bài nêu trực tiếp vấn đề, phần Giải thích cần cắt nghĩa tường minh khái niệm cốt lõi là gì, làm rõ bản chất vấn đề."
         if not is_quote else
@@ -382,7 +385,7 @@ Cấu trúc JSON BẮT BUỘC:
         except Exception:
             pass
 
-    # 2. Xử lý bằng Bộ máy NLP Sư phạm Nội bộ (Giải thích sâu sắc, đúng dạng đề)
+    # Xử lý bằng Bộ máy NLP Sư phạm Nội bộ
     combined_low = (raw_topic_text + " " + student_vdnl).lower()
     matched_concept = None
     for kw, data in CONCEPT_DICTIONARY.items():
@@ -509,7 +512,10 @@ def is_ghostwriting_request(q_low):
             return True
     return False
 
-def generate_deep_chat_response(user_q, cur_de_info):
+# ==============================================================================
+# HÀM TƯ VẤN LINH HOẠT ĐA LƯỢT: TRUYỀN TOÀN BỘ NGỮ CẢNH CHAT VÀO GEMINI
+# ==============================================================================
+def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     q_clean = user_q.strip()
     q_low = q_clean.lower()
     topic_text = ensure_600_words_prompt(cur_de_info.get("text", ""))
@@ -518,92 +524,113 @@ def generate_deep_chat_response(user_q, cur_de_info):
     # 1. Bắt nhạy bén mọi yêu cầu nhờ viết hộ bài/đoạn văn
     if is_ghostwriting_request(q_low):
         return (
-            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô không viết sẵn bài văn hay đoạn văn thay cho em nhé, vì tự tay đặt bút viết mới giúp em rèn được tư duy lập luận của chính mình! "
-            f"Với đề bài về **{vdnl}**, để bắt đầu dễ dàng nhất, em hãy thử viết **1-2 câu đầu tiên** theo gợi mở này rồi gửi vào đây cô sửa câu chữ cho:\n"
-            f"- Nếu em đang viết **Mở bài**: Hãy bắt đầu bằng hình ảnh/câu hỏi về thực tế cuộc sống hôm nay rồi dẫn vào cụm từ khóa *{vdnl}*.\n"
-            f"- Nếu em đang viết **Thân bài**: Em muốn diễn đạt ý nào trước (Giải thích khái niệm, phân tích ý nghĩa hay đưa dẫn chứng)? Hãy nói rõ phần em đang bí từ để cô gợi ý cách nối câu nhé!"
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô không viết sẵn bài văn hay đoạn văn thay cho em nhé! Nếu cô viết hộ, em sẽ mất đi cơ hội rèn luyện tư duy lập luận của chính mình. "
+            f"Với đề bài về **{vdnl}**, em hãy thử viết **1-2 câu đầu tiên** theo suy nghĩ của em rồi gửi vào đây, cô sẽ đọc và chỉ cho em cách chuốt câu chữ, chọn từ đắt giá hơn!"
         )
 
-    # 2. Gọi AI đám mây với chỉ thị ngầm linh hoạt, bám sát trọng tâm câu hỏi
-    prompt_chat = f"""Bạn là giáo viên Ngữ văn THPT sắc sảo, tinh tế, đang trực tiếp hướng dẫn học sinh luyện viết bài văn Nghị luận xã hội:
+    # 2. XÂY DỰNG NGỮ CẢNH HỘI THOẠI ĐA LƯỢT ĐỂ GỬI GEMINI API
+    system_instruction_text = f"""Bạn là một giáo viên Ngữ văn THPT tâm huyết, sắc sảo, giàu kinh nghiệm, đang kèm 1-1 cho học sinh viết bài văn Nghị luận xã hội khoảng 600 chữ.
+THÔNG TIN ĐỀ BÀI:
 - Đề bài: "{topic_text}"
 - Vấn đề nghị luận trọng tâm: "{vdnl}"
-- Câu hỏi/chia sẻ thực tế của học sinh: "{q_clean}"
 
-Thực hiện phản hồi tự nhiên như một người cô đang trò chuyện chuyên môn với học sinh:
-- Đọc kỹ từng chữ trong câu hỏi của học sinh để trả lời trực diện, đúng trọng tâm điều học sinh đang hỏi hoặc đang vướng mắc (ví dụ: hỏi cách diễn đạt một câu, hỏi cách chuyển ý, hỏi tìm từ ngữ, hỏi một khía cạnh nhỏ của đề, hay nhờ nhận xét một câu/đoạn nháp...).
-- Không trả lời máy móc bằng cách liệt kê lại dàn ý 5 luận điểm thân bài nếu học sinh không hỏi về dàn ý thân bài.
-- Nếu học sinh có ý nhờ viết hộ bài văn hoặc đoạn văn hoàn chỉnh, hãy từ chối khéo léo, ấm áp rồi gợi mở cấu trúc câu, từ khóa nối câu hoặc đặt câu hỏi dẫn dắt để học sinh tự viết."""
-    
-    ai_reply = call_gemini_rest_api(prompt_chat)
-    if ai_reply:
+NGUYÊN TẮC TƯ VẤN SƯ PHẠM VÀ TÍNH LINH HOẠT TUYỆT ĐỐI:
+1. ĐỌC KỸ LỊCH SỬ CHAT VÀ CÂU HỎI HIỆN TẠI: Phải bám sát vào ngữ cảnh trước đó để trả lời tiếp nối tự nhiên, sinh động, không lặp lại câu từ của các lượt trước.
+2. TRẢ LỜI ĐÚNG TRỌNG TÂM CÂU HỎI:
+   - Nếu học sinh hỏi thêm về "dẫn chứng": Hãy đưa ra các dẫn chứng mới, thời sự, góc nhìn phân tích độc đáo (nhân vật trẻ, dự án xã hội, tấm gương công nghệ, lối sống đẹp...) kèm câu gợi ý cách đưa vào bài.
+   - Nếu học sinh hỏi sâu về "luận điểm bàn luận": Hãy đào sâu vào khía cạnh học sinh đang thắc mắc (vì sao lại như vậy, ý nghĩa xã hội, góc nhìn tâm lý tuổi trẻ...) thay vì đọc lại một dàn ý chung chung.
+   - Nếu học sinh hỏi về "phản đề": Hãy hướng dẫn cách nhìn đa chiều, biện chứng, tránh nhầm lẫn giữa phản biện sắc bén với thói phủ nhận cực đoan.
+   - Nếu học sinh nhờ nhận xét câu văn/đoạn văn học sinh viết: Hãy đọc kỹ từng từ, khen ngợi điểm sáng, chỉ ra lỗi dùng từ/lỗi diễn đạt và gợi ý 1-2 cách viết lại nâng tầm.
+3. TUYỆT ĐỐI KHÔNG TRẢ LỜI RẬP KHUÔN theo một khuôn mẫu cố định nào. Không viết hộ nguyên bài văn hoàn chỉnh."""
+
+    contents_payload = []
+    # Đưa system instruction vào lượt đầu
+    contents_payload.append({
+        "role": "user",
+        "parts": [{"text": f"[CHỈ THỊ SƯ PHẠM BẮT BUỘC ĐỐI VỚI GIÁO VIÊN]:\n{system_instruction_text}\n\nEm chào cô ạ!"}]
+    })
+    contents_payload.append({
+        "role": "model",
+        "parts": [{"text": f"Chào em! Cô đang cùng em làm việc với đề bài về '{vdnl}'. Em đang băn khoăn hay cần cô gợi mở khâu nào trong bài viết?"}]
+    })
+
+    # Đưa các lượt hội thoại gần nhất vào để AI ghi nhớ ngữ cảnh liên tục
+    recent_history = chat_history_list[-6:] if len(chat_history_list) > 6 else chat_history_list
+    for role, msg in recent_history:
+        if role == "user":
+            contents_payload.append({"role": "user", "parts": [{"text": msg}]})
+        elif role == "assistant":
+            # Loại bỏ icon mở đầu nếu có để AI hiểu rõ ngữ cảnh
+            clean_msg = re.sub(r'^👩‍🏫 \*\*Trợ lý Ngữ văn:\*\*\s*', '', msg)
+            contents_payload.append({"role": "model", "parts": [{"text": clean_msg}]})
+
+    # Thêm câu hỏi mới nhất của học sinh
+    contents_payload.append({"role": "user", "parts": [{"text": q_clean}]})
+
+    ai_reply = call_gemini_rest_api(prompt="", contents_list=contents_payload)
+    if ai_reply and len(ai_reply.strip()) > 30:
         return ai_reply
 
-    # 3. Bộ máy phản hồi sư phạm nội bộ (Xử lý thông minh, phân loại đúng trọng tâm câu hỏi)
+    # 3. BỘ MÁY PHẢN HỒI NỘI BỘ THÔNG MINH, ĐA DẠNG HÓA KHI NGOẠI TUYẾN
     explain_list = cur_de_info.get("explain_items", [])
     questions_list = cur_de_info.get("questions", [])
-    evidence_list = cur_de_info.get("evidence", [])
     counter_list = cur_de_info.get("counter", [])
 
-    if any(w in q_low for w in ["chào cô", "hello", "hi cô", "cô ơi", "em chào cô"]) and len(q_low.split()) <= 6:
-        return f"👩‍🏫 **Trợ lý Ngữ văn:** Chào em! Chúng ta đang cùng rèn luyện đề bài về **{vdnl}**. Hiện tại em đang muốn tìm ý cho phần Mở bài, cách Giải thích từ khóa, cách chọn Dẫn chứng hay đang bí cách diễn đạt ở câu văn nào? Em cứ nói cụ thể nhé!"
+    # Xoay vòng linh hoạt các dẫn chứng thực tế phong phú
+    evidence_pool = [
+        {"ten": "Chiến dịch hỗ trợ đồng bào bão Yagi & Dự án Nuôi Em", "nd": "Hàng triệu tấm lòng chung tay cứu trợ, những người trẻ dấn thân trong lũ dữ.", "yn": "Sức mạnh của tình đoàn kết, lòng nhân ái và trách nhiệm công dân."},
+        {"ten": "Đôi bạn 10 năm cõng bạn đến trường (Minh & Hiếu)", "nd": "Tình bạn cao đẹp vượt qua nghịch cảnh tật nguyền để cùng bước vào giảng đường.", "yn": "Nghị lực sống phi thường và giá trị thiêng liêng của sự đồng hành."},
+        {"ten": "Biệt đội Sài Gòn Xanh", "nd": "Những bạn trẻ tình nguyện dầm mình dọn sạch những dòng kênh đen kịt vì môi trường.", "yn": "Hành động trách nhiệm cụ thể, vượt lên sự ngại khó của tuổi trẻ."},
+        {"ten": "Kình ngư Ánh Viên & hành trình dạy bơi cộng đồng", "nd": "Vượt qua đỉnh cao thi đấu để trao tặng giá trị phòng chống đuối nước cho trẻ thơ.", "yn": "Bản lĩnh cống hiến không ngừng và lối sống khiêm nhường, sẻ chia."},
+        {"ten": "Cô gái Mông Lầu Minh Vư giành học bổng quốc tế", "nd": "Vượt định kiến và nghèo khó vùng cao để vươn ra thế giới bằng con đường tri thức.", "yn": "Khát vọng tự thân và sức mạnh của tinh thần tự học."}
+    ]
+    # Lấy dẫn chứng dựa trên số lượt chat để mỗi lần hỏi sẽ ra một dẫn chứng khác nhau
+    chat_turn_count = len(chat_history_list)
+    selected_ev = evidence_pool[chat_turn_count % len(evidence_pool)]
+    alt_ev = evidence_pool[(chat_turn_count + 1) % len(evidence_pool)]
 
-    if "mở bài" in q_low or "dẫn dắt" in q_low or "câu đầu" in q_low:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để viết phần **Mở bài** thật cuốn hút cho vấn đề **\"{vdnl}\"**, em có thể chọn 1 trong 2 cách dẫn dắt sau:
-- **Cách 1 (Đi từ nghịch lý/thực tiễn thời đại):** Giữa một thế giới đang chuyển động không ngừng với vô vàn biến số, điều gì tạo nên điểm tựa vững chắc nhất cho con người? Phải chăng câu trả lời nằm ở chính **{vdnl}**... *(sau đó em trích dẫn đề bài)*.
-- **Cách 2 (Đi từ trải nghiệm tuổi trẻ):** Hành trình trưởng thành của mỗi người trẻ chưa bao giờ là một đường thẳng trải đầy hoa hồng, mà luôn đòi hỏi chúng ta phải nhận thức sâu sắc về **{vdnl}**...
-👉 *Em hãy thử viết 2-3 câu mở bài của riêng em vào khung chat này, cô sẽ đọc và góp ý cách chuốt từ cho thật mượt nhé!*"""
+    if "dẫn chứng" in q_low or "ví dụ" in q_low or "nhân vật" in q_low or "ai" in q_low:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để làm sáng tỏ cho vấn đề **\"{vdnl}\"**, cô gợi ý cho em thêm góc nhìn dẫn chứng thực tế sau (khác với các dẫn chứng thông thường):
+- **Dẫn chứng 1: {selected_ev['ten']}**
+  - *Hành động tiêu biểu:* {selected_ev['nd']}
+  - *Gợi ý phân tích:* Em dùng dẫn chứng này để làm sáng tỏ ý nghĩa: *{selected_ev['yn']}*.
+- **Dẫn chứng 2: {alt_ev['ten']}**
+  - *Hành động tiêu biểu:* {alt_ev['nd']}
+  - *Gợi ý phân tích:* Thích hợp đưa vào luận điểm bàn về sự dấn thân, không ngại khó của tuổi trẻ.
+💡 *Cách đưa vào bài:* Không kể lể dài dòng, chỉ cần viết: *Nhìn vào hành trình của {selected_ev['ten']}, ta thấm thía sâu sắc rằng...*"""
 
-    if "giải thích" in q_low or "từ khóa" in q_low or "khái niệm" in q_low or "là gì" in q_low or "nghĩa là" in q_low:
-        gt_content = "\n".join(explain_list) if explain_list else f"- Làm rõ bản chất khái niệm **{vdnl}**."
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Với câu hỏi của em về phần **Giải thích**, em cần đi thẳng vào cắt nghĩa từ khóa cốt lõi một cách cô đọng (khoảng 3-4 câu văn):
-{gt_content}
-- **Gợi ý câu nối chuyển ý:** *Khi đã thấu hiểu bản chất của vấn đề, chúng ta càng nhận ra sức mạnh và giá trị to lớn mà nó mang lại trong đời sống thực tiễn.*"""
-
-    if "chuyển ý" in q_low or "chuyển đoạn" in q_low or "nối câu" in q_low or "liên kết" in q_low:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để các đoạn văn trong bài viết về **\"{vdnl}\"** liên kết chặt chẽ, mượt mà và thoát khỏi kiểu liệt kê khô khan, em có thể sử dụng các cấu trúc câu chuyển đoạn sau:
-- **Từ Giải thích sang Bàn luận:** *Không chỉ dừng lại ở một khái niệm mang tính nhận thức, {vdnl} còn hiện hữu sinh động và khẳng định giá trị sâu sắc trong từng nhịp đập của đời sống.*
-- **Nối giữa các luận điểm bàn luận:** *Hơn thế nữa, nếu nhìn ở bình diện rộng lớn hơn, chính {vdnl} còn là chất keo gắn kết cộng đồng...*
-- **Từ Bàn luận sang Phản đề:** *Tuy nhiên, nhìn thẳng vào thực tế hôm nay, thật đáng trăn trở khi vẫn còn không ít người đang đi ngược lại giá trị ấy...*"""
-
-    if "dẫn chứng" in q_low or "ví dụ" in q_low or "nhân vật" in q_low or "tấm gương" in q_low:
-        ev_str = ""
-        for idx, ev in enumerate(evidence_list[:2], 1):
-            if isinstance(ev, dict):
-                ev_str += f"\n- **{ev.get('ten', '')}:** {ev.get('chi_tiet', '')} *(Góc độ phân tích: {ev.get('y_nghia', '')})*"
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để phần **Dẫn chứng** cho vấn đề **\"{vdnl}\"** sắc bén và không bị sa vào kể lể dài dòng, em hãy áp dụng công thức **3 câu** (Câu 1: Nêu tên nhân vật/sự kiện tiêu biểu -> Câu 2: Khái quát hành động cốt lõi nhất -> Câu 3: Bình luận ý nghĩa gắn chặt với luận điểm):
-{ev_str}
-💡 *Ngoài ra, em có thể mở mục **Kho dẫn chứng 9 chủ điểm** ở cột bên trái để chọn thêm các tấm gương thời sự khác phù hợp với góc nhìn của em nhé!*"""
-
-    if "phản đề" in q_low or "phản biện" in q_low or "mở rộng" in q_low or "phê phán" in q_low or "lật lại" in q_low:
+    if "phản đề" in q_low or "phản biện" in q_low or "mở rộng" in q_low or "ngược lại" in q_low:
         pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện thiếu **{vdnl}** và mở rộng góc nhìn biện chứng."
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để đoạn **Phản đề & Mở rộng** thực sự có chiều sâu tư duy phản biện, em cần triển khai 2 chiều kích:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Khi viết đoạn **Phản đề & Mở rộng** cho vấn đề **\"{vdnl}\"**, em hãy chú ý nhìn nhận từ 2 góc độ:
+1. **Phê phán hiện tượng lệch lạc:** Lên án những người sống thờ ơ, thiếu bản lĩnh hoặc chạy theo những giá trị ảo.
+2. **Mở rộng góc nhìn đa chiều:** Cần phân biệt rõ ranh giới giữa việc kiên định với sự bảo thủ; giữa khát vọng cống hiến với sự vội vàng, hình thức.
 {pb_content}
-👉 *Lưu ý: Khi phê phán, em nên dùng thái độ khách quan, thẳng thắn, đồng thời chỉ rõ ranh giới giữa giá trị tích cực và những biểu hiện cực đoan/lệch lạc.*"""
+👉 *Em thử viết một câu lật lại vấn đề bắt đầu bằng cụm từ 'Tuy nhiên, không thể đồng nhất...' xem sao nhé!*"""
 
-    if "liên hệ" in q_low or "kết bài" in q_low or "bài học" in q_low or "kết thúc" in q_low:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Ở phần **Bài học liên hệ và Kết bài** cho đề **{vdnl}**, để tránh lối viết sáo mòn ("Là học sinh đang ngồi trên ghế nhà trường..."), em hãy viết từ sự trăn trở chân thực của chính mình:
-- **Về nhận thức:** Hiểu rằng **{vdnl}** không phải là những lý thuyết xa vời mà là lựa chọn thái độ sống mỗi ngày.
-- **Về hành động:** Bắt đầu từ những việc cụ thể, vừa sức trong học tập, cách ứng xử và rèn luyện bản lĩnh cá nhân, rồi khép lại bằng một câu khẳng định giàu dư âm."""
+    if "mở bài" in q_low or "bắt đầu" in q_low:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Với đề bài về **\"{vdnl}\"**, em có thể mở bài linh hoạt theo một trong hai hướng:
+- **Hướng 1 (Tương phản):** Giữa nhịp sống hiện đại hối hả nơi con người dễ bị cuốn theo những giá trị vật chất bề nổi, điều gì mới thực sự tạo nên chiều sâu nhân cách? Đó chính là **{vdnl}**...
+- **Hướng 2 (Dẫn dắt trực tiếp):** Mỗi thế hệ đều có một sứ mệnh riêng, và đối với tuổi trẻ hôm nay, nhận thức sâu sắc về **{vdnl}** chính là chiếc chìa khóa mở ra cánh cửa trưởng thành đích thực...
+👉 *Em hãy chọn một hướng và viết thử 2 câu mở bài của em vào đây, cô sẽ đọc và góp ý cách trau chuốt từng từ nhé!*"""
 
-    if "bàn luận" in q_low or "luận điểm" in q_low or "thân bài" in q_low or "dàn ý" in q_low or "vì sao" in q_low or "ý nghĩa" in q_low or "tác dụng" in q_low or "vai trò" in q_low:
+    if "luận điểm" in q_low or "bàn luận" in q_low or "thân bài" in q_low or "vì sao" in q_low or "ý nghĩa" in q_low:
         bl_items = []
         for q in questions_list:
             for ans in q.get("y_tra_loi", []):
                 bl_items.append(ans)
         bl_text = "\n".join(bl_items[:5]) if bl_items else f"- Phân tích biểu hiện, nguyên nhân và ý nghĩa của **{vdnl}**."
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Về phần **Bàn luận / Hệ thống luận điểm** của vấn đề **\"{vdnl}\"**, em có thể triển khai theo các tầng bậc lập luận từ cá nhân đến xã hội như sau:
-{bl_text}"""
+        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Để phần **Bàn luận** về **\"{vdnl}\"** có chiều sâu thuyết phục và không bị sáo rỗng, em hãy triển khai tuần tự từ nhận thức cá nhân đến tác động xã hội:
+{bl_text}
+💡 *Em đang muốn đào sâu vào luận điểm nào nhất trong các ý trên? Cứ nói rõ cho cô, cô sẽ hướng dẫn cách đặt câu hỏi phản biện cho luận điểm đó!*"""
 
-    # Nếu học sinh gửi một câu văn/đoạn nháp để hỏi ý kiến hoặc hỏi câu tự do khác
-    if len(q_clean.split()) >= 15:
-        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Cô đã đọc kỹ phần diễn đạt của em: *\"{q_clean[:120]}{'...' if len(q_clean) > 120 else ''}\"*.
-- **Điểm ghi nhận:** Em đã bước đầu hướng vào chủ đề **{vdnl}**.
-- **Gợi ý nâng cấp câu văn:** Để đoạn viết sắc sảo và giàu sức nặng lập luận hơn, em hãy chú ý tránh lặp từ, bổ sung thêm các từ nối chỉ nguyên nhân - kết quả (*bởi lẽ, chính điều đó đã tạo nên, không dừng lại ở đó...*) và làm nổi bật rõ từ khóa trọng tâm của đề bài ngay ở câu chốt đoạn nhé!"""
+    if len(q_clean.split()) >= 12:
+        return f"""👩‍🏫 **Trợ lý Ngữ văn:** Cô đã đọc rất kỹ câu của em: *\"{q_clean}\"*.
+- **Về ý tứ:** Em đã bám sát được hướng bàn luận về **{vdnl}**.
+- **Góp ý hoàn thiện:** Để câu văn giàu sức thuyết phục và mang giọng điệu nghị luận sắc bén hơn, em nên thay thế các từ ngữ đời thường bằng các từ ngữ biểu đạt tư duy logic (như *minh chứng, khẳng định, tác động sâu sắc, cội nguồn...*). Em hãy thử sửa lại một chút và gửi lại cô xem nhé!"""
 
-    return f"""👩‍🏫 **Trợ lý Ngữ văn:** Về thắc mắc **\"{q_clean}\"** của em liên quan đến chủ đề **{vdnl}**:
-Để giải quyết tốt điểm này trong bài viết, em hãy bám sát vào bản chất cốt lõi của **{vdnl}** — đặt ra câu hỏi: *Điều này thể hiện như thế nào trong thực tế? Vì sao nó lại cần thiết với người trẻ hôm nay? Nếu nhìn ở góc độ ngược lại thì có điều gì đáng suy ngẫm?* 
-Em đang muốn đào sâu vào phần **Mở bài, Giải thích, Lập luận, Dẫn chứng hay Phản đề**? Hãy nói rõ hơn hoặc dán câu văn em đang viết dở vào đây để cô hướng dẫn sát nhất nhé!"""
+    return f"""👩‍🏫 **Trợ lý Ngữ văn:** Đối với câu hỏi *\"{q_clean}\"* của em về chủ đề **{vdnl}**:
+Trong bài văn nghị luận xã hội, điều quan trọng nhất là tính logic và cảm xúc chân thành. Em hãy tự hỏi: *Khía cạnh này tác động trực tiếp thế nào đến người trẻ chúng ta? Có dẫn chứng nào gần gũi trong đời sống minh họa được không?*
+Em hãy chia sẻ cụ thể đoạn văn hoặc ý tưởng em đang viết dở, cô sẽ đồng hành sửa từng câu chữ cùng em nhé!"""
 
 
 # ==============================================================================
@@ -662,7 +689,6 @@ Thực hiện đánh giá trực tiếp vào bảng điểm và lời nhận xé
     counter_markers = ["tuy nhiên", "ngược lại", "đáng buồn", "phê phán", "bên cạnh những", "mặt trái", "thực trạng", "vô cảm", "ích kỷ", "lệch lạc", "nhầm lẫn", "cực đoan", "nhìn nhận lại"]
     counter_count = sum(1 for m in counter_markers if m in text_low)
 
-    # Phát hiện lỗi diễn đạt: từ khẩu ngữ, sáo rỗng, lặp từ, câu quá ngắn hoặc quá dài không ngắt câu
     colloquial_words = ["rất là", "cực kỳ", "siêu", "thì là", "nói chung là", "kiểu như", "vân vân", "v.v", "là một học sinh đang ngồi trên ghế nhà trường"]
     found_colloquial = [cw for cw in colloquial_words if cw in text_low]
 
@@ -676,7 +702,7 @@ Thực hiện đánh giá trực tiếp vào bảng điểm và lời nhận xé
     weak_sentences = [s for s in sentences if len(s.split()) < 7 or len(s.split()) > 65]
     sample_weak_sent = weak_sentences[0] if weak_sentences else shortest_sent
 
-    # 1. Bố cục (0.5đ) - Kiểm tra khắt khe tỷ lệ các đoạn
+    # 1. Bố cục (0.5đ)
     if num_paras >= 4 and word_count >= 500:
         s1 = 0.5
         c1_note = f"Bài viết chia thành **{num_paras} đoạn văn**, đảm bảo kết cấu 3 phần Mở - Thân - Kết và tách các luận điểm rõ ràng."
@@ -709,7 +735,7 @@ Thực hiện đánh giá trực tiếp vào bảng điểm và lời nhận xé
         s3 = 0.25 if word_count >= 180 and topic_coverage > 0 else 0.0
         c3_note = "Thiếu hẳn đoạn văn giải thích tường minh khái niệm/câu nói ở đầu phần Thân bài, hoặc giải thích còn chung chung, mơ hồ."
 
-    # 4. Hệ thống luận điểm (3.5đ) - Chấm khắt khe, không cho tối đa dễ dãi
+    # 4. Hệ thống luận điểm (3.5đ)
     if word_count < 200:
         s4 = 0.5
         c4_note = f"Dung lượng quá ngắn (**{word_count} chữ**). Các ý chỉ mới gạch đầu dòng hoặc nêu nhận định suông, hoàn toàn chưa có lập luận phân tích. Minh chứng: *\"{shortest_sent}\"*."
@@ -969,20 +995,20 @@ with tabs[1]:
                 st.markdown(f"**III. KẾT BÀI:** {dani.get('kb','')}")
 
     with c_right:
-        st.markdown("#### 🧭 Trợ Lý Ngữ Văn Tư Vấn (Chat)")
+        st.markdown("#### 🧭 Trợ Lý Ngữ Văn Tư Vấn (Chat Trực Tuyến)")
         chat_container = st.container(height=420, border=True)
         with chat_container:
             for role, msg in st.session_state["chat_history"]:
                 st.markdown(f"**{'🧑‍🎓 Học sinh' if role == 'user' else '👩‍🏫 Trợ lý Ngữ văn'}:**\n\n{msg}")
                 st.markdown("---")
 
-        user_question = st.text_area("Nhập câu hỏi cụ thể (VD: Cách viết mở bài, giải thích, đưa dẫn chứng, phản đề, liên hệ...):", height=80, key="txt_chat_input")
+        user_question = st.text_area("Nhập câu hỏi cụ thể (Hỏi sâu về dẫn chứng mới, cách lập luận, phản đề, hoặc dán câu văn nhờ nhận xét...):", height=80, key="txt_chat_input")
         col_chat_1, col_chat_2 = st.columns([2, 1])
         with col_chat_1:
             if st.button("🚀 Gửi câu hỏi", type="primary", use_container_width=True):
                 if user_question.strip():
-                    with st.spinner("Trợ lý Ngữ văn đang phân tích câu hỏi..."):
-                        reply = generate_deep_chat_response(user_question.strip(), cur_de_info)
+                    with st.spinner("Trợ lý Ngữ văn đang phân tích câu hỏi trong mạch hội thoại..."):
+                        reply = generate_deep_chat_response(user_question.strip(), cur_de_info, st.session_state["chat_history"])
                         st.session_state["chat_history"].append(("user", user_question.strip()))
                         st.session_state["chat_history"].append(("assistant", reply))
                         st.rerun()
@@ -1045,7 +1071,7 @@ with tabs[2]:
             )
             if st.button("📊 Đọc bài & Đánh giá theo Rubric", type="primary"):
                 with st.spinner("Đang đọc kỹ bài làm, rà soát lỗi và chấm điểm theo 7 tiêu chí..."):
-                    prompt_img = f"""Hãy đọc toàn bộ chữ viết tay trong bức ảnh này và đánh giá nghiêm khắc, thực chất theo Bảng Rubric 7 tiêu chí (Thang điểm 10.0) cho đề bài: "{ensure_600_words_prompt(st.session_state['current_de_info'].get('text', ''))}".
+                    prompt_img = f"""Hãy đọc toàn bộ chữ viết tay trong bức ảnh này và đánh giá nghiêm khắc, thực chất theo BẢNG RUBRIC 7 TIÊU CHÍ (Thang điểm 10.0) cho đề bài: "{ensure_600_words_prompt(st.session_state['current_de_info'].get('text', ''))}".
 Trích dẫn nguyên văn các câu trong ảnh bài làm để chỉ rõ lỗi diễn đạt, lỗi lập luận, lỗi chính tả và hướng dẫn cách sửa chi tiết."""
                     ai_img_res = call_gemini_rest_api(prompt_img, pil_image=img_obj)
                     if ai_img_res and "|" in ai_img_res:
