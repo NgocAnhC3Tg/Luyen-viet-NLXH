@@ -159,7 +159,7 @@ if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = [
         (
             "assistant",
-            "Chào em! Cô là Trợ lý Ngữ văn. Cô sẵn sàng hỗ trợ em định hướng phương pháp lập ý theo đúng dạng đề, cung cấp dẫn chứng thực tế và gợi ý cách hành văn, nhưng em phải tự viết bài nhé. Em đang vướng ở phần nào?",
+            "Chào em! Cô là Trợ lý Ngữ văn. Cô sẵn sàng hỗ trợ em giải thích khái niệm khó, gợi mở luận điểm sâu sắc theo đúng dạng đề, cung cấp dẫn chứng người thật việc thật và sửa từng câu văn cho em. Em đang cần cô hỗ trợ khâu nào?",
         )
     ]
 if "user_essay" not in st.session_state:
@@ -185,7 +185,7 @@ def get_api_key():
 # ==============================================================================
 # 4. ĐỘNG CƠ KẾT NỐI AI ĐA PHIÊN (HỖ TRỢ LỊCH SỬ CHAT, SYSTEM INSTRUCTION & REST API)
 # ==============================================================================
-def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_instruction=None, temperature=0.45):
+def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_instruction=None, temperature=0.4):
     key = get_api_key()
     if not key or not key.startswith("AIza"):
         return None
@@ -222,7 +222,7 @@ def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_inst
 
     payload = {
         "contents": contents_payload,
-        "generationConfig": {"temperature": temperature, "maxOutputTokens": 3800},
+        "generationConfig": {"temperature": temperature, "maxOutputTokens": 4000},
     }
     if system_instruction:
         payload["systemInstruction"] = {"parts": [{"text": system_instruction}]}
@@ -235,7 +235,7 @@ def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_inst
             url, data=data, headers={"Content-Type": "application/json"}, method="POST"
         )
         try:
-            with urllib.request.urlopen(req, timeout=24) as response:
+            with urllib.request.urlopen(req, timeout=25) as response:
                 res_json = json.loads(response.read().decode("utf-8"))
                 candidates = res_json.get("candidates", [])
                 if len(candidates) > 0:
@@ -247,88 +247,256 @@ def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_inst
     return None
 
 # ==============================================================================
-# 5. HỆ THỐNG TỪ ĐIỂN SƯ PHẠM & NHẬN DIỆN 5 DẠNG BÀI + 3 TRƯỜNG HỢP TƯ TƯỞNG ĐẠO LÝ
+# 5. KHO TRI THỨC BÁCH KHOA NLXH CHUYÊN SÂU (KHÁI NIỆM, LÝ LẼ, GIẢI PHÁP 3 CẤP ĐỘ & DẪN CHỨNG CỤ THỂ)
+# Đảm bảo học sinh có ngay khái niệm chuẩn và dẫn chứng cụ thể mà không cần tra Google/ChatGPT
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
         "term": "Tinh thần sáng tạo",
-        "def": "**Tinh thần sáng tạo** là khả năng tư duy độc lập, dám bứt phá khỏi những khuôn mẫu, lối mòn sẵn có để tìm tòi, khám phá ra những ý tưởng mới, cách làm mới mang lại giá trị và hiệu quả cao hơn.",
-        "why": "Thế giới hiện đại biến đổi từng giây cùng kỷ nguyên số; nếu chỉ sao chép và đi theo lối mòn, con người sẽ bị tụt hậu. Sáng tạo chính là động lực cốt lõi giúp cá nhân khẳng định bản sắc và thúc đẩy xã hội tiến bộ.",
-        "manifest": "Chủ động đặt câu hỏi phản biện trong học tập, tìm kiếm phương pháp giải quyết vấn đề mới mẻ, dám thử nghiệm công nghệ và ý tưởng đột phá trong lao động, nghiên cứu.",
-        "counter": "Lối sống thụ động, học vẹt máy móc, rập khuôn sáo rỗng, ngại thay đổi; hoặc nhầm lẫn sáng tạo với sự lập dị, tùy tiện, bất chấp các quy chuẩn đạo đức và khoa học.",
-        "ev_ten": "Kỹ sư trẻ Nguyễn Tử Quảng và các nhóm nghiên cứu công nghệ lõi Việt Nam",
-        "ev_chitiet": "Dám dấn thân nghiên cứu các lĩnh vực công nghệ cao từ an ninh mạng đến trí tuệ nhân tạo ngay từ khi điều kiện trong nước còn thiếu thốn, góp phần khẳng định trí tuệ Việt trên bản đồ công nghệ.",
-        "ev_ynghia": "Minh chứng rõ nét cho sức mạnh của tinh thần dám nghĩ dám làm và khát vọng sáng tạo không ngừng.",
+        "def": "**Tinh thần sáng tạo** là khả năng tư duy độc lập, dám bứt phá khỏi những khuôn mẫu, lối mòn sẵn có để tìm tòi, khám phá ra những ý tưởng mới, phương pháp mới mang lại giá trị và hiệu quả cao hơn.",
+        "why": "Thế giới hiện đại biến đổi từng giây cùng kỷ nguyên số và trí tuệ nhân tạo; nếu chỉ sao chép và đi theo lối mòn, con người sẽ bị đào thải. Sáng tạo chính là động lực cốt lõi giúp cá nhân khẳng định bản sắc độc bản và thúc đẩy xã hội tiến bộ.",
+        "manifest": "Chủ động đặt câu hỏi phản biện trong học tập, tìm kiếm cách giải quyết vấn đề mới mẻ, dám thử nghiệm công nghệ và ý tưởng đột phá trong lao động, nghiên cứu khoa học.",
+        "how_to_promote": "Không ngừng tự học để tích lũy nền tảng tri thức vững chắc; rèn tư duy phản biện, dám thử nghiệm và chấp nhận rủi ro sai sót như một phần của quá trình tìm tòi cái mới.",
+        "counter": "Lối sống thụ động, học vẹt máy móc, rập khuôn văn mẫu sáo rỗng, ngại thay đổi; hoặc nhầm lẫn sáng tạo với sự lập dị, tùy tiện, bất chấp quy chuẩn đạo đức và khoa học.",
+        "ev_ten": "Nhóm kỹ sư trẻ Việt Nam nghiên cứu AI & Học sinh chế tạo cánh tay robot hỗ trợ người khuyết tật",
+        "ev_chitiet": "Từ những phòng thí nghiệm học đường còn khiêm tốn, nhiều học sinh THPT Việt Nam đã sáng tạo ra các thiết bị cảnh báo lũ quét, cánh tay robot sinh học đạt giải cao tại Cuộc thi Khoa học Kỹ thuật Quốc tế (ISEF).",
+        "ev_ynghia": "Minh chứng rõ nét cho sức mạnh của tinh thần dám nghĩ dám làm và khát vọng sáng tạo từ chính lứa tuổi học trò.",
     },
     "đoàn kết": {
         "term": "Tinh thần đoàn kết",
-        "def": "**Tinh thần đoàn kết** là sự gắn kết, đồng lòng, tập hợp sức mạnh của nhiều cá nhân thành một khối thống nhất để cùng hướng tới mục tiêu chung.",
-        "why": "Một cá nhân dù xuất sắc đến đâu cũng có giới hạn; khi biết hợp lực, sức mạnh trí tuệ và tinh thần sẽ được nhân lên gấp bội để vượt qua nghịch cảnh.",
-        "manifest": "Sự tương thân tương ái khi đồng bào gặp thiên tai bão lũ; tinh thần phối hợp ăn ý trong học tập, làm việc nhóm; sự đồng lòng của cả dân tộc trước những thử thách lịch sử.",
-        "counter": "Lối sống ích kỷ, cục bộ, chia rẽ tập thể; hoặc biến 'đoàn kết' thành sự bao che, dĩ hòa vi quý làm triệt tiêu sự đấu tranh phản biện tích cực.",
-        "ev_ten": "Chiến dịch chung tay hỗ trợ đồng bào miền Bắc trong siêu bão Yagi & Dự án 'Nuôi Em'",
-        "ev_chitiet": "Hàng triệu người dân Việt Nam từ khắp mọi miền đã chung tay quyên góp, những đoàn xe cứu trợ xuyên đêm và hàng nghìn chiến sĩ, thanh niên tình nguyện dầm mình trong lũ dữ để cứu giúp đồng bào.",
-        "ev_ynghia": "Minh chứng sống động cho sức mạnh đại đoàn kết: khi những trái tim cùng chung một nhịp đập, không thử thách nào có thể khuất phục.",
+        "def": "**Tinh thần đoàn kết** là sự gắn kết, đồng lòng, tập hợp sức mạnh trí tuệ và vật chất của nhiều cá nhân thành một khối thống nhất để cùng vượt qua thử thách, hướng tới mục tiêu chung.",
+        "why": "Một cá nhân dù xuất sắc đến đâu cũng có giới hạn; khi biết hợp lực, sức mạnh tinh thần và hành động sẽ được nhân lên gấp bội để tạo nên kỳ tích trước nghịch cảnh.",
+        "manifest": "Sự tương thân tương ái khi đồng bào gặp thiên tai bão lũ; tinh thần phối hợp ăn ý, tôn trọng lẫn nhau trong học tập, làm việc nhóm; sự đồng lòng của cả dân tộc trước những bước ngoặt lịch sử.",
+        "how_to_promote": "Biết hạ cái tôi cá nhân vì mục tiêu chung, lắng nghe và tôn trọng sự khác biệt trong tập thể, chủ động sẻ chia trách nhiệm thay vì đùn đẩy.",
+        "counter": "Lối sống ích kỷ, cục bộ, chia rẽ tập thể; hoặc biến 'đoàn kết' thành sự bao che sai phạm, dĩ hòa vi quý làm triệt tiêu sự đấu tranh phản biện tích cực.",
+        "ev_ten": "Chiến dịch triệu tấm lòng hướng về đồng bào miền Bắc trong siêu bão Yagi (9/2024)",
+        "ev_chitiet": "Chỉ trong vài ngày, hàng triệu người dân Việt Nam từ học sinh đến người già đã quyên góp hàng nghìn tỷ đồng qua Mặt trận Tổ quốc; hàng trăm đoàn xe cứu trợ xuyên đêm và lực lượng vũ trang dầm mình trong lũ dữ cứu dân.",
+        "ev_ynghia": "Minh chứng sống động cho sức mạnh đại đoàn kết dân tộc: khi những trái tim cùng chung một nhịp đập, không thử thách nào có thể khuất phục.",
     },
     "biết ơn": {
         "term": "Lòng biết ơn",
-        "def": "**Lòng biết ơn** là thái độ trân trọng, khắc ghi công lao, sự giúp đỡ của người khác hoặc những giá trị tốt đẹp mà gia đình, thế hệ đi trước và cuộc đời đã dành cho mình.",
-        "why": "Không thành quả nào tự nhiên mà có; lòng biết ơn giúp con người sống có cội nguồn, nuôi dưỡng tâm hồn nhân hậu và tạo ra sợi dây gắn kết bền chặt giữa người với người.",
-        "manifest": "Hiếu thảo với cha mẹ, kính trọng thầy cô; tri ân các anh hùng liệt sĩ; trân trọng thành quả lao động, bảo vệ thiên nhiên và nỗ lực sống có ích để đáp đền tiếp nối.",
-        "counter": "Thái độ vô ơn, bạc bẽo, 'qua cầu rút ván', coi sự hy sinh của người khác là điều hiển nhiên, hoặc chỉ thể hiện lòng biết ơn bằng lời nói hình thức.",
-        "ev_ten": "Đôi bạn Nguyễn Tất Minh và Ngô Minh Hiếu (10 năm cõng bạn đến trường)",
-        "ev_chitiet": "Nguyễn Tất Minh luôn khắc ghi sự hy sinh của gia đình và người bạn tri kỷ Ngô Minh Hiếu, nỗ lực vượt qua khuyết tật bẩm sinh để tốt nghiệp đại học loại Giỏi và tự lập giúp đỡ lại cộng đồng.",
-        "ev_ynghia": "Biểu tượng đẹp đẽ của lòng biết ơn được chuyển hóa thành hành động vươn lên mạnh mẽ.",
+        "def": "**Lòng biết ơn** là thái độ trân trọng, khắc ghi công lao, sự hy sinh, giúp đỡ của người khác hoặc những giá trị tốt đẹp mà gia đình, thế hệ đi trước và cuộc đời đã dành cho mình, từ đó chuyển hóa thành hành động đền đáp xứng đáng.",
+        "why": "Không thành quả nào tự nhiên mà có; lòng biết ơn giúp con người sống có cội nguồn, nuôi dưỡng tâm hồn nhân hậu, xóa bỏ sự ích kỷ và tạo ra sợi dây gắn kết bền chặt giữa các thế hệ.",
+        "manifest": "Hiếu thảo với cha mẹ, kính trọng thầy cô; tri ân các anh hùng liệt sĩ; trân trọng thành quả lao động, bảo vệ thiên nhiên và nỗ lực sống tử tế, có ích để tiếp nối giá trị.",
+        "how_to_promote": "Thể hiện sự trân trọng từ lời cảm ơn chân thành đến những hành động thiết thực hàng ngày; nỗ lực học tập, tu dưỡng để không phụ lòng mong mỏi của đấng sinh thành.",
+        "counter": "Thái độ vô ơn, bạc bẽo, 'qua cầu rút ván', coi sự hy sinh của cha mẹ và xã hội là điều hiển nhiên, hoặc chỉ thể hiện lòng biết ơn bằng lời nói hình thức trên mạng xã hội.",
+        "ev_ten": "Đôi bạn Nguyễn Tất Minh và Ngô Minh Hiếu (10 năm cõng bạn đến trường) & Dự án phục dựng ảnh liệt sĩ của nhóm 'Màu hoa đỏ'",
+        "ev_chitiet": "Nhóm các bạn trẻ thuộc dự án 'Màu hoa đỏ' và 'Team Lee' đã dành hàng nghìn giờ phục dựng miễn phí hàng trăm bức di ảnh liệt sĩ đã phai mờ để trao tặng các Mẹ Việt Nam Anh hùng.",
+        "ev_ynghia": "Biểu tượng đẹp đẽ của lòng biết ơn thế hệ trẻ: dùng tri thức và công nghệ hiện đại để tri ân quá khứ hào hùng.",
     },
     "bản lĩnh": {
         "term": "Bản lĩnh sống",
-        "def": "**Bản lĩnh** là sức mạnh ý chí, sự kiên định, vững vàng của con người trước những khó khăn, nghịch cảnh, áp lực hoặc cám dỗ mà không hề nao núng hay đánh mất giá trị bản thân.",
-        "why": "Cuộc sống luôn ẩn chứa những biến cố bất ngờ; bản lĩnh chính là chiếc mỏ neo giữ cho con người không gục ngã, biến nghịch cảnh thành bàn đạp để trưởng thành.",
-        "manifest": "Dám đối diện với thất bại để đứng lên làm lại; dám bảo vệ lẽ phải trước đám đông; giữ vững đạo đức trước những cám dỗ vật chất.",
-        "counter": "Sự yếu đuối, dễ dàng buông xuôi khi gặp khó khăn, sống ba phải theo hiệu ứng đám đông; hoặc nhầm lẫn bản lĩnh với sự bảo thủ, liều lĩnh bất chấp.",
-        "ev_ten": "Kình ngư Nguyễn Thị Ánh Viên và hành trình vượt ngưỡng bản thân",
-        "ev_chitiet": "Trải qua hàng vạn giờ tập luyện khắc nghiệt, vượt qua chấn thương và áp lực tâm lý nặng nề để mang về hàng loạt kỷ lục lịch sử cho thể thao Việt Nam, rồi tiếp tục truyền cảm hứng dạy bơi chống đuối nước cho trẻ em.",
-        "ev_ynghia": "Bản lĩnh được tôi luyện qua sự kiên cường bền bỉ trước mọi áp lực.",
+        "def": "**Bản lĩnh** là sức mạnh ý chí, sự kiên định, vững vàng của con người trước những khó khăn, nghịch cảnh, áp lực hoặc cám dỗ mà không hề nao núng, gục ngã hay đánh mất nguyên tắc đạo đức của bản thân.",
+        "why": "Cuộc sống luôn ẩn chứa những biến cố bất ngờ và vô vàn áp lực vô hình; bản lĩnh chính là chiếc mỏ neo giữ cho con người làm chủ tâm trí, biến nghịch cảnh thành bàn đạp để trưởng thành.",
+        "manifest": "Bình tĩnh đối diện với thất bại để đứng lên làm lại; dám bảo vệ lẽ phải trước hiệu ứng đám đông; giữ vững nhân cách trước những cám dỗ vật chất hay thực dụng.",
+        "how_to_promote": "Chủ động bước ra khỏi vùng an toàn để trải nghiệm thử thách; rèn luyện tư duy độc lập, trau dồi tri thức để có sự tự tin dựa trên năng lực thực chất.",
+        "counter": "Sự yếu đuối, dễ dàng buông xuôi khi mới gặp trở ngại, sống ba phải a dua theo đám đông; hoặc nhầm lẫn bản lĩnh với sự bảo thủ, liều lĩnh bất chấp hậu quả.",
+        "ev_ten": "Kình ngư Nguyễn Thị Ánh Viên và Nhà giáo ưu tú Nguyễn Ngọc Ký",
+        "ev_chitiet": "Thầy Nguyễn Ngọc Ký bị liệt cả hai tay từ năm lên 4 tuổi nhưng bằng bản lĩnh phi thường đã dùng đôi chân tập viết, vượt qua những cơn đau co rút để trở thành người thầy mẫu mực truyền cảm hứng cho bao thế hệ.",
+        "ev_ynghia": "Khẳng định nghịch cảnh khắc nghiệt nhất cũng phải cúi đầu trước bản lĩnh và ý chí kiên cường của con người.",
     },
     "trách nhiệm": {
         "term": "Tinh thần trách nhiệm",
-        "def": "**Tinh thần trách nhiệm** là ý thức thực hiện trọn vẹn bổn phận, nghĩa vụ của bản thân đối với chính mình, gia đình và xã hội, đồng thời dám làm dám chịu trước mọi hành động của mình.",
-        "why": "Mỗi cá nhân là một mắt xích trong cộng đồng; sống có trách nhiệm tạo nên sự tin cậy, thúc đẩy xã hội vận hành văn minh và khẳng định phẩm giá của người trưởng thành.",
-        "manifest": "Hoàn thành tốt việc học tập, lao động; không đổ lỗi cho hoàn cảnh; chủ động tham gia giải quyết các vấn đề chung như bảo vệ môi trường, thượng tôn pháp luật.",
-        "counter": "Lối sống thờ ơ, vô cảm ('cha chung không ai khóc'), đùn đẩy lỗi lầm cho người khác, chỉ biết đòi hỏi quyền lợi mà trốn tránh nghĩa vụ.",
-        "ev_ten": "Biệt đội Sài Gòn Xanh và các nhóm bạn trẻ giải cứu dòng kênh ô nhiễm",
-        "ev_chitiet": "Những người trẻ tuổi tự nguyện lội xuống những dòng kênh đen đặc rác thải để dọn sạch hàng trăm tấn rác, trả lại dòng nước trong xanh và lan tỏa ý thức bảo vệ môi trường.",
-        "ev_ynghia": "Hành động xuất phát từ ý thức trách nhiệm công dân tự giác vì cộng đồng.",
+        "def": "**Tinh thần trách nhiệm** là ý thức tự giác thực hiện trọn vẹn bổn phận, nghĩa vụ của bản thân đối với chính mình, gia đình và cộng đồng, đồng thời dám làm dám chịu trước mọi quyết định và hành động của mình.",
+        "why": "Mỗi cá nhân là một mắt xích trong xã hội; sống có trách nhiệm tạo nên uy tín, sự tin cậy, thúc đẩy cộng đồng vận hành văn minh và khẳng định phẩm giá của một con người trưởng thành.",
+        "manifest": "Hoàn thành nghiêm túc việc học tập, lao động; không đổ lỗi cho hoàn cảnh; chủ động lên tiếng và tham gia giải quyết các vấn đề chung như bảo vệ môi trường, thượng tôn pháp luật.",
+        "how_to_promote": "Bắt đầu từ sự kỷ luật với chính bản thân mình, hoàn thành đúng hạn từng công việc nhỏ, dám nhận lỗi và sửa lỗi thay vì tìm cớ biện minh.",
+        "counter": "Lối sống thờ ơ, vô cảm ('cha chung không ai khóc'), đùn đẩy trách nhiệm cho người khác, chỉ biết đòi hỏi quyền lợi cá nhân mà trốn tránh nghĩa vụ công dân.",
+        "ev_ten": "Biệt đội Sài Gòn Xanh và Hà Nội Xanh (Những người trẻ giải cứu dòng kênh ô nhiễm)",
+        "ev_chitiet": "Hàng trăm bạn trẻ thế hệ Gen Z tự nguyện mặc đồ bảo hộ, lội xuống những dòng kênh đen đặc rác thải và kim tiêm vào mỗi cuối tuần để vớt hàng trăm tấn rác, trả lại dòng chảy trong lành cho thành phố.",
+        "ev_ynghia": "Hành động xuất phát từ ý thức trách nhiệm công dân tự giác, biến tình yêu quê hương thành việc làm cụ thể.",
     },
     "thất bại": {
-        "term": "Cách đối diện với thất bại",
-        "def": "**Thất bại** là những lần vấp ngã, chưa đạt được mục tiêu đề ra trên đường đời, nhưng đồng thời là phép thử bản lĩnh và bài học kinh nghiệm quý giá giúp con người hoàn thiện mình.",
-        "why": "Không ai thành công mà chưa từng vấp ngã; thất bại giúp con người nhận diện rõ thiếu sót, rèn luyện nghị lực và tích lũy trí tuệ thực tiễn.",
-        "manifest": "Bình tĩnh nhìn nhận nguyên nhân sau mỗi lần vấp ngã; kiên trì điều chỉnh phương pháp để thử sức lại thay vì tự ti, mặc cảm.",
-        "counter": "Tâm lý sợ sai nên không dám dấn thân thử thách; hoặc thái độ bi quan, tuyệt vọng, buông xuôi sau một lần vấp ngã đầu đời.",
-        "ev_ten": "Nhà bác học Thomas Edison và hàng nghìn lần thử nghiệm dây tóc bóng đèn",
-        "ev_chitiet": "Trước khi phát minh ra bóng đèn điện làm thay đổi nhân loại, ông đã trải qua hàng ngàn cuộc thí nghiệm thất bại nhưng luôn coi đó là bước đệm cần thiết để tìm ra chân lý.",
-        "ev_ynghia": "Thất bại chỉ thực sự là dấu chấm hết khi con người ngừng cố gắng.",
+        "term": "Thái độ đối diện với thất bại",
+        "def": "**Thất bại** là những lần vấp ngã, sai sót, chưa đạt được mục tiêu đề ra trên đường đời; nhưng dưới góc nhìn tích cực, đó là phép thử bản lĩnh và bài học kinh nghiệm quý giá giúp con người hoàn thiện mình.",
+        "why": "Không một hành trình vươn tới đỉnh cao nào mà trải toàn hoa hồng; thất bại giúp con người nhận diện rõ lỗ hổng năng lực, gột rửa sự tự mãn và tích lũy trí tuệ thực tiễn.",
+        "manifest": "Bình tĩnh phân tích nguyên nhân sau mỗi lần điểm kém hay dự án đổ vỡ; kiên trì điều chỉnh phương pháp để thử sức lại thay vì tự ti, mặc cảm.",
+        "how_to_promote": "Thay đổi góc nhìn coi thất bại là một phần tất yếu của sự trưởng thành; rèn luyện nghị lực bền bỉ và kỹ năng quản trị cảm xúc trước nghịch cảnh.",
+        "counter": "Tâm lý 'sợ sai' nên thu mình trong vỏ ốc an toàn không dám dấn thân; hoặc thái độ bi quan, tuyệt vọng, gục ngã hoàn toàn sau một lần vấp ngã đầu đời.",
+        "ev_ten": "Nhà bác học Thomas Edison và tỷ phú công nghệ Jensen Huang (CEO NVIDIA)",
+        "ev_chitiet": "Trước khi đưa NVIDIA trở thành tập đoàn dẫn đầu kỷ nguyên AI toàn cầu, Jensen Huang từng đối mặt với những thiết kế chip đầu tiên thất bại hoàn toàn khiến công ty đứng bên bờ vực phá sản, nhưng ông đã thẳng thắn nhận sai, làm lại từ đầu.",
+        "ev_ynghia": "Thất bại chỉ thực sự là dấu chấm hết khi con người từ bỏ nỗ lực đứng lên.",
     },
     "ước mơ": {
-        "term": "Ước mơ và khát vọng",
-        "def": "**Ước mơ / Khát vọng** là những mục tiêu, lý tưởng tốt đẹp mà con người khao khát hướng tới và nỗ lực phấn đấu để hiện thực hóa trong tương lai.",
-        "why": "Ước mơ giống như ngọn hải đăng soi đường, giúp tuổi trẻ sống có mục đích, đánh thức tiềm năng và tạo động lực vượt qua mọi rào cản.",
-        "manifest": "Xây dựng mục tiêu học tập rõ ràng, bền bỉ trau dồi tri thức và kỹ năng mỗi ngày, gắn ước mơ cá nhân với sự phát triển của cộng đồng.",
-        "counter": "Lối sống hoài phí tuổi trẻ, không mục tiêu, buông thả; hoặc những ảo tưởng viển vông, chỉ mơ mộng suông mà không bắt tay vào hành động.",
-        "ev_ten": "Cô gái dân tộc Mông Lầu Minh Vư chinh phục học bổng đại học quốc tế",
-        "ev_chitiet": "Sinh ra ở vùng cao nghèo khó nơi nhiều bạn bè nghỉ học sớm, Vư đã nuôi dưỡng khát vọng bước ra thế giới bằng con đường tri thức, tự học ngoại ngữ và giành học bổng toàn phần.",
-        "ev_ynghia": "Khát vọng lớn chính là đôi cánh đưa con người vượt thoát khỏi mọi giới hạn xuất phát điểm.",
+        "term": "Ước mơ và khát vọng tuổi trẻ",
+        "def": "**Ước mơ / Khát vọng** là những mục tiêu, lý tưởng cao đẹp, chính đáng mà con người khao khát hướng tới và bền bỉ nỗ lực phấn đấu để hiện thực hóa trong tương lai.",
+        "why": "Ước mơ giống như ngọn hải đăng soi đường giữa biển lớn, giúp tuổi trẻ sống có mục đích rõ ràng, đánh thức tiềm năng ẩn giấu và tạo động lực vượt qua mọi rào cản xuất phát điểm.",
+        "manifest": "Xây dựng lộ trình học tập cụ thể, miệt mài trau dồi tri thức, ngoại ngữ và kỹ năng mỗi ngày; biết gắn khát vọng vươn lên của cá nhân với sự phồn vinh của đất nước.",
+        "how_to_promote": "Biến ước mơ lớn thành những mục tiêu hành động cụ thể từng ngày; kết hợp giữa khát vọng bay cao với sự kiên trì, thực tế trên mặt đất.",
+        "counter": "Lối sống hoài phí thanh xuân, buông thả 'đến đâu hay đến đó'; hoặc những ảo tưởng viển vông, chỉ mơ mộng hão huyền mà lười biếng hành động.",
+        "ev_ten": "Cô gái dân tộc Mông Lầu Minh Vư và chàng trai xương thủy tinh Nguyễn Sơn Lâm",
+        "ev_chitiet": "Sinh ra ở vùng cao nghèo khó nơi nhiều bạn bè bỏ học lấy chồng sớm, Lầu Minh Vư đã nuôi dưỡng khát vọng bước ra thế giới bằng con đường học vấn, tự học tiếng Anh và giành học bổng toàn phần đại học quốc tế.",
+        "ev_ynghia": "Khát vọng lớn chính là đôi cánh đưa con người vượt thoát khỏi mọi giới hạn của hoàn cảnh.",
     },
     "thấu cảm": {
         "term": "Sự thấu cảm và sẻ chia",
-        "def": "**Sự thấu cảm** là khả năng đặt mình vào vị trí của người khác để thấu hiểu, sẻ chia những nỗi niềm, khó khăn của họ và hành động bằng một trái tim nhân ái.",
-        "why": "Trong xã hội hiện đại nhiều áp lực, sự thấu cảm là chất keo hàn gắn những tổn thương, xóa bỏ sự cô đơn và làm cho cuộc sống trở nên ấm áp, nhân văn hơn.",
-        "manifest": "Biết lắng nghe không phán xét; sẵn sàng nâng đỡ những mảnh đời yếu thế; tôn trọng sự khác biệt của người xung quanh.",
-        "counter": "Căn bệnh vô cảm, dửng dưng trước nỗi đau đồng loại; thói phán xét độc hại trên mạng xã hội hoặc lòng tốt giả tạo nhằm đánh bóng tên tuổi.",
-        "ev_ten": "Chàng trai trẻ Lê Văn Phúc và dự án thiện nguyện 'Fly To Sky'",
-        "ev_chitiet": "Từ khi còn là học sinh phổ thông, Phúc đã khởi xướng hàng chục dự án hỗ trợ sách vở, thư viện và nước sạch cho hàng vạn trẻ em vùng cao biên giới.",
-        "ev_ynghia": "Khi sự thấu cảm đi liền với hành động tử tế, tuổi trẻ có thể tạo ra những thay đổi kỳ diệu.",
+        "def": "**Sự thấu cảm** là khả năng đặt mình vào vị trí, hoàn cảnh của người khác để cảm nhận, thấu hiểu sâu sắc những nỗi niềm, tổn thương hay khó khăn của họ, từ đó ứng xử bằng một trái tim nhân ái và tôn trọng.",
+        "why": "Trong xã hội hiện đại nhiều áp lực và sự xa cách của màn hình số, sự thấu cảm là chất keo hàn gắn những vết thương tinh thần, xóa bỏ sự cô đơn và làm cho thế giới trở nên ấm áp, nhân văn hơn.",
+        "manifest": "Biết lắng nghe chân thành mà không vội vã phán xét; sẵn sàng nâng đỡ những mảnh đời yếu thế; tôn trọng sự khác biệt của người xung quanh.",
+        "how_to_promote": "Rèn thói quen quan sát tinh tế, chậm lại một nhịp trước khi bình luận hay phán xét người khác trên mạng xã hội; tích cực tham gia các hoạt động thiện nguyện thực tế.",
+        "counter": "Căn bệnh vô cảm, dửng dưng trước nỗi đau đồng loại; thói phán xét độc hại (cyberbullying) trên không gian mạng hoặc lòng tốt giả tạo nhằm đánh bóng tên tuổi.",
+        "ev_ten": "Chàng trai trẻ Lê Văn Phúc (Sáng lập nhóm thiện nguyện 'Fly To Sky') & Hoàng Hoa Trung (Dự án 'Nuôi Em')",
+        "ev_chitiet": "Từ khi còn là học sinh THPT tại Gia Lai, Lê Văn Phúc đã khởi xướng mạng lưới 'Fly To Sky', quyên góp hàng chục tấn sách vở, xây dựng thư viện và mang nước sạch đến cho hàng vạn trẻ em vùng cao biên giới.",
+        "ev_ynghia": "Khi sự thấu cảm đi liền với hành động tử tế, tuổi trẻ có thể tạo ra những thay đổi kỳ diệu cho cộng đồng.",
+    },
+}
+
+# KHO TRI THỨC CHUYÊN BIỆT CHO DẠNG 2 (VẤN ĐỀ CẦN GIẢI QUYẾT) VÀ DẠNG 5 (THUYẾT PHỤC TỪ BỎ THÓI QUEN/QUAN NIỆM)
+PROBLEM_SOLVING_KB = {
+    "mạng xã hội": {
+        "name": "Tình trạng nghiện mạng xã hội và phụ thuộc vào thế giới ảo của giới trẻ",
+        "is_positive_declining": False,
+        "def": "**Nghiện mạng xã hội / Sống ảo** là trạng thái con người bị lệ thuộc quá mức về mặt thời gian và cảm xúc vào các nền tảng kỹ thuật số (TikTok, Facebook, Instagram...), lấy lượt tương tác ảo làm thước đo giá trị bản thân mà sao nhãng đời sống thực.",
+        "manifest": "Dành hàng chục giờ mỗi ngày lướt video ngắn vô thức; bất an khi không có điện thoại; chăm chút hình ảnh hào nhoáng trên mạng nhưng thờ ơ, lạnh nhạt với người thân ngay bên cạnh.",
+        "status_cause_harm": (
+            "- **Thực trạng:** Theo thống kê số hóa, trung bình nhiều thanh thiếu niên hiện nay dành từ 5–7 giờ/ngày trên mạng xã hội, biến các buổi gặp mặt hay bữa cơm gia đình thành 'những ốc đảo cúi đầu vào màn hình'.\n"
+            "  - **Nguyên nhân:** *Chủ quan* là do tâm lý thiếu bản lĩnh tự kiểm soát, sợ bị bỏ lỡ (FOMO) và khao khát sự công nhận nhanh chóng; *Khách quan* là do thuật toán gây nghiện của các nền tảng số và sự thiếu không gian sinh hoạt thực tế từ gia đình, đô thị.\n"
+            "  - **Hậu quả:** Bào mòn khả năng tập trung sâu, suy giảm kết quả học tập, gây rối loạn giấc ngủ, trầm cảm, cô lập giao tiếp trực tiếp và dễ bị dẫn dắt bởi thông tin độc hại."
+        ),
+        "benefit_of_quitting": "Giúp người trẻ giành lại quỹ thời gian quý giá để phát triển kỹ năng thực chất, tâm trí trở nên tĩnh tại, tập trung sâu hơn và tận hưởng trọn vẹn những kết nối ấm áp, chân thực ngoài đời thực.",
+        "sol_individual": (
+            "- **Giải pháp khả thi:** Mỗi người trẻ cần thực hiện 'Thanh lọc số' (Digital Detox): cài đặt giới hạn thời gian sử dụng ứng dụng không quá 60 phút/ngày, tắt thông báo khi học tập và chuyển từ người tiêu thụ nội dung thụ động sang người sử dụng công nghệ có mục đích.\n"
+            "  - **Lí giải vì sao:** Bởi chiếc điện thoại nằm trong tay mỗi cá nhân; nếu tự thân không thiết lập kỷ luật tự giác thì không một phần mềm hay sự cấm đoán nào từ bên ngoài có thể thay đổi được thói quen.\n"
+            "  - **Dẫn chứng thực tế:** Phong trào '30 ngày Digital Detox' và thử thách tắt mạng xã hội sau 21h tối của hàng nghìn học sinh, sinh viên tại Hà Nội và TP.HCM đã giúp các bạn cải thiện rõ rệt điểm số và giấc ngủ."
+        ),
+        "sol_family": (
+            "- **Giải pháp khả thi:** Cha mẹ cần làm gương không lướt điện thoại trong bữa ăn, thiết lập quy tắc 'Khung giờ vàng gia đình không màn hình' vào mỗi tối để cùng trò chuyện, đọc sách hoặc tập thể thao cùng con.\n"
+            "  - **Lí giải vì sao:** Gia đình là môi trường định hình thói quen đầu tiên; khi con cái tìm thấy sự lắng nghe và niềm vui ấm áp trong gia đình, các em sẽ không cần tìm kiếm sự bù đắp cảm xúc trên thế giới ảo.\n"
+            "  - **Dẫn chứng thực tế:** Chiến dịch 'Bữa cơm gia đình ấm áp – Tắt điện thoại, bật yêu thương' được Hội Liên hiệp Phụ nữ và nhiều gia đình trẻ hưởng ứng đã khôi phục sợi dây gắn kết bền chặt giữa cha mẹ và con cái."
+        ),
+        "sol_school": (
+            "- **Giải pháp khả thi:** Nhà trường cần quy định rõ việc quản lý điện thoại trong giờ học, đồng thời mở rộng các câu lạc bộ thể thao, nghệ thuật, thiện nguyện thực tế và tổ chức chuyên đề kỹ năng làm chủ không gian mạng.\n"
+            "  - **Lí giải vì sao:** Khi trường học tạo ra một môi trường trải nghiệm thực tế hấp dẫn và năng động, học sinh sẽ tự nhiên rời mắt khỏi màn hình ảo để hòa mình vào hoạt động tập thể.\n"
+            "  - **Dẫn chứng thực tế:** Mô hình 'Hộp giữ điện thoại thông minh đầu giờ' kết hợp 'Giờ ra chơi trải nghiệm sáng tạo không thiết bị số' tại nhiều trường THPT ở Hà Nội, Hải Phòng, Nghệ An đã giúp sân trường rộn ràng tiếng cười và hoạt động thể chất."
+        ),
+        "counter_rebuttal": (
+            "- **Ý kiến trái chiều / Biện minh:** Có người cho rằng trong kỷ nguyên số 4.0, việc online liên tục là xu thế tất yếu để cập nhật thông tin và kết nối bạn bè nên không việc gì phải hạn chế hay từ bỏ.\n"
+            "- **Phản biện khẳng định:** Đây là sự ngụy biện đánh tráo khái niệm giữa 'ứng dụng công nghệ thông minh' với 'lệ thuộc mù quáng vào mạng xã hội'. Công nghệ sinh ra để phục vụ con người chứ không phải để làm chủ con người; vì vậy việc kiểm soát và khắc phục tình trạng nghiện mạng là yêu cầu sống còn."
+        ),
+    },
+    "trì hoãn": {
+        "name": "Thói quen trì hoãn ('Nước đến chân mới nhảy') trong học tập và cuộc sống",
+        "is_positive_declining": False,
+        "def": "**Thói quen trì hoãn** là hành vi cố tình chần chừ, dây dưa, đẩy những công việc cần làm ngay sang 'ngày mai' hoặc 'lúc khác' dù biết rõ việc chậm trễ đó sẽ dẫn đến áp lực và kết quả kém.",
+        "manifest": "Đợi sát ngày thi mới bắt đầu học bài; lập thời gian biểu chi tiết nhưng luôn tự thưởng cho mình lướt mạng 'thêm 5 phút nữa'; viện cớ 'chưa có cảm hứng' để trốn tránh nhiệm vụ khó.",
+        "status_cause_harm": (
+            "- **Thực trạng:** Thói quen 'nước đến chân mới nhảy' đang trở thành căn bệnh trầm kha của một bộ phận lớn học sinh, người trẻ hiện nay trong cả việc học lẫn rèn luyện kỹ năng.\n"
+            "  - **Nguyên nhân:** *Chủ quan* là do sự thiếu kỷ luật bản thân, tâm lý ngại khó, sợ thất bại hoặc chạy theo những thú vui giải trí tức thời; *Khách quan* là do sự cám dỗ dày đặc của các thiết bị giải trí số và thiếu phương pháp quản lý thời gian khoa học.\n"
+            "  - **Hậu quả:** Khiến công việc dồn ứ gây căng thẳng tâm lý cực độ, chất lượng học tập sụt giảm, đánh mất uy tín với tập thể và bỏ lỡ những cơ hội quý giá không bao giờ quay lại."
+        ),
+        "benefit_of_quitting": "Khi dứt khoát từ bỏ sự trì hoãn, mỗi người sẽ làm chủ được quỹ thời gian, giải phóng tâm trí khỏi cảm giác tội lỗi, nâng cao chất lượng công việc và xây dựng được phong thái làm việc chuyên nghiệp, đáng tin cậy.",
+        "sol_individual": (
+            "- **Giải pháp khả thi (Trọng tâm):** Áp dụng ngay 'Quy tắc 2 phút' (việc gì làm dưới 2 phút thì bắt tay làm ngay lập tức) và phương pháp quả cà chua (Pomodoro: tập trung cao độ 25 phút, nghỉ 5 phút), đồng thời chia nhỏ mục tiêu lớn thành từng bước nhỏ dễ bắt đầu.\n"
+            "  - **Lí giải vì sao:** Rào cản lớn nhất của sự trì hoãn nằm ở cảm giác 'ngại bắt đầu' khi nhìn vào khối lượng việc quá lớn; khi chia nhỏ và hành động ngay trong 2 phút đầu, quán tính làm việc sẽ được kích hoạt.\n"
+            "  - **Dẫn chứng thực tế:** Tác giả David Allen với nguyên tắc 'Getting Things Done' (Quy tắc 2 phút) và tấm gương tự học ngoại ngữ mỗi ngày 30 phút không ngắt quãng của các thủ khoa kỳ thi THPT Quốc gia."
+        ),
+        "sol_family": (
+            "- **Giải pháp khả thi:** Cha mẹ rèn cho con tính tự lập và nguyên tắc hoàn thành nhiệm vụ đúng hạn từ những việc nhỏ trong nhà, khích lệ sự tiến bộ thay vì làm thay hoặc nhắc nhở chì chiết.\n"
+            "  - **Lí giải vì sao:** Nề nếp sinh hoạt đúng giờ giấc trong gia đình sẽ tạo lập phản xạ kỷ luật tự nhiên cho người trẻ.\n"
+            "  - **Dẫn chứng thực tế:** Phương pháp giáo dục tính tự giác và quản lý thời gian từ nhỏ của các gia đình có con đạt thành tích tự học xuất sắc."
+        ),
+        "sol_school": (
+            "- **Giải pháp khả thi:** Giáo viên và nhà trường giao nhiệm vụ học tập theo từng chặng (milestone) có kiểm tra tiến độ định kỳ thay vì chỉ chấm kết quả cuối cùng, đồng thời hướng dẫn học sinh kỹ năng lập kế hoạch.\n"
+            "  - **Lí giải vì sao:** Việc đồng hành và giám sát theo chặng giúp học sinh hình thành thói quen làm việc đều đặn, triệt tiêu thói quen dồn việc đến phút chót.\n"
+            "  - **Dẫn chứng thực tế:** Mô hình học tập theo dự án (Project-based Learning) có nhật ký tiến độ hàng tuần tại các trường THPT hiện nay đã giúp học sinh rèn luyện tác phong làm việc đúng hạn."
+        ),
+        "counter_rebuttal": (
+            "- **Dự đoán ý kiến phản đối:** Nhiều người thường biện minh rằng: 'Làm việc sát nút dưới áp lực cao mới kích thích sự sáng tạo' hoặc 'Tuổi trẻ còn nhiều thời gian, chậm một chút cũng chẳng sao'.\n"
+            "- **Phản biện & Khuyên nhủ:** Thực chất, việc làm vội vã phút chót chỉ tạo ra những sản phẩm đối phó đầy sai sót và bào mòn sức khỏe. Thời gian trôi qua không thể lấy lại, vì vậy từ bỏ trì hoãn ngay hôm nay chính là cách tôn trọng tương lai của chính mình."
+        ),
+    },
+    "bạo lực": {
+        "name": "Vấn nạn bạo lực học đường và bạo lực ngôn từ trên không gian mạng",
+        "is_positive_declining": False,
+        "def": "**Bạo lực học đường và bạo lực mạng** là những hành vi cố ý sử dụng vũ lực thể chất hoặc lời nói lăng mạ, cô lập, vu khống, công kích tinh thần người khác trong môi trường trường học và trên các nền tảng trực tuyến.",
+        "manifest": "Đánh hội đồng, quay clip tung lên mạng; lập các hội nhóm nói xấu, tẩy chay bạn bè; buông những bình luận miệt thị ngoại hình, hoàn cảnh của người khác sau bàn phím.",
+        "status_cause_harm": (
+            "- **Thực trạng:** Bạo lực học đường hiện nay không chỉ dừng ở xô xát tay chân mà đã biến tướng tinh vi thành 'bạo lực tinh thần' và 'bạo lực mạng' với tốc độ phát tán chóng mặt.\n"
+            "  - **Nguyên nhân:** *Chủ quan* do sự bốc đồng tâm lý lứa tuổi, thiếu kỹ năng kiểm soát cảm xúc, thích thể hiện cái tôi lệch lạc; *Khách quan* do ảnh hưởng từ phim ảnh bạo lực, sự thiếu quan tâm sâu sát của gia đình và tâm lý đám đông vô trách nhiệm trên mạng.\n"
+            "  - **Hậu quả:** Để lại vết sẹo tâm lý nặng nề, khiến nạn nhân rơi vào trầm cảm, hoảng loạn, bỏ học, thậm chí có hành vi tự hủy hoại bản thân; đồng thời làm suy đồi đạo đức và sự an toàn của môi trường giáo dục."
+        ),
+        "benefit_of_quitting": "Chấm dứt bạo lực và thói phán xét độc hại giúp xây dựng một môi trường học đường nhân ái, an toàn, nơi mỗi cá nhân được tôn trọng và phát triển toàn diện.",
+        "sol_individual": (
+            "- **Giải pháp khả thi:** Mỗi học sinh cần học cách quản trị cơn giận, giải quyết mâu thuẫn bằng đối thoại tôn trọng; tuyệt đối không cổ xúy, không bấm 'like/share' các clip bạo lực và dũng cảm báo ngay cho thầy cô khi thấy hành vi bắt nạt.\n"
+            "  - **Lí giải vì sao:** Bạo lực chỉ có thể lan rộng khi có sự tiếp tay hoặc im lặng vô cảm của những người xung quanh; khi mỗi cá nhân biết kiểm soát hành vi và lên tiếng bảo vệ lẽ phải, mầm mống bạo lực sẽ bị dập tắt.\n"
+            "  - **Dẫn chứng thực tế:** Chiến dịch 'Ngừng bắt nạt bằng lời nói' và hành động dũng cảm đứng ra can ngăn, bảo vệ bạn yếu thế của nhiều học sinh THPT được tuyên dương dưới cờ."
+        ),
+        "sol_family": (
+            "- **Giải pháp khả thi:** Cha mẹ cần giáo dục con bằng sự yêu thương và lắng nghe thay vì đòn roi quát tháo, đồng thời thường xuyên quan sát những biểu hiện tâm lý bất thường của con để kịp thời tháo gỡ.\n"
+            "  - **Lí giải vì sao:** Một đứa trẻ lớn lên trong gia đình êm ấm, giàu lòng thấu cảm sẽ không dùng bạo lực để giải quyết vấn đề và luôn có điểm tựa an toàn khi gặp khủng hoảng.\n"
+            "  - **Dẫn chứng thực tế:** Các chương trình kết nối 'Cha mẹ đồng hành cùng con tuổi dậy thì' do các chuyên gia tâm lý giáo dục triển khai hiệu quả tại nhiều địa phương."
+        ),
+        "sol_school": (
+            "- **Giải pháp khả thi:** Nhà trường vận hành thực chất Phòng tư vấn tâm lý học đường, thiết lập kênh tiếp nhận thông tin ẩn danh của học sinh và xây dựng mô hình 'Trường học hạnh phúc – Không bạo lực'.\n"
+            "  - **Lí giải vì sao:** Khi nhà trường vừa có sự hỗ trợ tâm lý kịp thời vừa có quy tắc ứng xử văn hóa nghiêm minh, học sinh sẽ được bảo vệ toàn diện.\n"
+            "  - **Dẫn chứng thực tế:** Mô hình 'Hòm thư điều em muốn nói' và Câu lạc bộ Truyền thông phòng chống bạo lực học đường tại nhiều trường THPT trên cả nước."
+        ),
+        "counter_rebuttal": (
+            "- **Ý kiến trái chiều:** Có người cho rằng những xích mích, trêu chọc hay xô xát tuổi học trò chỉ là chuyện nhỏ nhất thời của lứa tuổi mới lớn, không cần làm quá lên.\n"
+            "- **Phản biện khẳng định:** Suy nghĩ thờ ơ đó chính là sự dung túng nguy hiểm, bởi từ những lời miệt thị hay cái tát tưởng như 'chuyện nhỏ' đã cướp đi tương lai và sinh mạng của không ít học sinh. Đẩy lùi bạo lực học đường là trách nhiệm không thể chần chừ."
+        ),
+    },
+    "môi trường": {
+        "name": "Vấn đề ô nhiễm môi trường và thói quen xả rác, lạm dụng đồ nhựa dùng một lần",
+        "is_positive_declining": False,
+        "def": "**Ô nhiễm môi trường / Lạm dụng rác thải nhựa** là tình trạng môi trường tự nhiên (đất, nước, không khí) bị suy thoái nghiêm trọng do các chất thải độc hại và thói quen tiêu dùng thiếu bền vững của con người.",
+        "manifest": "Xả rác bừa bãi nơi công cộng; sử dụng tràn lan túi nilon, cốc nhựa dùng một lần; chặt phá cây xanh và xả nước thải chưa qua xử lý ra sông hồ.",
+        "status_cause_harm": (
+            "- **Thực trạng:** Việt Nam nằm trong nhóm các quốc gia chịu ảnh hưởng nặng nề nhất của biến đổi khí hậu và rác thải nhựa; mỗi năm có hàng triệu tấn rác nhựa thải ra môi trường nhưng tỷ lệ tái chế còn rất thấp.\n"
+            "  - **Nguyên nhân:** *Chủ quan* là do thói quen tiện đâu vứt đấy, lối sống tiêu dùng nhanh ích kỷ của một bộ phận người dân; *Khách quan* là do quá trình đô thị hóa nhanh và chế tài xử phạt vi phạm môi trường ở một số nơi chưa đủ sức răn đe.\n"
+            "  - **Hậu quả:** Làm cạn kiệt tài nguyên, gây biến đổi khí hậu cực đoan (siêu bão, lũ quét, hạn mặn) và đe dọa trực tiếp đến sức khỏe, mạng sống của chính con người qua nguồn nước, thực phẩm nhiễm vi nhựa."
+        ),
+        "benefit_of_quitting": "Từ bỏ thói quen xả rác và dùng nhựa một lần giúp trả lại không gian sống xanh – sạch – lành mạnh, bảo vệ sức khỏe cộng đồng và giữ gìn hành tinh bền vững cho thế hệ tương lai.",
+        "sol_individual": (
+            "- **Giải pháp khả thi:** Mỗi cá nhân thực hành lối sống xanh từ những việc nhỏ nhất: mang bình nước cá nhân, dùng túi vải khi đi chợ, phân loại rác tại nguồn và bỏ rác đúng nơi quy định.\n"
+            "  - **Lí giải vì sao:** Môi trường chung được tạo nên từ hành vi của hàng triệu cá nhân; khi mỗi người giảm đi một chiếc túi nilon mỗi ngày, hàng tỷ rác thải nhựa sẽ được cắt giảm mỗi năm.\n"
+            "  - **Dẫn chứng thực tế:** Phong trào sống xanh của giới trẻ cùng hành động trực tiếp lội kênh vớt hàng trăm tấn rác của nhóm bạn trẻ 'Sài Gòn Xanh', 'Hà Nội Xanh'."
+        ),
+        "sol_family": (
+            "- **Giải pháp khả thi:** Mỗi gia đình hình thành thói quen phân loại rác hữu cơ – rác tái chế ngay tại bếp, hạn chế đồ nhựa một lần và dạy con trẻ ý thức trân trọng cây xanh, tiết kiệm điện nước.\n"
+            "  - **Lí giải vì sao:** Gia đình là đơn vị tiêu dùng trực tiếp mỗi ngày; nếp sống xanh từ gia đình sẽ tạo ra thế hệ công dân có trách nhiệm với tự nhiên.\n"
+            "  - **Dẫn chứng thực tế:** Mô hình 'Gia đình 5 không, 3 sạch' và phong trào biến rác hữu cơ thành phân bón trồng cây tại nhiều khu dân cư."
+        ),
+        "sol_school": (
+            "- **Giải pháp khả thi:** Nhà trường xây dựng mô hình 'Trường học xanh – Không rác thải nhựa', tổ chức ngày hội đổi rác lấy cây xanh và lồng ghép giáo dục bảo vệ môi trường qua trải nghiệm thực địa.\n"
+            "  - **Lí giải vì sao:** Trường học có sức lan tỏa mạnh mẽ tới hàng triệu học sinh, giúp biến nhận thức bảo vệ môi trường thành thói quen văn minh bền vững.\n"
+            "  - **Dẫn chứng thực tế:** Dự án 'Đổi sách báo cũ và vỏ lon lấy cây xanh' của chuỗi chương trình 'Fly To Sky' phối hợp cùng hàng trăm trường THPT trên toàn quốc."
+        ),
+        "counter_rebuttal": (
+            "- **Ý kiến trái chiều:** Có người cho rằng việc bảo vệ môi trường là trách nhiệm vĩ mô của các cơ quan chức năng và tập đoàn lớn, một vài cá nhân tiết kiệm túi nilon cũng chẳng thay đổi được gì.\n"
+            "- **Phản biện khẳng định:** Đó là lối tư duy ỷ lại vô trách nhiệm. Đại dương được tạo nên từ những giọt nước, và thảm họa môi trường cũng tích tụ từ chính sự tiện tay vô ý thức của từng cá nhân. Do đó, hành động từ mỗi người là không thể thay thế."
+        ),
+    },
+    "tự lập": {
+        "name": "Rèn luyện tính tự lập, tự chủ và tinh thần tự giác của người trẻ",
+        "is_positive_declining": True,
+        "def": "**Tính tự lập / Tự giác** là khả năng tự mình suy nghĩ, đưa ra quyết định, tự lo liệu công việc học tập và cuộc sống bằng năng lực của bản thân mà không ỷ lại, dựa dẫm vào cha mẹ hay người khác.",
+        "manifest": "Tự giác lập kế hoạch học tập mà không cần ai nhắc nhở; chủ động trang bị kỹ năng sống, tự giải quyết các vấn đề cá nhân và chịu trách nhiệm về lựa chọn của mình.",
+        "meaning_when_positive": "**Ý nghĩa cốt lõi của tính tự lập:** Tự lập chính là bước ngoặt đánh dấu sự trưởng thành thực sự của một con người; nó giúp người trẻ rèn luyện bản lĩnh thích ứng trước mọi biến động, làm chủ cuộc đời mình và giảm bớt gánh nặng cho gia đình.",
+        "status_cause_harm": (
+            "- **Thực trạng cần giải quyết:** Hiện nay, không ít học sinh, thanh niên dù đã lớn nhưng vẫn mang tâm lý 'cây tầm gửi', thiếu kỹ năng tự chăm sóc bản thân, học tập đối phó khi không có người giám sát và dễ hoảng loạn khi bước vào môi trường mới.\n"
+            "  - **Nguyên nhân:** *Chủ quan* là do sự lười biếng, ưa hưởng thụ trong vùng an toàn của chính người trẻ; *Khách quan* là do sự bao bọc thái quá ('cha mẹ trực thăng') làm thay con mọi việc của nhiều gia đình hiện đại.\n"
+            "  - **Hậu quả:** Khiến người trẻ trở nên yếu ớt, thụ động, thiếu khả năng giải quyết vấn đề thực tế và dễ gục ngã trước những va vấp đầu đời."
+        ),
+        "sol_individual": (
+            "- **Giải pháp khả thi:** Mỗi học sinh cần bắt đầu tự lập từ những việc gần gũi nhất: tự đặt báo thức, tự xây dựng thời gian biểu học tập, tự chăm sóc không gian sống và chủ động tìm tòi phương pháp giải quyết bài khó trước khi nhờ trợ giúp.\n"
+            "  - **Lí giải vì sao:** Kỹ năng tự lập không tự nhiên sinh ra mà phải được tích lũy qua việc tự tay làm và tự chịu trách nhiệm mỗi ngày.\n"
+            "  - **Dẫn chứng thực tế:** Nhiều học sinh THPT vùng cao hoặc các bạn học sinh giành học bổng du học tự túc đã rèn khả năng tự quản lý tài chính, thời gian và tự học xuất sắc ngay từ năm lớp 10."
+        ),
+        "sol_family": (
+            "- **Giải pháp khả thi:** Cha mẹ cần thay đổi cách yêu thương: chuyển từ 'làm thay con' sang 'hướng dẫn và trao quyền cho con tự làm', chấp nhận để con va vấp trong giới hạn an toàn để trưởng thành.\n"
+            "  - **Lí giải vì sao:** Nếu cha mẹ cứ giữ mãi đôi cánh bao bọc, con cái sẽ không bao giờ học được cách tự bay trên bầu trời của chính mình.\n"
+            "  - **Dẫn chứng thực tế:** Phương pháp giáo dục tự lập của các gia đình văn minh (cho con tự chuẩn bị đồ dùng, tự chịu trách nhiệm với điểm số và quyết định cá nhân)."
+        ),
+        "sol_school": (
+            "- **Giải pháp khả thi:** Nhà trường đẩy mạnh phương pháp dạy học phát triển năng lực tự học, tổ chức các hoạt động dã ngoại, trại hè kỹ năng sinh tồn và giao quyền tự quản cho các câu lạc bộ học sinh.\n"
+            "  - **Lí giải vì sao:** Môi trường tập thể đòi hỏi sự tự chủ sẽ là thao trường tốt nhất để học sinh rèn luyện bản lĩnh độc lập.\n"
+            "  - **Dẫn chứng thực tế:** Các chương trình 'Học kỳ trong quân đội' và mô hình Câu lạc bộ học sinh tự quản tại các trường THPT trên cả nước."
+        ),
+        "counter_rebuttal": (
+            "- **Ý kiến trái chiều:** Có ý kiến cho rằng ở lứa tuổi học sinh phổ thông, nhiệm vụ duy nhất là học văn hóa nên việc được bố mẹ lo liệu hết mọi thứ là điều bình thường, khi nào đi làm mới cần tự lập.\n"
+            "- **Phản biện khẳng định:** Đây là quan niệm sai lầm; bởi tự lập là một năng lực cần quá trình rèn luyện lâu dài. Nếu suốt 18 năm chỉ quen dựa dẫm, người trẻ sẽ hoàn toàn bơ vơ và khủng hoảng khi bước ra ngưỡng cửa đại học và cuộc đời."
+        ),
     },
 }
 
@@ -345,7 +513,7 @@ DANH_SACH_DANG_BAI = [
 
 def extract_clean_topic_noun(text):
     clean = re.sub(
-        r"(?i)(hãy viết một bài văn nghị luận xã hội|hãy viết bài văn nghị luận|khoảng 600 chữ|trình bày suy nghĩ của anh/chị về|suy nghĩ của anh/chị về|suy nghĩ về|bàn về|ý nghĩa của|vai trò của|tầm quan trọng của|sức mạnh của|sự cần thiết của|giá trị của|thuyết phục người khác từ bỏ|giải pháp khắc phục|làm thế nào để)",
+        r"(?i)(hãy viết một bài văn nghị luận xã hội|hãy viết bài văn nghị luận|viết bài văn nghị luận|khoảng 600 chữ|trình bày suy nghĩ của anh/chị về|suy nghĩ của anh/chị về|suy nghĩ về|bàn về|ý nghĩa của|vai trò của|tầm quan trọng của|sức mạnh của|sự cần thiết của|giá trị của|thuyết phục người khác từ bỏ|giải pháp khắc phục|làm thế nào để|cần làm gì để)",
         "",
         text,
     )
@@ -424,15 +592,16 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
             "anh/chị chọn quan điểm nào",
             "bạn chọn",
             "giữa hai lựa chọn",
-            "hay là",
+            "quan điểm thứ nhất",
+            "ý kiến thứ nhất",
         ]
     ):
-        if "quan điểm" in combined or "ý kiến" in combined or "lựa chọn" in combined or "chọn" in combined:
-            return "DANG_3_HAI_QUAN_DIEM"
+        return "DANG_3_HAI_QUAN_DIEM"
 
     negative_phenomena = [
         "ô nhiễm",
         "nghiện game",
+        "nghiện mạng",
         "bạo lực học đường",
         "bạo lực mạng",
         "rác thải",
@@ -449,6 +618,7 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
         "cần giải quyết",
         "khắc phục tình trạng",
         "giải pháp để khắc phục",
+        "giải pháp khắc phục",
         "mất kết nối",
     ]
     if any(kw in combined for kw in negative_phenomena):
@@ -503,6 +673,7 @@ def is_positive_topic_declining(topic_text, vdnl_text):
     direct_negative = [
         "ô nhiễm",
         "nghiện game",
+        "nghiện mạng",
         "bạo lực",
         "rác thải",
         "gian lận",
@@ -511,10 +682,40 @@ def is_positive_topic_declining(topic_text, vdnl_text):
         "cờ bạc",
         "thuốc lá",
         "nói tục",
+        "sống ảo",
+        "trì hoãn",
+        "vô cảm",
     ]
     if any(neg in combined for neg in direct_negative):
         return False
     return True
+
+def match_problem_solving_kb(raw_topic, vdnl):
+    combined = (raw_topic + " " + vdnl).lower()
+    if any(k in combined for k in ["mạng xã hội", "sống ảo", "nghiện game", "điện thoại", "không gian mạng", "công nghệ"]):
+        return PROBLEM_SOLVING_KB["mạng xã hội"]
+    if any(k in combined for k in ["trì hoãn", "nước đến chân", "lười biếng", "thời gian", "đúng giờ"]):
+        return PROBLEM_SOLVING_KB["trì hoãn"]
+    if any(k in combined for k in ["bạo lực", "bắt nạt", "ngôn từ", "nói tục", "phán xét"]):
+        return PROBLEM_SOLVING_KB["bạo lực"]
+    if any(k in combined for k in ["môi trường", "ô nhiễm", "rác thải", "nhựa", "biến đổi khí hậu", "sống xanh"]):
+        return PROBLEM_SOLVING_KB["môi trường"]
+    if any(k in combined for k in ["tự lập", "tự giác", "tự chủ", "ỷ lại", "dựa dẫm", "gắn kết"]):
+        return PROBLEM_SOLVING_KB["tự lập"]
+    return None
+
+def parse_two_viewpoints_from_topic(raw_topic, vdnl):
+    # Tự động trích xuất 2 câu trích dẫn hoặc 2 vế quan điểm từ đề bài
+    quotes = re.findall(r'["“”\']([^"“”\']{8,150})["“”\']', raw_topic)
+    if len(quotes) >= 2:
+        return quotes[0].strip(), quotes[1].strip()
+    split_match = re.split(r"(?i)(?:nhưng có ý kiến khác lại cho rằng|trong khi đó|ngược lại có người cho rằng|hay là|hoặc)", raw_topic)
+    if len(split_match) >= 2:
+        v1 = extract_clean_topic_noun(split_match[0])[:100]
+        v2 = extract_clean_topic_noun(split_match[1])[:100]
+        if v1 and v2:
+            return v1, v2
+    return f"Góc nhìn đề cao khía cạnh thứ nhất của {vdnl}", f"Góc nhìn nhấn mạnh khía cạnh đối trọng/bổ sung của {vdnl}"
 
 def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
     has_meaning_step = is_positive_topic_declining(raw_topic, vdnl)
@@ -523,9 +724,9 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
             f"DẠNG BÀI: Nghị luận tư tưởng, đạo lí - Trường hợp 1: Đề hỏi trực tiếp khía cạnh mặt tích cực (ý nghĩa/sự cần thiết/giá trị/vai trò/sức mạnh/tầm quan trọng của '{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
             f"- Mở bài: Dẫn dắt và nêu trực diện vấn đề nghị luận (nhấn mạnh tầm quan trọng/ý nghĩa của {vdnl}).",
-            "- Thao tác 1 (Giải thích): Giải thích từ khóa/khái niệm/ý kiến và chốt vấn đề.",
-            f"- Thao tác 2 (Bàn luận trọng tâm - Bàn sâu về Ý NGHĨA của VĐNL): Tập trung phân tích sâu sắc các tầng ý nghĩa, giá trị, sức mạnh của {vdnl} đối với sự trưởng thành của cá nhân, đối với mối quan hệ giữa người với người và đối với sự phát triển của cộng đồng, xã hội; lý giải vì sao {vdnl} lại cần thiết trong thời đại hôm nay.",
-            "- Thao tác 3 (Dẫn chứng): Đưa dẫn chứng thực tế xác thực chứng minh cho sức mạnh/ý nghĩa đó.",
+            "- Thao tác 1 (Giải thích): Giải thích tường minh từ khóa/khái niệm/ý kiến và chốt vấn đề.",
+            f"- Thao tác 2 (Bàn luận trọng tâm - Bàn sâu về Ý NGHĨA của VĐNL): Tập trung phân tích sâu sắc các tầng ý nghĩa, giá trị, sức mạnh của {vdnl} đối với cá nhân, mối quan hệ con người và xã hội; lý giải vì sao {vdnl} lại cần thiết.",
+            "- Thao tác 3 (Dẫn chứng): Đưa dẫn chứng người thật việc thật cụ thể chứng minh cho sức mạnh/ý nghĩa đó.",
             "- Thao tác 4 (Phản đề & Bài học): Phê phán biểu hiện đi ngược lại, mở rộng biện chứng và rút ra bài học nhận thức, hành động.",
         ]
         return "\n".join(lines)
@@ -535,11 +736,8 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
             f"DẠNG BÀI: Nghị luận tư tưởng, đạo lí - Trường hợp 2: Đề hỏi các bài học mang tính giải pháp (trả lời câu hỏi: Cần làm gì? Vai trò/trách nhiệm của chủ thể đối với '{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
             "- Mở bài: Dẫn dắt và nêu vấn đề nghị luận gắn với trách nhiệm/hành động cần thực hiện.",
-            "- Thao tác 1 (Giải thích & Khái quát sự cần thiết): Giải thích khái niệm và khẳng định ngắn gọn tầm quan trọng của vấn đề để làm tiền đề cho hành động.",
-            "- Thao tác 2 (Bàn luận trọng tâm - Trả lời câu hỏi CẦN LÀM GÌ?): Triển khai hệ thống các bài học/giải pháp cụ thể, sâu sắc:",
-            "  + Về nhận thức, tư tưởng: Thay đổi tư duy, xác lập thái độ đúng đắn như thế nào?",
-            "  + Về hành động, rèn luyện thực tế: Cần trau dồi kỹ năng gì, hành động cụ thể ra sao trong học tập, lao động và cống hiến?",
-            "  + Về sự lan tỏa và kết nối cộng đồng: Làm gì để cùng cộng đồng thúc đẩy giá trị tốt đẹp đó?",
+            "- Thao tác 1 (Giải thích & Khái quát sự cần thiết): Giải thích khái niệm cụ thể và khẳng định ngắn gọn tầm quan trọng của vấn đề để làm tiền đề cho hành động.",
+            "- Thao tác 2 (Bàn luận trọng tâm - Trả lời câu hỏi CẦN LÀM GÌ?): Triển khai hệ thống các bài học/giải pháp cụ thể, sâu sắc về nhận thức, hành động rèn luyện cá nhân và cống hiến cộng đồng.",
             "- Thao tác 3 (Dẫn chứng): Dẫn chứng người thật việc thật đã hành động quyết liệt, hiệu quả.",
             "- Thao tác 4 (Phản đề & Liên hệ): Phê phán thái độ thụ động, nói suông không làm; liên hệ bản thân và Kết bài.",
         ]
@@ -551,10 +749,7 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
             f"- Mở bài: Giới thiệu và dẫn vào vấn đề nghị luận '{vdnl}'.",
             f"- Thao tác 1 (Giải thích): Giải thích rõ ràng khái niệm/nhận định '{vdnl}'.",
-            "- Thao tác 2 (Bàn luận toàn diện):",
-            f"  + Nêu biểu hiện cụ thể của '{vdnl}' trong đời sống.",
-            f"  + Phân tích ý nghĩa, giá trị của '{vdnl}' đối với cá nhân và xã hội (kết hợp dẫn chứng thực tế).",
-            f"  + Chỉ ra cần làm gì để phát huy '{vdnl}' trong cuộc sống hôm nay (bài học giải pháp phát huy).",
+            "- Thao tác 2 (Bàn luận toàn diện): Nêu biểu hiện cụ thể -> Phân tích ý nghĩa đối với cá nhân và xã hội -> Dẫn chứng thực tế -> Chỉ ra cần làm gì để phát huy (bài học) -> Liên hệ cá nhân.",
             "- Thao tác 3 (Phản đề & Mở rộng): Phê phán biểu hiện lệch lạc/trái ngược.",
             "- Kết bài: Khẳng định lại vấn đề và liên hệ cá nhân sâu sắc.",
         ]
@@ -562,22 +757,19 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
 
     if type_code == "DANG_2_GIAI_QUYET":
         if has_meaning_step:
-            meaning_note = f"- Bước 2 (Ý nghĩa của vấn đề): Vì đề cập đến một giá trị tích cực đang có chiều hướng mai một/chưa tốt ({vdnl}), cần viết 1 đoạn ngắn khẳng định ý nghĩa vốn có của nó trước khi nêu thực trạng."
+            meaning_note = f"- Bước 2 (Ý nghĩa của vấn đề): Vì đề cập đến một giá trị tích cực đang có chiều hướng mai một ({vdnl}), cần viết 1 đoạn ngắn khẳng định ý nghĩa vốn có của nó trước khi nêu thực trạng."
         else:
             meaning_note = f"- Lưu ý: Vì đề hỏi trực tiếp về một hiện tượng tiêu cực ({vdnl}), đi thẳng từ Giải thích sang Lí do cần giải quyết (không cần đoạn ca ngợi ý nghĩa)."
         lines = [
             f"DẠNG BÀI: Nghị luận về một vấn đề cần giải quyết ('{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
             "- Mở bài: Dẫn dắt và nêu trực diện vấn đề cần giải quyết.",
-            "- Bước 1 (Giải thích): Cắt nghĩa rõ bản chất vấn đề cần giải quyết.",
+            "- Bước 1 (Giải thích): Cắt nghĩa rõ bản chất khái niệm của vấn đề cần giải quyết.",
             meaning_note,
-            "- Bước 3 (Lí do cần giải quyết): Viết gọn thành 01 đoạn văn chặt chẽ tích hợp đủ 3 ý: Thực trạng đang diễn ra như thế nào -> Nguyên nhân (chủ quan, khách quan) -> Hậu quả/Hệ lụy nghiêm trọng nếu không giải quyết.",
-            "- Bước 4 (Đưa ra Giải pháp - Trọng tâm, trình bày thành 3 đoạn văn rõ ràng):",
-            "  + Đoạn 1 - Giải pháp đối với Cá nhân: Nêu giải pháp khả thi -> Lí giải vì sao chọn giải pháp đó -> Kèm ít nhất 01 dẫn chứng thực tế.",
-            "  + Đoạn 2 - Giải pháp đối với Gia đình: Nêu giải pháp khả thi -> Lí giải vì sao -> Kèm ít nhất 01 dẫn chứng thực tế.",
-            "  + Đoạn 3 - Giải pháp đối với Nhà trường / Xã hội: Nêu giải pháp khả thi -> Lí giải vì sao -> Kèm ít nhất 01 dẫn chứng thực tế.",
-            "- Bước 5 (Ý kiến khác & Phản biện): Nêu ý kiến trái chiều (thường cho rằng việc giải quyết là không cần thiết hoặc bất khả thi) -> Phản biện sắc bén để khẳng định dứt khoát vẫn cần phải khắc phục.",
-            "- Kết bài: Khẳng định lại thông điệp và rút ra bài học liên hệ bản thân.",
+            "- Bước 3 (Lí do cần giải quyết): Viết thành 01 đoạn văn thống nhất nêu cụ thể: Thực trạng -> Nguyên nhân -> Hậu quả.",
+            "- Bước 4 (Đưa ra Giải pháp - Trình bày thành 3 đoạn văn: Đối với Cá nhân - Gia đình - Nhà trường; mỗi đoạn bắt buộc nêu rõ giải pháp khả thi cụ thể + lí giải vì sao chọn như vậy + ít nhất 01 dẫn chứng thực tế cụ thể).",
+            "- Bước 5 (Ý kiến khác & Phản biện): Nêu ý kiến trái chiều cho rằng không cần thiết -> Phản biện khẳng định vẫn cần khắc phục.",
+            "- Kết bài: Khẳng định thông điệp và bài học liên hệ.",
         ]
         return "\n".join(lines)
 
@@ -585,12 +777,11 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
         lines = [
             f"DẠNG BÀI: Nghị luận lựa chọn quan điểm ('{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
-            "- Mở bài: Giới thiệu cả 2 quan điểm được nêu trong đề bài VÀ chỉ ra rõ ràng quan điểm lựa chọn của bản thân.",
-            "- Bước 1 (Giải thích & Mối quan hệ): Giải thích tường minh quan điểm 1, giải thích quan điểm 2, và chỉ ra mối quan hệ giữa 2 quan điểm (đối lập hay bổ sung ở những khía cạnh nào).",
-            "- Bước 2 (Lí giải vì sao chọn quan điểm của mình + Dẫn chứng): Đưa ra hệ thống lý lẽ sắc bén để bảo vệ quan điểm đã chọn, kết hợp phân tích dẫn chứng thực tế thuyết phục.",
-            "- Bước 3 (Chỉ ra hạn chế của quan điểm còn lại): Phân tích khách quan những điểm chưa toàn diện, bất cập hoặc hệ lụy nếu tuyệt đối hóa quan điểm còn lại.",
-            "- Bước 4 (Bài học khái quát & Bài học liên hệ): Rút ra bài học nhận thức khái quát và liên hệ trực tiếp tới bản thân.",
-            "- Kết bài: Khẳng định lại lập trường và thông điệp kết thúc.",
+            "- Mở bài: Giới thiệu cả 2 quan điểm và chỉ ra rõ quan điểm của mình.",
+            "- Bước 1 (Giải thích & Mối quan hệ): Giải thích cụ thể từng quan điểm và chỉ ra mối quan hệ giữa 2 quan điểm.",
+            "- Bước 2 (Lí giải vì sao chọn quan điểm của mình + Dẫn chứng thực tế cụ thể).",
+            "- Bước 3 (Chỉ ra hạn chế của quan điểm còn lại).",
+            "- Bước 4 (Bài học khái quát & Bài học liên hệ) -> Kết bài.",
         ]
         return "\n".join(lines)
 
@@ -598,12 +789,11 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
         lines = [
             f"DẠNG BÀI: Nghị luận về một vấn đề xã hội rút ra từ tác phẩm văn học ('{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
-            "- Mở bài: Giới thiệu tác giả, tác phẩm/nhân vật và dẫn dắt vào vấn đề xã hội cần nghị luận.",
-            "- Bước 1 (Phân tích ngắn gọn ngữ liệu văn học để rút ra vấn đề): Khái quát ngắn gọn tình huống, hình tượng hoặc chi tiết trong tác phẩm, từ đó chốt lại vấn đề tư tưởng/xã hội mà nhà văn gửi gắm.",
-            "- Bước 2 (Giải thích vấn đề xã hội): Giải thích khái niệm, bản chất của vấn đề xã hội đó khi đặt trong đời sống thực tiễn.",
-            "- Bước 3 (Bàn luận vấn đề trong đời sống thực tế + Dẫn chứng): Phân tích biểu hiện, ý nghĩa/tác động của vấn đề đối với con người và xã hội hôm nay; đưa dẫn chứng người thật việc thật ngoài đời sống để chứng minh.",
-            "- Bước 4 (Mở rộng, Phản đề & Bài học): Phê phán các biểu hiện lệch lạc, khẳng định sức sống của thông điệp từ trang sách ra đời thực và rút ra bài học nhận thức, hành động cho bản thân.",
-            "- Kết bài: Khẳng định giá trị nhân sinh của tác phẩm và thông điệp xã hội.",
+            "- Mở bài: Giới thiệu tác giả, tác phẩm và vấn đề xã hội rút ra.",
+            "- Bước 1 (Phân tích ngắn gọn ngữ liệu văn học để rút ra vấn đề).",
+            "- Bước 2 (Giải thích cụ thể khái niệm vấn đề xã hội đó).",
+            "- Bước 3 (Bàn luận ý nghĩa/tác động trong đời sống thực tế + Dẫn chứng người thật việc thật ngoài đời sống).",
+            "- Bước 4 (Mở rộng, Phản đề & Bài học liên hệ) -> Kết bài.",
         ]
         return "\n".join(lines)
 
@@ -611,22 +801,19 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
         lines = [
             f"DẠNG BÀI: Thuyết phục người khác từ bỏ một thói quen hay một quan niệm ('{vdnl}').",
             "CẤU TRÚC TƯ DUY BẮT BUỘC:",
-            "- Mở bài: Dẫn dắt gần gũi, nêu rõ thói quen/quan niệm cần từ bỏ và bày tỏ thiện chí thuyết phục.",
-            "- Bước 1 (Giải thích & Biểu hiện): Giải thích thói quen/quan niệm đó là gì và chỉ ra những biểu hiện phổ biến của nó trong đời sống hàng ngày.",
-            "- Bước 2 (Lí do vì sao phải từ bỏ): Phân tích sâu sắc những hậu quả, tác hại đối với cá nhân và tập thể (kèm dẫn chứng thực tế); đồng thời chỉ ra lợi ích tốt đẹp sẽ nhận được khi dũng cảm từ bỏ.",
-            "- Bước 3 (Giải pháp từ bỏ khả thi - Chia 3 cấp độ, mỗi phần đều phải lí giải vì sao làm vậy + có dẫn chứng):",
-            "  + Đối với Cá nhân (TRỌNG TÂM): Giải pháp tự nhận thức, thay đổi hành vi từng bước + lí giải vì sao + dẫn chứng.",
-            "  + Đối với Gia đình: Sự đồng hành, khích lệ, tạo môi trường + lí giải + dẫn chứng.",
-            "  + Đối với Nhà trường / Cộng đồng: Hoạt động định hướng, hỗ trợ + lí giải + dẫn chứng.",
-            "- Bước 4 (Dự đoán những ý kiến phản đối & Khuyên nhủ): Dự đoán lý lẽ bao biện của người mang thói quen/quan niệm đó (ví dụ: cho rằng thói quen vô hại hoặc quá khó bỏ) -> Phản biện nhẹ nhàng nhưng sắc bén và khẳng định vẫn cần kiên quyết từ bỏ.",
-            "- Kết bài: Khẳng định lại thông điệp tích cực và rút ra bài học liên hệ.",
+            "- Mở bài: Nêu rõ thói quen/quan niệm cần thuyết phục từ bỏ.",
+            "- Bước 1 (Giải thích cụ thể thói quen/quan niệm & Chỉ ra biểu hiện cụ thể).",
+            "- Bước 2 (Lí do vì sao phải từ bỏ: Phân tích hậu quả + dẫn chứng thực tế + lợi ích khi từ bỏ).",
+            "- Bước 3 (Giải pháp từ bỏ: Cá nhân (trọng tâm) - Gia đình - Nhà trường; mỗi phần đều nêu cách làm cụ thể + lí giải vì sao làm vậy + dẫn chứng cụ thể).",
+            "- Bước 4 (Dự đoán những ý kiến phản đối - Khuyên vẫn cần từ bỏ) -> Kết bài, bài học liên hệ.",
         ]
         return "\n".join(lines)
 
     return ""
 
 # ==============================================================================
-# HÀM XÂY DỰNG KHUNG ĐỊNH HƯỚNG TƯ DUY ĐỘNG THEO ĐÚNG DẠNG BÀI
+# HÀM XÂY DỰNG KHUNG ĐỊNH HƯỚNG TƯ DUY CỤ THỂ, CHI TIẾT SÁT TỪNG ĐỀ BÀI
+# (Giải thích sẵn khái niệm, cung cấp sẵn lý lẽ & dẫn chứng người thật việc thật vào từng bước)
 # ==============================================================================
 def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_type_override="Tự động nhận diện theo đề bài"):
     formatted_topic = ensure_600_words_prompt(raw_topic_text)
@@ -636,20 +823,20 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
     type_label = get_essay_type_label(type_code)
     structure_guide = get_pedagogical_structure_guide(type_code, raw_topic_text, direct_problem)
 
-    if not is_quote:
-        explain_instruction = "Vì đề bài nêu trực tiếp vấn đề, phần Giải thích cần cắt nghĩa tường minh khái niệm cốt lõi là gì."
-    else:
-        explain_instruction = "Vì đề bài có trích dẫn câu nói/nhận định/tác phẩm, phần Giải thích phải cắt nghĩa cả lớp nghĩa đen/hình ảnh ẩn dụ/ngữ liệu rồi rút ra nghĩa hàm ẩn."
-
+    # 1. GỌI GEMINI API VỚI YÊU CẦU BẮT BUỘC CUNG CẤP TRI THỨC CỤ THỂ (KHÔNG NÓI CHUNG CHUNG)
     prompt_lines = [
-        "Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy chuẩn mực cho đề bài NLXH sau theo ĐÚNG DẠNG BÀI ĐÃ PHÂN LOẠI và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):",
+        "Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy CHI TIẾT, CỤ THỂ cho đề bài NLXH sau theo ĐÚNG DẠNG BÀI ĐÃ PHÂN LOẠI và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):",
         f'- Đề bài: "{formatted_topic}"',
         f'- Vấn đề nghị luận trọng tâm: "{direct_problem}"',
         f'- Phân loại dạng bài: "{type_label}"',
         "",
-        "QUY CHUẨN CẤU TRÚC SƯ PHẠM BẮT BUỘC CỦA DẠNG BÀI NÀY:",
+        "CẤU TRÚC SƯ PHẠM BẮT BUỘC CỦA DẠNG BÀI NÀY:",
         structure_guide,
-        f"- {explain_instruction}",
+        "",
+        "YÊU CẦU TỐI QUAN TRỌNG (TUYỆT ĐỐI KHÔNG VIẾT CHUNG CHUNG):",
+        f"1. Ở mục explain_items: Phải viết rõ định nghĩa/giải thích cụ thể từ khóa '{direct_problem}' là gì (nếu có câu nói/2 quan điểm/tác phẩm văn học thì phải cắt nghĩa cụ thể từng vế ngay tại đây để học sinh nắm được khái niệm mà không cần tra Google).",
+        "2. Ở mục questions (y_tra_loi): Không được ghi chung chung kiểu 'Hãy nêu thực trạng, hãy nêu giải pháp...'. Phải viết rõ nội dung thực trạng là gì, nguyên nhân là gì, hậu quả là gì; ở mỗi giải pháp (Cá nhân - Gia đình - Nhà trường) phải ghi rõ hành động cụ thể + lí giải vì sao + ghi rõ tên dẫn chứng người thật việc thật ngay trong từng đoạn.",
+        "3. Ở mục evidence: Cung cấp ít nhất 2 dẫn chứng thực tế có tên nhân vật, sự kiện, số liệu xác thực gắn chặt với đề bài.",
         "",
         "Trả về JSON theo đúng các trường: text, vdnl_chuan, essay_type_code, essay_type_label, explain_items (mảng chuỗi), vdnl_ket_luan (chuỗi), questions (mảng đối tượng gồm cau_hoi và y_tra_loi), evidence (mảng đối tượng gồm ten, chi_tiet, y_nghia, nguon), counter (mảng chuỗi), dani_chi_tiet (đối tượng gồm mb, gt, bl, dc, pb, kb).",
     ]
@@ -669,7 +856,10 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
         except Exception:
             pass
 
-    # BỘ MÁY SƯ PHẠM NỘI BỘ: TỰ ĐỘNG SINH DÀN Ý CHUẨN XÁC CHO TỪNG DẠNG TRONG 5 DẠNG + 3 TRƯỜNG HỢP
+    # ==========================================================================
+    # 2. BỘ MÁY TRI THỨC SƯ PHẠM NỘI BỘ CHUYÊN SÂU (KHI CHƯA NHẬP API KEY)
+    # Tự động tra cứu Kho tri thức và cung cấp sẵn Khái niệm + Lý lẽ + Giải pháp + Dẫn chứng cụ thể!
+    # ==========================================================================
     combined_low = (raw_topic_text + " " + student_vdnl).lower()
     matched_concept = None
     for kw, data in CONCEPT_DICTIONARY.items():
@@ -677,50 +867,92 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             matched_concept = (kw, data)
             break
 
+    matched_prob_kb = match_problem_solving_kb(raw_topic_text, direct_problem)
     vdnl_final = direct_problem
+
+    # Xác định định nghĩa cụ thể & dẫn chứng cụ thể cho chủ đề
+    if matched_prob_kb:
+        specific_def = matched_prob_kb["def"]
+        specific_manifest = matched_prob_kb["manifest"]
+    elif matched_concept:
+        specific_def = matched_concept[1]["def"]
+        specific_manifest = matched_concept[1]["manifest"]
+    else:
+        specific_def = f"**{vdnl_final}** được hiểu là những nhận thức, chuẩn mực thái độ và hành vi ứng xử cụ thể của con người trước vấn đề đặt ra trong đời sống cá nhân và cộng đồng hiện đại."
+        specific_manifest = f"Thể hiện trực tiếp qua cách suy nghĩ, lựa chọn thái độ và những hành động cụ thể hàng ngày của người trẻ trong học tập, giao tiếp và trách nhiệm xã hội liên quan đến **{vdnl_final}**."
+
     if matched_concept:
-        c_def = matched_concept[1]["def"]
         c_ev_ten = matched_concept[1]["ev_ten"]
         c_ev_chitiet = matched_concept[1]["ev_chitiet"]
         c_ev_ynghia = matched_concept[1]["ev_ynghia"]
     else:
-        c_def = f"**{vdnl_final}** là khái niệm/vấn đề phản ánh nhận thức, thái độ và cách ứng xử của con người trước những yêu cầu của đời sống cá nhân và cộng đồng."
-        c_ev_ten = "Biệt đội Sài Gòn Xanh, Dự án 'Nuôi Em' và những tấm gương người trẻ sống cống hiến, bản lĩnh"
-        c_ev_chitiet = "Những con người trẻ tuổi dám hành động thực chất, vượt qua khó khăn và định kiến để tạo ra giá trị tích cực, truyền cảm hứng mạnh mẽ cho xã hội."
-        c_ev_ynghia = f"Minh chứng thuyết phục cho giá trị thực tiễn và sức lan tỏa của {vdnl_final}."
+        c_ev_ten = "Lê Văn Phúc (Sáng lập mạng lưới 'Fly To Sky') & Biệt đội Sài Gòn Xanh"
+        c_ev_chitiet = "Những người trẻ tuổi khởi xướng hàng chục dự án cộng đồng từ khi còn ngồi trên ghế nhà trường THPT, biến nhận thức thành hành động thực tế lan tỏa khắp cả nước."
+        c_ev_ynghia = f"Minh chứng sống động, thuyết phục cho việc giải quyết và thực hành {vdnl_final} trong thực tiễn."
 
-    # --- DẠNG 2: VẤN ĐỀ CẦN GIẢI QUYẾT ---
+    # --------------------------------------------------------------------------
+    # CHI TIẾT DẠNG 2: VẤN ĐỀ CẦN GIẢI QUYẾT
+    # --------------------------------------------------------------------------
     if type_code == "DANG_2_GIAI_QUYET":
-        has_meaning = is_positive_topic_declining(raw_topic_text, vdnl_final)
+        if matched_prob_kb:
+            has_meaning = matched_prob_kb.get("is_positive_declining", False)
+            status_block = matched_prob_kb["status_cause_harm"]
+            sol_ind = matched_prob_kb["sol_individual"]
+            sol_fam = matched_prob_kb["sol_family"]
+            sol_sch = matched_prob_kb["sol_school"]
+            rebuttal_block = matched_prob_kb["counter_rebuttal"]
+            meaning_text = matched_prob_kb.get("meaning_when_positive", f"**Ý nghĩa vốn có của {vdnl_final}:** Là nền tảng quan trọng giúp cá nhân phát triển lành mạnh và gắn kết tập thể.")
+        else:
+            has_meaning = is_positive_topic_declining(raw_topic_text, vdnl_final)
+            meaning_text = f"**Ý nghĩa của {vdnl_final}:** Khi được duy trì và phát huy đúng đắn, **{vdnl_final}** là phẩm chất/kỹ năng thiết yếu giúp mỗi cá nhân hoàn thiện bản thân, nâng cao hiệu quả học tập và tạo dựng môi trường sống văn minh, gắn kết."
+            status_block = (
+                f"- **Thực trạng:** Trong đời sống học đường và xã hội hiện nay, vấn đề **{vdnl_final}** đang diễn biến đáng báo động ở một bộ phận không nhỏ giới trẻ ({specific_manifest}).\n"
+                f"  - **Nguyên nhân:** *Chủ quan* xuất phát từ nhận thức chưa thấu đáo, tâm lý buông thả, thiếu kỷ luật tự thân của cá nhân; *Khách quan* do sự tác động từ mặt trái của môi trường số, áp lực cuộc sống và sự thiếu định hướng sát sao từ gia đình, xã hội.\n"
+                f"  - **Hậu quả:** Nếu không kịp thời giải quyết, thực trạng này sẽ làm suy giảm trực tiếp năng lực học tập, bào mòn nhân cách người trẻ và gây hệ lụy tiêu cực cho sự phát triển bền vững của cộng đồng."
+            )
+            sol_ind = (
+                f"- **Giải pháp khả thi:** Mỗi cá nhân phải chủ động nâng cao nhận thức đúng đắn về **{vdnl_final}**, tự thiết lập nguyên tắc kỷ luật hàng ngày, rèn luyện kỹ năng tự kiểm soát và tích cực tham gia các hoạt động thực tế lành mạnh.\n"
+                f"  - **Lí giải vì sao:** Bởi mỗi cá nhân là chủ thể trực tiếp của mọi nhận thức và hành vi; nếu bản thân không tự giác thay đổi từ bên trong thì mọi sự hỗ trợ bên ngoài đều chỉ là hình thức.\n"
+                f"  - **Dẫn chứng cụ thể:** Tấm gương tự rèn luyện kỷ luật và hành động vì cộng đồng của các bạn trẻ thuộc mạng lưới tình nguyện quốc gia 'Fly To Sky' (do Lê Văn Phúc sáng lập từ khi còn là học sinh THPT) hay các thủ khoa tự học vượt khó."
+            )
+            sol_fam = (
+                f"- **Giải pháp khả thi:** Cha mẹ cần làm tấm gương sáng trong lối sống, dành thời gian chất lượng mỗi ngày để lắng nghe, thấu cảm và đồng hành định hướng con cái xử lý vấn đề **{vdnl_final}** thay vì áp đặt hay phó mặc.\n"
+                f"  - **Lí giải vì sao:** Gia đình là cái nôi giáo dục đầu tiên và là điểm tựa tâm lý bền vững nhất giúp hình thành nhân cách, thói quen của người trẻ.\n"
+                f"  - **Dẫn chứng cụ thể:** Mô hình 'Giờ tối gia đình không thiết bị điện tử – Cùng lắng nghe và chia sẻ' được hàng chục nghìn gia đình Việt Nam áp dụng hiệu quả trong việc gắn kết và định hướng con cái."
+            )
+            sol_sch = (
+                f"- **Giải pháp khả thi:** Nhà trường cần đổi mới sinh hoạt dưới cờ, lồng ghép kỹ năng giải quyết vấn đề **{vdnl_final}** vào hoạt động trải nghiệm và phát huy vai trò của Phòng tư vấn tâm lý học đường; xã hội tăng cường truyền thông những mô hình tích cực.\n"
+                f"  - **Lí giải vì sao:** Môi trường giáo dục và cộng đồng văn minh sẽ tạo ra hệ sinh thái nâng đỡ, định hướng chuẩn mực để học sinh duy trì hành vi tích cực lâu dài.\n"
+                f"  - **Dẫn chứng cụ thể:** Phong trào xây dựng 'Trường học hạnh phúc' của Bộ Giáo dục & Đào tạo cùng các câu lạc bộ kỹ năng sống, dự án học sinh tự quản tại các trường THPT trên cả nước."
+            )
+            rebuttal_block = (
+                f"- **Ý kiến khác (Trái chiều):** Có ý kiến cho rằng vấn đề **{vdnl_final}** chỉ là chuyện cá nhân nhỏ nhặt hoặc là hệ quả tất yếu của nhịp sống hiện đại nên không cần tốn công sức can thiệp, giải quyết.\n"
+                f"- **Phản biện & Khẳng định:** Đây là góc nhìn phiến diện và thiếu trách nhiệm. Bởi những lệch lạc nhỏ nếu bị dung túng sẽ tích tụ thành khủng hoảng lớn cho cả thế hệ; do đó việc chung tay khắc phục là hoàn toàn cấp thiết."
+            )
+
         explain_items = [
-            f"- **Giải thích vấn đề:** Làm rõ bản chất của **{vdnl_final}** là gì và biểu hiện nhận diện trong đời sống hiện nay.",
+            f"- **Giải thích khái niệm cụ thể:** {specific_def}",
+            f"- **Biểu hiện nhận diện:** {specific_manifest}",
         ]
         if has_meaning:
-            explain_items.append(
-                f"- **Ý nghĩa vốn có của vấn đề (Vì đây là giá trị tốt đang có chiều hướng suy giảm):** Khẳng định vai trò quan trọng của **{vdnl_final}** đối với sự phát triển nhân cách và gắn kết cộng đồng trước khi chỉ ra thực trạng đáng lo ngại."
-            )
-            gt_dani = "Giải thích rõ khái niệm/vấn đề + Nêu ý nghĩa vốn có của vấn đề."
+            explain_items.append(f"- {meaning_text}")
             step_offset = 1
         else:
             explain_items.append(
-                f"- **Lưu ý cấu trúc:** Vì **{vdnl_final}** là vấn đề/hiện tượng tiêu cực trực tiếp, sau khi giải thích khái niệm, bài viết chuyển thẳng sang phân tích Lí do cần giải quyết (bỏ qua bước nêu ý nghĩa tích cực)."
+                f"- **Lưu ý triển khai:** Vì **{vdnl_final}** là vấn đề/hiện tượng tiêu cực trực tiếp, sau đoạn Giải thích, bài viết đi thẳng vào đoạn **Lí do cần giải quyết** (không viết đoạn ca ngợi ý nghĩa)."
             )
-            gt_dani = "Giải thích rõ khái niệm/vấn đề (Bỏ qua bước ý nghĩa vì là hiện tượng tiêu cực trực tiếp)."
             step_offset = 0
 
         y_tra_loi_d2 = []
         if has_meaning:
-            y_tra_loi_d2.append(
-                f"- **1. Ý nghĩa của vấn đề:** Khẳng định giá trị tốt đẹp của **{vdnl_final}** khi được thực hiện đúng đắn, giúp cá nhân trưởng thành và tập thể gắn kết."
-            )
-        y_tra_loi_d2.extend(
-            [
-                f"- **{1 + step_offset}. Lí do cần giải quyết (Viết thành 01 đoạn văn thống nhất gồm 3 ý):**\n  + *Thực trạng:* Chỉ ra mức độ phổ biến và những biểu hiện đáng báo động của vấn đề **{vdnl_final}** hiện nay.\n  + *Nguyên nhân:* Do nhận thức chủ quan của cá nhân (thiếu tự giác, chạy theo thói quen dễ dãi) và tác động khách quan từ môi trường gia đình, xã hội, mặt trái công nghệ.\n  + *Hậu quả:* Gây hệ lụy trực tiếp đến sức khỏe tinh thần, tương lai của cá nhân và làm suy giảm các giá trị bền vững của xã hội.",
-                f"- **{2 + step_offset}. Giải pháp 1 — Đối với Cá nhân (Viết 01 đoạn văn):**\n  + *Giải pháp khả thi:* Chủ động nâng cao nhận thức, thiết lập kỷ luật bản thân và rèn luyện kỹ năng thực tế để làm chủ hành vi trước **{vdnl_final}**.\n  + *Lí giải vì sao:* Cá nhân là chủ thể trực tiếp quyết định mọi hành động; nếu tự thân không thay đổi thì mọi tác động bên ngoài đều vô nghĩa.\n  + *Dẫn chứng (ít nhất 01 dẫn chứng):* Các bạn trẻ tự lập kế hoạch học tập, chủ động cai nghiện mạng xã hội hoặc tham gia các dự án rèn luyện bản lĩnh thực tế.",
-                f"- **{3 + step_offset}. Giải pháp 2 — Đối với Gia đình (Viết 01 đoạn văn):**\n  + *Giải pháp khả thi:* Cha mẹ làm gương, dành thời gian lắng nghe, đồng hành và định hướng con cái bằng sự thấu cảm thay vì áp đặt hay phó mặc.\n  + *Lí giải vì sao:* Gia đình là cái nôi đầu tiên hình thành thói quen và điểm tựa tâm lý vững chắc nhất của mỗi người.\n  + *Dẫn chứng (ít nhất 01 dẫn chứng):* Mô hình 'Giờ tối không thiết bị điện tử' và cùng đọc sách, trò chuyện của nhiều gia đình hiện đại.",
-                f"- **{4 + step_offset}. Giải pháp 3 — Đối với Nhà trường & Xã hội (Viết 01 đoạn văn):**\n  + *Giải pháp khả thi:* Nhà trường đổi mới hoạt động trải nghiệm, tư vấn tâm lý học đường; xã hội và truyền thông lan tỏa các chiến dịch tích cực, hoàn thiện chế tài quản lý.\n  + *Lí giải vì sao:* Môi trường giáo dục và cộng đồng lành mạnh sẽ tạo hành lang hỗ trợ bền vững để cá nhân duy trì thói quen tốt.\n  + *Dẫn chứng (ít nhất 01 dẫn chứng):* Các chương trình 'Trường học hạnh phúc', chiến dịch 'Sài Gòn Xanh' hay các câu lạc bộ kỹ năng sống tại trường THPT.",
-            ]
-        )
+            y_tra_loi_d2.append(f"- **Đoạn 1 — Ý nghĩa của vấn đề (Vì vấn đề tốt nhưng đang có chiều hướng chưa tốt):**\n  {meaning_text}")
+
+        y_tra_loi_d2.extend([
+            f"- **Đoạn {1 + step_offset} — Lí do cần giải quyết (Tích hợp chặt chẽ Thực trạng - Nguyên nhân - Hậu quả trong 1 đoạn):**\n  {status_block}",
+            f"- **Đoạn {2 + step_offset} — Giải pháp đối với Cá nhân (Giải pháp khả thi + Lí giải + Dẫn chứng cụ thể):**\n  {sol_ind}",
+            f"- **Đoạn {3 + step_offset} — Giải pháp đối với Gia đình (Giải pháp khả thi + Lí giải + Dẫn chứng cụ thể):**\n  {sol_fam}",
+            f"- **Đoạn {4 + step_offset} — Giải pháp đối với Nhà trường & Xã hội (Giải pháp khả thi + Lí giải + Dẫn chứng cụ thể):**\n  {sol_sch}",
+        ])
 
         return {
             "text": formatted_topic,
@@ -728,57 +960,63 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             "essay_type_code": type_code,
             "essay_type_label": type_label,
             "explain_items": explain_items,
-            "vdnl_ket_luan": f"Từ thực tiễn đó, việc nhận diện thấu đáo và tìm ra giải pháp khắc phục triệt để cho vấn đề **{vdnl_final}** là yêu cầu cấp thiết.",
+            "vdnl_ket_luan": f"Từ thực trạng và những hệ lụy trên, việc tìm kiếm các giải pháp đồng bộ để giải quyết vấn đề **{vdnl_final}** là yêu cầu bức thiết đặt ra cho mỗi cá nhân, gia đình và nhà trường.",
             "questions": [
                 {
-                    "cau_hoi": f"Khung triển khai Thân bài dạng Vấn đề cần giải quyết ({vdnl_final}):",
+                    "cau_hoi": f"Hệ thống luận điểm chi tiết giải quyết vấn đề '{vdnl_final}' (Đã kèm lý lẽ & dẫn chứng cụ thể cho từng đoạn):",
                     "y_tra_loi": y_tra_loi_d2,
                 }
             ],
             "evidence": [
                 {
-                    "ten": c_ev_ten,
-                    "chi_tiet": c_ev_chitiet,
-                    "y_nghia": "Đưa vào các đoạn Giải pháp (Cá nhân / Gia đình / Nhà trường) để chứng minh tính khả thi.",
-                    "nguon": "Thực tiễn đời sống xã hội",
-                }
+                    "ten": "Dẫn chứng cho đoạn Giải pháp Cá nhân: Lê Văn Phúc ('Fly To Sky') & Phong trào '30 ngày kỷ luật tự thân'",
+                    "chi_tiet": "Hàng nghìn học sinh THPT tự thiết lập kỷ luật cá nhân, hạn chế thiết bị số và tham gia các dự án thiện nguyện, nghiên cứu khoa học.",
+                    "y_nghia": "Chứng minh khi cá nhân tự giác thay đổi nhận thức và hành vi, vấn đề được giải quyết tận gốc.",
+                    "nguon": "Báo Tiền Phong & Trung ương Đoàn",
+                },
+                {
+                    "ten": "Dẫn chứng cho đoạn Gia đình & Nhà trường: Chiến dịch 'Tắt điện thoại - Bật yêu thương' & Mô hình 'Trường học hạnh phúc'",
+                    "chi_tiet": "Sự phối hợp giữa quy tắc 'Khung giờ tối gia đình không màn hình' và các câu lạc bộ trải nghiệm tâm lý học đường tại các trường THPT.",
+                    "y_nghia": "Chứng minh sức mạnh của môi trường gia đình và nhà trường trong việc nâng đỡ, định hướng người trẻ.",
+                    "nguon": "Bộ Giáo dục & Đào tạo / Báo Giáo dục & Thời đại",
+                },
             ],
-            "counter": [
-                f"- **Ý kiến khác (Trái chiều):** Có ý kiến cho rằng vấn đề **{vdnl_final}** chỉ là chuyện nhỏ của cá nhân hoặc là xu thế tất yếu của thời đại nên không cần tốn công sức giải quyết.",
-                "- **Phản biện & Khẳng định:** Bác bỏ suy nghĩ chủ quan, buông xuôi đó; khẳng định nếu không kiên quyết khắc phục ngay từ hôm nay thì hệ lụy tích tụ sẽ hủy hoại tương lai người trẻ.",
-            ],
+            "counter": [rebuttal_block],
             "dani_chi_tiet": {
                 "mb": f"Dẫn dắt từ bối cảnh thời đại -> Nêu trực diện vấn đề cần giải quyết: {vdnl_final}.",
-                "gt": gt_dani,
-                "bl": "1. Đoạn Lí do cần giải quyết (Thực trạng - Nguyên nhân - Hậu quả).\n2. Ba đoạn Giải pháp tách biệt: Cá nhân - Gia đình - Nhà trường (Mỗi đoạn đủ: Giải pháp khả thi + Lí giải vì sao + 01 Dẫn chứng).",
-                "dc": "Lồng ghép trực tiếp ít nhất 01 dẫn chứng thực tế vào mỗi đoạn giải pháp.",
-                "pb": "Nêu ý kiến khác cho rằng không cần thiết -> Phản biện lại và khẳng định vẫn cần phải khắc phục.",
-                "kb": f"Khẳng định lại tầm quan trọng của việc giải quyết {vdnl_final} và liên hệ hành động bản thân.",
+                "gt": f"Giải thích khái niệm cụ thể của '{vdnl_final}' {'+ Đoạn nêu ý nghĩa vốn có của vấn đề' if has_meaning else '(Chuyển thẳng sang Lí do cần giải quyết)'}.",
+                "bl": "1. Đoạn Lí do cần giải quyết (Thực trạng - Nguyên nhân - Hậu quả).\n2. Ba đoạn Giải pháp (Cá nhân - Gia đình - Nhà trường): mỗi đoạn đều triển khai đủ Giải pháp khả thi + Lí giải vì sao + Dẫn chứng cụ thể như khung bên trên.",
+                "dc": "Sử dụng trực tiếp các dẫn chứng đã gợi ý vào từng đoạn Giải pháp Cá nhân, Gia đình, Nhà trường.",
+                "pb": "Nêu ý kiến khác cho rằng không cần thiết -> Phản biện bác bỏ và khẳng định vẫn cần khắc phục.",
+                "kb": f"Khẳng định lại thông điệp giải quyết {vdnl_final} và rút ra bài học liên hệ cá nhân.",
             },
         }
 
-    # --- DẠNG 3: LỰA CHỌN QUAN ĐIỂM ---
+    # --------------------------------------------------------------------------
+    # CHI TIẾT DẠNG 3: LỰA CHỌN QUAN ĐIỂM (ĐỨNG TRƯỚC 2 QUAN ĐIỂM)
+    # --------------------------------------------------------------------------
     if type_code == "DANG_3_HAI_QUAN_DIEM":
+        v1_text, v2_text = parse_two_viewpoints_from_topic(raw_topic_text, vdnl_final)
         return {
             "text": formatted_topic,
             "vdnl_chuan": vdnl_final,
             "essay_type_code": type_code,
             "essay_type_label": type_label,
             "explain_items": [
-                "- **Giải thích Quan điểm 1:** Làm rõ nội hàm, cơ sở hình thành và thông điệp của quan điểm thứ nhất trong đề bài.",
-                "- **Giải thích Quan điểm 2:** Làm rõ nội hàm, góc nhìn và thông điệp của quan điểm thứ hai.",
-                "- **Chỉ ra mối quan hệ giữa 2 quan điểm:** Phân tích xem 2 quan điểm đối lập nhau hoàn toàn hay là hai lát cắt bổ sung cho nhau trong những hoàn cảnh khác nhau.",
+                f"- **Giải thích Quan điểm 1 (*\"{v1_text}\"*):** Quan điểm này đề cao giá trị của sự nỗ lực chủ động, khẳng định vai trò của ý chí/lựa chọn thứ nhất trong việc định hình thành công và nhân cách con người.",
+                f"- **Giải thích Quan điểm 2 (*\"{v2_text}\"*):** Quan điểm này nhìn nhận vấn đề từ góc độ đối trọng, nhấn mạnh vào điều kiện thực tế, sự linh hoạt hoặc giá trị tinh thần chiều sâu.",
+                "- **Chỉ ra mối quan hệ giữa 2 quan điểm:** Hai quan điểm tưởng chừng đối lập nhưng thực chất phản ánh hai chiều kích khác nhau của cuộc sống; tuy nhiên, đặt trong bối cảnh của tuổi trẻ hôm nay, người viết cần xác lập rõ quan điểm ưu tiên mà mình lựa chọn (hoặc lựa chọn quan điểm tích hợp có trọng tâm).",
             ],
-            "vdnl_ket_luan": f"Đứng trước hai góc nhìn trên về **{vdnl_final}**, người viết cần xác lập rõ quan điểm lựa chọn của mình và bảo vệ bằng lý lẽ thuyết phục.",
+            "vdnl_ket_luan": f"Đứng trước hai luồng ý kiến về **{vdnl_final}**, em lựa chọn bảo vệ quan điểm mang tính chủ động, kiến tạo giá trị thực chất, đồng thời nhìn nhận thấu đáo hạn chế nếu tuyệt đối hóa quan điểm còn lại.",
             "questions": [
                 {
-                    "cau_hoi": f"Khung triển khai Thân bài dạng Lựa chọn quan điểm ({vdnl_final}):",
+                    "cau_hoi": f"Hệ thống luận điểm chi tiết cho dạng Lựa chọn quan điểm ({vdnl_final}):",
                     "y_tra_loi": [
-                        "- **1. Giải thích 2 quan điểm & Mối quan hệ:** Cắt nghĩa từng quan điểm và chỉ rõ điểm giao thoa hoặc khác biệt giữa chúng.",
-                        "- **2. Lí giải vì sao chọn quan điểm của mình (Trọng tâm):** Đưa ra các luận cứ sắc bén chứng minh tính đúng đắn, phù hợp và giá trị tích cực của quan điểm mình lựa chọn đối với sự phát triển của cá nhân và xã hội.",
-                        "- **3. Phân tích Dẫn chứng chứng minh:** Đưa dẫn chứng người thật việc thật tiêu biểu để bảo vệ vững chắc cho quan điểm đã chọn.",
-                        "- **4. Chỉ ra hạn chế của quan điểm còn lại:** Phân tích khách quan những điểm phiến diện, bất cập hoặc rủi ro nếu con người tuyệt đối hóa quan điểm còn lại.",
-                        "- **5. Bài học khái quát & Bài học liên hệ:** Rút ra quy luật ứng xử linh hoạt trong cuộc sống và bài học hành động cho bản thân.",
+                        f"- **1. Giải thích 2 quan điểm & Mối quan hệ:**\n  + Cắt nghĩa rõ nội hàm của **\"{v1_text}\"** và **\"{v2_text}**\".\n  + Chỉ ra mối quan hệ: Hai góc nhìn xuất phát từ những hệ quy chiếu khác nhau trước vấn đề **{vdnl_final}**.",
+                        "- **2. Lí giải vì sao chọn quan điểm của mình (Trọng tâm lập luận):**\n  + *Lý lẽ 1:* Quan điểm em chọn phù hợp với quy luật phát triển tự thân của con người hiện đại — giúp cá nhân làm chủ hoàn cảnh thay vì thụ động chờ đợi.\n  + *Lý lẽ 2:* Mang lại giá trị bền vững cho cả sự trưởng thành cá nhân lẫn sự tiến bộ của cộng đồng xã hội.",
+                        f"- **3. Phân tích Dẫn chứng thực tế bảo vệ quan điểm đã chọn:**\n  + *Dẫn chứng cụ thể:* **{c_ev_ten}** ({c_ev_chitiet}).\n  + *Phân tích:* Hành trình ấy chứng minh hùng hồn cho tính đúng đắn của quan điểm mà em đã lựa chọn.",
+                        "- **4. Chỉ ra hạn chế của quan điểm còn lại:**\n  + Nếu con người chỉ nghiêng hẳn về quan điểm còn lại một cách cực đoan, phiến diện thì dễ rơi vào sự thụ động, bảo thủ hoặc mất cân bằng trong thực tiễn cuộc sống.",
+                        "- **5. Bài học khái quát & Bài học liên hệ cá nhân:**\n  + *Bài học khái quát:* Cần có bản lĩnh giữ vững lập trường đúng đắn, đồng thời có tư duy biện chứng, không cực đoan.\n  + *Bài học liên hệ:* Áp dụng trực tiếp quan điểm đã chọn vào việc học tập, rèn luyện nhân cách và định hướng tương lai của bản thân.",
                     ],
                 }
             ],
@@ -786,25 +1024,27 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
                 {
                     "ten": c_ev_ten,
                     "chi_tiet": c_ev_chitiet,
-                    "y_nghia": "Chứng minh sức thuyết phục cho quan điểm mà học sinh đã lựa chọn.",
-                    "nguon": "Thực tiễn đời sống",
+                    "y_nghia": "Dẫn chứng thực tế sắc bén dùng để bảo vệ quan điểm lựa chọn của học sinh ở Bước 2.",
+                    "nguon": "Thực tiễn đời sống & Báo chí chính thống",
                 }
             ],
             "counter": [
-                "- **Chỉ ra hạn chế của quan điểm không chọn:** Phân tích vì sao quan điểm kia chưa tối ưu hoặc dễ dẫn đến sự cực đoan trong thực tế.",
-                "- **Bài học nhận thức khái quát:** Biết giữ vững lập trường đúng đắn nhưng đồng thời có cái nhìn biện chứng, tôn trọng sự đa dạng của tư duy.",
+                "- **Chỉ ra hạn chế của quan điểm còn lại:** Phân tích rõ những điểm bất cập, thiếu khả thi nếu tuyệt đối hóa quan điểm không được chọn.",
+                "- **Bài học khái quát & Liên hệ:** Rút ra chân lý nhận thức toàn diện và bài học hành động cụ thể cho tuổi trẻ.",
             ],
             "dani_chi_tiet": {
-                "mb": "Giới thiệu 2 quan điểm trong đề bài + Chỉ ra rõ ràng quan điểm lựa chọn của bản thân.",
-                "gt": "Giải thích lần lượt 2 quan điểm và chỉ ra mối quan hệ giữa chúng.",
-                "bl": "Lí giải sâu sắc vì sao chọn quan điểm của mình + Chỉ ra những hạn chế của quan điểm còn lại.",
-                "dc": "Phân tích dẫn chứng thực tế để bảo vệ quan điểm đã chọn.",
-                "pb": "Rút ra bài học khái quát từ sự đối sánh hai quan điểm.",
-                "kb": "Khẳng định lại sự lựa chọn và nêu bài học liên hệ cá nhân.",
+                "mb": f"Giới thiệu 2 quan điểm ('{v1_text}' và '{v2_text}') + Khẳng định rõ quan điểm lựa chọn của bản thân.",
+                "gt": "Giải thích cụ thể từng quan điểm và chỉ ra mối quan hệ giữa 2 quan điểm.",
+                "bl": "1. Lí giải sâu sắc vì sao chọn quan điểm của mình (kèm dẫn chứng thực tế).\n2. Chỉ ra những hạn chế của quan điểm còn lại.",
+                "dc": f"Đưa dẫn chứng ({c_ev_ten}) vào ngay sau phần lí giải bảo vệ quan điểm của mình.",
+                "pb": "Nêu bài học khái quát về cách nhìn nhận vấn đề đa chiều -> Bài học liên hệ cá nhân.",
+                "kb": "Khẳng định lại sự lựa chọn và thông điệp kết bài.",
             },
         }
 
-    # --- DẠNG 4: VẤN ĐỀ XÃ HỘI RÚT RA TỪ TÁC PHẨM VĂN HỌC ---
+    # --------------------------------------------------------------------------
+    # CHI TIẾT DẠNG 4: VẤN ĐỀ XÃ HỘI RÚT RA TỪ TÁC PHẨM VĂN HỌC
+    # --------------------------------------------------------------------------
     if type_code == "DANG_4_VAN_HOC":
         return {
             "text": formatted_topic,
@@ -812,19 +1052,19 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             "essay_type_code": type_code,
             "essay_type_label": type_label,
             "explain_items": [
-                f"- **Bước 1 — Phân tích ngắn gọn ngữ liệu văn học:** Khái quát nội dung, tình huống hoặc hình tượng nhân vật trong tác phẩm/đoạn trích để rút ra thông điệp, vấn đề xã hội: **{vdnl_final}**.",
-                f"- **Bước 2 — Giải thích vấn đề xã hội:** Cắt nghĩa khái niệm, bản chất của **{vdnl_final}** khi bước ra khỏi trang sách để đi vào đời sống xã hội.",
+                f"- **Bước 1 — Phân tích ngắn gọn ngữ liệu văn học để rút ra vấn đề:** Qua tình huống, chi tiết nghệ thuật và hình tượng nhân vật trong văn bản/tác phẩm, tác giả đã gửi gắm một bức thông điệp nhân sinh sâu sắc về **{vdnl_final}**.",
+                f"- **Bước 2 — Giải thích vấn đề xã hội đặt ra:** {specific_def}",
             ],
-            "vdnl_ket_luan": f"Từ hình tượng nghệ thuật trong tác phẩm, một vấn đề nhân sinh và xã hội sâu sắc được đặt ra là: **{vdnl_final}**.",
+            "vdnl_ket_luan": f"Khép lại trang văn, vấn đề **{vdnl_final}** bước ra giữa đời thực như một câu hỏi lớn đánh thức nhận thức và lương tri của mỗi con người hôm nay.",
             "questions": [
                 {
-                    "cau_hoi": f"Khung triển khai Thân bài dạng Vấn đề xã hội rút ra từ tác phẩm văn học ({vdnl_final}):",
+                    "cau_hoi": f"Hệ thống luận điểm chi tiết cho dạng Vấn đề xã hội rút ra từ tác phẩm văn học ({vdnl_final}):",
                     "y_tra_loi": [
-                        "- **1. Chuyển giao từ Văn học sang Đời sống:** Phân tích ngắn gọn (khoảng 1 đoạn) ý nghĩa ngữ liệu văn học để gọi tên chính xác vấn đề xã hội.",
-                        f"- **2. Giải thích vấn đề xã hội:** Làm rõ bản chất của **{vdnl_final}** trong thực tiễn cuộc sống.",
-                        f"- **3. Bàn luận biểu hiện & Ý nghĩa thực tiễn:** Phân tích các biểu hiện sinh động và vai trò, tác động của **{vdnl_final}** đối với con người và xã hội đương đại.",
-                        "- **4. Dẫn chứng thực tế đời sống:** Lấy dẫn chứng người thật, việc thật ngoài xã hội (không lấy lại dẫn chứng trong văn học) để làm sáng tỏ vấn đề.",
-                        "- **5. Phản đề, Mở rộng & Bài học liên hệ:** Phê phán các biểu hiện trái ngược, khẳng định giá trị thức tỉnh của văn chương đối với cuộc đời và rút ra bài học cho tuổi trẻ.",
+                        f"- **1. Phân tích khái quát ngữ liệu văn học (Khoảng 1 đoạn ngắn):**\n  + Chỉ ra vẻ đẹp/bi kịch của nhân vật hoặc ý nghĩa của chi tiết trong tác phẩm.\n  + Chốt lại vấn đề xã hội cốt lõi được rút ra: **{vdnl_final}**.",
+                        f"- **2. Giải thích vấn đề xã hội trong đời sống thực tiễn:**\n  + {specific_def}\n  + Biểu hiện trong đời thực: {specific_manifest}",
+                        f"- **3. Bàn luận ý nghĩa, tác động của '{vdnl_final}' giữa cuộc đời thực:**\n  + *Đối với cá nhân:* Giúp con người bồi đắp tâm hồn, định hình bản lĩnh và sống có giá trị nhân văn.\n  + *Đối với cộng đồng, xã hội:* Hàn gắn những đứt gãy, đẩy lùi cái xấu và kiến tạo một xã hội tốt đẹp như khát vọng mà nhà văn gửi gắm.",
+                        f"- **4. Dẫn chứng thực tế ngoài đời sống (Lưu ý: Lấy người thật việc thật, không lấy lại nhân vật văn học):**\n  + *Dẫn chứng cụ thể:* **{c_ev_ten}** — {c_ev_chitiet}.\n  + *Phân tích:* Minh chứng cho thấy thông điệp từ trang sách đã và đang tỏa sáng sinh động giữa cuộc đời.",
+                        "- **5. Phản đề, Mở rộng & Bài học liên hệ:**\n  + Phê phán những người sống thờ ơ, thực dụng, đi ngược lại giá trị nhân văn của tác phẩm.\n  + Rút ra bài học nhận thức và hành động cụ thể cho bản thân người trẻ hôm nay.",
                     ],
                 }
             ],
@@ -832,109 +1072,158 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
                 {
                     "ten": c_ev_ten,
                     "chi_tiet": c_ev_chitiet,
-                    "y_nghia": "Dẫn chứng thực tế đời sống làm sáng tỏ thông điệp xã hội rút ra từ tác phẩm.",
-                    "nguon": "Thực tiễn đời sống",
+                    "y_nghia": "Dẫn chứng người thật việc thật ngoài đời thực để chứng minh sức sống của vấn đề rút ra từ tác phẩm.",
+                    "nguon": "Thực tiễn đời sống xã hội",
                 }
             ],
             "counter": [
-                "- **Phê phán & Mở rộng:** Lên án những biểu hiện đi ngược lại giá trị nhân văn mà tác phẩm đã cảnh báo/khơi gợi.",
-                "- **Bài học nhận thức và hành động:** Biết soi chiếu bản thân qua trang sách để sống nhân ái, bản lĩnh và trách nhiệm hơn.",
+                f"- **Phê phán biểu hiện trái ngược:** Lên án lối sống vô cảm, ích kỷ hoặc đi ngược lại giá trị **{vdnl_final}** mà tác phẩm đã đặt ra.",
+                "- **Khẳng định mối quan hệ Văn học - Cuộc đời & Bài học:** Văn chương chân chính luôn bắt nguồn từ cuộc đời và quay trở lại thanh lọc, nâng đỡ con người.",
             ],
             "dani_chi_tiet": {
-                "mb": f"Dẫn dắt từ tác giả, tác phẩm -> Nêu vấn đề xã hội rút ra từ tác phẩm: {vdnl_final}.",
-                "gt": "Phân tích ngắn gọn khía cạnh văn học để rút ra vấn đề -> Giải thích khái niệm vấn đề xã hội đó.",
-                "bl": f"Bàn luận sâu sắc về biểu hiện, ý nghĩa và tác động của {vdnl_final} trong đời sống xã hội hôm nay.",
-                "dc": "Phân tích dẫn chứng thực tế ngoài đời sống xã hội.",
-                "pb": "Phản đề, mở rộng góc nhìn và nêu bài học nhận thức, hành động.",
-                "kb": "Khẳng định sức sống lâu bền của thông điệp từ tác phẩm văn học trong cuộc sống và liên hệ bản thân.",
+                "mb": f"Dẫn dắt từ sứ mệnh của văn chương hoặc giới thiệu tác giả, tác phẩm -> Nêu vấn đề xã hội rút ra: {vdnl_final}.",
+                "gt": f"1. Phân tích ngắn gọn ngữ liệu văn học để rút ra vấn đề.\n2. Giải thích khái niệm '{vdnl_final}' trong đời sống xã hội.",
+                "bl": f"Bàn luận sâu sắc về biểu hiện, ý nghĩa và sức mạnh của '{vdnl_final}' đối với cá nhân và xã hội hiện đại.",
+                "dc": f"Phân tích dẫn chứng người thật việc thật ngoài đời sống ({c_ev_ten}).",
+                "pb": "Phản đề phê phán mặt trái, mở rộng vấn đề và rút ra bài học liên hệ cá nhân.",
+                "kb": "Khẳng định giá trị trường tồn của thông điệp từ tác phẩm văn học trong dòng chảy cuộc đời.",
             },
         }
 
-    # --- DẠNG 5: THUYẾT PHỤC NGƯỜI KHÁC TỪ BỎ MỘT THÓI QUEN HAY QUAN NIỆM ---
+    # --------------------------------------------------------------------------
+    # CHI TIẾT DẠNG 5: THUYẾT PHỤC NGƯỜI KHÁC TỪ BỎ MỘT THÓI QUEN HAY MỘT QUAN NIỆM
+    # --------------------------------------------------------------------------
     if type_code == "DANG_5_TU_BO":
+        if matched_prob_kb:
+            habit_def = matched_prob_kb["def"]
+            habit_manifest = matched_prob_kb["manifest"]
+            harm_and_benefit = (
+                f"  + **Hậu quả nghiêm trọng nếu giữ thói quen/quan niệm này:** {matched_prob_kb['status_cause_harm']}\n"
+                f"  + **Dẫn chứng thực tế về hậu quả:** Thực tế đã có biết bao bạn trẻ đánh mất cơ hội học tập, rơi vào khủng hoảng tâm lý và rạn nứt các mối quan hệ tốt đẹp chỉ vì dung túng cho thói quen này.\n"
+                f"  + **Lợi ích to lớn khi dũng cảm từ bỏ:** {matched_prob_kb.get('benefit_of_quitting', 'Giúp cá nhân giải phóng năng lượng tích cực, làm chủ cuộc sống và được mọi người tin yêu, tôn trọng.')}"
+            )
+            sol_ind = matched_prob_kb["sol_individual"]
+            sol_fam = matched_prob_kb["sol_family"]
+            sol_sch = matched_prob_kb["sol_school"]
+            predict_objection = matched_prob_kb["counter_rebuttal"]
+        else:
+            habit_def = f"**{vdnl_final}** là một thói quen chưa tốt / quan niệm lệch lạc được hình thành từ sự thiếu tự giác hoặc cái nhìn phiến diện, lâu dần ăn sâu vào nếp nghĩ và hành vi của con người."
+            habit_manifest = f"Biểu hiện cụ thể qua lời nói, thái độ chủ quan, sự chần chừ hoặc cách ứng xử thiếu chuẩn mực trong học tập, công việc và giao tiếp hàng ngày liên quan đến **{vdnl_final}**."
+            harm_and_benefit = (
+                f"  + **Hậu quả nặng nề:** Thói quen/quan niệm **{vdnl_final}** âm thầm bào mòn thời gian, làm suy giảm năng lực học tập, thu hẹp cơ hội phát triển của bản thân và gây ảnh hưởng tiêu cực tới tập thể.\n"
+                f"  + **Dẫn chứng thực tế:** Không ít người trẻ có tố chất thông minh nhưng vì không vượt qua được **{vdnl_final}** nên đã tụt hậu phía sau trong kỷ nguyên số đầy cạnh tranh.\n"
+                f"  + **Lợi ích thiết thực khi từ bỏ:** Khi dứt khoát từ bỏ **{vdnl_final}**, mỗi người sẽ tìm lại sự tự chủ, nâng cao hiệu suất học tập, hoàn thiện nhân cách và nhận được sự tin cậy từ cộng đồng."
+            )
+            sol_ind = (
+                f"- **Giải pháp đối với Cá nhân (TRỌNG TÂM):**\n"
+                f"  + *Cách làm khả thi:* Thẳng thắn nhìn nhận tác hại của **{vdnl_final}**, đặt mục tiêu thay đổi theo từng chặng nhỏ (Quy tắc 21 ngày tạo thói quen mới), thay thế hành vi cũ bằng một hoạt động tích cực cụ thể và tự kỷ luật mỗi ngày.\n"
+                f"  + *Lí giải vì sao:* Thói quen/quan niệm nằm trong chính tiềm thức và hành vi của mỗi người; chỉ khi bản thân thực sự quyết tâm thay đổi thì quá trình từ bỏ mới thành công.\n"
+                f"  + *Dẫn chứng cụ thể:* Hành trình tự rèn luyện kỷ luật thép, vượt qua thói quen trì hoãn và giới hạn bản thân của kình ngư Nguyễn Thị Ánh Viên hay các thủ khoa tự học."
+            )
+            sol_fam = (
+                f"- **Giải pháp đối với Gia đình:**\n"
+                f"  + *Cách làm khả thi:* Cha mẹ và người thân kiên nhẫn đồng hành, nhắc nhở nhẹ nhàng, ghi nhận từng bước tiến bộ nhỏ của con thay vì chê bai, chỉ trích nặng lời.\n"
+                f"  + *Lí giải vì sao:* Sự khích lệ và môi trường gia đình tích cực sẽ tạo động lực tâm lý giúp người trẻ không bỏ cuộc giữa chừng khi thay đổi thói quen.\n"
+                f"  + *Dẫn chứng cụ thể:* Sự đồng hành thấu cảm của gia đình trong các chương trình 'Cha mẹ cùng con thay đổi thói quen tích cực'."
+            )
+            sol_sch = (
+                f"- **Giải pháp đối với Nhà trường & Tập thể:**\n"
+                f"  + *Cách làm khả thi:* Thầy cô và bạn bè tạo môi trường sinh hoạt câu lạc bộ lành mạnh, cùng lập nhóm 'Đôi bạn cùng tiến' để nhắc nhở và truyền cảm hứng rèn luyện mỗi ngày.\n"
+                f"  + *Lí giải vì sao:* Áp lực tích cực từ tập thể bạn bè đồng trang lứa giúp cá nhân duy trì cam kết từ bỏ thói quen xấu dễ dàng hơn.\n"
+                f"  + *Dẫn chứng cụ thể:* Phong trào 'Đôi bạn cùng tiến' và các câu lạc bộ rèn luyện kỹ năng sống tại các trường THPT."
+            )
+            predict_objection = (
+                f"- **Dự đoán những ý kiến phản đối / bao biện:** Người mang thói quen/quan niệm **{vdnl_final}** có thể phản đối rằng: *'Thói quen này đã thành bản tính khó đổi'* hoặc *'Đó là quyền cá nhân, chẳng ảnh hưởng lớn đến ai'*.\n"
+                f"- **Khuyên nhủ & Khẳng định vẫn cần từ bỏ:** Hãy nhẹ nhàng nhưng kiên quyết chỉ rõ: Không ai sinh ra đã hoàn hảo, mọi thói quen đều do rèn luyện mà thành. Nếu cứ thỏa hiệp với một thói quen/quan niệm sai lầm, chính tương lai của bạn sẽ phải trả giá đắt. Vì vậy, bắt đầu từ bỏ ngay hôm nay là lựa chọn sáng suốt nhất."
+            )
+
         return {
             "text": formatted_topic,
             "vdnl_chuan": vdnl_final,
             "essay_type_code": type_code,
             "essay_type_label": type_label,
             "explain_items": [
-                f"- **Giải thích thói quen / quan niệm:** Làm rõ bản chất của thói quen/quan niệm (**{vdnl_final}**) là gì.",
-                "- **Biểu hiện thực tế:** Chỉ ra những biểu hiện cụ thể, phổ biến của thói quen/quan niệm này trong suy nghĩ, lời nói và hành động hàng ngày của một bộ phận giới trẻ/con người hiện nay.",
+                f"- **1. Giải thích cụ thể thói quen / quan niệm:** {habit_def}",
+                f"- **2. Biểu hiện thực tế trong đời sống:** {habit_manifest}",
             ],
-            "vdnl_ket_luan": f"Nhận diện rõ những hệ lụy âm thầm nhưng nặng nề ấy, mỗi chúng ta cần dũng cảm từ bỏ **{vdnl_final}** để hướng tới lối sống tích cực hơn.",
+            "vdnl_ket_luan": f"Nhận thức rõ những tác hại ấy, việc thuyết phục và đồng hành để mỗi người kiên quyết từ bỏ **{vdnl_final}** là điều vô cùng ý nghĩa.",
             "questions": [
                 {
-                    "cau_hoi": f"Khung triển khai Thân bài dạng Thuyết phục từ bỏ thói quen/quan niệm ({vdnl_final}):",
+                    "cau_hoi": f"Hệ thống luận điểm chi tiết Thuyết phục từ bỏ '{vdnl_final}' (Đã kèm lý lẽ, giải pháp 3 cấp độ & dẫn chứng cụ thể):",
                     "y_tra_loi": [
-                        f"- **1. Giải thích & Biểu hiện:** Gọi tên rõ bản chất và các biểu hiện thường gặp của **{vdnl_final}**.",
-                        "- **2. Lí do vì sao phải từ bỏ (Hậu quả + Dẫn chứng + Lợi ích khi từ bỏ):**\n  + *Hậu quả:* Phân tích tác hại trực tiếp đến sức khỏe, thời gian, nhân cách, cơ hội phát triển của cá nhân và ảnh hưởng xấu đến người xung quanh (kèm dẫn chứng thực tế).\n  + *Lợi ích khi từ bỏ:* Chỉ ra sự thay đổi tích cực, tự do và trưởng thành khi thoát khỏi thói quen/quan niệm sai lầm đó.",
-                        "- **3. Giải pháp từ bỏ — Đối với Cá nhân (TRỌNG TÂM):** Đưa ra các bước hành động cụ thể để tự thay đổi (nhận diện nguyên nhân, chia nhỏ mục tiêu, thay thế bằng thói quen tích cực) + Lí giải vì sao phải làm vậy + Dẫn chứng thực tế.",
-                        "- **4. Giải pháp phối hợp — Đối với Gia đình & Nhà trường:**\n  + *Gia đình:* Thấu hiểu, khích lệ và đồng hành thay vì chỉ trích nặng lời + Lí giải vì sao + Dẫn chứng.\n  + *Nhà trường/Tập thể:* Tạo môi trường hoạt động lành mạnh, truyền cảm hứng tích cực + Lí giải vì sao + Dẫn chứng.",
-                        "- **5. Dự đoán những ý kiến phản đối & Khuyên nhủ thuyết phục:** Dự đoán lời biện minh của người mang thói quen/quan niệm đó (cho rằng 'ai cũng vậy' hoặc 'không ảnh hưởng đến ai') -> Phân tích thấu tình đạt lý để khuyên họ kiên quyết từ bỏ.",
+                        f"- **Bước 1 — Giải thích & Biểu hiện:**\n  + {habit_def}\n  + *Biểu hiện:* {habit_manifest}",
+                        f"- **Bước 2 — Lí do vì sao phải từ bỏ (Phân tích Hậu quả + Dẫn chứng + Lợi ích khi từ bỏ):**\n{harm_and_benefit}",
+                        f"- **Bước 3a — Giải pháp từ bỏ đối với Cá nhân (TRỌNG TÂM - Nêu cách làm + Lí giải + Dẫn chứng):**\n  {sol_ind}",
+                        f"- **Bước 3b — Giải pháp phối hợp từ Gia đình (Cách làm + Lí giải + Dẫn chứng):**\n  {sol_fam}",
+                        f"- **Bước 3c — Giải pháp phối hợp từ Nhà trường (Cách làm + Lí giải + Dẫn chứng):**\n  {sol_sch}",
+                        f"- **Bước 4 — Dự đoán ý kiến phản đối & Khuyên nhủ thuyết phục:**\n  {predict_objection}",
                     ],
                 }
             ],
             "evidence": [
                 {
-                    "ten": c_ev_ten,
-                    "chi_tiet": c_ev_chitiet,
-                    "y_nghia": "Sử dụng làm minh chứng cho phần Hậu quả và phần Giải pháp vượt qua thói quen/định kiến.",
-                    "nguon": "Thực tiễn đời sống",
+                    "ten": "Dẫn chứng vượt qua thói quen/giới hạn bản thân: Nguyễn Thị Ánh Viên & Thử thách '21 ngày thay đổi bản thân'",
+                    "chi_tiet": "Rèn luyện kỷ luật nghiêm ngặt từng ngày để vượt qua sự trì hoãn và sức ỳ tâm lý, biến mục tiêu thành hành động thực tế.",
+                    "y_nghia": "Chứng minh không có thói quen xấu hay định kiến nào là không thể từ bỏ nếu có phương pháp đúng và ý chí kiên định.",
+                    "nguon": "Thực tiễn đời sống & Báo chí chính thống",
                 }
             ],
-            "counter": [
-                "- **Dự đoán ý kiến phản đối:** Có người có thể phản đối rằng thói quen/quan niệm này đã ăn sâu vào tính cách hoặc chỉ là sở thích cá nhân vô hại.",
-                "- **Phản biện & Khuyên nhủ:** Dùng lý lẽ chân thành chỉ rõ nếu cứ dung túng cho những điều lệch lạc nhỏ sẽ dẫn đến sự tụt hậu lớn; từ đó khẳng định việc từ bỏ là hoàn toàn cần thiết và khả thi.",
-            ],
+            "counter": [predict_objection],
             "dani_chi_tiet": {
-                "mb": f"Dẫn dắt chân thành -> Nêu rõ thói quen/quan niệm cần thuyết phục từ bỏ: {vdnl_final}.",
-                "gt": "Giải thích thói quen/quan niệm -> Nêu các biểu hiện cụ thể trong đời sống.",
-                "bl": "1. Lí do phải từ bỏ (Phân tích hậu quả + Dẫn chứng + Lợi ích khi từ bỏ).\n2. Giải pháp từ bỏ khả thi ở 3 cấp độ: Cá nhân (Trọng tâm) - Gia đình - Nhà trường (Đều có lí giải vì sao + dẫn chứng).",
-                "dc": "Đưa dẫn chứng thực tế vào cả phần Hậu quả và phần Giải pháp.",
-                "pb": "Dự đoán những ý kiến phản đối/biện minh -> Phản biện và khuyên vẫn cần kiên quyết từ bỏ.",
-                "kb": "Khẳng định lại thông điệp khích lệ thay đổi và rút ra bài học liên hệ bản thân.",
+                "mb": f"Dẫn dắt bằng giọng điệu chân thành, tôn trọng -> Nêu rõ thói quen/quan niệm cần thuyết phục từ bỏ: {vdnl_final}.",
+                "gt": f"Giải thích rõ bản chất của '{vdnl_final}' -> Nêu các biểu hiện cụ thể trong đời sống hàng ngày.",
+                "bl": "1. Lí do phải từ bỏ (Hậu quả + Dẫn chứng + Lợi ích khi từ bỏ).\n2. Giải pháp từ bỏ ở 3 cấp độ: Cá nhân (Trọng tâm) - Gia đình - Nhà trường (Mỗi cấp độ đều nêu rõ cách làm + lí giải vì sao + dẫn chứng cụ thể).",
+                "dc": "Lồng ghép dẫn chứng vào cả phần Hậu quả và phần Giải pháp từ bỏ.",
+                "pb": "Dự đoán những ý kiến phản đối/biện minh -> Phân tích thấu tình đạt lý để khuyên vẫn cần kiên quyết từ bỏ.",
+                "kb": "Khẳng định niềm tin vào sự thay đổi tích cực và rút ra bài học liên hệ bản thân.",
             },
         }
 
-    # --- DẠNG 1 (TƯ TƯỞNG, ĐẠO LÍ) CHIA 3 TRƯỜNG HỢP: TH1, TH2, TH3 ---
+    # --------------------------------------------------------------------------
+    # CHI TIẾT DẠNG 1: TƯ TƯỞNG, ĐẠO LÍ (CHIA 3 TRƯỜNG HỢP CỤ THỂ)
+    # --------------------------------------------------------------------------
     if not is_quote:
         explain_list = [
-            f"- **Giải thích khái niệm:** {c_def}",
-            f"- **Chốt trọng tâm đề bài:** Định hướng suy ngẫm trực diện vào **{vdnl_final}**.",
+            f"- **Giải thích khái niệm cụ thể:** {specific_def}",
+            f"- **Biểu hiện cốt lõi:** {specific_manifest}",
         ]
     else:
         explain_list = [
-            "- **Giải thích câu nói/nhận định:** Cắt nghĩa lớp nghĩa tường minh (từ ngữ, hình ảnh ẩn dụ) và rút ra nghĩa hàm ẩn của nhận định.",
-            f"- **Bản chất tư tưởng:** {c_def}",
+            f"- **Giải thích câu nói/nhận định trong đề:** Cắt nghĩa lớp nghĩa tường minh (hình ảnh, từ ngữ trong câu trích dẫn) và rút ra thông điệp hàm ẩn sâu sắc về **{vdnl_final}**.",
+            f"- **Giải thích khái niệm cốt lõi:** {specific_def}",
         ]
+
+    why_detail = matched_concept[1]["why"] if matched_concept else f"Trong dòng chảy nhiều biến động của xã hội hiện đại, **{vdnl_final}** chính là điểm tựa tinh thần vững chắc giúp con người khẳng định giá trị bản thân và lan tỏa điều tử tế."
+    promote_detail = matched_concept[1].get("how_to_promote", f"Mỗi người trẻ cần chủ động nâng cao nhận thức, rèn luyện **{vdnl_final}** thông qua những hành động kiên trì, thiết thực trong học tập và ứng xử hàng ngày.") if matched_concept else f"Mỗi người trẻ cần chủ động nâng cao nhận thức, rèn luyện **{vdnl_final}** thông qua những hành động kiên trì, thiết thực trong học tập và ứng xử hàng ngày."
+    counter_detail = matched_concept[1]["counter"] if matched_concept else f"Lối sống thờ ơ, hời hợt, thực dụng hoặc đi ngược lại những giá trị tốt đẹp của **{vdnl_final}**."
 
     if type_code == "DANG_1_TH1":
         y_list = [
-            f"- **Luận điểm 1 (Bàn sâu ý nghĩa đối với nhận thức & nội lực cá nhân):** **{vdnl_final}** chính là nguồn sức mạnh nội sinh giúp con người định hình bản lĩnh, vượt qua giới hạn và vững vàng trước nghịch cảnh.",
-            "- **Luận điểm 2 (Giá trị bồi đắp nhân cách & tâm hồn):** Nuôi dưỡng chiều sâu tâm hồn, giúp mỗi người sống có lý tưởng, có giá trị thực chất và không bị cuốn theo những điều phù phiếm.",
-            "- **Luận điểm 3 (Vai trò kết nối giữa người với người):** Tạo dựng niềm tin, sự thấu hiểu và truyền cảm hứng tích cực tới những người xung quanh.",
-            "- **Luận điểm 4 (Sức mạnh thúc đẩy cộng đồng, xã hội):** Khi giá trị này được lan tỏa rộng rãi, nó trở thành động lực kiến tạo một xã hội văn minh, nhân ái và tiến bộ.",
-            "- **Luận điểm 5 (Lý giải bằng góc nhìn ngược lại - Hệ lụy nếu thiếu vắng):** Nếu đánh mất giá trị này, cá nhân dễ rơi vào bế tắc, phương hướng sống mờ nhạt và xã hội thiếu đi điểm tựa phát triển.",
+            f"- **Luận điểm 1 — Ý nghĩa đối với việc định hình nội lực và bản lĩnh cá nhân:** {why_detail}",
+            f"- **Luận điểm 2 — Giá trị bồi đắp chiều sâu tâm hồn và nhân cách:** Thực hành **{vdnl_final}** giúp con người sống có lý tưởng, tìm thấy hạnh phúc thực chất và không bị đánh mất mình trước những cám dỗ.",
+            f"- **Luận điểm 3 — Vai trò kết nối và truyền cảm hứng giữa người với người:** Tạo dựng niềm tin, sự thấu hiểu, đồng cảm và lan tỏa nguồn năng lượng tích cực tới những người xung quanh.",
+            f"- **Luận điểm 4 — Sức mạnh thúc đẩy sự phát triển của cộng đồng, xã hội:** Khi **{vdnl_final}** trở thành chuẩn mực chung, nó sẽ kiến tạo một xã hội văn minh, nhân ái và giàu nội lực phát triển.",
+            f"- **Luận điểm 5 — Khẳng định tầm quan trọng qua góc nhìn đối lập (Nếu thiếu vắng):** Nếu thiếu đi giá trị này, cá nhân dễ rơi vào khủng hoảng phương hướng và xã hội trở nên lạnh lùng, trì trệ.",
         ]
-        bl_summary = "Tập trung bàn thật sâu các tầng Ý NGHĨA, VAI TRÒ, SỨC MẠNH của vấn đề đối với cá nhân, mối quan hệ con người và xã hội."
+        bl_summary = f"Xoáy sâu toàn diện vào 5 tầng Ý NGHĨA, GIÁ TRỊ, VAI TRÒ, SỨC MẠNH của '{vdnl_final}' đối với cá nhân, mối quan hệ con người và xã hội."
     elif type_code == "DANG_1_TH2":
         y_list = [
-            "- **Luận điểm 1 (Khái quát sự cần thiết phải hành động):** Khẳng định ngắn gọn tầm quan trọng của vấn đề để làm rõ vì sao chủ thể cần nhận thức rõ trách nhiệm của mình.",
-            "- **Luận điểm 2 (Bài học giải pháp về Nhận thức & Tư duy - Cần hiểu thế nào?):** Chủ động nâng cao nhận thức, xác lập mục tiêu sống đúng đắn, vượt qua sự thờ ơ hay tâm lý ỷ lại.",
-            "- **Luận điểm 3 (Bài học giải pháp về Hành động rèn luyện cá nhân - Cần làm gì?):** Không ngừng trau dồi tri thức, kỹ năng và hiện thực hóa bằng những việc làm kiên trì, thiết thực mỗi ngày.",
-            "- **Luận điểm 4 (Bài học giải pháp trong Gắn kết & Cống hiến cộng đồng):** Đặt trách nhiệm của bản thân trong sự phát triển chung của gia đình, nhà trường và đất nước; lan tỏa năng lượng tích cực.",
-            "- **Luận điểm 5 (Rèn luyện bản lĩnh vượt rào cản khi thực hiện):** Kiên định trước khó khăn, cám dỗ để biến nhận thức thành kết quả thực chất chứ không dừng ở khẩu hiệu.",
+            f"- **Luận điểm 1 — Khái quát sự cần thiết phải hành động:** {why_detail}",
+            f"- **Luận điểm 2 — Bài học giải pháp về Nhận thức & Thái độ (Cần hiểu và xác lập tâm thế ra sao?):** Mỗi người trẻ cần nhận thức sâu sắc trách nhiệm của mình đối với **{vdnl_final}**, xóa bỏ tâm lý ỷ lại, thờ ơ hay ngại khó.",
+            f"- **Luận điểm 3 — Bài học giải pháp về Hành động rèn luyện cá nhân (Cần làm gì cụ thể?):** {promote_detail}",
+            f"- **Luận điểm 4 — Bài học giải pháp trong Gắn kết & Cống hiến cộng đồng:** Chủ động tham gia các hoạt động tập thể, dự án xã hội để biến nhận thức về **{vdnl_final}** thành giá trị đóng góp thiết thực cho quê hương, đất nước.",
+            f"- **Luận điểm 5 — Bản lĩnh kiên trì thực hiện đến cùng:** Kiên định vượt qua những rào cản, cám dỗ để duy trì hành động bền bỉ chứ không làm theo phong trào nhất thời.",
         ]
-        bl_summary = "Trọng tâm trả lời câu hỏi CẦN LÀM GÌ? (Hệ thống các bài học giải pháp về nhận thức, hành động cá nhân và trách nhiệm cộng đồng)."
-    else:
+        bl_summary = f"Trọng tâm trả lời câu hỏi CẦN LÀM GÌ? (Triển khai hệ thống các bài học giải pháp cụ thể về nhận thức, hành động cá nhân và trách nhiệm cộng đồng đối với '{vdnl_final}')."
+    else:  # DANG_1_TH3
         y_list = [
-            f"- **1. Biểu hiện của vấn đề:** Chỉ ra những biểu hiện sinh động, cụ thể của **{vdnl_final}** trong suy nghĩ, thái độ và hành động thực tế giữa đời sống.",
-            "- **2. Bàn luận — Nêu ý nghĩa đối với cá nhân:** Giúp con người hoàn thiện nhân cách, khơi dậy tiềm năng và tạo điểm tựa vượt qua thử thách.",
-            "- **3. Bàn luận — Nêu ý nghĩa đối với cộng đồng, xã hội:** Góp phần lan tỏa những giá trị tốt đẹp, gắn kết con người và thúc đẩy xã hội phát triển.",
-            f"- **4. Cần làm gì để phát huy (Bài học định hướng):** Xác định rõ những việc cần làm về cả nhận thức lẫn hành động thực tế để nuôi dưỡng và phát huy **{vdnl_final}**.",
-            "- **5. Liên hệ cá nhân sâu sắc:** Soi chiếu vào trải nghiệm và hành trình rèn luyện của chính bản thân người viết.",
+            f"- **Bước 1 — Biểu hiện cụ thể của '{vdnl_final}' trong đời sống:** {specific_manifest}",
+            f"- **Bước 2 — Bàn luận: Nêu ý nghĩa đối với cá nhân:** {why_detail}",
+            f"- **Bước 3 — Bàn luận: Nêu ý nghĩa đối với cộng đồng, xã hội:** Góp phần gắn kết tình người, lan tỏa lối sống đẹp và tạo động lực thúc đẩy xã hội phát triển văn minh.",
+            f"- **Bước 4 — Phân tích Dẫn chứng thực tế:** Đưa tấm gương **{c_ev_ten}** ({c_ev_chitiet}) để chứng minh sinh động.",
+            f"- **Bước 5 — Cần làm gì để phát huy '{vdnl_final}' (Bài học định hướng) & Liên hệ cá nhân:** {promote_detail} Từ đó soi chiếu trực tiếp vào quá trình tự tu dưỡng của bản thân.",
         ]
-        bl_summary = "Triển khai tuần tự: Biểu hiện -> Bàn luận nêu ý nghĩa -> Dẫn chứng -> Cần làm gì để phát huy (bài học) -> Liên hệ cá nhân."
+        bl_summary = f"Triển khai đúng mạch toàn diện: Giải thích '{vdnl_final}' -> Biểu hiện -> Bàn luận nêu ý nghĩa -> Dẫn chứng ({c_ev_ten}) -> Cần làm gì để phát huy (bài học) -> Liên hệ cá nhân."
 
     return {
         "text": formatted_topic,
@@ -942,27 +1231,27 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
         "essay_type_code": type_code,
         "essay_type_label": type_label,
         "explain_items": explain_list,
-        "vdnl_ket_luan": f"Qua đó, đề bài định hướng chúng ta bàn luận sâu sắc về: **{vdnl_final}**.",
-        "questions": [{"cau_hoi": f"Hệ thống luận điểm Thân bài ({type_label}):", "y_tra_loi": y_list}],
+        "vdnl_ket_luan": f"Từ đó, đề bài đặt ra vấn đề nghị luận sâu sắc và giàu tính thời sự: **{vdnl_final}**.",
+        "questions": [{"cau_hoi": f"Hệ thống luận điểm chi tiết ({type_label}):", "y_tra_loi": y_list}],
         "evidence": [
             {
                 "ten": c_ev_ten,
                 "chi_tiet": c_ev_chitiet,
                 "y_nghia": c_ev_ynghia,
-                "nguon": "Thực tiễn đời sống xã hội",
+                "nguon": "Thực tiễn đời sống xã hội & Báo chí chính thống",
             }
         ],
         "counter": [
-            f"- **Phê phán biểu hiện lệch lạc:** Lên án những biểu hiện sống hời hợt, ích kỷ, đi ngược lại giá trị của **{vdnl_final}**.",
-            "- **Mở rộng biện chứng & Liên hệ:** Nhìn nhận vấn đề toàn diện, tránh cực đoan hoặc giáo điều hình thức; rút ra bài học thiết thực cho bản thân.",
+            f"- **Phê phán biểu hiện lệch lạc:** {counter_detail}",
+            f"- **Mở rộng biện chứng & Bài học liên hệ:** Cần đặt **{vdnl_final}** trong cái nhìn tỉnh táo, toàn diện, tránh giáo điều hình thức; rút ra bài học hành động thực chất cho bản thân.",
         ],
         "dani_chi_tiet": {
             "mb": f"Dẫn dắt tự nhiên -> Trích dẫn đề bài -> Nêu vấn đề nghị luận: {vdnl_final}.",
-            "gt": "Giải thích khái niệm hoặc thông điệp câu nói.",
+            "gt": f"Giải thích cụ thể khái niệm '{vdnl_final}': {specific_def}",
             "bl": bl_summary,
-            "dc": "Đưa dẫn chứng người thật việc thật và phân tích gắn kết với luận điểm.",
-            "pb": "Phản đề (phê phán biểu hiện ngược lại, mở rộng góc nhìn) và liên hệ cá nhân.",
-            "kb": f"Khẳng định lại giá trị của {vdnl_final} và thông điệp kết bài.",
+            "dc": f"Phân tích dẫn chứng cụ thể: {c_ev_ten}.",
+            "pb": f"Phê phán biểu hiện trái ngược ({counter_detail}) và mở rộng góc nhìn biện chứng.",
+            "kb": f"Khẳng định lại giá trị của {vdnl_final} và liên hệ trách nhiệm tuổi trẻ.",
         },
     }
 
@@ -982,7 +1271,7 @@ def is_ghostwriting_request(q_low):
     return False
 
 # ==============================================================================
-# HÀM TRỢ LÝ TƯ VẤN SƯ PHẠM ĐA LƯỢT - NHẠY BÉN, LINH HOẠT, KHÔNG BAO GIỜ LẶP LẠI 1 CÂU
+# HÀM TRỢ LÝ TƯ VẤN SƯ PHẠM ĐA LƯỢT - GIẢI ĐÁP CỤ THỂ KHÁI NIỆM, DẪN CHỨNG, LẬP LUẬN
 # ==============================================================================
 def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     q_clean = user_q.strip()
@@ -996,7 +1285,7 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     current_draft = st.session_state.get("user_essay", "").strip()
     draft_excerpt = current_draft[:600] if current_draft else "Chưa viết"
 
-    # 1. Nhận diện nhạy bén nếu học sinh yêu cầu viết hộ
+    # 1. Nếu học sinh nhờ viết hộ cả bài văn: từ chối khéo nhưng đưa ngay khung ý + từ khóa cụ thể của đề
     if is_ghostwriting_request(q_low):
         if "mở bài" in q_low:
             part_hint = "Mở bài"
@@ -1006,15 +1295,16 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             part_hint = "đoạn Phản đề"
         else:
             part_hint = "đoạn văn"
+        explain_preview = cur_de_info.get("explain_items", [""])[0]
         return (
-            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô không viết sẵn bài văn hay {part_hint} hoàn chỉnh thay cho em nhé, vì tự tay diễn đạt mới giúp em làm chủ tư duy! "
-            f"Tuy nhiên, để em viết {part_hint} cho đề **{vdnl}** (*{type_label}*) thật nhanh và trúng ý, cô gợi ý ngay công thức nối câu cho em:\n"
-            f"- **Câu mở đoạn:** Nêu trực diện luận điểm chính gắn với từ khóa *{vdnl}*.\n"
-            "- **Câu triển khai:** Dùng các cụm từ lập luận (*Bởi lẽ..., Thực tế cho thấy..., Chính điều này đã...*) để làm rõ lý do/biểu hiện.\n"
-            "👉 *Em hãy viết thử 1-2 câu nháp theo ý của em vào đây, cô sẽ đọc và chuốt lại câu chữ cho em ngay lập tức!*"
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô không viết sẵn nguyên bài văn hay {part_hint} thay cho em nhé, vì tự mình đặt câu mới giúp em làm chủ kỹ năng viết! "
+            f"Nhưng cô cung cấp ngay cho em **chất liệu cụ thể** của đề **{vdnl}** (*{type_label}*) để em ráp thành đoạn ngay lập tức:\n"
+            f"- **Ý cốt lõi cần đưa vào:** {explain_preview}\n"
+            f"- **Khung câu gợi mở cho {part_hint}:** *\"Giữa dòng chảy không ngừng của cuộc sống hiện đại, {vdnl} không chỉ là một khái niệm nhận thức mà còn là thước đo bản lĩnh và trách nhiệm của mỗi người trẻ...\"*\n"
+            "👉 *Em hãy viết tiếp 2-3 câu theo ý trên rồi gửi vào đây, cô sẽ sửa câu chữ cho em thật sắc sảo!*"
         )
 
-    # 2. GỌI GEMINI API VỚI LỊCH SỬ ĐA LƯỢT + SYSTEM INSTRUCTION CHUYÊN SÂU THEO ĐÚNG DẠNG BÀI
+    # 2. GỌI GEMINI API VỚI YÊU CẦU CUNG CẤP KIẾN THỨC CỤ THỂ (KHÁI NIỆM, DẪN CHỨNG, LÝ LẼ RÕ RÀNG)
     sys_lines = [
         "Bạn là một giáo viên Ngữ văn THPT giỏi chuyên môn, nhạy bén và tận tâm, đang trực tiếp hướng dẫn học sinh viết bài Nghị luận xã hội (khoảng 600 chữ).",
         "THÔNG TIN ĐỀ BÀI ĐANG LÀM:",
@@ -1024,11 +1314,10 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
         structure_guide,
         f'- Bản nháp học sinh đang viết (nếu có): "{draft_excerpt}"',
         "",
-        "QUY TẮC PHẢN HỒI BẮT BUỘC:",
-        "1. LINH HOẠT, NHẠY BÉN, TRẢ LỜI ĐÚNG TRỌNG TÂM: Đọc kỹ câu hỏi mới nhất của học sinh và toàn bộ lịch sử trò chuyện trước đó. Học sinh hỏi khía cạnh nào (mở bài, giải thích, thêm dẫn chứng khác, cách phân tích dẫn chứng, cách viết giải pháp cá nhân/gia đình/nhà trường, cách phản đề, cách dùng từ, hay hỏi tiếp 'còn gì nữa không', 'em chưa hiểu ý số 2'...), hãy giải đáp xoáy sâu vào ĐÚNG khía cạnh đó.",
-        "2. TUYỆT ĐỐI KHÔNG LẶP LẠI CÂU TRẢ LỜI CŨ: Nếu ở lượt trước đã gợi ý một ý/dẫn chứng mà học sinh hỏi thêm, phải cung cấp góc nhìn mới, dẫn chứng mới, mẫu câu diễn đạt mới hoặc phân tích sâu hơn. Không bao giờ trả lời máy móc bằng cách chép lại dàn ý chung.",
-        f"3. BÁM SÁT ĐÚNG DẠNG BÀI: Mọi hướng dẫn về luận điểm, dẫn chứng, phản đề phải khớp với cấu trúc của dạng bài '{type_label}'.",
-        "4. Không viết hộ toàn bộ bài văn hoàn chỉnh, nhưng được phép đưa ra các cụm từ đắt giá, mẫu câu chuyển đoạn hoặc sửa trực tiếp câu văn nháp của học sinh.",
+        "QUY TẮC PHẢN HỒI BẮT BUỘC (ĐỂ HỌC SINH KHÔNG PHẢI TRA GOOGLE HAY CHATGPT):",
+        "1. CUNG CẤP KIẾN THỨC CỤ THỂ, TRỰC DIỆN: Khi học sinh hỏi khái niệm/từ khóa nào, phải định nghĩa rõ ràng, đầy đủ khái niệm đó là gì. Khi học sinh hỏi dẫn chứng, phải nêu rõ tên nhân vật, sự kiện thực tế, số liệu/hành động cụ thể và câu văn mẫu phân tích dẫn chứng đó. Khi học sinh hỏi giải pháp hay luận điểm, phải vạch ra ý cụ thể gắn sát với đề bài chứ tuyệt đối không chỉ nói lý thuyết chung chung.",
+        "2. NHẠY BÉN THEO MẠCH HỘI THOẠI: Đọc kỹ lịch sử trò chuyện. Tuyệt đối không lặp lại câu trả lời cũ. Nếu học sinh hỏi tiếp ('còn dẫn chứng nào khác không', 'giải thích rõ hơn ý 2', 'làm sao nối đoạn...'), phải cung cấp dẫn chứng mới và góc nhìn sâu hơn.",
+        f"3. BÁM SÁT ĐÚNG DẠNG BÀI: Hướng dẫn đúng theo cấu trúc của '{type_label}'. Không viết hộ nguyên bài văn 600 chữ hoàn chỉnh.",
     ]
     system_instruction_text = "\n".join(sys_lines)
 
@@ -1050,13 +1339,13 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
         prompt="",
         contents_list=contents_payload,
         system_instruction=system_instruction_text,
-        temperature=0.55,
+        temperature=0.5,
     )
     if ai_reply and len(ai_reply.strip()) > 20:
         return ai_reply
 
     # ==========================================================================
-    # 3. BỘ MÁY PHẢN HỒI SƯ PHẠM NỘI BỘ ĐA TẦNG (KHI CHƯA NHẬP API KEY HOẶC LỖI MẠNG)
+    # 3. BỘ MÁY PHẢN HỒI SƯ PHẠM NỘI BỘ CỤ THỂ, SÂU SẮC (KHI CHƯA NHẬP API KEY)
     # ==========================================================================
     explain_list = cur_de_info.get("explain_items", [])
     questions_list = cur_de_info.get("questions", [])
@@ -1069,21 +1358,7 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             break
     is_followup = any(
         w in q_low
-        for w in [
-            "thêm",
-            "khác",
-            "nữa",
-            "sâu hơn",
-            "cụ thể hơn",
-            "chưa hiểu",
-            "rõ hơn",
-            "ví dụ",
-            "còn gì",
-            "ý 2",
-            "ý 3",
-            "đoạn 2",
-            "tiếp",
-        ]
+        for w in ["thêm", "khác", "nữa", "sâu hơn", "cụ thể", "chưa hiểu", "rõ hơn", "ví dụ", "còn gì", "ý 2", "ý 3", "đoạn 2", "tiếp"]
     )
     effective_query = (last_user_q + " " + q_low) if (is_followup and len(q_low.split()) <= 10) else q_low
 
@@ -1094,6 +1369,7 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
                 cnt += 1
         return cnt
 
+    # Lấy toàn bộ dẫn chứng từ Kho 9 chủ điểm
     all_repo_evidences = []
     try:
         for topic_name, dc_list in db.KHO_DAN_CHUNG_9_CHU_DIEM.items():
@@ -1102,200 +1378,143 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     except Exception:
         pass
 
-    # --- NHÁNH A: HỎI VỀ DẪN CHỨNG ---
+    # --- NHÁNH A: HỎI KHÁI NIỆM / GIẢI THÍCH TỪ KHÓA ("A là gì", "giải thích", "khái niệm") ---
+    gt_keywords = ["giải thích", "khái niệm", "từ khóa", "là gì", "nghĩa là gì", "hiểu như thế nào"]
+    if any(k in effective_query for k in gt_keywords):
+        # Kiểm tra xem học sinh có hỏi đích danh một khái niệm trong từ điển không
+        for kw, c_data in CONCEPT_DICTIONARY.items():
+            if kw in effective_query:
+                return (
+                    f"👩‍🏫 **Trợ lý Ngữ văn:** Cô giải thích cụ thể khái niệm **{c_data['term']}** để em đưa ngay vào đầu phần Thân bài nhé:\n"
+                    f"- **Định nghĩa chuẩn xác:** {c_data['def']}\n"
+                    f"- **Biểu hiện thực tế:** {c_data['manifest']}\n"
+                    f"- **Câu văn mẫu ghép vào bài viết:** *\"Hiểu một cách sâu sắc, {c_data['def'].replace('**', '')} Chính phẩm chất ấy được thể hiện sinh động qua {c_data['manifest'].lower()}\"*."
+                )
+        prob_kb = match_problem_solving_kb(effective_query, vdnl)
+        if prob_kb:
+            return (
+                f"👩‍🏫 **Trợ lý Ngữ văn:** Cô cung cấp ngay phần **Giải thích khái niệm & Biểu hiện cụ thể** cho vấn đề **{prob_kb['name']}**:\n"
+                f"- **Khái niệm:** {prob_kb['def']}\n"
+                f"- **Biểu hiện cụ thể:** {prob_kb['manifest']}\n"
+                "- **Câu chuyển ý sang đoạn tiếp theo:** *\"Nhận diện rõ bản chất và những biểu hiện đáng lo ngại ấy, chúng ta càng thấy rõ tính cấp thiết của việc tìm hiểu nguyên nhân và giải pháp khắc phục triệt để vấn đề này.\"*"
+            )
+        gt_content = "\n".join(explain_list) if explain_list else f"- **{vdnl}** là nhận thức đúng đắn và hành động thiết thực của con người trước vấn đề đặt ra trong đời sống."
+        return (
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Đây là phần **Giải thích cụ thể** cho đề bài **'{vdnl}'** (*{type_label}*) để em viết đoạn đầu Thân bài:\n"
+            f"{gt_content}\n"
+            f"- **Câu văn mẫu dẫn dắt giải thích:** *\"Trước hết, cần hiểu thấu đáo bản chất của vấn đề: {vdnl} không phải là những lý thuyết xa vời mà chính là...\"*"
+        )
+
+    # --- NHÁNH B: HỎI VỀ DẪN CHỨNG (Đưa dẫn chứng cụ thể tên người, sự việc, nguồn báo chí & câu văn mẫu) ---
     ev_keywords = ["dẫn chứng", "ví dụ", "nhân vật", "tấm gương", "người thật", "minh họa", "chứng minh"]
     if any(k in effective_query for k in ev_keywords):
         ask_idx = count_previous_topic_asks(ev_keywords)
         cur_evs = cur_de_info.get("evidence", [])
 
         if ask_idx == 0 and cur_evs:
-            ev0 = cur_evs[0]
+            ev_lines = [f"👩‍🏫 **Trợ lý Ngữ văn:** Cô cung cấp ngay cho em **các dẫn chứng người thật việc thật cụ thể** sát với đề **'{vdnl}'** (*{type_label}*):"]
+            for i, ev in enumerate(cur_evs, 1):
+                ev_lines.append(f"**{i}. {ev.get('ten', '')}**")
+                ev_lines.append(f"   - *Chi tiết sự kiện/số liệu:* {ev.get('chi_tiet', '')}")
+                ev_lines.append(f"   - *Góc độ phân tích gắn với đề:* {ev.get('y_nghia', '')}")
             if all_repo_evidences:
-                extra_ev = all_repo_evidences[0][1]
-            else:
-                extra_ev = {
-                    "ten": "Dự án Nuôi Em & Biệt đội Sài Gòn Xanh",
-                    "noi_dung": "Những người trẻ hành động thiết thực vì cộng đồng.",
-                    "nguon": "Báo chí chính thống",
-                }
-            lines = [
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Đối với đề bài về **'{vdnl}'** (*{type_label}*), cô gợi ý cho em 2 dẫn chứng tiêu biểu kèm cách đưa vào bài:",
-                f"1. **Dẫn chứng trọng tâm: {ev0.get('ten', '')}**",
-                f"   - *Sự việc cốt lõi:* {ev0.get('chi_tiet', '')}",
-                f"   - *Cách phân tích gắn với luận điểm:* {ev0.get('y_nghia', '')}",
-                f"2. **Dẫn chứng mở rộng: {extra_ev.get('ten', '')}**",
-                f"   - *Chi tiết:* {extra_ev.get('noi_dung', '')}",
-                "💡 **Công thức viết đoạn dẫn chứng (3 câu - không sa vào kể lể):**",
-                f"- *Câu 1 (Dẫn dắt):* Thực tiễn cuộc sống đã ghi nhận biết bao câu chuyện lay động về {vdnl}, mà tiêu biểu là...",
-                "- *Câu 2 (Khái quát hành động):* Nêu ngắn gọn hành động/sự kiện đắt giá nhất của nhân vật.",
-                "- *Câu 3 (Bình luận chốt ý):* Chính hành trình ấy là minh chứng sống động nhất khẳng định rằng...",
-                "*(Nếu em muốn lấy dẫn chứng ở lĩnh vực khác như khoa học, thể thao, lịch sử hay đời sống giới trẻ, em cứ nhắn 'cho em thêm dẫn chứng khác' nhé!)*",
-            ]
-            return "\n".join(lines)
+                t0, dc0 = all_repo_evidences[0]
+                ev_lines.append(f"**{len(cur_evs)+1}. {dc0['ten']}** *(Chủ điểm: {t0})*")
+                ev_lines.append(f"   - *Chi tiết:* {dc0['noi_dung']} *(Nguồn: {dc0['nguon']})*")
+            ev_lines.append("\n💡 **oạn văn mẫu đưa dẫn chứng vào bài (Em có thể tham khảo cách hành văn này):**")
+            first_ev_name = cur_evs[0].get("ten", "những tấm gương người trẻ tiêu biểu")
+            ev_lines.append(f"*\"Thực tiễn đời sống đã ghi nhận biết bao minh chứng sống động cho điều đó, mà tiêu biểu là câu chuyện về {first_ev_name}. {cur_evs[0].get('chi_tiet', '')} Chính hành động thiết thực ấy đã khẳng định đầy thuyết phục giá trị của {vdnl}.\"*")
+            return "\n".join(ev_lines)
         else:
             if all_repo_evidences:
                 idx1 = (ask_idx * 2) % len(all_repo_evidences)
                 idx2 = (ask_idx * 2 + 1) % len(all_repo_evidences)
                 t1, dc1 = all_repo_evidences[idx1]
                 t2, dc2 = all_repo_evidences[idx2]
-                lines = [
-                    f"👩‍🏫 **Trợ lý Ngữ văn:** Cô cung cấp thêm cho em **2 dẫn chứng mới** ở góc nhìn khác để bài viết về **'{vdnl}'** tránh lối mòn nhé:",
-                    f"1. **{dc1['ten']}** *(Chủ điểm: {t1})*",
-                    f"   - *Nội dung:* {dc1['noi_dung']}",
-                    f"   - *Cách lồng ghép:* Em có thể dùng câu dẫn: *'Nhìn từ câu chuyện của {dc1['ten']}, ta càng thấm thía cách mà {vdnl} được chuyển hóa thành hành động thực tế...'*",
-                    f"2. **{dc2['ten']}** *(Chủ điểm: {t2})*",
-                    f"   - *Nội dung:* {dc2['noi_dung']}",
-                    f"   - *Nguồn dẫn:* {dc2['nguon']}",
-                    "👉 *Trong trường hợp bài viết của em thuộc dạng Giải pháp (Cá nhân - Gia đình - Nhà trường), em hãy chia mỗi dẫn chứng ngắn gọn (1-2 câu) đặt ngay sau phần lí giải của từng giải pháp để đạt điểm tối đa nhé!*",
-                ]
-                return "\n".join(lines)
-            else:
-                return f"👩‍🏫 **Trợ lý Ngữ văn:** Để làm mới dẫn chứng cho đề **'{vdnl}'**, ngoài các nhân vật nổi tiếng, em có thể kết hợp **Dẫn chứng diện (số liệu/thực trạng chung)** và **Dẫn chứng điểm (1 cá nhân tiêu biểu)** để tăng sức thuyết phục."
+                return (
+                    f"👩‍🏫 **Trợ lý Ngữ văn:** Cô bổ sung ngay cho em **2 dẫn chứng thực tế mới hoàn toàn** kèm số liệu và nguồn báo chí để em lựa chọn cho đề **'{vdnl}'**:\n"
+                    f"1. **{dc1['ten']}** *(Chủ điểm: {t1})*\n"
+                    f"   - *Chi tiết xác thực:* {dc1['noi_dung']}\n"
+                    f"   - *Nguồn:* {dc1['nguon']}\n"
+                    f"2. **{dc2['ten']}** *(Chủ điểm: {t2})*\n"
+                    f"   - *Chi tiết xác thực:* {dc2['noi_dung']}\n"
+                    f"   - *Nguồn:* {dc2['nguon']}\n"
+                    f"👉 **Câu nối dẫn chứng vào luận điểm:** *\"Nhìn vào hành trình của {dc1['ten']}, người trẻ chúng ta càng thấm thía rằng {vdnl} được khẳng định bằng chính những hành động bền bỉ, dám dấn thân giữa đời thực.\"*"
+                )
 
-    # --- NHÁNH B: HỎI VỀ PHẢN ĐỀ / Ý KIẾN TRÁI CHIỀU / DỰ ĐOÁN PHẢN ĐỐI ---
-    pb_keywords = ["phản đề", "phản biện", "mở rộng", "lật lại", "phê phán", "ý kiến khác", "trái chiều", "phản đối"]
-    if any(k in effective_query for k in pb_keywords):
-        ask_idx = count_previous_topic_asks(pb_keywords)
-        pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện thiếu **{vdnl}** và mở rộng góc nhìn biện chứng."
-
-        if ask_idx == 0:
-            if type_code == "DANG_2_GIAI_QUYET":
-                return (
-                    f"👩‍🏫 **Trợ lý Ngữ văn:** Với **Dạng bài Vấn đề cần giải quyết** (*{vdnl}*), phần cuối Thân bài cần thực hiện thao tác **Nêu ý kiến khác & Phản biện**:\n"
-                    f"1. **Nêu ý kiến khác:** Giả định luồng suy nghĩ: *'Có người cho rằng {vdnl} chỉ là chuyện cá nhân hoặc là xu thế tất yếu không thể thay đổi, nên việc tìm giải pháp là không cần thiết.'*\n"
-                    "2. **Phản biện lại:** Dùng lý lẽ bác bỏ: *'Đây là cái nhìn phiến diện và buông xuôi. Bởi nếu mỗi cá nhân, gia đình và nhà trường đều thờ ơ, hệ lụy của nó sẽ trực tiếp kìm hãm sự phát triển chung. Do đó, việc kiên trì khắc phục là hoàn toàn cấp thiết.'*"
-                )
-            elif type_code == "DANG_5_TU_BO":
-                return (
-                    f"👩‍🏫 **Trợ lý Ngữ văn:** Với **Dạng bài Thuyết phục từ bỏ thói quen/quan niệm** (*{vdnl}*), phần này là **Dự đoán ý kiến phản đối và Khuyên nhủ**:\n"
-                    "1. **Dự đoán lý lẽ bao biện:** *'Có thể bạn sẽ nghĩ rằng thói quen/quan niệm này chẳng gây hại cho ai, hoặc đã quen rồi nên rất khó thay đổi...'*\n"
-                    "2. **Thuyết phục ngược lại:** *'Thế nhưng, chính sự thỏa hiệp từng chút một ấy lại đang âm thầm lấy đi thời gian, cơ hội và giá trị tốt đẹp của chính bạn. Thay đổi chưa bao giờ là muộn nếu chúng ta bắt đầu ngay hôm nay.'*"
-                )
-            elif type_code == "DANG_3_HAI_QUAN_DIEM":
-                return (
-                    "👩‍🏫 **Trợ lý Ngữ văn:** Với **Dạng bài Lựa chọn quan điểm**, phần phản biện chính là **Chỉ ra hạn chế của quan điểm còn lại**:\n"
-                    "- Em hãy phân tích khách quan: Nếu tuyệt đối hóa quan điểm kia mà bỏ qua thực tế thì con người sẽ dễ rơi vào sự cực đoan, phiến diện hoặc thiếu tính khả thi như thế nào.\n"
-                    "- Từ đó khẳng định sự lựa chọn của em là có cơ sở vững chắc."
-                )
-            else:
-                return (
-                    f"👩‍🏫 **Trợ lý Ngữ văn:** Để viết đoạn **Phản đề & Mở rộng** cho đề **'{vdnl}'** đạt điểm tối đa (1.0đ), em triển khai theo 2 tầng tư duy:\n"
-                    f"{pb_content}\n"
-                    f"- **Tầng 1 (Phê phán mặt trái):** Chỉ ra và lên án bộ phận sống thiếu **{vdnl}** hoặc đi ngược lại giá trị này.\n"
-                    f"- **Tầng 2 (Mở rộng biện chứng - Rất ăn điểm):** Đặt vấn đề trong giới hạn hợp lý — phân biệt rõ giá trị đích thực của **{vdnl}** với những biểu hiện cực đoan, máy móc hoặc sáo rỗng hình thức."
-                )
-        else:
-            return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Để đoạn **Phản đề / Phản biện** về **'{vdnl}'** của em sắc sảo hơn nữa, em hãy áp dụng **Kỹ thuật 'Nhượng bộ - Phản bác'** chỉ trong 3 câu văn:\n"
-                f"- **Câu 1 (Mở góc nhìn đối lập):** *Nhìn từ chiều ngược lại, không thể phủ nhận trong thực tế vẫn tồn tại những biểu hiện đi ngược lại {vdnl}, hoặc những cái nhìn lệch lạc khi...*\n"
-                f"- **Câu 2 (Chỉ ra ranh giới biện chứng):** *Hơn nữa, đề cao {vdnl} hoàn toàn không đồng nghĩa với sự cực đoan, giáo điều hay bất chấp quy luật khách quan.*\n"
-                f"- **Câu 3 (Chốt giá trị):** *Chỉ khi đặt {vdnl} trên nền tảng của nhận thức tỉnh táo và sự chân thành, giá trị ấy mới thực sự tỏa sáng bền vững.*"
-            )
-
-    # --- NHÁNH C: HỎI VỀ LUẬN ĐIỂM BÀN LUẬN / GIẢI PHÁP / THÂN BÀI ---
-    bl_keywords = [
-        "luận điểm",
-        "bàn luận",
-        "thân bài",
-        "dàn ý",
-        "ý nghĩa",
-        "vai trò",
-        "giải pháp",
-        "thực trạng",
-        "nguyên nhân",
-        "hậu quả",
-        "lí do",
-        "lý do",
-        "triển khai",
-        "cần làm gì",
-        "bài học",
-    ]
+    # --- NHÁNH C: HỎI VỀ LUẬN ĐIỂM / GIẢI PHÁP / THỰC TRẠNG (Trả lời cụ thể từng ý + lý lẽ + dẫn chứng) ---
+    bl_keywords = ["luận điểm", "bàn luận", "thân bài", "dàn ý", "ý nghĩa", "vai trò", "giải pháp", "thực trạng", "nguyên nhân", "hậu quả", "lí do", "lý do", "triển khai", "cần làm gì", "bài học", "cá nhân", "gia đình", "nhà trường"]
     if any(k in effective_query for k in bl_keywords):
         ask_idx = count_previous_topic_asks(bl_keywords)
         bl_items = []
         for q in questions_list:
             for ans in q.get("y_tra_loi", []):
                 bl_items.append(ans)
-        bl_text = "\n".join(bl_items)
-
-        if any(w in effective_query for w in ["giải pháp", "cá nhân", "gia đình", "nhà trường"]):
-            return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Khi viết phần **Giải pháp** cho vấn đề **'{vdnl}'**, em nhớ quy tắc vàng: **Tách thành 3 đoạn văn (Cá nhân - Gia đình - Nhà trường)**, và mỗi đoạn bắt buộc đủ 3 mạch câu: **[Nêu giải pháp khả thi] -> [Lí giải vì sao chọn giải pháp đó] -> [Ít nhất 01 dẫn chứng]**:\n"
-                "1. **Đoạn Giải pháp từ Cá nhân (Trọng tâm):**\n"
-                "   - *Cách làm:* Tự nhận thức, thay đổi thói quen từ những hành động nhỏ, rèn kỹ năng tự kiểm soát.\n"
-                "   - *Lí giải:* Bởi mỗi cá nhân là chủ thể trực tiếp của nhận thức và hành động; sự thay đổi tự thân luôn mang tính quyết định.\n"
-                "   - *Dẫn chứng:* Nêu tấm gương người trẻ tự rèn luyện vượt qua hoàn cảnh.\n"
-                "2. **Đoạn Giải pháp từ Gia đình:**\n"
-                "   - *Cách làm:* Cha mẹ lắng nghe, thấu cảm, làm gương và tạo không gian gắn kết.\n"
-                "   - *Lí giải:* Gia đình là môi trường giáo dục đầu tiên, định hình cảm xúc và thói quen bền vững nhất.\n"
-                "   - *Dẫn chứng:* Những gia đình duy trì thói quen sinh hoạt chung, đồng hành cùng con.\n"
-                "3. **Đoạn Giải pháp từ Nhà trường & Xã hội:**\n"
-                "   - *Cách làm:* Tăng cường hoạt động trải nghiệm thực tế, tư vấn tâm lý và truyền thông tích cực.\n"
-                "   - *Lí giải:* Tạo hệ sinh thái lành mạnh nâng đỡ và định hướng cá nhân phát triển đúng hướng.\n"
-                "   - *Dẫn chứng:* Các dự án học đường, phong trào thanh niên tình nguyện, câu lạc bộ kỹ năng."
-            )
+        bl_text = "\n\n".join(bl_items)
 
         if ask_idx == 0:
             return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Hệ thống đã nhận diện đề bài của em thuộc **{type_label}**. Do đó, phần Thân bài em triển khai theo đúng cấu trúc đặc thù sau:\n"
-                f"{bl_text}\n"
-                "💡 *Em muốn cô hướng dẫn cách viết chi tiết (cách lập lý lẽ, cách đặt câu chủ đề) cho **Luận điểm số mấy** trong các mục trên? Em hãy nhắn rõ số thứ tự hoặc tên mục đó nhé!*"
+                f"👩‍🏫 **Trợ lý Ngữ văn:** Đối với đề **'{vdnl}'** thuộc **{type_label}**, cô vạch sẵn cho em **nội dung lý lẽ và dẫn chứng cụ thể cho từng đoạn Thân bài** như sau (em không cần phải tìm ở đâu khác):\n\n"
+                f"{bl_text}\n\n"
+                "👉 *Em đang bắt đầu viết đoạn số mấy trong các đoạn trên? Hãy nhắn số đoạn (VD: 'hướng dẫn em viết thành đoạn văn hoàn chỉnh cho ý số 2') để cô cung cấp khung câu nối chi tiết cho đoạn đó nhé!*"
             )
         else:
+            # Lượt hỏi tiếp theo về luận điểm: cung cấp mẫu câu triển khai sâu từng đoạn
+            target_idx = 0
+            for num in ["1", "2", "3", "4", "5"]:
+                if num in effective_query:
+                    target_idx = min(int(num) - 1, max(len(bl_items) - 1, 0))
+                    break
+            chosen_point = bl_items[target_idx] if bl_items else f"Phân tích trọng tâm về {vdnl}"
             return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Để đào sâu từng **Luận điểm bàn luận** về **'{vdnl}'** sao cho dày dặn (đạt chuẩn bài văn khoảng 600 chữ) mà không bị cụt ý, ở mỗi đoạn văn thân bài em hãy triển khai theo **Mô hình 4 câu hỏi (PEEL)**:\n"
-                f"1. **Câu chủ đề (Point):** Khẳng định trực tiếp luận điểm ở ngay câu đầu đoạn (Ví dụ: *Trước hết, {vdnl} chính là động lực...*).\n"
-                "2. **Lí giải nguyên nhân (Explanation):** Trả lời câu hỏi *Vì sao lại như vậy? Nếu nhìn vào quy luật tâm lý và thực tế đời sống thì điều đó diễn ra thế nào?*\n"
-                "3. **Minh chứng thực tế (Evidence):** Đưa dẫn chứng cụ thể và phân tích ngắn gọn.\n"
-                "4. **Câu tiểu kết (Link):** Khẳng định lại giá trị của luận điểm và mở đường sang đoạn tiếp theo."
+                f"👩‍🏫 **Trợ lý Ngữ văn:** Cô hướng dẫn em cách triển khai sâu ý này thành một **đoạn văn chuẩn mực (khoảng 120-150 chữ)** cho đề **'{vdnl}'**:\n"
+                f"**Nội dung cốt lõi của đoạn:**\n{chosen_point}\n\n"
+                "**Khung câu văn triển khai mạch lạc (4 bước):**\n"
+                f"- *Câu 1 (Mở đoạn trực diện):* Trước hết, xét trên bình diện thực tiễn, một khía cạnh trọng tâm cần bàn luận sâu sắc về {vdnl} chính là...\n"
+                "- *Câu 2-3 (Lí giải sâu nguyên nhân/bản chất):* Bởi lẽ, trong bối cảnh xã hội hiện đại hôm nay, khi mà... thì điều này đóng vai trò quyết định bởi...\n"
+                "- *Câu 4-5 (Đưa dẫn chứng cụ thể):* Minh chứng rõ nét nhất cho điều này là... (nêu tên nhân vật/sự kiện và phân tích ngắn gọn ý nghĩa).\n"
+                "- *Câu 6 (Chốt đoạn):* Như vậy, có thể khẳng định đây chính là mắt xích quan trọng không thể tách rời khi nhìn nhận về vấn đề."
             )
 
-    # --- NHÁNH D: HỎI VỀ MỞ BÀI / KẾT BÀI / GIẢI THÍCH ---
-    if any(w in effective_query for w in ["mở bài", "câu đầu", "dẫn dắt"]):
-        ask_idx = count_previous_topic_asks(["mở bài", "câu đầu", "dẫn dắt"])
-        if ask_idx == 0:
-            return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Với đề bài về **'{vdnl}'** (*{type_label}*), cô gợi ý 2 cách **Mở bài** phù hợp nhất:\n"
-                f"- **Cách 1 (Mở bài trực tiếp - Ngắn gọn, sáng rõ):** Đi từ yêu cầu bức thiết của cuộc sống hiện đại -> Nêu trực diện vấn đề **{vdnl}** (Nếu là dạng 2 quan điểm thì giới thiệu 2 quan điểm và chốt lựa chọn của em; nếu là dạng tác phẩm văn học thì giới thiệu tác giả, tác phẩm rồi rút ra vấn đề).\n"
-                f"- **Cách 2 (Mở bài gián tiếp - Giàu hình ảnh, cảm xúc):** Dẫn dắt từ một nghịch lý của thời đại số hoặc một hình ảnh ẩn dụ tương đồng, sau đó kết nối tự nhiên vào **{vdnl}**.\n"
-                "👉 *Em thích phong cách mở bài nào hơn? Hãy viết thử 2 câu mở đầu của em vào đây cô xem nhé!*"
-            )
-        else:
-            return (
-                f"👩‍🏫 **Trợ lý Ngữ văn:** Cô gợi ý thêm cho em **khung câu Mở bài nâng cao** dành cho đề **'{vdnl}'**:\n"
-                f"*'Cuộc sống không chỉ được đo bằng chiều dài của năm tháng, mà được định giá bằng những giá trị thực chất mà con người kiến tạo và theo đuổi. Giữa dòng chảy nhiều biến động của thời đại hôm nay, câu chuyện về **{vdnl}** lại càng trở thành một vấn đề đáng suy ngẫm sâu sắc...'* (Sau đó em trích dẫn đề bài/quan điểm của mình)."
-            )
-
-    if any(w in effective_query for w in ["giải thích", "khái niệm", "từ khóa"]):
-        gt_content = "\n".join(explain_list) if explain_list else f"- Cắt nghĩa tường minh bản chất của **{vdnl}**."
+    # --- NHÁNH D: HỎI VỀ PHẢN ĐỀ / Ý KIẾN TRÁI CHIỀU / DỰ ĐOÁN PHẢN ĐỐI ---
+    pb_keywords = ["phản đề", "phản biện", "mở rộng", "lật lại", "phê phán", "ý kiến khác", "trái chiều", "phản đối"]
+    if any(k in effective_query for k in pb_keywords):
+        pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện thiếu **{vdnl}** và mở rộng góc nhìn biện chứng."
         return (
-            f"👩‍🏫 **Trợ lý Ngữ văn:** Ở đoạn **Giải thích** cho đề **'{vdnl}'** (*{type_label}*), em cần thực hiện gọn gàng trong khoảng 4-5 câu văn đầu Thân bài:\n"
-            f"{gt_content}\n"
-            "- **Lưu ý quan trọng:** Giải thích xong phải có 1 câu chốt để bắc cầu sang phần trọng tâm tiếp theo của dạng bài này."
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Đây là nội dung cụ thể và khung câu văn cho đoạn **Phản đề / Ý kiến trái chiều** của đề **'{vdnl}'** (*{type_label}*):\n"
+            f"{pb_content}\n\n"
+            "✍️ **Mẫu câu diễn đạt sắc bén em có thể vận dụng ngay:**\n"
+            f"*\"Nhìn nhận vấn đề một cách đa chiều, bên cạnh những giá trị tích cực, thực tế vẫn tồn tại một bộ phận người trẻ có suy nghĩ và hành vi lệch lạc đối với {vdnl}... Tuy nhiên, có ý kiến lại bao biện cho rằng điều đó là bình thường và không cần thay đổi. Đây là một cái nhìn phiến diện cần được bác bỏ, bởi nếu dung túng cho sự lệch lạc ấy, chính cá nhân và cộng đồng sẽ phải gánh chịu hệ lụy lâu dài.\"*"
         )
 
-    if any(w in effective_query for w in ["kết bài", "kết thúc", "liên hệ"]):
+    # --- NHÁNH E: HỎI MỞ BÀI / KẾT BÀI ---
+    if any(w in effective_query for w in ["mở bài", "câu đầu", "dẫn dắt", "kết bài", "liên hệ"]):
+        dani = cur_de_info.get("dani_chi_tiet", {})
         return (
-            f"👩‍🏫 **Trợ lý Ngữ văn:** Để viết **Kết bài & Liên hệ bản thân** cho đề **'{vdnl}'** thật ấn tượng:\n"
-            f"1. **Khẳng định lại thông điệp cốt lõi:** Tóm lược lại giá trị/bài học quan trọng nhất của **{vdnl}** bằng một câu văn cô đọng.\n"
-            "2. **Liên hệ cá nhân thực chất:** Tránh câu sáo mòn *'Là học sinh ngồi trên ghế nhà trường...'*; hãy nói rõ sự thay đổi trong góc nhìn của riêng em và một hành động cụ thể em chọn thực hiện ngay từ hôm nay."
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô gợi ý cụ thể cách viết **Mở bài và Kết bài** đúng chuẩn **{type_label}** cho đề **'{vdnl}'**:\n"
+            f"- **Mở bài ({dani.get('mb', '')}):**\n"
+            f"  *Mẫu dẫn dắt:* \"Giữa kỷ nguyên số đầy biến động, nơi mỗi người trẻ đều đứng trước vô vàn cơ hội nhưng cũng không ít thử thách định hình nhân cách, câu chuyện về **{vdnl}** trở thành một vấn đề thiết실 và đáng suy ngẫm hơn bao giờ hết...\"\n"
+            f"- **Kết bài ({dani.get('kb', '')}):**\n"
+            f"  *Mẫu khép lại:* \"Khép lại những suy ngẫm về **{vdnl}**, mỗi chúng ta hiểu rằng nhận thức đúng đắn chỉ thực sự có giá trị khi được chuyển hóa thành hành động kiên trì ngay từ hôm nay...\""
         )
 
-    if len(q_clean.split()) >= 14:
-        snippet = q_clean[:140] + ("..." if len(q_clean) > 140 else "")
+    # --- NHÁNH F: HỌC SINH GỬI ĐOẠN VĂN NHỜ SỬA HOẶC HỎI CÂU BẤT KỲ ---
+    if len(q_clean.split()) >= 12:
+        snippet = q_clean[:160] + ("..." if len(q_clean) > 160 else "")
         return (
-            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô đã đọc kỹ đoạn/ý em vừa viết: *'{snippet}'*.\n"
-            f"- **Điểm tốt:** Em đã bám vào chủ đề **{vdnl}** và có ý thức triển khai câu văn nghị luận.\n"
-            "- **Điểm cần nâng cấp:**\n"
-            f"  1. Em hãy kiểm tra xem đoạn này đã đặt đúng vị trí trong cấu trúc **{type_label}** chưa.\n"
-            "  2. Hãy bổ sung thêm các từ ngữ lập luận chỉ nguyên nhân - hệ quả (*bởi lẽ, chính điều đó đã khẳng định, từ thực tế ấy...*) và kèm theo 1 minh chứng thực tế cụ thể để đoạn văn có sức nặng thuyết phục hơn nhé!"
+            f"👩‍🏫 **Trợ lý Ngữ văn:** Cô đã đọc kỹ đoạn viết của em: *'{snippet}'*.\n"
+            f"- **Nhận xét chuyên môn:** Đoạn viết của em đã hướng vào chủ đề **{vdnl}** (*{type_label}*).\n"
+            "- **Hướng dẫn nâng cấp câu chữ cụ thể:**\n"
+            "  1. Em hãy bổ sung ngay cụm từ lập luận chỉ nguyên nhân (*Sở dĩ như vậy là bởi..., Thực tế đã chứng minh rằng...*) vào câu thứ 2 để tăng sức nặng lý lẽ.\n"
+            "  2. Đừng quên gắn kèm 1 dẫn chứng người thật việc thật đã có sẵn ở cột bên trái vào cuối đoạn để đạt điểm tối đa tiêu chí Dẫn chứng nhé!"
         )
 
     return (
         f"👩‍🏫 **Trợ lý Ngữ văn:** Về câu hỏi **'{q_clean}'** của em cho đề bài **{vdnl}** (*{type_label}*):\n"
-        "Để triển khai tốt ý này, em hãy bám sát vào yêu cầu đặc thù của dạng đề:\n"
-        f"{structure_guide}\n"
-        "Em muốn cô gợi mở sâu hơn về **Cách giải thích, Hệ thống luận điểm/giải pháp, Dẫn chứng mới hay Cách viết phản biện**? Em cứ nhắn cụ thể nhé!"
+        "Cô đã thiết lập sẵn đầy đủ **Khái niệm giải thích tường minh, Hệ thống luận điểm/giải pháp 3 cấp độ và Dẫn chứng cụ thể** ở ngay khung bên trái.\n"
+        "- Nếu em muốn lấy **đoạn văn mẫu giải thích khái niệm**, hãy nhắn: *\"Giải thích khái niệm\"*.\n"
+        "- Nếu em muốn lấy **dẫn chứng mới kèm cách phân tích**, hãy nhắn: *\"Cho em dẫn chứng cụ thể\"*.\n"
+        "- Nếu em muốn hướng dẫn chi tiết **Giải pháp Cá nhân - Gia đình - Nhà trường**, hãy nhắn: *\"Hướng dẫn phần giải pháp\"* nhé!"
     )
 
 
@@ -1571,7 +1790,7 @@ with st.sidebar:
             "Mã Gemini API Key (Tùy chọn):",
             type="password",
             value=st.session_state["gemini_api_key"],
-            help="Nếu nhập mã AIzaSy..., hệ thống kết hợp thêm AI đám mây. Nếu để trống, hệ thống tự động chạy Bộ máy NLP Sư phạm Nội bộ.",
+            help="Nếu nhập mã AIzaSy..., hệ thống kết hợp thêm AI đám mây. Nếu để trống, hệ thống tự động chạy Bộ máy Tri thức Sư phạm Nội bộ.",
         )
         if key_in != st.session_state["gemini_api_key"]:
             st.session_state["gemini_api_key"] = key_in
@@ -1696,7 +1915,7 @@ with tabs[0]:
 
     with tab_de_tu_nhap:
         st.markdown(
-            "##### ✏️ Nhập đề bài riêng (Hệ thống tự động nhận diện đúng dạng trong 5 Dạng bài & 3 Trường hợp bàn luận):"
+            "##### ✏️ Nhập đề bài riêng (Hệ thống tự động giải thích khái niệm, lập luận điểm & cung cấp dẫn chứng cụ thể sát từng dạng đề):"
         )
         custom_de_text = st.text_area(
             "Đề bài:",
@@ -1710,14 +1929,14 @@ with tabs[0]:
             key="txt_custom_vdnl",
         )
         if st.button(
-            "🔍 Phân tích đề tự nhập & Thiết lập Khung định hướng Bước 2",
+            "🔍 Phân tích đề tự nhập & Thiết lập Khung định hướng chi tiết Bước 2",
             type="primary",
             key="btn_custom_analyze",
         ):
             if not custom_de_text.strip():
                 st.warning("⚠️ Vui lòng nhập Đề bài trước khi bấm phân tích!")
             else:
-                with st.spinner("Đang nhận diện dạng đề và thiết lập Khung định hướng tư duy Bước 2..."):
+                with st.spinner("Đang giải thích khái niệm, thiết lập hệ thống luận điểm và trích xuất dẫn chứng cụ thể..."):
                     outline = build_dynamic_outline_for_custom_topic(
                         custom_de_text.strip(), student_custom_vdnl.strip(), selected_override
                     )
@@ -1727,7 +1946,7 @@ with tabs[0]:
                     st.session_state["selected_de_key"] = f"Đề tự nhập: {short_title}"
                     st.session_state["current_de_info"] = outline
                     st.success(
-                        f"✅ Đã nhận diện: **{outline.get('essay_type_label', '')}** và thiết lập xong Khung định hướng ở **Bước 2**!"
+                        f"✅ Đã nhận diện: **{outline.get('essay_type_label', '')}** và cung cấp đầy đủ khái niệm, luận điểm, dẫn chứng ở **Bước 2**!"
                     )
 
     st.markdown("---")
@@ -1771,14 +1990,14 @@ with tabs[1]:
         )
         st.markdown(f"<div class='type-badge'>🧭 {cur_type_label}</div>", unsafe_allow_html=True)
 
-        with st.expander("📌 Thao tác 1: Giải thích & Khởi điểm vấn đề (Theo đúng dạng đề)", expanded=True):
+        with st.expander("📌 Thao tác 1: Giải thích khái niệm & Khởi điểm vấn đề (Cụ thể, tường minh)", expanded=True):
             with st.container(border=True):
                 for itm in cur_de_info.get("explain_items", []):
                     st.markdown(itm)
                 st.markdown("---")
                 st.markdown(f"**👉 Chốt lại VĐNL:** {cur_de_info.get('vdnl_ket_luan', '')}")
 
-        with st.expander("💡 Thao tác 2: Hệ thống luận điểm Thân bài (Tùy biến sát dạng bài)", expanded=True):
+        with st.expander("💡 Thao tác 2: Hệ thống luận điểm & Giải pháp chi tiết (Kèm lý lẽ và dẫn chứng cụ thể)", expanded=True):
             with st.container(border=True):
                 for q in cur_de_info.get("questions", []):
                     st.markdown(f"**❓ {q.get('cau_hoi', '')}**")
@@ -1843,7 +2062,7 @@ with tabs[1]:
                 st.markdown("---")
 
         user_question = st.text_area(
-            "Nhập câu hỏi cụ thể (Hỏi sâu về dẫn chứng mới, cách viết giải pháp, phản đề, hoặc dán câu văn nhờ nhận xét...):",
+            "Nhập câu hỏi cụ thể (VD: Giải thích khái niệm, cho thêm dẫn chứng mới, hướng dẫn viết đoạn giải pháp, phản đề...):",
             height=80,
             key="txt_chat_input",
         )
@@ -1865,7 +2084,7 @@ with tabs[1]:
                 st.session_state["chat_history"] = [
                     (
                         "assistant",
-                        "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng ở khâu nào (Mở bài, Giải thích, Luận điểm, Giải pháp, Dẫn chứng hay Phản đề)?",
+                        "Chào em! Cô là Trợ lý Ngữ văn. Em đang vướng ở khâu nào (Mở bài, Giải thích khái niệm, Luận điểm, Giải pháp, Dẫn chứng hay Phản đề)?",
                     )
                 ]
                 st.rerun()
