@@ -249,7 +249,7 @@ def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_inst
     return None
 
 # ==============================================================================
-# 5. KHO TRI THỨC BÁCH KHOA NLXH CHUYÊN SÂU (GIỮ NGUYÊN 100% ĐẦY ĐỦ)
+# 5. KHO TRI THỨC BÁCH KHOA NLXH CHUYÊN SÂU
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
@@ -342,7 +342,6 @@ CONCEPT_DICTIONARY = {
     },
 }
 
-# KHO TRI THỨC CHUYÊN BIỆT CHO CÁC CHỦ ĐỀ HIỆN TƯỢNG / THÓI QUEN (GIỮ NGUYÊN 100% ĐẦY ĐỦ)
 PROBLEM_SOLVING_KB = {
     "mạng xã hội": {
         "name": "tình trạng nghiện mạng xã hội và phụ thuộc vào thế giới ảo",
@@ -770,7 +769,7 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
     if type_code == "DANG_1_TH1_Y_NGHIA":
         lines = [
             f"DẠNG BÀI: Đề chỉ hỏi 1 khía cạnh tích cực (Ý nghĩa / Vai trò / Giá trị / Sức mạnh / Sự cần thiết của '{vdnl}').",
-            "QUY TẮC BẮT BUỘC: Tập trung phân tích sâu Ý NGHĨA / VAI TRÒ của vấn đề. Tuyệt đối KHÔNG ôm đồm biến thành bài giải pháp 3 cấp độ.",
+            "QUY TẮC BẮT BUỘC: Tập trung phân tích sâu sắc Ý NGHĨA / VAI TRÒ của vấn đề. Tuyệt đối KHÔNG ôm đồm biến thành bài giải pháp 3 cấp độ.",
             "- Luận điểm 1 (Giải thích & Biểu hiện): Giải thích khái niệm/nhận định và nêu biểu hiện thực tế.",
             f"- Luận điểm 2 (Bàn luận sâu về Ý NGHĨA / VAI TRÒ của '{vdnl}'): Chia thành các ý phân tích sâu giá trị đối với nội lực cá nhân, bồi đắp tâm hồn, kết nối con người và thúc đẩy xã hội + Phân tích Dẫn chứng thực tế.",
             "- Luận điểm 3 (Phản đề & Bài học liên hệ): Phê phán biểu hiện trái ngược, mở rộng biện chứng và rút ra bài học nhận thức, hành động ngắn gọn.",
@@ -780,9 +779,9 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
     if type_code == "DANG_1_TH1_TAC_HAI":
         lines = [
             f"DẠNG BÀI: Đề chỉ hỏi 1 khía cạnh tiêu cực (Tác hại / Hậu quả / Hệ lụy của '{vdnl}').",
-            "QUY TẮC BẮT BUỘC: Trọng tâm của bài viết là MỔ XẺ SÂU CÁC TẦNG TÁC HẠI / HẬU QUẢ. Tuyệt đối KHÔNG ôm đồm biến bài văn thành dạng Giải pháp 3 đoạn hay dạng Thuyết phục từ bỏ.",
+            "QUY TẮC BẮT BUỘC: Trọng tâm của bài viết là PHÂN TÍCH THẤU ĐÁO CÁC TẦNG TÁC HẠI / HẬU QUẢ. Tuyệt đối KHÔNG ôm đồm biến bài văn thành dạng Giải pháp 3 đoạn hay dạng Thuyết phục từ bỏ.",
             "- Luận điểm 1 (Giải thích & Biểu hiện nhận diện): Giải thích rõ bản chất của thói quen/hiện tượng và chỉ ra các biểu hiện cụ thể trong đời sống, học đường.",
-            f"- Luận điểm 2 (Bàn luận trọng tâm — Phân tích sâu các tầng TÁC HẠI / HẬU QUẢ của '{vdnl}'): Chia thành các ý phân tích sâu: Ý 1 (Tác hại đối với năng lực, hiệu suất học tập/làm việc) -> Ý 2 (Tác hại đối với sức khỏe tâm thần, sự tự tin và nhân cách) -> Ý 3 (Tác hại làm đánh mất cơ hội tương lai) -> Ý 4 (Hệ lụy đối với gia đình, uy tín tập thể và xã hội) + Phân tích Dẫn chứng thực tế chứng minh hậu quả.",
+            f"- Luận điểm 2 (Bàn luận trọng tâm — Làm sáng tỏ các tầng TÁC HẠI / HẬU QUẢ của '{vdnl}'): Chia thành các ý phân tích sâu: Ý 1 (Tác hại đối với năng lực, hiệu suất học tập/làm việc) -> Ý 2 (Tác hại đối với sức khỏe tâm thần, sự tự tin và nhân cách) -> Ý 3 (Tác hại làm đánh mất cơ hội tương lai) -> Ý 4 (Hệ lụy đối với gia đình, uy tín tập thể và xã hội) + Phân tích Dẫn chứng thực tế chứng minh hậu quả.",
             "- Luận điểm 3 (Phản đề & Bài học tỉnh thức): Phê phán thái độ chủ quan, coi thường tác hại; rút ra bài học nhận thức và hành động rèn luyện bản thân để tránh xa tác hại đó.",
         ]
         return "\n".join(lines)
@@ -879,7 +878,7 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
         structure_guide,
         "",
         "LƯU Ý ĐẶC BIỆT QUAN TRỌNG:",
-        "- Nếu đề bài chỉ hỏi về 1 khía cạnh như 'Tác hại của...' hoặc 'Vai trò/Ý nghĩa của...', phần Luận điểm 2 PHẢI xoáy sâu phân tích trọn vẹn khía cạnh Tác hại hoặc Vai trò đó, TUYỆT ĐỐI KHÔNG biến thành bài văn Giải pháp 3 cấp độ (Cá nhân - Gia đình - Nhà trường) hay bài Thuyết phục từ bỏ.",
+        "- Nếu đề bài chỉ hỏi về 1 khía cạnh như 'Tác hại của...' hoặc 'Vai trò/Ý nghĩa của...', phần Luận điểm 2 PHẢI tập trung phân tích sâu sắc khía cạnh Tác hại hoặc Vai trò đó, TUYỆT ĐỐI KHÔNG biến thành bài văn Giải pháp 3 cấp độ (Cá nhân - Gia đình - Nhà trường) hay bài Thuyết phục từ bỏ.",
         f"- Ở mục explain_items (Luận điểm 1): Giải thích cụ thể khái niệm '{direct_problem}' là gì và nêu biểu hiện thực tế.",
         "- Ở mục questions (Luận điểm 2): Tuyệt đối không lặp lại phần Giải thích và Biểu hiện của Luận điểm 1. Chia thành các ý bàn luận cụ thể (Ý 1, Ý 2, Ý 3...).",
         "- Ở mục counter (Luận điểm 3): Phản đề / Ý kiến trái chiều và rút ra bài học.",
@@ -970,7 +969,7 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             "essay_type_code": type_code,
             "essay_type_label": type_label,
             "explain_items": explain_items_th,
-            "vdnl_ket_luan": f"Từ việc nhận diện bản chất và biểu hiện trên, chúng ta cần đi sâu mổ xẻ toàn diện những tác hại, hệ lụy nghiêm trọng của **{direct_problem}** đối với cá nhân và xã hội.",
+            "vdnl_ket_luan": f"Từ việc nhận diện bản chất và biểu hiện trên, chúng ta cần đi sâu phân tích toàn diện những tác hại, hệ lụy nghiêm trọng của **{direct_problem}** đối với cá nhân và xã hội.",
             "questions": [
                 {
                     "cau_hoi": f"Luận điểm 2 — Bàn luận trọng tâm: Phân tích sâu các tầng Tác hại / Hậu quả của '{direct_problem}':",
@@ -1398,7 +1397,7 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
         "",
         "QUY TẮC PHẢN HỒI BẮT BUỘC:",
         "1. CUNG CẤP KIẾN THỨC CỤ THỂ, TRỰC DIỆN: Khi học sinh hỏi khái niệm/từ khóa nào, phải định nghĩa rõ ràng, đầy đủ khái niệm đó là gì. Khi học sinh hỏi dẫn chứng, phải nêu rõ tên nhân vật, sự kiện thực tế, số liệu/hành động cụ thể và câu văn mẫu phân tích dẫn chứng đó. Khi học sinh hỏi luận điểm, phải vạch ra ý cụ thể gắn sát với đề bài.",
-        "2. KHÔNG ÔM ĐỒM SAI DẠNG ĐỀ: Nếu đề chỉ hỏi về 'Tác hại' hoặc 'Vai trò/Ý nghĩa', hãy tập trung hướng dẫn phân tích sâu các tầng Tác hại hoặc Vai trò đó, không ép học sinh viết 3 đoạn giải pháp như dạng bài giải quyết vấn đề.",
+        "2. KHÔNG ÔM ĐỒM SAI DẠNG ĐỀ: Nếu đề chỉ hỏi về 'Tác hại' hoặc 'Vai trò/Ý nghĩa', hãy tập trung hướng dẫn phân tích sâu sắc các tầng Tác hại hoặc Vai trò đó, không ép học sinh viết 3 đoạn giải pháp như dạng bài giải quyết vấn đề.",
         "3. NHẠY BÉN THEO MẠCH HỘI THOẠI: Đọc kỹ lịch sử trò chuyện. Tuyệt đối không lặp lại câu trả lời cũ.",
     ]
     system_instruction_text = "\n".join(sys_lines)
@@ -1589,15 +1588,13 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
 
 
 # ==============================================================================
-# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (CHẤM CHẶT CHẼ, KHÔNG VỠ BẢNG)
+# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (CHUẨN HÓA SƯ PHẠM, KHÔNG VỠ BẢNG)
 # ==============================================================================
 def sanitize_cell_text(text):
     """Làm sạch văn bản trong ô bảng: xóa bỏ ký tự xuống dòng thực tế để không làm vỡ Markdown table."""
     if not text:
         return ""
-    # Thay thế ký tự xuống dòng bằng khoảng trắng hoặc dấu gạch nối
     cleaned = re.sub(r"[\r\n]+", " ", str(text)).strip()
-    # Tránh ký tự pipe (|) làm gãy cột Markdown
     cleaned = cleaned.replace("|", "/")
     return cleaned
 
@@ -1611,7 +1608,7 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     structure_guide = get_pedagogical_structure_guide(type_code, topic_text, vdnl_chuan)
 
     prompt_lines = [
-        "Bạn là Giám khảo chấm thi HSG và Tốt nghiệp THPT Ngữ văn môn NLXH, chấm ĐÚNG CHUẨN SƯ PHẠM, CỰC KỲ NGHIÊM KHẮC VÀ CHẶT CHẼ THEO RUBRIC (Thang 10.0, bước 0.25đ).",
+        "Bạn là Giám khảo chấm thi HSG và Tốt nghiệp THPT môn Ngữ văn, chấm ĐÚNG CHUẨN SƯ PHẠM, NGHIÊM KHẮC VÀ CHẶT CHẼ THEO RUBRIC (Thang 10.0, bước 0.25đ).",
         f'- Đề bài: "{topic_text}"',
         f'- Vấn đề nghị luận trọng tâm: "{vdnl_chuan}"',
         f'- Dạng bài bắt buộc: "{type_label}"',
@@ -1621,36 +1618,26 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
         "- Bài làm thực tế của học sinh:",
         text,
         "",
-        "NGUYÊN TẮC CHẤM CHẶT CHẼ (TUYỆT ĐỐI TUÂN THỦ):",
-        "1. KHÔNG CHO ĐIỂM CAO DỄ DÃI: Bài viết nghị luận xã hội nhưng lại lấy thơ ca, tác phẩm văn học làm dẫn chứng chính (như Tiếng hát con tàu, Chế Lan Viên, Thơ Tố Hữu...) thì Tiêu chí 5 (Dẫn chứng) TỐI ĐA CHỈ ĐẠT 0.75đ (vì thiếu dẫn chứng người thật việc thật của đời sống hiện đại).",
-        "2. NẾU LẬP LUẬN NÔNG, ôm đồm sang phân tích văn học hoặc viết quá dài lê thê không tập trung đúng khía cạnh lệnh đề thì Tiêu chí 4 (Luận điểm) TỐI ĐA CHỈ ĐẠT 2.00 - 2.25đ.",
-        "3. QUY TẮC HIỂN THỊ ĐỂ KHÔNG BỊ VỠ BẢNG: Xuất DUY NHẤT 1 BẢNG MARKDOWN gồm 4 cột (STT / Tiêu chí | Điểm tối đa | Điểm đạt | Nhận xét chi tiết). Toàn bộ nội dung trong ô nhận xét PHẢI VIẾT TRÊN 1 DÒNG DUY NHẤT, TUYỆT ĐỐI KHÔNG GÕ KÝ TỰ XUỐNG DÒNG (\\n) trong ô bảng.",
-        "4. Bảng phải có đủ 7 hàng từ 1 đến 7. Sau bảng mới ghi Tổng điểm và lời khuyên chỉnh sửa.",
+        "NGUYÊN TẮC CHẤM CHUẨN XÁC THEO QUY ĐỊNH:",
+        "1. TIÊU CHÍ 1 (BỐ CỤC & DUNG LƯỢNG - 0.50đ): Yêu cầu bài làm từ 600 chữ trở lên. CHỈ TRỪ ĐIỂM KHI bài viết dưới 600 chữ (chưa đạt dung lượng) hoặc viết quá dài trên 1500 chữ (quá lan man). Nếu bài viết từ 600 đến 1500 chữ và đủ 3 phần Mở - Thân - Kết, thân bài tách đoạn mạch lạc thì ĐẠT ĐIỂM TỐI ĐA 0.50đ.",
+        "2. VĂN PHONG CHUẨN SƯ PHẠM: Dùng ngôn ngữ chính luận trang trọng, tuyệt đối KHÔNG dùng các từ ngữ đời thường, tiếng lóng hay từ ngữ như 'mổ xẻ' trong lời nhận xét. Hãy dùng các từ: 'phân tích sâu sắc', 'làm sáng tỏ các tầng hậu quả/ý nghĩa', 'bàn luận thấu đáo'.",
+        "3. TIÊU CHÍ 5 (DẪN CHỨNG - 2.50đ): Nghị luận xã hội bắt buộc dùng dẫn chứng người thật, việc thật của đời sống hiện đại. Nếu học sinh lấy thơ ca, truyện văn học (như Tiếng hát con tàu, Chế Lan Viên, Tố Hữu, Nam Cao...) làm dẫn chứng thì TIÊU CHÍ 5 TỐI ĐA CHỈ ĐẠT 0.50 - 0.75đ.",
+        "4. TIÊU CHÍ 4 (HỆ THỐNG LUẬN ĐIỂM - 3.50đ): Nếu sa đà bình giảng tác phẩm văn học thay vì lập luận các vấn đề đời sống thực tế thì TỐI ĐA CHỈ ĐẠT 1.75 - 2.25đ.",
+        "5. QUY TẮC HIỂN THỊ ĐỂ KHÔNG BỊ VỠ BẢNG: Xuất DUY NHẤT 1 BẢNG MARKDOWN gồm 4 cột (STT / Tiêu chí | Điểm tối đa | Điểm đạt | Nhận xét chi tiết). Toàn bộ nội dung trong ô nhận xét PHẢI VIẾT TRÊN 1 DÒNG DUY NHẤT, TUYỆT ĐỐI KHÔNG GÕ KÝ TỰ XUỐNG DÒNG (\\n) trong ô bảng.",
+        "6. Bảng phải có đủ 7 hàng từ 1 đến 7. Sau bảng mới ghi Tổng điểm và lời khuyên chỉnh sửa.",
     ]
     prompt_grade = "\n".join(prompt_lines)
 
     ai_eval = call_gemini_rest_api(prompt_grade, temperature=0.2)
-    # Kiểm tra tính toàn vẹn: nếu AI trả về bảng chuẩn không bị vỡ dòng và đủ 7 tiêu chí
     if ai_eval and ai_eval.count("|") >= 28 and all(f"{i}" in ai_eval for i in range(1, 8)):
-        # Làm sạch kỹ thuật: sửa lại các dòng vô tình bị ngắt dòng trong bảng của AI
         lines = ai_eval.split("\n")
         repaired_lines = []
-        in_table = False
         for l in lines:
             stripped = l.strip()
-            if stripped.startswith("|") and stripped.endswith("|"):
-                in_table = True
-                repaired_lines.append(stripped)
-            elif in_table and stripped.startswith("|"):
-                repaired_lines.append(stripped)
-            elif in_table and not stripped:
-                in_table = False
-                repaired_lines.append(stripped)
-            else:
-                repaired_lines.append(stripped)
+            repaired_lines.append(stripped)
         return "\n".join(repaired_lines)
 
-    # BỘ MÁY KIỂM ĐỊNH NỘI BỘ CHUẨN XÁC, NGHIÊM KHẮC THEO ĐÚNG RUBRIC (100% KHÔNG VỠ BẢNG)
+    # BỘ MÁY KIỂM ĐỊNH NỘI BỘ CHUẨN XÁC, SƯ PHẠM, KHÔNG VỠ BẢNG
     words = re.findall(r"\w+", text)
     word_count = len(words)
     raw_paragraphs = [p.strip() for p in re.split(r"\n+", text) if len(p.strip()) > 5]
@@ -1658,7 +1645,6 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     raw_sentences = [s.strip() for s in re.split(r"[.?!]+", text) if len(s.strip()) > 3]
     num_sents = len(raw_sentences)
 
-    # Làm sạch câu để đưa vào ô bảng (loại bỏ hoàn toàn \n)
     first_sent = sanitize_cell_text(raw_sentences[0] if num_sents > 0 else text[:80])
     sample_weak = sanitize_cell_text(raw_sentences[min(2, num_sents - 1)] if num_sents >= 3 else first_sent)
 
@@ -1667,41 +1653,43 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     matched_kws = [w for w in vdnl_tokens if w in text_low]
     topic_coverage = len(matched_kws) / max(len(vdnl_tokens), 1)
 
-    # Kiểm tra xem có bị lỗi lấy thơ ca văn học làm dẫn chứng NLXH không
     van_hoc_markers = ["chế lan viên", "tiếng hát con tàu", "tố hữu", "nam cao", "xuân diệu", "văn học", "bài thơ", "tác phẩm", "nhà thơ"]
     has_van_hoc_confusion = any(vm in text_low for vm in van_hoc_markers)
 
-    # 1. Bố cục (0.50đ)
-    if 500 <= word_count <= 680 and 3 <= num_paras <= 6:
+    # 1. Bố cục bài viết (0.50đ) - Chuẩn hóa theo yêu cầu: từ 600 - 1500 chữ đạt tối đa
+    if 600 <= word_count <= 1500 and num_paras >= 3:
         s1 = 0.50
-        c1_note = f"Đủ 3 phần Mở - Thân - Kết rõ ràng; dung lượng chuẩn {word_count} chữ ({num_paras} đoạn)."
-    elif word_count > 680:
+        c1_note = f"Đủ 3 phần Mở – Thân – Kết rõ ràng; thân bài tách đoạn mạch lạc; đạt dung lượng yêu cầu ({word_count} chữ, {num_paras} đoạn)."
+    elif word_count > 1500:
         s1 = 0.25
-        c1_note = f"Bài viết quá dài ({word_count} chữ, {num_paras} đoạn), chưa kiểm soát tốt dung lượng chuẩn 600 chữ; phân tách đoạn chưa thực sự tinh gọn."
-    elif 300 <= word_count < 500:
+        c1_note = f"Bài viết quá dài ({word_count} chữ > 1500 chữ), chưa đảm bảo tính cô đọng, súc tích của bài văn nghị luận xã hội."
+    elif 400 <= word_count < 600:
         s1 = 0.25
-        c1_note = f"Dung lượng còn thiếu ({word_count} chữ); các đoạn Thân bài phân bổ chưa cân đối."
+        c1_note = f"Chưa đạt yêu cầu tối thiểu 600 chữ của đề bài (hiện đạt {word_count} chữ); các đoạn Thân bài phân bổ chưa cân đối."
     else:
         s1 = 0.00
-        c1_note = f"Bài viết dang dở ({word_count} chữ, {num_paras} đoạn), chưa hoàn chỉnh bố cục."
+        c1_note = f"Bài viết dang dở ({word_count} chữ, {num_paras} đoạn), chưa hoàn chỉnh bố cục 3 phần."
 
     # 2. Xác định VĐNL (0.50đ)
     if topic_coverage >= 0.5:
         s2 = 0.50
-        c2_note = f"Xác định đúng và trúng vấn đề nghị luận trọng tâm. Trích câu mở đầu: \\\"{first_sent[:75]}...\\\"."
+        c2_note = f"Dẫn dắt tự nhiên, xác định đúng và trúng vấn đề nghị luận trọng tâm. Trích câu mở đầu: \\\"{first_sent[:75]}...\\\"."
     elif topic_coverage >= 0.2:
         s2 = 0.25
-        c2_note = f"Có chạm đến đề nhưng cách dẫn dắt còn vòng vo, chưa làm nổi bật lệnh đề."
+        c2_note = f"Có nhắc đến vấn đề nhưng cách dẫn dắt còn vòng vo, chưa làm nổi bật lệnh đề."
     else:
         s2 = 0.00
         c2_note = "Xác định sai lệch trọng tâm vấn đề nghị luận."
 
-    # 3. Giải thích & Biểu hiện (1.00đ)
+    # 3. Giải thích khái niệm & Biểu hiện (1.00đ)
     explain_markers = ["là", "được hiểu là", "nghĩa là", "chính là", "biểu hiện", "khái niệm"]
     has_exp = sum(1 for em in explain_markers if em in text_low)
-    if has_exp >= 2 and word_count >= 450:
+    if has_exp >= 2 and word_count >= 600:
+        s3 = 1.00
+        c3_note = "Cắt nghĩa rõ ràng, tường minh bản chất khái niệm và chỉ ra các biểu hiện thực tế đời sống sinh động."
+    elif has_exp >= 1 and word_count >= 500:
         s3 = 0.75
-        c3_note = "Có thao tác giải thích và chỉ ra biểu hiện thực tế, tuy nhiên câu văn định nghĩa cần cô đọng và khái quát hơn."
+        c3_note = "Giải thích đúng khái niệm nhưng phần nêu biểu hiện đời sống còn sơ sài, câu chữ chưa thật cô đọng."
     elif has_exp >= 1:
         s3 = 0.50
         c3_note = "Giải thích còn mang tính bề mặt, chưa làm bật được bản chất vấn đề; thiếu biểu hiện thực tế sinh động."
@@ -1709,42 +1697,44 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
         s3 = 0.25
         c3_note = "Chưa có đoạn giải thích rõ ràng khái niệm ở đầu Thân bài; vào bài là bàn luận ngay."
 
-    # 4. Hệ thống luận điểm (3.50đ) - Chấm chặt chẽ
+    # 4. Hệ thống luận điểm bàn luận (3.50đ) - Chấm nghiêm ngặt, chuẩn mực sư phạm
     if has_van_hoc_confusion and type_code != "DANG_4_VAN_HOC":
-        # Bị nhầm lẫn sang bình giảng thơ văn trong bài NLXH
         s4 = 2.00
-        c4_note = f"Dung lượng đạt {word_count} chữ nhưng đang mắc lỗi nhầm lẫn sang phân tích văn học/thơ ca; chưa tập trung mổ xẻ các tầng lý lẽ thực tế của đời sống theo đúng yêu cầu dạng bài {type_label}."
-    elif word_count >= 500 and topic_coverage >= 0.6:
-        s4 = 2.50
-        c4_note = f"Triển khai đúng hướng đề {type_label}, nhưng lập luận còn ở mức độ an toàn; cần đào sâu hơn quan hệ nhân quả và phản biện đa chiều."
-    elif word_count >= 350:
-        s4 = 1.75
-        c4_note = "Luận điểm còn nông, nghiêng về liệt kê nhận định chủ quan mà thiếu lý lẽ thuyết phục."
+        c4_note = f"Dung lượng đạt {word_count} chữ nhưng đang mắc lỗi nhầm lẫn sang phân tích tác phẩm văn học; chưa tập trung phân tích sâu sắc các tầng lý lẽ thực tiễn của đời sống theo đúng yêu cầu dạng bài {type_label}."
+    elif word_count >= 600 and topic_coverage >= 0.6:
+        s4 = 3.00 if word_count <= 1200 else 2.50
+        c4_note = f"Triển khai đúng trọng tâm theo dạng bài {type_label}; lí lẽ có sức thuyết phục, tuy nhiên cần đào sâu hơn quan hệ nhân quả và phản biện đa chiều."
+    elif word_count >= 500:
+        s4 = 2.00
+        c4_note = "Luận điểm còn nông, nghiêng về liệt kê nhận định chủ quan mà thiếu câu văn lí giải thấu đáo nguyên nhân, hệ quả."
     else:
-        s4 = 1.00
+        s4 = 1.25
         c4_note = "Hệ thống luận điểm sơ sài, lộn xộn, chưa bám sát cấu trúc dạng đề."
 
     # 5. Dẫn chứng thực tế (2.50đ) - Khống chế điểm nếu lấy thơ ca
     proper_nouns = re.findall(r"(?<=\s)[A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s[A-ZÀ-Ỹ][a-zà-ỹ]+)+", text)
-    unique_nouns = list(set([pn for pn in proper_nouns if pn.lower() not in ["chế lan viên", "tiếng hát con tàu", "nguyễn du", "nam cao"]]))
+    unique_nouns = list(set([pn for pn in proper_nouns if pn.lower() not in ["chế lan viên", "tiếng hát con tàu", "nguyễn du", "nam cao", "tố hữu", "việt nam"]]))
     
     if has_van_hoc_confusion and len(unique_nouns) == 0:
         s5 = 0.75
-        c5_note = "Mắc lỗi nghiêm trọng: Lấy câu thơ/tác phẩm văn học làm dẫn chứng cho bài Nghị luận xã hội; hoàn toàn thiếu dẫn chứng người thật việc thật ngoài đời sống."
-    elif len(unique_nouns) >= 2 and word_count >= 500:
-        s5 = 2.00
-        c5_note = f"Có dẫn chứng người thật việc thật ({', '.join(unique_nouns[:2])}), cần viết thêm câu bình luận đắt giá gắn kết dẫn chứng với luận điểm."
+        c5_note = "Mắc lỗi phương pháp: Sử dụng câu thơ/tác phẩm văn học làm dẫn chứng cho bài Nghị luận xã hội; thiếu hẳn dẫn chứng người thật, việc thật của đời sống hiện đại."
+    elif len(unique_nouns) >= 2 and word_count >= 600:
+        s5 = 2.25
+        c5_note = f"Có dẫn chứng người thật việc thật xác thực ({', '.join(unique_nouns[:2])}); cần viết thêm câu bình luận đắt giá gắn kết dẫn chứng với luận điểm."
     elif len(unique_nouns) >= 1:
-        s5 = 1.25
-        c5_note = f"Có nhắc đến dẫn chứng ({unique_nouns[0]}) nhưng còn nặng về thuật lại sự việc, phân tích còn mỏng."
+        s5 = 1.50
+        c5_note = f"Có nhắc đến dẫn chứng ({unique_nouns[0]}) nhưng còn nặng về thuật lại sự việc, phần phân tích ý nghĩa còn mỏng."
     else:
         s5 = 0.50
-        c5_note = "Dẫn chứng chung chung (\\\"xung quanh ta\\\", \\\"xã hội\\\"); thiếu hẳn những tấm gương cụ thể có tính thời sự."
+        c5_note = "Dẫn chứng chung chung (\\\"xung quanh ta\\\", \\\"trong xã hội\\\"); thiếu hẳn những tấm gương cụ thể có tính thời sự."
 
-    # 6. Phản đề & Bài học (1.00đ)
+    # 6. Phản đề & Bài học liên hệ (1.00đ)
     counter_kws = ["tuy nhiên", "ngược lại", "phê phán", "mặt khác", "trái lại", "bài học"]
     cnt_kws = sum(1 for ck in counter_kws if ck in text_low)
-    if cnt_kws >= 2 and word_count >= 450:
+    if cnt_kws >= 2 and word_count >= 600:
+        s6 = 1.00
+        c6_note = "Nhìn nhận vấn đề đa chiều, phê phán sắc nét các quan điểm lệch lạc và rút ra bài học nhận thức, hành động thiết thực."
+    elif cnt_kws >= 1 and word_count >= 450:
         s6 = 0.75
         c6_note = "Đã có đoạn phản đề phê phán mặt trái và rút ra bài học, nhưng góc nhìn phản biện cần sắc bén hơn."
     elif cnt_kws >= 1:
@@ -1754,21 +1744,21 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
         s6 = 0.25
         c6_note = "Thiếu góc nhìn phản biện đa chiều; phần liên hệ cá nhân mờ nhạt."
 
-    # 7. Diễn đạt & Chính tả (1.00đ)
-    if word_count > 700:
+    # 7. Diễn đạt, ngữ pháp & chính tả (1.00đ)
+    if word_count > 1500:
         s7 = 0.50
-        c7_note = f"Hành văn tương đối trôi chảy nhưng diễn đạt còn rườm rà, lặp ý; cần tinh giản câu chữ để đảm bảo tính cô đọng của văn chính luận."
-    elif word_count >= 450:
+        c7_note = f"Hành văn trôi chảy nhưng diễn đạt rườm rà, chưa đảm bảo tính cô đọng, khúc chiết của thể văn nghị luận."
+    elif word_count >= 600:
         s7 = 0.75
-        c7_note = "Diễn đạt khá mạch lạc, dùng từ rõ ý; cần gọt giũa một số câu văn kéo dài thiếu ngắt nghỉ."
+        c7_note = "Lời văn trong sáng, dùng từ chính xác; cần trau chuốt thêm các từ nối chuyển đoạn để liên kết chặt chẽ hơn."
     else:
         s7 = 0.50
-        c7_note = "Còn mắc lỗi câu cụt hoặc dùng từ ngữ khẩu ngữ; liên kết giữa các đoạn chưa mượt mà."
+        c7_note = "Còn mắc lỗi câu cụt hoặc dùng từ ngữ khẩu ngữ; liên kết giữa các đoạn chưa thật mượt mà."
 
     total_score = round(s1 + s2 + s3 + s4 + s5 + s6 + s7, 2)
     rank = "Tốt" if total_score >= 8.0 else ("Khá" if total_score >= 6.5 else ("Đạt" if total_score >= 5.0 else "Chưa đạt"))
 
-    # XUẤT RA TOÀN BỘ 7 TIÊU CHÍ TRONG 1 BẢNG MARKDOWN DUY NHẤT (TUYỆT ĐỐI KHÔNG CÓ KÝ TỰ \n TRONG Ô)
+    # XUẤT BẢNG MARKDOWN DUY NHẤT (TUYỆT ĐỐI KHÔNG CÓ KÝ TỰ \n TRONG Ô)
     report_lines = [
         "### 📊 BẢNG ĐÁNH GIÁ CHI TIẾT THEO 7 TIÊU CHÍ RUBRIC",
         f"*🧭 **Dạng bài áp dụng:** {sanitize_cell_text(type_label)}*  ",
@@ -1789,12 +1779,12 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
         "",
         "#### 🔍 RÀ SOÁT LỖI CỤ THỂ & ĐỊNH HƯỚNG CHỈNH SỬA NÂNG CẤP BÀI VIẾT:",
         f"1. **Về cấu trúc và phương pháp làm bài:** Bài làm đạt **{word_count} chữ**. " + (
-            "**LƯU Ý ĐẶC BIỆT:** Đây là bài văn Nghị luận xã hội, em tuyệt đối không được lấy thơ ca, truyện văn học để phân tích thay cho các vấn đề đời sống. Hãy tập trung lập luận vào các khía cạnh đạo đức, lối sống, trách nhiệm và tư duy của con người hiện đại." if has_van_hoc_confusion else "Cần kiểm soát độ dài cô đọng trong khoảng 600 chữ, tránh viết quá dài dẫn đến loãng ý."
+            "**LƯU Ý QUAN TRỌNG:** Đây là bài văn Nghị luận xã hội, em cần hạn chế việc lấy thơ ca hay trích đoạn văn học để thay thế cho việc phân tích các vấn đề thực tiễn đời sống. Hãy tập trung lập luận sâu sắc vào nhận thức, lối sống và trách nhiệm của thế hệ trẻ hiện nay." if has_van_hoc_confusion else "Bài viết cần duy trì dung lượng hợp lý (tối thiểu từ 600 chữ, không vượt quá 1500 chữ) để đảm bảo độ sâu và tính súc tích."
         ),
         f"2. **Về dẫn chứng thực tế:** " + (
-            "Em cần thay thế toàn bộ trích dẫn văn học bằng **dẫn chứng người thật, việc thật từ thực tế đời sống** (như các tấm gương khởi nghiệp, cống hiến vì cộng đồng, vượt khó học tập...) để bài viết đạt điểm tối đa ở tiêu chí 5." if (has_van_hoc_confusion or s5 < 1.5) else "Dẫn chứng đã phù hợp, hãy bổ sung thêm câu phân tích ý nghĩa để tăng sức thuyết phục."
+            "Em cần thay thế các ngữ liệu văn học bằng **dẫn chứng người thật, việc thật từ thực tế đời sống** (các tấm gương thanh niên khởi nghiệp, cống hiến cộng đồng, vượt khó học tập...) để bài viết đạt điểm tối đa ở tiêu chí 5." if (has_van_hoc_confusion or s5 < 1.5) else "Dẫn chứng đã phù hợp, hãy bổ sung thêm câu phân tích ý nghĩa để tăng sức thuyết phục."
         ),
-        f"3. **Về diễn đạt và liên kết câu:** Chú ý rà soát lại câu văn: *\"{sample_weak[:120]}...\"* -> Hãy bổ sung quan hệ từ logic (*sở dĩ như vậy là vì..., chính điều này đã dẫn tới...*) để câu văn giàu chất chính luận hơn.",
+        f"3. **Về diễn đạt và liên kết câu:** Chú ý rà soát lại câu văn: *\"{sample_weak[:120]}...\"* -> Hãy bổ sung quan hệ từ logic (*bởi lẽ, chính vì vậy, nhờ đó...*) để câu văn giàu chất chính luận hơn.",
     ]
     return "\n".join(report_lines)
 
@@ -2122,18 +2112,22 @@ with tabs[2]:
         )
         st.session_state["user_essay"] = essay_input
         wc = len(re.findall(r"\w+", essay_input)) if essay_input.strip() else 0
-        wc_status = (
-            "(Chưa đạt yêu cầu khoảng 600 chữ của đề bài)"
-            if wc < 550
-            else ("(Bài viết khá dài, cần kiểm soát tính cô đọng)" if wc > 720 else "(Đã đạt chuẩn dung lượng khoảng 600 chữ)")
-        )
+        
+        # Nhắc nhở dung lượng chuẩn xác
+        if wc < 600:
+            wc_status = "(Chưa đạt yêu cầu tối thiểu khoảng 600 chữ của đề bài)"
+        elif wc > 1500:
+            wc_status = "(Bài viết quá dài trên 1500 chữ, cần tinh giản súc tích)"
+        else:
+            wc_status = "(Đã đạt chuẩn dung lượng yêu cầu của đề bài)"
+            
         st.caption(f"📊 Dung lượng hiện tại: **{wc} chữ** {wc_status}.")
 
         col_w1, col_w2 = st.columns([1, 1])
         with col_w1:
             if st.button("💡 Nhắc lại tiêu chuẩn bài văn 600 chữ", use_container_width=True):
                 st.info(
-                    "💡 **Lưu ý:** Bài văn cần đạt dung lượng khoảng 600 chữ, bố cục 3 phần rõ ràng, giải thích trúng trọng tâm, thân bài triển khai đúng hệ thống luận điểm của dạng đề, có dẫn chứng thực tế và phản biện sắc bén!"
+                    "💡 **Lưu ý:** Bài văn cần đạt dung lượng từ 600 chữ trở lên (không vượt quá 1500 chữ), bố cục 3 phần rõ ràng, giải thích trúng trọng tâm, thân bài triển khai đúng hệ thống luận điểm của dạng đề, có dẫn chứng thực tế và phản biện sắc bén!"
                 )
         with col_w2:
             if st.button("📊 Nộp bài & Đánh giá theo Rubric", type="primary", use_container_width=True):
@@ -2181,7 +2175,7 @@ with tabs[2]:
 
 
 # ------------------------------------------------------------------------------
-# BƯỚC 4: ĐÁNH GIÁ VÀ CHỈNH SỬA (BẢNG RUBRIC ĐẶT TRƯỚC, CHỈNH SỬA ĐẶT DƯỚI)
+# BƯỚC 4: ĐÁNH GIÁ VÀ CHỈNH SỬA
 # ------------------------------------------------------------------------------
 with tabs[3]:
     st.markdown('<div class="section-title">📊 Bước 4: Đánh giá và Chỉnh sửa</div>', unsafe_allow_html=True)
@@ -2190,19 +2184,19 @@ with tabs[3]:
         """
         <div class="rubric-info-box">
             <b>📌 Hệ thống tiêu chí Rubric đánh giá bài văn Nghị luận xã hội (Thang điểm 10):</b><br>
-            1. <b>Bố cục (0.5đ):</b> Đủ 3 phần Mở - Thân - Kết, tách đoạn hợp lý theo dạng bài.<br>
-            2. <b>Xác định VĐNL (0.5đ):</b> Nêu đúng trọng tâm vấn đề nghị luận.<br>
-            3. <b>Giải thích & Biểu hiện (1.0đ):</b> Cắt nghĩa tường minh khái niệm, nhận định và nêu biểu hiện.<br>
-            4. <b>Hệ thống luận điểm (3.5đ):</b> Triển khai đầy đủ, sâu sắc các ý bàn luận theo đúng khía cạnh đề hỏi.<br>
-            5. <b>Dẫn chứng (2.5đ):</b> Người thật việc thật xác thực, phân tích gắn kết hữu cơ với luận điểm.<br>
-            6. <b>Phản đề & Bài học (1.0đ):</b> Có góc nhìn phản biện đa chiều, bác bỏ ý kiến lệch lạc và bài học thực chất.<br>
-            7. <b>Diễn đạt & Chính tả (1.0đ):</b> Trong sáng, lập luận chặt chẽ, không lặp từ hay viết câu cụt.
+            1. <b>Bố cục bài viết (0.5đ):</b> Đủ 3 phần Mở - Thân - Kết, tách đoạn hợp lý, dung lượng từ 600 đến 1500 chữ.<br>
+            2. <b>Xác định VĐNL (0.5đ):</b> Nêu đúng và trúng vấn đề nghị luận trọng tâm ngay từ Mở bài.<br>
+            3. <b>Giải thích khái niệm & Biểu hiện (1.0đ):</b> Cắt nghĩa tường minh bản chất vấn đề và nêu biểu hiện thực tế.<br>
+            4. <b>Hệ thống luận điểm bàn luận (3.5đ):</b> Triển khai sâu sắc các ý bàn luận theo đúng đặc thù dạng đề.<br>
+            5. <b>Dẫn chứng thực tế (2.5đ):</b> Người thật việc thật xác thực, tiêu biểu, phân tích gắn kết hữu cơ với luận điểm.<br>
+            6. <b>Phản đề & Bài học liên hệ (1.0đ):</b> Có góc nhìn phản biện đa chiều, bài học nhận thức và hành động thực chất.<br>
+            7. <b>Diễn đạt, ngữ pháp & chính tả (1.0đ):</b> Lời văn chính luận chuẩn mực, câu cú hoàn chỉnh, giàu tính liên kết.
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # 1. HIỂN THỊ BẢNG ĐIỂM VÀ LỜI PHÊ CHI TIẾT LÊN TRƯỚC HẾT (RỘNG RÃI TOÀN MÀN HÌNH)
+    # 1. BẢNG ĐIỂM & NHẬN XÉT CHI TIẾT ĐẶT LÊN TRÊN HẾT TOÀN MÀN HÌNH
     st.markdown("#### 📋 KẾT QUẢ ĐÁNH GIÁ CHI TIẾT THEO RUBRIC:")
     if st.session_state.get("rubric_evaluation"):
         with st.container(border=True):
@@ -2212,9 +2206,9 @@ with tabs[3]:
 
     st.markdown("---")
 
-    # 2. KHUNG CHỈNH SỬA VÀ HOÀN THIỆN ĐƯỢC ĐƯA XUỐNG DƯỚI SAU KHI ĐÃ ĐỌC XONG BẢNG ĐIỂM
+    # 2. KHUNG CHỈNH SỬA & HOÀN THIỆN ĐƯỢC CHUYỂN XUỐNG DƯỚI
     st.markdown("#### 📝 KHÔNG GIAN HOÀN THIỆN & CHỈNH SỬA BÀI VIẾT:")
-    st.caption("Dựa vào những câu văn bị chỉ ra lỗi ở bảng đánh giá phía trên, em hãy sửa trực tiếp vào khung dưới đây rồi bấm 'Cập nhật đánh giá lại' để xem điểm số tiến bộ:")
+    st.caption("Dựa vào những câu văn và gợi ý nâng cấp ở bảng đánh giá phía trên, em hãy chỉnh sửa trực tiếp vào khung dưới đây rồi bấm 'Cập nhật đánh giá lại' để theo dõi sự tiến bộ:")
 
     edited_essay = st.text_area(
         "Nội dung bài làm của học sinh:",
