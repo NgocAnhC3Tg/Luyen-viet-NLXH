@@ -9,10 +9,10 @@ import base64
 import io
 
 # ==============================================================================
-# 1. CẤU HÌNH GIAO DIỆN & TÊN HỆ THỐNG (IN HOA TOÀN BỘ)
+# 1. CẤU HÌNH GIAO DIỆN & TÊN HỆ THỐNG
 # ==============================================================================
 st.set_page_config(
-    page_title="EDUAI - HỆ THỐNG ĐỊNH HƯỚNG TƯ DUY VÀ PHÁT TRIỂN NĂNG LỰC VIẾT VĂN NGHỊ LUẬN XÃ HỘI",
+    page_title="EduAI - Hệ thống định hướng tư duy và phát triển năng lực viết văn nghị luận xã hội",
     page_icon="🖊️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -42,7 +42,6 @@ CUSTOM_CSS = """
         letter-spacing: -0.3px;
         margin-bottom: 6px !important;
         color: #ffffff !important;
-        text-transform: uppercase;
         line-height: 1.35;
     }
 
@@ -250,7 +249,7 @@ def call_gemini_rest_api(prompt, pil_image=None, contents_list=None, system_inst
     return None
 
 # ==============================================================================
-# 5. KHO TRI THỨC BÁCH KHOA NLXH CHUYÊN SÂU (KHÁI NIỆM, Ý NGHĨA, TÁC HẠI, GIẢI PHÁP, DẪN CHỨNG)
+# 5. KHO TRI THỨC BÁCH KHOA NLXH CHUYÊN SÂU (GIỮ NGUYÊN 100% ĐẦY ĐỦ)
 # ==============================================================================
 CONCEPT_DICTIONARY = {
     "sáng tạo": {
@@ -343,7 +342,7 @@ CONCEPT_DICTIONARY = {
     },
 }
 
-# KHO TRI THỨC CHUYÊN BIỆT CHO CÁC CHỦ ĐỀ HIỆN TƯỢNG / THÓI QUEN (CÓ TÁCH RIÊNG 4 TẦNG TÁC HẠI VÀ 3 CẤP ĐỘ GIẢI PHÁP)
+# KHO TRI THỨC CHUYÊN BIỆT CHO CÁC CHỦ ĐỀ HIỆN TƯỢNG / THÓI QUEN (GIỮ NGUYÊN 100% ĐẦY ĐỦ)
 PROBLEM_SOLVING_KB = {
     "mạng xã hội": {
         "name": "tình trạng nghiện mạng xã hội và phụ thuộc vào thế giới ảo",
@@ -546,7 +545,7 @@ DANH_SACH_DANG_BAI = [
 
 def extract_clean_topic_noun(text):
     clean = re.sub(
-        r"(?i)(hãy viết một bài văn nghị luận xã hội|hãy viết bài văn nghị luận xã hội|hãy viết một bài văn nghị luận|hãy viết bài văn nghị luận|viết một bài văn nghị luận|viết bài văn nghị luận|viết bài văn|viết đoạn văn|khoảng 600 chữ|khoảng 200 chữ|trình bày suy nghĩ của anh/chị về|suy nghĩ của anh/chị về|suy nghĩ về|bàn luận về|bàn về|nghị luận về|tác hại của|hậu quả của|hệ lụy của|ý nghĩa của|vai trò của|tầm quan trọng của|sức mạnh của|sự cần thiết của|giá trị của|thuyết phục người khác từ bỏ|thuyết phục bạn bè từ bỏ|thuyết phục mọi người từ bỏ|thuyết phục từ bỏ|giải pháp khắc phục tình trạng|giải pháp khắc phục|làm thế nào để|cần làm gì để)",
+        r"(?i)(hãy viết một bài văn nghị luận xã hội|hãy viết bài văn nghị luận xã hội|hãy viết một bài văn nghị luận|hãy viết bài văn nghị luận|viết một bài văn nghị luận|viết bài văn nghị luận|viết bài văn|viết đoạn văn|khoảng 600 chữ|khoảng 200 chữ|trình bày suy nghĩ của anh/chị về|suy nghĩ của anh/chị về|suy nghĩ về|bàn luận về|bàn về|nghị luận về|tác hại của|hậu quả của|hệ lụy của|mặt trái của|ý nghĩa của|vai trò của|tầm quan trọng của|sức mạnh của|sự cần thiết của|giá trị của|thuyết phục người khác từ bỏ|thuyết phục bạn bè từ bỏ|thuyết phục mọi người từ bỏ|thuyết phục từ bỏ|giải pháp khắc phục tình trạng|giải pháp khắc phục|làm thế nào để|cần làm gì để)",
         "",
         text,
     )
@@ -565,7 +564,7 @@ def is_metaphorical_quote_topic(topic_text):
     return False
 
 # ==============================================================================
-# THUẬT TOÁN PHÂN LUỒNG CHÍNH XÁC TỪNG DẠNG BÀI (KHÔNG ÔM ĐỒM GIẢI PHÁP KHI ĐỀ CHỈ HỎI 1 KHÍA CẠNH)
+# THUẬT TOÁN PHÂN LUỒNG CHÍNH XÁC TỪNG DẠNG BÀI
 # ==============================================================================
 def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động nhận diện theo đề bài"):
     if manual_override and manual_override != "Tự động nhận diện theo đề bài":
@@ -588,7 +587,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
 
     combined = (topic_text + " " + vdnl_text).lower()
 
-    # 1. ƯU TIÊN SỐ 1: Nhận diện Dạng 5 (Thuyết phục người khác từ bỏ...) — Chỉ khi đề có từ khóa "thuyết phục", "khuyên", "từ bỏ"
     if any(
         kw in combined
         for kw in [
@@ -606,14 +604,11 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
     ):
         return "DANG_5_TU_BO"
 
-    # 2. ƯU TIÊN SỐ 2: Nhận diện đề CHỈ HỎI 1 KHÍA CẠNH TIÊU CỰC (Tác hại / Hậu quả / Hệ lụy của...)
-    # Không ôm đồm biến thành bài Giải pháp hay bài Thuyết phục từ bỏ!
     if any(kw in combined for kw in ["tác hại của", "hậu quả của", "hệ lụy của", "mặt trái của"]):
         if not any(sol_kw in combined for sol_kw in ["giải pháp", "khắc phục", "cần làm gì"]):
             return "DANG_1_TH1_TAC_HAI"
         return "DANG_2_GIAI_QUYET"
 
-    # 3. ƯU TIÊN SỐ 3: Nhận diện đề CHỈ HỎI 1 KHÍA CẠNH TÍCH CỰC (Ý nghĩa / Vai trò / Giá trị / Sức mạnh / التầm quan trọng / Sự cần thiết)
     if any(
         kw in combined
         for kw in [
@@ -630,7 +625,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
         if not any(sol_kw in combined for sol_kw in ["giải pháp", "khắc phục", "cần làm gì để", "làm thế nào để"]):
             return "DANG_1_TH1_Y_NGHIA"
 
-    # 4. Nhận diện Dạng 4: Vấn đề xã hội rút ra từ tác phẩm văn học
     if any(
         kw in combined
         for kw in [
@@ -647,7 +641,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
     ):
         return "DANG_4_VAN_HOC"
 
-    # 5. Nhận diện Dạng 3: Lựa chọn quan điểm (2 luồng ý kiến)
     if any(
         kw in combined
         for kw in [
@@ -665,7 +658,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
     ):
         return "DANG_3_HAI_QUAN_DIEM"
 
-    # 6. Nhận diện Dạng 1 - TH2: Hỏi bài học giải pháp / Trách nhiệm cần làm gì
     if any(
         kw in combined
         for kw in [
@@ -683,7 +675,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
     ):
         return "DANG_1_TH2"
 
-    # 7. Nhận diện Dạng 2: Nghị luận về một vấn đề cần giải quyết (hiện tượng đời sống hoặc đề yêu cầu giải pháp khắc phục)
     negative_phenomena = [
         "ô nhiễm",
         "nghiện game",
@@ -709,7 +700,6 @@ def classify_essay_type(topic_text, vdnl_text="", manual_override="Tự động 
     if any(kw in combined for kw in negative_phenomena):
         return "DANG_2_GIAI_QUYET"
 
-    # 8. Mặc định: Dạng 1 - TH3 (Hỏi chung, nêu suy nghĩ về một tư tưởng/đạo lí)
     return "DANG_1_TH3"
 
 def get_essay_type_label(code):
@@ -863,7 +853,7 @@ def get_pedagogical_structure_guide(type_code, raw_topic, vdnl):
     return ""
 
 # ==============================================================================
-# HÀM XÂY DỰNG KHUNG ĐỊNH HƯỚNG TƯ DUY THEO HỆ THỐNG LUẬN ĐIỂM (ĐÚNG TRỌNG TÂM LỆNH ĐỀ)
+# HÀM XÂY DỰNG KHUNG ĐỊNH HƯỚNG TƯ DUY THEO HỆ THỐNG LUẬN ĐIỂM
 # ==============================================================================
 def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_type_override="Tự động nhận diện theo đề bài", base_de_info=None):
     formatted_topic = ensure_600_words_prompt(raw_topic_text)
@@ -873,14 +863,12 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
     type_label = get_essay_type_label(type_code)
     structure_guide = get_pedagogical_structure_guide(type_code, raw_topic_text, direct_problem)
 
-    # Nếu là đề có sẵn trong kho và thuộc dạng bàn luận chung (DANG_1_TH3) và người dùng không ép đổi dạng khác -> Giữ nguyên dữ liệu chuẩn của kho đề
     if base_de_info is not None and type_code == "DANG_1_TH3" and manual_type_override == "Tự động nhận diện theo đề bài":
         preserved = dict(base_de_info)
         preserved["essay_type_code"] = type_code
         preserved["essay_type_label"] = type_label
         return preserved
 
-    # 1. GỌI GEMINI API VỚI YÊU CẦU BÁM SÁT ĐÚNG KHÍA CẠNH ĐỀ HỎI (KHÔNG ÔM ĐỒM GIẢI PHÁP NẾU ĐỀ CHỈ HỎI TÁC HẠI / VAI TRÒ)
     prompt_lines = [
         "Đóng vai chuyên gia sư phạm Ngữ văn THPT. Hãy lập Khung định hướng tư duy CHI TIẾT, CỤ THỂ theo HỆ THỐNG LUẬN ĐIỂM cho đề bài NLXH sau và trả về MỘT CHUỖI JSON HỢP LỆ (không dùng markdown code block):",
         f'- Đề bài: "{formatted_topic}"',
@@ -915,9 +903,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
         except Exception:
             pass
 
-    # ==========================================================================
-    # 2. BỘ MÁY TRI THỨC SƯ PHẠM NỘI BỘ (CHUẨN XÁC TỪNG DẠNG, ĐẶC BIỆT TÁCH RIÊNG DẠNG TÁC HẠI & VAI TRÒ)
-    # ==========================================================================
     combined_low = (raw_topic_text + " " + direct_problem).lower()
     matched_concept = None
     for kw, data in CONCEPT_DICTIONARY.items():
@@ -928,7 +913,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
     matched_prob_kb = match_problem_solving_kb(raw_topic_text, direct_problem)
     vdnl_final = student_vdnl.strip() if student_vdnl.strip() else direct_problem
 
-    # Ưu tiên lấy giải thích và dẫn chứng từ kho đề gốc nếu có (`base_de_info`)
     if base_de_info and base_de_info.get("explain_items"):
         base_explain_items = base_de_info["explain_items"]
     else:
@@ -960,10 +944,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
         c_ev_ynghia = f"Minh chứng thực tế làm sáng tỏ sâu sắc cho vấn đề {vdnl_final}."
         base_ev_list = [{"ten": c_ev_ten, "chi_tiet": c_ev_chitiet, "y_nghia": c_ev_ynghia, "nguon": "Thực tiễn đời sống & Báo chí chính thống"}]
 
-    # --------------------------------------------------------------------------
-    # TRƯỜNG HỢP ĐẶC BIỆT 1: ĐỀ CHỈ HỎI 1 KHÍA CẠNH TIÊU CỰC (TÁC HẠI / HẬU QUẢ CỦA...)
-    # Không ôm đồm biến thành bài giải pháp 3 cấp độ hay bài thuyết phục từ bỏ!
-    # --------------------------------------------------------------------------
     if type_code == "DANG_1_TH1_TAC_HAI":
         explain_items_th = base_explain_items if base_explain_items else [
             f"- **1. Giải thích khái niệm:** {specific_def}",
@@ -1012,10 +992,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # TRƯỜNG HỢP ĐẶC BIỆT 2: ĐỀ CHỈ HỎI 1 KHÍA CẠNH TÍCH CỰC (Ý NGHĨA / VAI TRÒ / SỨC MẠNH / GIÁ TRỊ)
-    # Tập trung đào sâu Ý nghĩa/Vai trò, không ôm đồm tách thành giải pháp 3 cấp độ!
-    # --------------------------------------------------------------------------
     if type_code == "DANG_1_TH1_Y_NGHIA":
         explain_items_yn = base_explain_items if base_explain_items else [
             f"- **1. Giải thích khái niệm:** {specific_def}",
@@ -1058,9 +1034,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # CHI TIẾT DẠNG 2: VẤN ĐỀ CẦN GIẢI QUYẾT
-    # --------------------------------------------------------------------------
     if type_code == "DANG_2_GIAI_QUYET":
         if matched_prob_kb:
             has_meaning = matched_prob_kb.get("is_positive_declining", False)
@@ -1156,9 +1129,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # CHI TIẾT DẠNG 3: LỰA CHỌN QUAN ĐIỂM
-    # --------------------------------------------------------------------------
     if type_code == "DANG_3_HAI_QUAN_DIEM":
         v1_text, v2_text = parse_two_viewpoints_from_topic(raw_topic_text, direct_problem)
         return {
@@ -1197,9 +1167,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # CHI TIẾT DẠNG 4: VẤN ĐỀ XÃ HỘI RÚT RA TỪ TÁC PHẨM VĂN HỌC
-    # --------------------------------------------------------------------------
     if type_code == "DANG_4_VAN_HOC":
         return {
             "text": formatted_topic,
@@ -1237,9 +1204,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # CHI TIẾT DẠNG 5: THUYẾT PHỤC NGƯỜI KHÁC TỪ BỎ MỘT THÓI QUEN HAY QUAN NIỆM
-    # --------------------------------------------------------------------------
     if type_code == "DANG_5_TU_BO":
         if matched_prob_kb:
             habit_def = matched_prob_kb["def"]
@@ -1319,9 +1283,6 @@ def build_dynamic_outline_for_custom_topic(raw_topic_text, student_vdnl, manual_
             },
         }
 
-    # --------------------------------------------------------------------------
-    # CHI TIẾT DẠNG 1 - TH2 & TH3
-    # --------------------------------------------------------------------------
     explain_list = base_explain_items if base_explain_items else (
         [
             f"- **1. Giải thích khái niệm cụ thể:** {specific_def}",
@@ -1394,7 +1355,7 @@ def is_ghostwriting_request(q_low):
     return False
 
 # ==============================================================================
-# HÀM TRỢ LÝ TƯ VẤN SƯ PHẠM ĐA LƯỢT - LINH HOẠT, ĐÚNG TRỌNG TÂM DẠNG ĐỀ
+# HÀM TRỢ LÝ NGỮ VĂN
 # ==============================================================================
 def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     q_clean = user_q.strip()
@@ -1408,7 +1369,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     current_draft = st.session_state.get("user_essay", "").strip()
     draft_excerpt = current_draft[:600] if current_draft else "Chưa viết"
 
-    # 1. Nếu học sinh nhờ viết hộ cả bài văn
     if is_ghostwriting_request(q_low):
         if "mở bài" in q_low:
             part_hint = "Mở bài"
@@ -1424,10 +1384,9 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             f"Nhưng cô cung cấp ngay cho em **chất liệu cụ thể** của đề **{vdnl}** (*{type_label}*) để em ráp thành đoạn ngay lập tức:\n"
             f"- **Ý cốt lõi cần đưa vào:** {explain_preview}\n"
             f"- **Khung câu gợi mở cho {part_hint}:** *\"Giữa dòng chảy không ngừng của cuộc sống hiện đại, {vdnl} đang đặt ra những suy ngẫm sâu sắc cho mỗi người trẻ...\"*\n"
-            "👉 *Em hãy viết tiếp 2-3 câu theo ý trên rồi gửi vào đây, cô sẽ sửa câu chữ cho em thật sắc sảo!*"
+            f"👉 *Em hãy viết tiếp 2-3 câu theo ý trên rồi gửi vào đây, cô sẽ sửa câu chữ cho em thật sắc sảo!*"
         )
 
-    # 2. GỌI GEMINI API VỚI YÊU CẦU CUNG CẤP KIẾN THỨC CỤ THỂ, BÁM SÁT ĐÚNG DẠNG BÀI
     sys_lines = [
         "Bạn là một giáo viên Ngữ văn THPT giỏi chuyên môn, nhạy bén và tận tâm, đang trực tiếp hướng dẫn học sinh viết bài Nghị luận xã hội (khoảng 600 chữ).",
         "THÔNG TIN ĐỀ BÀI ĐANG LÀM:",
@@ -1467,9 +1426,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     if ai_reply and len(ai_reply.strip()) > 20:
         return ai_reply
 
-    # ==========================================================================
-    # 3. BỘ MÁY PHẢN HỒI SƯ PHẠM NỘI BỘ ĐA LƯỢT (XOAY VÒNG LINH HOẠT, ĐÚNG DẠNG ĐỀ)
-    # ==========================================================================
     explain_list = cur_de_info.get("explain_items", [])
     questions_list = cur_de_info.get("questions", [])
     counter_list = cur_de_info.get("counter", [])
@@ -1500,7 +1456,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
     except Exception:
         pass
 
-    # --- NHÁNH A: HỎI KHÁI NIỆM / GIẢI THÍCH TỪ KHÓA (Luận điểm 1) ---
     gt_keywords = ["giải thích", "khái niệm", "từ khóa", "là gì", "nghĩa là gì", "hiểu như thế nào", "luận điểm 1", "biểu hiện"]
     if any(k in effective_query for k in gt_keywords):
         for kw, c_data in CONCEPT_DICTIONARY.items():
@@ -1526,7 +1481,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             f"- **Câu văn mẫu dẫn dắt giải thích:** *\"Trước hết, cần hiểu thấu đáo bản chất của vấn đề: {vdnl} được thể hiện rõ nét qua...\"*"
         )
 
-    # --- NHÁNH B: HỎI VỀ DẪN CHỨNG ---
     ev_keywords = ["dẫn chứng", "ví dụ", "nhân vật", "tấm gương", "người thật", "minh họa", "chứng minh"]
     if any(k in effective_query for k in ev_keywords):
         ask_idx = count_previous_topic_asks(ev_keywords)
@@ -1563,7 +1517,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
                     f"👉 **Câu nối dẫn chứng vào luận điểm:** *\"Nhìn từ câu chuyện thực tế của {dc1['ten']}, người trẻ chúng ta càng nhận thức sâu sắc hơn về {vdnl}.\"*"
                 )
 
-    # --- NHÁNH C: HỎI VỀ LUẬN ĐIỂM 2 (TÁC HẠI / VAI TRÒ / BÀN LUẬN / GIẢI PHÁP) ---
     bl_keywords = ["luận điểm", "bàn luận", "thân bài", "dàn ý", "tác hại", "hậu quả", "ý nghĩa", "vai trò", "giải pháp", "thực trạng", "nguyên nhân", "lí do", "lý do", "triển khai", "cần làm gì", "bài học", "cá nhân", "gia đình", "nhà trường"]
     if any(k in effective_query for k in bl_keywords):
         ask_idx = count_previous_topic_asks(bl_keywords)
@@ -1596,7 +1549,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
                 "- *Câu 6 (Chốt đoạn):* Như vậy, có thể khẳng định đây chính là góc nhìn quan trọng giúp chúng ta nhận thức thấu đáo về vấn đề."
             )
 
-    # --- NHÁNH D: HỎI VỀ LUẬN ĐIỂM 3 (PHẢN ĐỀ / Ý KIẾN TRÁI CHIỀU) ---
     pb_keywords = ["phản đề", "phản biện", "mở rộng", "lật lại", "phê phán", "ý kiến khác", "trái chiều", "phản đối", "luận điểm 3"]
     if any(k in effective_query for k in pb_keywords):
         pb_content = "\n".join(counter_list) if counter_list else f"- Phê phán biểu hiện lệch lạc đối với **{vdnl}** và rút ra bài học."
@@ -1607,7 +1559,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             f"*\"Nhìn nhận vấn đề một cách đa chiều, bên cạnh những nhận thức đúng đắn, thực tế vẫn tồn tại thái độ chủ quan hoặc góc nhìn phiến diện đối với {vdnl}... Đây là biểu hiện lệch lạc cần thẳng thắn phê phán và loại bỏ. Từ đó, mỗi người trẻ chúng ta cần tự rút ra bài học tỉnh thức và rèn luyện bản thân mỗi ngày.\"*"
         )
 
-    # --- NHÁNH E: HỎI MỞ BÀI / KẾT BÀI ---
     if any(w in effective_query for w in ["mở bài", "câu đầu", "dẫn dắt", "kết bài", "liên hệ"]):
         dani = cur_de_info.get("dani_chi_tiet", {})
         return (
@@ -1618,7 +1569,6 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
             f"  *Mẫu khép lại:* \"Khép lại những suy ngẫm về **{vdnl}**, mỗi chúng ta hiểu rằng nhận thức đúng đắn chỉ thực sự có giá trị khi được chuyển hóa thành hành động kiên trì ngay từ hôm nay...\""
         )
 
-    # --- NHÁNH F: HỌC SINH GỬI ĐOẠN VĂN NHỜ SỬA HOẶC HỎI CÂU BẤT KỲ ---
     if len(q_clean.split()) >= 12:
         snippet = q_clean[:160] + ("..." if len(q_clean) > 160 else "")
         return (
@@ -1639,8 +1589,7 @@ def generate_deep_chat_response(user_q, cur_de_info, chat_history_list):
 
 
 # ==============================================================================
-# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (NGHIÊM NGẶT, CHÍNH XÁC, RÀ SOÁT LỖI CỤ THỂ)
-# (Quy tắc chấm chặt được xử lý ngầm trong thuật toán và chỉ thị AI, không hiển thị trên giao diện)
+# 6. THUẬT TOÁN CHẤM ĐIỂM RUBRIC 7 TIÊU CHÍ (HIỂN THỊ ĐẦY ĐỦ TRONG 1 BẢNG DUY NHẤT)
 # ==============================================================================
 def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     text = essay_text.strip()
@@ -1661,20 +1610,29 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
         "- Bài làm thực tế của học sinh:",
         text,
         "",
-        "Thực hiện đánh giá trực tiếp vào bảng điểm và lời phê theo các nguyên tắc chuyên môn sau (tuyệt đối không nhắc lại các nguyên tắc này trong kết quả trả về):",
-        f"- Đánh giá dựa trên chất lượng thực tế và ĐÚNG DẠNG ĐỀ ({type_label}). Không cho điểm tối đa ở bất kỳ tiêu chí nào nếu học sinh chỉ mới nêu chạm ý mà phân tích nông cạn, lập luận lỏng lẻo, thiếu lí giải, hoặc làm lệch trọng tâm dạng bài (ví dụ: đề hỏi 'Tác hại' nhưng không phân tích sâu tác hại mà lại lan man sang giải pháp chung chung; hoặc đề yêu cầu giải pháp nhưng thiếu tách đoạn Cá nhân - Gia đình - Nhà trường).",
-        "- Nếu bài viết ngắn dưới 450 chữ, tổng điểm không vượt quá 6.0 điểm; dưới 250 chữ, tổng điểm dưới 4.0 điểm.",
-        "- Đọc kỹ từng câu để rà soát lỗi: Bắt buộc trích dẫn nguyên văn (trong dấu ngoặc kép) ít nhất 3-4 câu hoặc cụm từ thực tế từ bài làm của học sinh để chỉ rõ lỗi lập luận nông/lặp ý, lỗi diễn đạt, lỗi dùng từ, ngữ pháp hoặc chính tả.",
-        "- Lập bảng Markdown đúng 4 cột: Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm (với 7 tiêu chí: 1. Bố cục 0.5đ; 2. Xác định Vấn đề nghị luận 0.5đ; 3. Giải thích & Biểu hiện 1.0đ; 4. Hệ thống luận điểm trọng tâm 3.5đ; 5. Dẫn chứng thực tế 2.5đ; 6. Phản đề & Bài học 1.0đ; 7. Diễn đạt & Chính tả 1.0đ).",
-        "- Sau bảng điểm, trình bày phần Rà soát lỗi cụ thể & Hướng dẫn chỉnh sửa nâng cấp từng câu/đoạn bị lỗi.",
+        "QUY TẮC HIỂN THỊ BẮT BUỘC ĐỂ TRÁNH BỊ VỠ BẢNG:",
+        "1. TOÀN BỘ 7 TIÊU CHÍ BẮT BUỘC PHẢI NẰM HOÀN TOÀN TRONG DUY NHẤT 1 BẢNG MARKDOWN gồm 4 cột:",
+        "| Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm |",
+        "2. Bảng phải có đủ 7 hàng không được thiếu hàng nào:",
+        "   Hàng 1: 1. Bố cục bài viết (0.50đ)",
+        "   Hàng 2: 2. Xác định Vấn đề nghị luận (0.50đ)",
+        "   Hàng 3: 3. Giải thích khái niệm & Biểu hiện (1.00đ)",
+        "   Hàng 4: 4. Hệ thống luận điểm bàn luận (3.50đ)",
+        "   Hàng 5: 5. Dẫn chứng thực tế (2.50đ)",
+        "   Hàng 6: 6. Phản đề & Bài học liên hệ (1.00đ)",
+        "   Hàng 7: 7. Diễn đạt, ngữ pháp & chính tả (1.00đ)",
+        "3. LƯU Ý KỸ THUẬT QUAN TRỌNG: Tuyệt đối KHÔNG gõ ký tự xuống dòng bên trong các ô bảng (nếu cần xuống dòng trong ô thì bắt buộc dùng thẻ <br>).",
+        "4. Bắt buộc trích dẫn nguyên văn (trong ngoặc kép) các câu văn lỗi từ bài làm của học sinh.",
+        "5. Sau khi kết thúc bảng mới ghi: Tổng điểm, Xếp loại và các mục rà soát lỗi cụ thể.",
     ]
     prompt_grade = "\n".join(prompt_lines)
 
     ai_eval = call_gemini_rest_api(prompt_grade, temperature=0.25)
-    if ai_eval and "|" in ai_eval:
+    # Kiểm tra tính toàn vẹn của bảng trả về từ AI: Phải có đủ 7 tiêu chí trong bảng
+    if ai_eval and ai_eval.count("|") >= 28 and all(f"{i}." in ai_eval for i in range(1, 8)):
         return ai_eval
 
-    # Bộ máy kiểm định nội bộ chi tiết theo sát từng dạng đề (Khi không dùng hoặc lỗi API)
+    # BỘ MÁY KIỂM ĐỊNH NỘI BỘ (ĐẢM BẢO 100% HIỂN THỊ ĐỦ 7 TIÊU CHÍ BẰNG BẢNG)
     words = re.findall(r"\w+", text)
     word_count = len(words)
     paragraphs = [p.strip() for p in re.split(r"\n\s*\n|\n", text) if len(p.strip()) > 10]
@@ -1712,17 +1670,15 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     if type_code == "DANG_1_TH1_TAC_HAI":
         harm_kws = ["tác hại", "hậu quả", "hệ lụy", "ảnh hưởng xấu", "suy giảm", "đánh mất", "bào mòn", "tổn hại"]
         if sum(1 for k in harm_kws if k in text_low) < 2:
-            type_specific_missing.append("chưa tập trung phân tích sâu các tầng **Tác hại / Hậu quả** theo đúng lệnh đề")
+            type_specific_missing.append("chưa tập trung phân tích sâu các tầng Tác hại / Hậu quả theo đúng lệnh đề")
     elif type_code == "DANG_1_TH1_Y_NGHIA":
         meaning_kws = ["ý nghĩa", "vai trò", "giá trị", "sức mạnh", "giúp", "tạo nên", "thúc đẩy", "động lực"]
         if sum(1 for k in meaning_kws if k in text_low) < 2:
-            type_specific_missing.append("chưa đào sâu phân tích các tầng **Ý nghĩa / Vai trò** của vấn đề")
+            type_specific_missing.append("chưa đào sâu phân tích các tầng Ý nghĩa / Vai trò của vấn đề")
     elif type_code in ["DANG_2_GIAI_QUYET", "DANG_5_TU_BO"]:
         for actor in ["cá nhân", "gia đình", "nhà trường"]:
             if actor not in text_low:
-                type_specific_missing.append(f"thiếu đoạn giải pháp đối với **{actor}**")
-        if not any(w in text_low for w in ["thực trạng", "nguyên nhân", "hậu quả", "tác hại"]):
-            type_specific_missing.append("thiếu phân tích rõ Lí do (Thực trạng/Nguyên nhân/Hậu quả)")
+                type_specific_missing.append(f"thiếu đoạn giải pháp đối với {actor}")
     elif type_code == "DANG_3_HAI_QUAN_DIEM":
         if not any(w in text_low for w in ["hạn chế", "phiến diện", "chưa toàn diện", "mặt khác"]):
             type_specific_missing.append("chưa phân tích rõ hạn chế của quan điểm còn lại")
@@ -1740,169 +1696,137 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
     weak_sentences = [s for s in sentences if len(s.split()) < 7 or len(s.split()) > 65]
     sample_weak_sent = weak_sentences[0] if weak_sentences else shortest_sent
 
-    # 1. Bố cục (0.5đ)
+    # 1. Bố cục (0.50đ)
     if num_paras >= 4 and word_count >= 500:
-        s1 = 0.5
-        c1_note = f"Bài viết chia thành **{num_paras} đoạn văn**, đảm bảo kết cấu 3 phần Mở - Thân - Kết và phân đoạn luận điểm hợp lý."
+        s1 = 0.50
+        c1_note = f"Đủ 3 phần Mở - Thân - Kết; thân bài tách {num_paras} đoạn mạch lạc; đạt dung lượng chuẩn {word_count} chữ."
     elif num_paras >= 3 and word_count >= 250:
         s1 = 0.25
-        c1_note = f"Có chia thành {num_paras} đoạn nhưng việc tách các đoạn luận điểm trong Thân bài chưa rõ hoặc dung lượng còn thiếu (**{word_count} chữ**)."
+        c1_note = f"Có đủ 3 phần nhưng thân bài tách đoạn chưa cân đối hoặc dung lượng còn thiếu ({word_count} chữ)."
     else:
-        s1 = 0.0
-        c1_note = f"Bố cục chưa đạt yêu cầu: bài viết chỉ có **{num_paras} đoạn** (**{word_count} chữ**), thiếu sự phân tách Mở - Thân - Kết."
+        s1 = 0.00
+        c1_note = f"Bố cục dang dở ({num_paras} đoạn, {word_count} chữ), chưa hoàn chỉnh 3 phần."
 
-    # 2. Xác định VĐNL (0.5đ)
-    if topic_coverage >= 0.6 and num_paras >= 3 and len(paragraphs[0].split()) >= 25:
-        s2 = 0.5
-        c2_note = f"Dẫn dắt và xác định trúng vấn đề nghị luận trọng tâm (*{vdnl_chuan}*). Minh chứng mở đầu: *'{first_sent[:110]}...'*."
-    elif topic_coverage >= 0.25:
+    # 2. Xác định VĐNL (0.50đ)
+    if topic_coverage >= 0.5 and num_paras >= 3:
+        s2 = 0.50
+        c2_note = f"Xác định đúng và trúng vấn đề nghị luận trọng tâm. Trích câu mở đầu: \"{first_sent[:90]}...\"."
+    elif topic_coverage >= 0.2:
         s2 = 0.25
-        c2_note = f"Có chạm tới từ khóa của đề nhưng giới thiệu vấn đề còn gượng gạo, chưa làm nổi bật trọng tâm (*'{first_sent[:95]}...'*)."
+        c2_note = f"Có nhắc đến vấn đề nhưng cách diễn đạt còn chung chung, chưa làm nổi bật trọng tâm."
     else:
-        s2 = 0.0
-        c2_note = f"Chưa xác định đúng trọng tâm vấn đề nghị luận (*{vdnl_chuan}*)."
+        s2 = 0.00
+        c2_note = "Xác định sai lệch vấn đề nghị luận, lạc đề."
 
-    # 3. Giải thích & Biểu hiện (1.0đ)
-    if has_explain >= 2 and word_count >= 500 and topic_coverage >= 0.5:
+    # 3. Giải thích & Biểu hiện (1.00đ)
+    if has_explain >= 2 and word_count >= 500:
+        s3 = 1.00
+        c3_note = "Cắt nghĩa tường minh bản chất khái niệm và nêu được biểu hiện thực tế đời sống sinh động."
+    elif has_explain >= 1 and word_count >= 350:
         s3 = 0.75
-        c3_note = "Đã thực hiện thao tác giải thích khái niệm và nêu biểu hiện của vấn đề, tuy nhiên cách cắt nghĩa cần cô đọng và sắc sảo hơn."
-    elif has_explain >= 1 and word_count >= 250:
-        s3 = 0.5
-        c3_note = "Mới dừng lại ở việc giải thích bề mặt từ ngữ, chưa làm bật lên bản chất cốt lõi và biểu hiện thực tế của vấn đề."
+        c3_note = "Giải thích đúng khái niệm nhưng phần nêu biểu hiện đời sống còn sơ sài."
+    elif has_explain >= 1:
+        s3 = 0.50
+        c3_note = "Mới giải thích bề mặt từ ngữ, chưa làm bật được bản chất vấn đề."
     else:
-        s3 = 0.25 if (word_count >= 180 and topic_coverage > 0) else 0.0
-        c3_note = "Thiếu đoạn giải thích tường minh khái niệm/nhận định ở đầu phần Thân bài."
+        s3 = 0.25 if word_count >= 200 else 0.00
+        c3_note = "Chưa có đoạn giải thích rõ ràng khái niệm ở đầu phần Thân bài."
 
-    # 4. Hệ thống luận điểm (3.5đ)
-    if word_count < 200:
-        base_s4 = 0.5
-    elif word_count < 380:
-        base_s4 = 1.0 if arg_count >= 3 else 0.75
-    elif word_count < 520:
-        base_s4 = 1.75 if arg_count >= 5 else 1.5
-    elif word_count < 600:
-        base_s4 = 2.25 if arg_count >= 7 else 2.0
+    # 4. Hệ thống luận điểm (3.50đ)
+    if word_count < 250:
+        base_s4 = 1.00
+    elif word_count < 400:
+        base_s4 = 1.75
+    elif word_count < 550:
+        base_s4 = 2.50 if arg_count >= 5 else 2.00
     else:
-        base_s4 = 2.75 if (arg_count >= 9 and topic_coverage >= 0.6) else 2.25
+        base_s4 = 3.25 if (arg_count >= 7 and topic_coverage >= 0.5) else 2.75
 
-    if type_specific_missing and base_s4 >= 1.5:
-        base_s4 = max(1.0, base_s4 - 0.5)
+    if type_specific_missing and base_s4 >= 1.50:
+        base_s4 = max(1.00, base_s4 - 0.50)
         missing_str = ", ".join(type_specific_missing)
-        c4_note = f"Dung lượng đạt **{word_count} chữ**, nhưng so với yêu cầu của **{type_label}**, bài làm còn {missing_str}. Minh chứng câu văn: *'{longest_sent[:100]}...'*."
+        c4_note = f"Bài làm đạt {word_count} chữ, tuy nhiên so với dạng bài {type_label} còn {missing_str}. Câu tiêu biểu: \"{longest_sent[:90]}...\"."
     else:
-        c4_note = f"Dung lượng đạt **{word_count} chữ**. Đã triển khai các ý bàn luận (*'{longest_sent[:105]}...'*), song chiều sâu lý lẽ và sự sắc bén trong phân tích vẫn cần nâng cao hơn để đạt điểm tối đa."
+        c4_note = f"Triển khai đúng trọng tâm theo dạng bài {type_label}. Lý lẽ tương đối tốt, cần đào sâu hơn quan hệ nhân - quả."
     s4 = base_s4
 
-    # 5. Dẫn chứng thực tế (2.5đ)
+    # 5. Dẫn chứng thực tế (2.50đ)
     if len(unique_proper_nouns) >= 2 and ev_marker_count >= 2 and word_count >= 500:
-        s5 = 1.75
-        nouns_str = ", ".join(unique_proper_nouns[:3])
-        c5_note = f"Có đưa dẫn chứng thực tế (**{nouns_str}**), nhưng cần phân tích sâu hơn sự kết nối giữa dẫn chứng với luận điểm thay vì chỉ thuật lại sự việc."
+        s5 = 2.25
+        nouns_str = ", ".join(unique_proper_nouns[:2])
+        c5_note = f"Có dẫn chứng người thật việc thật xác thực ({nouns_str}), đã có câu phân tích gắn với luận điểm."
     elif len(unique_proper_nouns) >= 1 or ev_marker_count >= 1:
-        s5 = 1.0 if word_count >= 350 else 0.75
-        nouns_str = ", ".join(unique_proper_nouns[:2]) if unique_proper_nouns else "ví dụ chung"
-        c5_note = f"Có nhắc tới dẫn chứng ({nouns_str}), nhưng chủ yếu mới dừng ở mức điểm tên, thiếu câu bình luận đắt giá."
+        s5 = 1.50 if word_count >= 350 else 1.00
+        nouns_str = ", ".join(unique_proper_nouns[:2]) if unique_proper_nouns else "dẫn chứng chung"
+        c5_note = f"Có nêu dẫn chứng ({nouns_str}) nhưng còn nghiêng về kể lể sự việc, thiếu câu bình luận đắt giá."
     else:
-        s5 = 0.25 if word_count >= 300 else 0.0
-        c5_note = "Bài viết thiếu dẫn chứng thực tế xác thực; lập luận chỉ dựa vào lý lẽ suông nên sức thuyết phục thấp."
+        s5 = 0.50 if word_count >= 300 else 0.00
+        c5_note = "Thiếu dẫn chứng thực tế xác thực; bài viết chủ yếu nói lý thuyết suông."
 
-    # 6. Phản đề & Bài học (1.0đ)
-    if counter_count >= 3 and word_count >= 500:
-        s6 = 0.75
-        c6_note = "Đã có đoạn phản đề / phản biện ý kiến trái chiều và rút ra bài học, nhưng góc nhìn phản biện cần sắc bén hơn."
+    # 6. Phản đề & Bài học (1.00đ)
+    if counter_count >= 2 and word_count >= 450:
+        s6 = 1.00
+        c6_note = "Phản biện sắc bén, biết lật lại vấn đề và rút ra bài học nhận thức, hành động thiết thực."
     elif counter_count >= 1 and word_count >= 280:
-        s6 = 0.5
-        c6_note = "Có nhắc qua ý phê phán và liên hệ bản thân nhưng viết còn sơ lược, mang tính công thức."
+        s6 = 0.75
+        c6_note = "Có phản đề và bài học nhưng góc nhìn phản biện còn nông, liên hệ bản thân còn hơi công thức."
+    elif counter_count >= 1:
+        s6 = 0.50
+        c6_note = "Mới chỉ có 1 câu phê phán chung chung hoặc bài học hô hào khẩu hiệu."
     else:
-        s6 = 0.25 if word_count >= 200 else 0.0
-        c6_note = "Thiếu thao tác phản đề / phản biện ý kiến trái chiều; phần liên hệ bản thân còn chung chung."
+        s6 = 0.25 if word_count >= 200 else 0.00
+        c6_note = "Thiếu thao tác phản biện ý kiến trái chiều và bài học liên hệ bản thân."
 
-    # 7. Diễn đạt & Chính tả (1.0đ)
+    # 7. Diễn đạt & Chính tả (1.00đ)
     err_details = []
     if found_colloquial:
-        col_str = ", ".join(found_colloquial[:3])
-        err_details.append(f"dùng từ khẩu ngữ/sáo mòn (*{col_str}*)")
+        err_details.append(f"dùng từ khẩu ngữ ({', '.join(found_colloquial[:2])})")
     if repeated_words:
-        rep_str = ", ".join(repeated_words[:4])
-        err_details.append(f"lặp từ nhiều lần (*{rep_str}*)")
+        err_details.append(f"lặp từ nhiều lần ({', '.join(repeated_words[:3])})")
     if len(sample_weak_sent.split()) < 7:
-        err_details.append(f"câu văn cụt/sơ sài (*'{sample_weak_sent}'*)")
-    elif len(sample_weak_sent.split()) > 65:
-        err_details.append(f"câu văn quá dài, thiếu ngắt câu (*'{sample_weak_sent[:90]}...'*)")
+        err_details.append(f"câu cụt: \"{sample_weak_sent}\"")
 
-    if err_details:
-        s7 = 0.5 if word_count >= 350 else 0.25
-        c7_note = "Cần khắc phục các lỗi diễn đạt: " + "; ".join(err_details) + "."
-    elif word_count < 450:
-        s7 = 0.5
-        c7_note = f"Diễn đạt tương đối rõ ý nhưng thiếu các cấu trúc câu liên kết chuyển đoạn. Câu cần trau chuốt thêm: *'{shortest_sent}'*."
-    else:
+    if not err_details and word_count >= 450:
+        s7 = 1.00
+        c7_note = "Lời văn chuẩn mực, giàu tính chính luận, câu cú hoàn chỉnh, không mắc lỗi chính tả."
+    elif not err_details:
         s7 = 0.75
-        c7_note = f"Diễn đạt khá mạch lạc, tuy nhiên một số câu văn vẫn cần gọt giũa từ ngữ cho giàu sức nặng lập luận hơn (ví dụ: *'{shortest_sent}'*)."
+        c7_note = "Diễn đạt rõ ràng, mạch lạc, câu văn tương đối trôi chảy."
+    else:
+        s7 = 0.50
+        c7_note = "Cần khắc phục các lỗi diễn đạt: " + "; ".join(err_details) + "."
 
     total_score = round(s1 + s2 + s3 + s4 + s5 + s6 + s7, 2)
+    rank = "Tốt" if total_score >= 8.0 else ("Khá" if total_score >= 6.5 else ("Đạt" if total_score >= 5.0 else "Chưa đạt"))
 
-    if total_score < 4.0:
-        rank = "Yếu / Chưa đạt"
-    elif total_score < 5.5:
-        rank = "Trung bình"
-    elif total_score < 7.0:
-        rank = "Trung bình - Khá"
-    elif total_score < 8.0:
-        rank = "Khá"
-    else:
-        rank = "Giỏi"
-
-    if type_specific_missing:
-        struct_advice = "Lưu ý khắc phục ngay về mặt cấu trúc: **" + ", ".join(type_specific_missing) + "**."
-    else:
-        struct_advice = "Cần chú ý đào sâu lý lẽ ở từng đoạn thân bài, tránh chỉ nêu nhận định bề mặt mà thiếu câu phân tích nguyên nhân - hệ quả."
-
-    if repeated_words:
-        vocab_advice = "Bài viết đang lặp lại nhiều lần các từ: **" + ", ".join(repeated_words[:4]) + "**. Hãy thay thế bằng từ đồng nghĩa."
-    else:
-        vocab_advice = "Cần tránh các từ ngữ khẩu ngữ hoặc sáo mòn, ưu tiên sử dụng từ vựng chính luận giàu sức biểu đạt."
-
-    if s5 < 1.75:
-        ev_advice = "Em mới chỉ điểm tên hoặc kể lại sự việc mà thiếu câu bình luận chốt ý gắn với luận điểm."
-    else:
-        ev_advice = "Cần trau chuốt thêm câu văn bình luận dẫn chứng cho thật sắc bén."
-
-    if s6 < 0.75:
-        pb_advice = "Cần bổ sung đoạn văn phản biện góc nhìn ngược lại theo đúng yêu cầu của dạng đề."
-    else:
-        pb_advice = "Phần liên hệ bản thân cần gắn với hành động thực chất hơn."
-
+    # XUẤT RA TOÀN BỘ 7 TIÊU CHÍ TRONG 1 BẢNG MARKDOWN DUY NHẤT
     report_lines = [
         "### 📊 BẢNG ĐÁNH GIÁ CHI TIẾT THEO 7 TIÊU CHÍ RUBRIC",
-        f"*🧭 **Dạng bài áp dụng:** {type_label}*  ",
-        f"*📏 **Thông số bài làm:** Độ dài **{word_count} chữ** | **{num_paras} đoạn văn** | **{num_sents} câu văn**.*",
-        "",
-        "| Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng trích dẫn từ bài làm |",
-        "| :--- | :---: | :---: | :--- |",
-        f"| **1. Bố cục (Mở - Thân - Kết)** | 0.50đ | **{s1:.2f}đ** | {c1_note} |",
-        f"| **2. Xác định Vấn đề nghị luận** | 0.50đ | **{s2:.2f}đ** | {c2_note} |",
-        f"| **3. Giải thích & Biểu hiện** | 1.00đ | **{s3:.2f}đ** | {c3_note} |",
-        f"| **4. Hệ thống luận điểm (Theo dạng đề)** | 3.50đ | **{s4:.2f}đ** | {c4_note} |",
-        f"| **5. Dẫn chứng thực tế** | 2.50đ | **{s5:.2f}đ** | {c5_note} |",
-        f"| **6. Phản đề & Bài học** | 1.00đ | **{s6:.2f}đ** | {c6_note} |",
-        f"| **7. Diễn đạt & Chính tả** | 1.00đ | **{s7:.2f}đ** | {c7_note} |",
+        f"*🧭 **Dạng bài áp dụng:** {type_label}*<br>",
+        f"*📏 **Thông số bài làm:** Độ dài **{word_count} chữ** | **{num_paras} đoạn văn** | **{num_sents} câu văn**.*\n",
+        "| STT | Tiêu chí đánh giá | Điểm tối đa | Điểm đạt | Nhận xét chi tiết & Minh chứng từ bài làm |",
+        "| :---: | :--- | :---: | :---: | :--- |",
+        f"| **1** | **Bố cục bài viết (Mở - Thân - Kết)** | 0.50đ | **{s1:.2f}đ** | {c1_note} |",
+        f"| **2** | **Xác định Vấn đề nghị luận** | 0.50đ | **{s2:.2f}đ** | {c2_note} |",
+        f"| **3** | **Giải thích khái niệm & Biểu hiện** | 1.00đ | **{s3:.2f}đ** | {c3_note} |",
+        f"| **4** | **Hệ thống luận điểm bàn luận** | 3.50đ | **{s4:.2f}đ** | {c4_note} |",
+        f"| **5** | **Dẫn chứng thực tế** | 2.50đ | **{s5:.2f}đ** | {c5_note} |",
+        f"| **6** | **Phản đề & Bài học liên hệ** | 1.00đ | **{s6:.2f}đ** | {c6_note} |",
+        f"| **7** | **Diễn đạt, ngữ pháp & chính tả** | 1.00đ | **{s7:.2f}đ** | {c7_note} |",
         "",
         "---",
-        f"### 📌 TỔNG ĐIỂM ĐẠT ĐƯỢC: **{total_score:.2f} / 10.0 điểm** — Xếp loại: **{rank}**",
+        f"### 📌 TỔNG ĐIỂM: **{total_score:.2f} / 10.0 điểm** — Xếp loại: **{rank}**",
         "",
         "#### 🔍 RÀ SOÁT LỖI CỤ THỂ & ĐỊNH HƯỚNG CHỈNH SỬA NÂNG CẤP BÀI VIẾT:",
-        f"1. **Rà soát cấu trúc theo đúng dạng bài ({type_label}):**",
-        f"   * Bài làm đạt **{word_count} chữ**. {struct_advice}",
-        f"   * **Câu mở đầu cần chú ý:** *'{first_sent[:120]}'* — Kiểm tra lại độ tự nhiên và tính chuẩn xác khi giới thiệu vấn đề **{vdnl_chuan}**.",
-        "",
-        "2. **Các lỗi diễn đạt, dùng từ và câu văn cần sửa ngay:**",
-        f"   * **Câu văn còn non / vụng về trong bài:** *'{sample_weak_sent}'* -> **Hướng sửa:** Tránh viết câu cụt hoặc liệt kê khô khan; hãy bổ sung quan hệ từ lập luận (*bởi lẽ, chính vì vậy, nhờ đó...*) để câu văn chặt chẽ hơn.",
-        f"   * **Về từ vựng:** {vocab_advice}",
-        "",
-        "3. **Về khai thác Dẫn chứng và Phản đề / Phản biện:**",
-        f"   * **Dẫn chứng:** {ev_advice}",
-        f"   * **Phản đề / Ý kiến trái chiều:** {pb_advice}",
+        f"1. **Cấu trúc bài làm theo dạng đề ({type_label}):**<br>",
+        f"   - Bài làm đạt **{word_count} chữ**. Cần bám chắc các luận điểm đã vạch ra ở Bước 2, tránh ôm đồm lan man.<br>",
+        f"   - **Câu mở đầu:** *\"{first_sent[:110]}...\"* -> Hãy kiểm tra lại xem đã nêu trực diện vấn đề trọng tâm hay chưa.<br>",
+        f"2. **Lỗi diễn đạt và câu chữ cần sửa ngay:**<br>",
+        f"   - **Câu văn còn non/cụt trong bài:** *\"{sample_weak_sent}\"* -> **Cách sửa:** Bổ sung quan hệ từ lập luận (*bởi lẽ, chính vì vậy, nhờ đó...*) để tăng tính liên kết.<br>",
+        f"   - **Từ vựng:** Tránh các từ ngữ khẩu ngữ hoặc lặp từ nhiều lần; ưu tiên dùng từ ngữ chính luận.<br>",
+        f"3. **Về khai thác Dẫn chứng và Phản đề:**<br>",
+        f"   - **Dẫn chứng:** Cần đưa tên người thật việc thật cụ thể và phân tích sâu ý nghĩa thay vì chỉ kể sự việc.<br>",
+        f"   - **Phản đề:** Nhìn nhận đa chiều, phê phán quan điểm lệch lạc để làm nổi bật tính đúng đắn của vấn đề.",
     ]
     return "\n".join(report_lines)
 
@@ -1912,7 +1836,7 @@ def evaluate_essay_strictly_by_7_criteria(essay_text, cur_de_info):
 # ==============================================================================
 with st.sidebar:
     st.title("⚙️ HỆ THỐNG QUẢN TRỊ")
-    st.success("✅ Hệ thống định hướng tư duy & phát triển năng lực viết NLXH hoạt động ổn định!")
+    st.success("✅ Hệ thống EduAI hoạt động ổn định!")
 
     with st.expander("🔑 Cấu hình nâng cao (Dành cho GV)"):
         key_in = st.text_input(
@@ -1934,7 +1858,7 @@ with st.sidebar:
 st.markdown(
     """
 <div class="hero-banner">
-    <div class="hero-title">🖊️ EDUAI - HỆ THỐNG ĐỊNH HƯỚNG TƯ DUY VÀ PHÁT TRIỂN NĂNG LỰC VIẾT VĂN NGHỊ LUẬN XÃ HỘI</div>
+    <div class="hero-title">🖊️ EduAI - HỆ THỐNG ĐỊNH HƯỚNG TƯ DUY VÀ PHÁT TRIỂN NĂNG LỰC VIẾT VĂN NGHỊ LUẬN XÃ HỘI</div>
     <p class="hero-subtitle">Đồng hành kiến tạo tư duy lập luận độc lập, bồi đắp chiều sâu nhận thức và làm chủ kỹ năng tạo lập văn bản nghị luận xã hội</p>
 </div>
 """,
@@ -2168,7 +2092,7 @@ with tabs[1]:
                 st.markdown(f"**III. KẾT BÀI:** {dani.get('kb','')}")
 
     with c_right:
-        st.markdown("#### 🧭 Trợ Lý Ngữ Văn Tư Vấn (Chat Đa Lượt Linh Hoạt)")
+        st.markdown("#### 🧭 Trợ lý Ngữ văn")
         chat_container = st.container(height=420, border=True)
         with chat_container:
             for role, msg in st.session_state["chat_history"]:
@@ -2270,10 +2194,10 @@ with tabs[2]:
                     prompt_img = (
                         f"Hãy đọc toàn bộ chữ viết tay trong bức ảnh này và đánh giá theo BẢNG RUBRIC 7 TIÊU CHÍ (Thang điểm 10.0) cho đề bài: "
                         f"'{ensure_600_words_prompt(st.session_state['current_de_info'].get('text', ''))}'. "
-                        "Trích dẫn nguyên văn các câu trong ảnh bài làm để chỉ rõ lỗi diễn đạt, lỗi lập luận, lỗi chính tả và hướng dẫn cách sửa chi tiết."
+                        "BẮT BUỘC hiển thị toàn bộ 7 tiêu chí trong DUY NHẤT 1 BẢNG MARKDOWN (không ngắt dòng trong ô, dùng thẻ <br> nếu muốn xuống dòng). Sau bảng mới ghi Tổng điểm và rà soát lỗi."
                     )
                     ai_img_res = call_gemini_rest_api(prompt_img, pil_image=img_obj, temperature=0.25)
-                    if ai_img_res and "|" in ai_img_res:
+                    if ai_img_res and "|" in ai_img_res and ai_img_res.count("|") >= 28:
                         st.session_state["rubric_evaluation"] = ai_img_res
                         st.success("✅ Đã đọc ảnh và đánh giá xong! Mời sang Bước 4 xem kết quả.")
                     elif ocr_assist_text.strip():
@@ -2352,6 +2276,6 @@ with tabs[3]:
         st.markdown("##### 📋 Bảng Điểm & Nhận Xét Chi Tiết:")
         if st.session_state.get("rubric_evaluation"):
             with st.container(border=True):
-                st.markdown(st.session_state["rubric_evaluation"])
+                st.markdown(st.session_state["rubric_evaluation"], unsafe_allow_html=True)
         else:
             st.info("💡 Chưa có kết quả đánh giá. Hãy nộp bài ở Bước 3 để hệ thống chấm và rà soát lỗi.")
